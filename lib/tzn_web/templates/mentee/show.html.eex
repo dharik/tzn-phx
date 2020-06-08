@@ -1,0 +1,14 @@
+<h1>Show Mentee</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @mentee.name %>
+    <%= link @mentee.mentor.name, to: Routes.mentor_path(@conn, :show, @mentee.mentor) %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.mentee_path(@conn, :edit, @mentee) %></span>
+<span><%= link "Back", to: Routes.mentee_path(@conn, :index) %></span>

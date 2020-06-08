@@ -3,6 +3,7 @@ defmodule TznWeb.MentorController do
 
   alias Tzn.Transizion
   alias Tzn.Transizion.Mentor
+  alias Tzn.Repo
 
   def index(conn, _params) do
     mentors = Transizion.list_mentors()
@@ -27,7 +28,7 @@ defmodule TznWeb.MentorController do
   end
 
   def show(conn, %{"id" => id}) do
-    mentor = Transizion.get_mentor!(id)
+    mentor = Transizion.get_mentor!(id) |> Repo.preload(:mentees)
     render(conn, "show.html", mentor: mentor)
   end
 

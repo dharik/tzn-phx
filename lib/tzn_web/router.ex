@@ -16,7 +16,11 @@ defmodule TznWeb.Router do
   scope "/", TznWeb do
     pipe_through :browser
 
-    get "/", PageController, :index
+    get "/", MenteeController, :index
+    resources "/mentors", MentorController
+    resources "/mentees", MenteeController
+    resources "/timesheet_entries", TimesheetEntryController
+    resources "/strategy_sessions", StrategySessionController
   end
 
   # Other scopes may use custom stacks.

@@ -1,18 +1,19 @@
-defmodule Tzn.Transizion.Mentor do
+defmodule Tzn.Transizion.Mentee do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "mentors" do
+  schema "mentees" do
     field :name, :string
-    has_many :mentees, Tzn.Transizion.Mentee
+    belongs_to :mentor, Tzn.Transizion.Mentor
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
     has_many :strategy_sessions, Tzn.Transizion.StrategySession
+
     timestamps()
   end
 
   @doc false
-  def changeset(mentor, attrs) do
-    mentor
+  def changeset(mentee, attrs) do
+    mentee
     |> cast(attrs, [:name])
     |> validate_required([:name])
   end
