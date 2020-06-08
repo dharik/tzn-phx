@@ -1,0 +1,13 @@
+<h1>Show Mentor</h1>
+
+<ul>
+
+  <li>
+    <strong>Name:</strong>
+    <%= @mentor.name %>
+  </li>
+
+</ul>
+
+<span><%= link "Edit", to: Routes.mentor_path(@conn, :edit, @mentor) %></span>
+<span><%= link "Back", to: Routes.mentor_path(@conn, :index) %></span>

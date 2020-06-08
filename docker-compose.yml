@@ -1,0 +1,18 @@
+db:
+  image: postgres
+  hostname: tzndb
+  ports:
+    - '5432:5432'
+  environment:
+    POSTGRES_PASSWORD: dev
+
+web:
+  build: .
+  volumes:
+    - ./:/app
+  ports:
+    - "4000:4000"
+  links:
+    - db
+  command:
+    - ./run.sh

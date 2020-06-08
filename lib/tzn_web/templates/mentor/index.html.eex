@@ -1,0 +1,26 @@
+<h1>Listing Mentors</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for mentor <- @mentors do %>
+    <tr>
+      <td><%= mentor.name %></td>
+
+      <td>
+        <span><%= link "Show", to: Routes.mentor_path(@conn, :show, mentor) %></span>
+        <span><%= link "Edit", to: Routes.mentor_path(@conn, :edit, mentor) %></span>
+        <span><%= link "Delete", to: Routes.mentor_path(@conn, :delete, mentor), method: :delete, data: [confirm: "Are you sure?"] %></span>
+      </td>
+    </tr>
+<% end %>
+  </tbody>
+</table>
+
+<span><%= link "New Mentor", to: Routes.mentor_path(@conn, :new) %></span>
