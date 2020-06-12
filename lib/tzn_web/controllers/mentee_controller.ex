@@ -3,10 +3,15 @@ defmodule TznWeb.MenteeController do
 
   alias Tzn.Transizion
   alias Tzn.Transizion.Mentee
+  alias Tzn.Transizion.Mentor
   alias Tzn.Repo
+
+  import Ecto.Query
+  require Logger
 
   def index(conn, _params) do
     mentees = Transizion.list_mentees() |> Repo.preload(:mentor)
+    Logger.info(Pow.Plug.current_user(conn).id)
     render(conn, "index.html", mentees: mentees)
   end
 
@@ -34,8 +39,9 @@ defmodule TznWeb.MenteeController do
 
   def edit(conn, %{"id" => id}) do
     mentee = Transizion.get_mentee!(id)
+    all_mentors = from(m in Mentor, select: { m.name, m.id }) |> Repo.all
     changeset = Transizion.change_mentee(mentee)
-    render(conn, "edit.html", mentee: mentee, changeset: changeset)
+    render(conn, "edit.html", mentee: mentee, all_mentors: all_mentors, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "mentee" => mentee_params}) do

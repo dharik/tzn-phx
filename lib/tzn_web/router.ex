@@ -1,5 +1,11 @@
 defmodule TznWeb.Router do
   use TznWeb, :router
+  use Pow.Phoenix.Router
+
+  pipeline :protected do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: Pow.Phoenix.PlugErrorHandler
+  end
 
   pipeline :browser do
     plug :accepts, ["html"]
@@ -13,15 +19,66 @@ defmodule TznWeb.Router do
     plug :accepts, ["json"]
   end
 
-  scope "/", TznWeb do
+  scope "/" do
     pipe_through :browser
+
+    pow_routes()
+  end
+
+  scope "/", TznWeb do
+    pipe_through [:browser, :protected]
 
     get "/", MenteeController, :index
     resources "/mentors", MentorController
     resources "/mentees", MenteeController
     resources "/timesheet_entries", TimesheetEntryController
     resources "/strategy_sessions", StrategySessionController
+
+    #
+    # Mentor app
+    #
+    # /mentor/mentees - index
+    # /mentor/mentees/:mentee_id/ - show, edit
+    #   edit: internal note, internal name
+    #   show: timesheet entries (by me), all strategy sessions
+    #   
+    # /mentor/timesheet_entries?mentee_id=#
+    # /mentor/strategy_sessions?mentee_id=#
+
+    # /mentor/timesheet_entries
+    # /mentor/strategy_sessions
+
+    # /mentor/timeline
+
+
+    #
+    # Admin app
+    #
+    # /admin/mentees
+
+    # /admin/mentees/:mentee_id
+    #   edit: mentor_id, internal note, name, internal name
+    #   show: 
+    #   new: 
+
+    # /admin/contract_purchases/new?mentee_id=#
+
+
+    # /admin/mentors/:mentor_id/
+    #   edit: 
+    #   show: mentees, name, 
+
+
+    # /admin/users/:user_id/new, edit, index, show
+    #   show mentee profile, mentor profile, admin profile
+
+
+    scope "/admin" do
+      get "/", MenteeController, :index
+    end
   end
+
+
 
   # Other scopes may use custom stacks.
   # scope "/api", TznWeb do
