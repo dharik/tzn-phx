@@ -1,0 +1,3 @@
+<h1>Edit Timesheet entry</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :update, @timesheet_entry)) %>

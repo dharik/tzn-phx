@@ -6,8 +6,8 @@ defmodule Tzn.Transizion.TimesheetEntry do
     field :date, :naive_datetime
     field :hours, :decimal
     field :notes, :string
-    field :mentor_id, :id
-    field :mentee_id, :id
+    belongs_to :mentor, Tzn.Transizion.Mentor
+    belongs_to :mentee, Tzn.Transizion.Mentee
 
     timestamps()
   end
@@ -15,7 +15,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
   @doc false
   def changeset(timesheet_entry, attrs) do
     timesheet_entry
-    |> cast(attrs, [:date, :notes, :hours])
-    |> validate_required([:date, :notes, :hours])
+    |> cast(attrs, [:date, :notes, :hours, :mentor_id, :mentee_id])
+    |> validate_required([:date, :notes, :hours, :mentor_id])
   end
 end

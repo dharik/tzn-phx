@@ -4,9 +4,74 @@ defmodule Tzn.Transizion do
   """
 
   import Ecto.Query, warn: false
-  alias Tzn.Repo
 
+  alias Tzn.Repo
   alias Tzn.Transizion.Mentor
+  alias Tzn.Transizion.Mentee
+  alias Tzn.Transizion.TimesheetEntry
+  alias Tzn.Transizion.StrategySession
+
+  """
+
+  load all relevant data in the request object from the controller?
+  then deliver via views + helpers?
+
+  Mentor API
+
+  - List of MY mentees with hours
+  list_mentees()
+
+  - Get mentee with hour aggregation, strategy sessions w/ mentor name, id, timesheet entries (only owned by me), internal fields, mentor name, mentor id
+  get_mentee()
+
+  - Update mentee's internal name, internal note
+  update_mentee(internal_name, internal_note)
+
+  - List strategy sessions, with filters for: mentee
+  strategy_sessions(mentee: )
+
+  - See internal details about a strategy session
+  get_strategy_session()
+
+  - Update internal details about a strategy session
+  update_strategy_session()
+
+  - Create a new strategy session for a mentee
+  create_strategy_session()
+  
+  - List timesheet entries, with filters for: mentee, date range. Also get a sum of hours for these entries
+  list_timesheet_entries(mentee?:, date_range: )
+
+  - See internal details about a timesheet entry (only if it belongs to me)
+  - Update internal details about a timesheet entry (only if it belongs to me)
+  - Create a new timesheet entry for a mentee
+
+
+  Admin API
+  - List of all mentees with hours used, purchased, hours remaining, and the mentor name. Filter by mentor, sort by hours
+  - List of all mentors with hours for the current month
+
+  - List all users
+    - w/ mentor profile
+    - w/ mentee profile
+
+  - Show a user
+    - Create a mentee profile
+    - Edit a mentee profile
+      - Update mentor id, internal name, name, 
+    - Delete a mentee profile
+
+    - Create a mentor profile
+    - Delete a mentor profile
+
+
+  Anybody in Tzn:
+  - Get timeline events w/ timeline progresses preloaded for a user
+  - Mark event complete for user
+  - Mark incomplete for user
+
+
+  """
 
   def list_mentors do
     Repo.all(Mentor)
@@ -79,11 +144,13 @@ defmodule Tzn.Transizion do
     Mentor.changeset(mentor, attrs)
   end
 
-  alias Tzn.Transizion.Mentee
-  alias Tzn.Transizion.MenteeWithHours
 
   def list_mentees do
-    Repo.all(MenteeWithHours)
+    Repo.all(Mentee)
+  end
+
+  def list_mentees(%{mentor: mentor}) do
+    Repo.all(from m in Mentee, where: m.mentor_id == ^mentor.id)
   end
 
   @doc """
@@ -146,20 +213,14 @@ defmodule Tzn.Transizion do
     Repo.delete(mentee)
   end
 
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking mentee changes.
+  # def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
+  #   Mentee.changeset(mentee, attrs)
+  # end
 
-  ## Examples
-
-      iex> change_mentee(mentee)
-      %Ecto.Changeset{data: %Mentee{}}
-
-  """
   def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
     Mentee.changeset(mentee, attrs)
   end
 
-  alias Tzn.Transizion.StrategySession
 
   @doc """
   Returns the list of strategy_sessions.
@@ -255,19 +316,13 @@ defmodule Tzn.Transizion do
     StrategySession.changeset(strategy_session, attrs)
   end
 
-  alias Tzn.Transizion.TimesheetEntry
 
-  @doc """
-  Returns the list of timesheet_entries.
-
-  ## Examples
-
-      iex> list_timesheet_entries()
-      [%TimesheetEntry{}, ...]
-
-  """
   def list_timesheet_entries do
     Repo.all(TimesheetEntry)
+  end
+
+  def list_timesheet_entries(%{mentor: mentor}) do
+    Repo.all(from e in TimesheetEntry, where: e.mentor_id == ^mentor.id)
   end
 
   @doc """

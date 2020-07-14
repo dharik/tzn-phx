@@ -1,5 +1,0 @@
-<h1>Edit Timesheet entry</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.timesheet_entry_path(@conn, :update, @timesheet_entry)) %>
-
-<span><%= link "Back", to: Routes.timesheet_entry_path(@conn, :index) %></span>

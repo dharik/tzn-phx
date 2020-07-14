@@ -2,7 +2,7 @@ defmodule Tzn.Transizion.ContractPurchase do
   use Ecto.Schema
   import Ecto.Changeset
 
-  schema "mentees" do
+  schema "contract_purchases" do
     belongs_to :mentee, Tzn.Transizion.Mentee
     field :hours, :decimal
     field :date, :naive_datetime

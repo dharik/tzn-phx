@@ -1,0 +1,38 @@
+<h1>Listing Timesheet entries</h1>
+
+<table>
+  <thead>
+    <tr>
+      <th>Mentee Name</th>
+      <th>Date</th>
+      <th>Notes</th>
+      <th>Hours</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for timesheet_entry <- @timesheet_entries do %>
+      <tr>
+        <td>
+          <%= if timesheet_entry.mentee do %>
+            <%= link timesheet_entry.mentee.name, to: Routes.mentor_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+          <% else %>
+            N/A
+          <% end %>
+        </td>
+        <td><%= timesheet_entry.date %></td>
+        <td><%= timesheet_entry.notes %></td>
+        <td><%= timesheet_entry.hours %></td>
+        <td>
+          <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %></span>
+          <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete, data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+Total hours:
+<%= total_hours(@timesheet_entries) %>
+
+<span><%= link "New Timesheet entry", to: Routes.mentor_timesheet_entry_path(@conn, :new) %></span>

@@ -3,8 +3,7 @@ defmodule TznWeb.Router do
   use Pow.Phoenix.Router
 
   pipeline :protected do
-    plug Pow.Plug.RequireAuthenticated,
-      error_handler: Pow.Phoenix.PlugErrorHandler
+    plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
   pipeline :browser do
@@ -26,13 +25,8 @@ defmodule TznWeb.Router do
   end
 
   scope "/", TznWeb do
-    pipe_through [:browser, :protected]
 
     get "/", MenteeController, :index
-    resources "/mentors", MentorController
-    resources "/mentees", MenteeController
-    resources "/timesheet_entries", TimesheetEntryController
-    resources "/strategy_sessions", StrategySessionController
 
     #
     # Mentor app
@@ -42,11 +36,6 @@ defmodule TznWeb.Router do
     #   edit: internal note, internal name
     #   show: timesheet entries (by me), all strategy sessions
     #   
-    # /mentor/timesheet_entries?mentee_id=#
-    # /mentor/strategy_sessions?mentee_id=#
-
-    # /mentor/timesheet_entries
-    # /mentor/strategy_sessions
 
     # /mentor/timeline
 
@@ -73,8 +62,27 @@ defmodule TznWeb.Router do
     #   show mentee profile, mentor profile, admin profile
 
 
-    scope "/admin" do
+    scope "/mentor", as: :mentor do
+      pipe_through [:browser, :protected]
+
+
+      get "/", Mentor.MenteeController, :index
+      resources "/mentees", Mentor.MenteeController
+      resources "/timesheet_entries", Mentor.TimesheetEntryController, except: [:show]
+      resources "/strategy_sessions", Mentor.StrategySessionController
+      # resources "/timeline", Mentor.MenteeController # todo
+    end
+
+
+    scope "/admin", as: :admin do
+      pipe_through [:browser, :protected]
+
       get "/", MenteeController, :index
+      resources "/mentors", MentorController
+      resources "/mentees", MenteeController
+      resources "/users", MenteeController
+      resources "/admins", AdminController
+      resources "/contract_purchases", AdminController
     end
   end
 

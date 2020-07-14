@@ -1,0 +1,21 @@
+<h2>My mentees</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Internal Name</th>
+      <th>Hours used / hours purchased</th>
+    </tr>
+  </thead>
+  <tbody>
+<%= for mentee <- @mentees do %>
+    <tr>
+      <td>
+        <%= link mentee.name, to: Routes.mentor_mentee_path(@conn, :show, mentee) %>
+      </td>
+      <td><%= mentee.internal_name %></td>
+      <td><%= mentee.hour_counts.hours_used %> / <%= mentee.hour_counts.hours_purchased %></td>
+    </tr>
+<% end %>
+  </tbody>
+</table>

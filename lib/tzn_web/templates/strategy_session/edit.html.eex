@@ -1,5 +1,0 @@
-<h1>Edit Strategy session</h1>
-
-<%= render "form.html", Map.put(assigns, :action, Routes.strategy_session_path(@conn, :update, @strategy_session)) %>
-
-<span><%= link "Back", to: Routes.strategy_session_path(@conn, :index) %></span>

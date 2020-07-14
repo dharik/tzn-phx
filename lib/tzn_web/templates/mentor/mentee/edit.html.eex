@@ -1,0 +1,5 @@
+<h1>Edit Mentee</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.mentor_mentee_path(@conn, :update, @mentee)) %>
+
+<span><%= link "Back", to: Routes.mentor_mentee_path(@conn, :index) %></span>
