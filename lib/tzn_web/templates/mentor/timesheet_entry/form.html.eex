@@ -5,7 +5,9 @@
     </div>
   <% end %>
 
-  TODO: Select a mentee
+  <%= label f, :mentee_id %>
+  <%= select f, :mentee_id, [{'None', nil} | Enum.map(@mentees, fn mentee ->  {"#{mentee.name} #{mentee.internal_name}", mentee.id} end)] %>
+  <%= error_tag f, :mentee_id %>
 
   <%= label f, :date %>
   <%= datetime_select f, :date %>

@@ -16,6 +16,6 @@ defmodule Tzn.Transizion.TimesheetEntry do
   def changeset(timesheet_entry, attrs) do
     timesheet_entry
     |> cast(attrs, [:date, :notes, :hours, :mentor_id, :mentee_id])
-    |> validate_required([:date, :notes, :hours, :mentor_id])
+    |> validate_required([:date, :notes, :hours])
   end
 end
