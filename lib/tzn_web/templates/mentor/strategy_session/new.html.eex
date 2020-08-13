@@ -1,5 +1,5 @@
 <h1>New Strategy session</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.strategy_session_path(@conn, :create)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.mentor_strategy_session_path(@conn, :create)) %>
 
-<span><%= link "Back", to: Routes.strategy_session_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.mentor_strategy_session_path(@conn, :index) %></span>

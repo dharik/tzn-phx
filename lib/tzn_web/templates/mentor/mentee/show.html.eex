@@ -1,46 +1,48 @@
-<h1>
-  Mentee: <%= @mentee.name %>
-</h1>
+<h1 class="display-title"><%= @mentee.name %></h1>
 
 <h3>Internal data <%= link "(edit)", to: Routes.mentor_mentee_path(@conn, :edit, @mentee) %></h3>
 <p>
   <strong>Internal Name:</strong>
   <%= @mentee.internal_name || 'N/A' %>
- <br />
-
+  <br />
   <strong>Internal Note:</strong>
   <%= @mentee.internal_note || 'N/A' %>
 </p>
 
 <hr />
+
 <h3>Contract info</h3>
 <strong>Hours used:</strong>
-    <%= @mentee.hour_counts.hours_used %>
+<%= @mentee.hour_counts.hours_used %>
 <br />
-     <strong>Hours purchased:</strong>
-    <%= @mentee.hour_counts.hours_purchased %>
+<strong>Hours purchased:</strong>
+<%= @mentee.hour_counts.hours_purchased %>
+
+<%= if @mentee.hour_counts.hours_purchased |> Decimal.sub(@mentee.hour_counts.hours_used) |> Decimal.cmp(5) == :lt do %>
+  Few hours remaining
+<% end %>
 
 <hr />
-  <h3>Timesheet Entries</h3>
-  <%= for timesheet_entry <- @mentee.timesheet_entries do %>
-    <p>
-      <strong><%= timesheet_entry.date %></strong>
-      <%= timesheet_entry.notes %>
-      <%= link "(Edit)", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %>
-    </p>
-  <% end %>
 
-  <h3>Strategy Sessions</h3>
-  <%= for strategy_session <- @mentee.strategy_sessions do %>
-    <p>
-      <strong><%= strategy_session.title %></strong> <%= link "(edit)", to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session) %>
-      <br />
-      <%= strategy_session.notes %>
-      <br />
-      <small><%= strategy_session.date %> with <%= strategy_session.mentor.name %></small>
-    </p>
-  <% end %>
+<h3>Timesheet Entries</h3>
+<%= for timesheet_entry <- @mentee.timesheet_entries do %>
+  <p>
+    <strong><%= timesheet_entry.started_at %></strong>
+    <%= timesheet_entry.notes %>
+    <%= link "(Edit)", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %>
+  </p>
+<% end %>
+<%= link "New timesheet entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
 
+<h3>Strategy Sessions</h3>
+<%= for strategy_session <- @mentee.strategy_sessions do %>
+  <p>
+    <strong><%= strategy_session.title %></strong> <%= link "(edit)", to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session) %>
+    <br />
+    <%= strategy_session.notes %>
+    <br />
+    <small><%= strategy_session.date %> with <%= strategy_session.mentor.name %></small>
+  </p>
+<% end %>
+<%= link "New strategy session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary' %>
 
-<span><%= link "Edit", to: Routes.mentor_mentee_path(@conn, :edit, @mentee) %></span>
-<span><%= link "Back", to: Routes.mentor_mentee_path(@conn, :index) %></span>

@@ -14,5 +14,7 @@ web:
     - "4000:4000"
   links:
     - db
-  command:
-    - ./run.sh
+  stdin_open: true # docker run -i
+  tty: true        # docker run -t
+  command: tail -f /dev/null
+    # - ./run.sh

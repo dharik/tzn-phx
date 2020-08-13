@@ -10,68 +10,8 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.Mentee
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Transizion.StrategySession
-
-  """
-
-  load all relevant data in the request object from the controller?
-  then deliver via views + helpers?
-
-  Mentor API
-
-  - List of MY mentees with hours
-  list_mentees()
-
-  - Get mentee with hour aggregation, strategy sessions w/ mentor name, id, timesheet entries (only owned by me), internal fields, mentor name, mentor id
-  get_mentee()
-
-  - Update mentee's internal name, internal note
-  update_mentee(internal_name, internal_note)
-
-  - List strategy sessions, with filters for: mentee
-  strategy_sessions(mentee: )
-
-  - See internal details about a strategy session
-  get_strategy_session()
-
-  - Update internal details about a strategy session
-  update_strategy_session()
-
-  - Create a new strategy session for a mentee
-  create_strategy_session()
-  
-  - List timesheet entries, with filters for: mentee, date range. Also get a sum of hours for these entries
-  list_timesheet_entries(mentee?:, date_range: )
-
-  - See internal details about a timesheet entry (only if it belongs to me)
-  - Update internal details about a timesheet entry (only if it belongs to me)
-  - Create a new timesheet entry for a mentee
-
-
-  Admin API
-  - List of all mentees with hours used, purchased, hours remaining, and the mentor name. Filter by mentor, sort by hours
-  - List of all mentors with hours for the current month
-
-  - List all users
-    - w/ mentor profile
-    - w/ mentee profile
-
-  - Show a user
-    - Create a mentee profile
-    - Edit a mentee profile
-      - Update mentor id, internal name, name, 
-    - Delete a mentee profile
-
-    - Create a mentor profile
-    - Delete a mentor profile
-
-
-  Anybody in Tzn:
-  - Get timeline events w/ timeline progresses preloaded for a user
-  - Mark event complete for user
-  - Mark incomplete for user
-
-
-  """
+  alias Tzn.Transizion.MentorTimelineEvent
+  alias Tzn.Transizion.MentorTimelineEventMarking
 
   def list_mentors do
     Repo.all(Mentor)
@@ -143,7 +83,6 @@ defmodule Tzn.Transizion do
   def change_mentor(%Mentor{} = mentor, attrs \\ %{}) do
     Mentor.changeset(mentor, attrs)
   end
-
 
   def list_mentees do
     Repo.all(Mentee)
@@ -220,7 +159,6 @@ defmodule Tzn.Transizion do
   def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
     Mentee.changeset(mentee, attrs)
   end
-
 
   @doc """
   Returns the list of strategy_sessions.
@@ -316,7 +254,6 @@ defmodule Tzn.Transizion do
     StrategySession.changeset(strategy_session, attrs)
   end
 
-
   def list_timesheet_entries do
     Repo.all(TimesheetEntry)
   end
@@ -404,5 +341,46 @@ defmodule Tzn.Transizion do
   """
   def change_timesheet_entry(%TimesheetEntry{} = timesheet_entry, attrs \\ %{}) do
     TimesheetEntry.changeset(timesheet_entry, attrs)
+  end
+
+  def mentor_timeline_events(mentor) do
+    timeline_events =
+      Repo.all(from t in MentorTimelineEvent)
+
+    completed_event_ids =
+      Repo.all(
+        from tem in MentorTimelineEventMarking,
+          where: tem.mentor_id == ^mentor.id and tem.completed == true
+      )
+      |> Enum.filter(fn marking -> marking.completed end)
+      |> Enum.map(fn marking -> marking.mentor_timeline_event_id end)
+      |> MapSet.new()
+
+    events =
+      timeline_events
+      |> Enum.map(fn event ->
+        Map.put(event, :completed_by_user, MapSet.member?(completed_event_ids, event.id))
+      end)
+  end
+
+  def create_mentor_timeline_event_marking(attrs \\ %{}) do
+    %MentorTimelineEventMarking{}
+    |> MentorTimelineEventMarking.changeset(attrs)
+    |> Repo.insert()
+  end
+  
+  def get_mentor_timeline_event_marking!(event_id, mentor_id) do
+    Repo.one(
+      from t in MentorTimelineEventMarking, where: t.mentor_timeline_event_id == ^event_id and t.mentor_id == ^mentor_id
+      )
+  end
+
+  def get_current_mentor(user_id) do
+    Repo.one(from m in Mentor, where: m.user_id == ^user_id)
+  end
+
+  
+  def delete_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = mentor_timeline_event_marking) do
+    Repo.delete(mentor_timeline_event_marking)
   end
 end

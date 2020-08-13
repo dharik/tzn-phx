@@ -14,12 +14,16 @@
   <%= error_tag f, :published %>
 
   <%= label f, :date %>
-  <%= datetime_select f, :date %>
+  <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>
 
   <%= label f, :title %>
   <%= text_input f, :title %>
   <%= error_tag f, :title %>
+
+  <%= label f, :email_subject %>
+  <%= text_input f, :email_subject %>
+  <%= error_tag f, :email_subject %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>

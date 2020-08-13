@@ -3,7 +3,8 @@ defmodule Tzn.Transizion.TimesheetEntry do
   import Ecto.Changeset
 
   schema "timesheet_entries" do
-    field :date, :naive_datetime
+    field :started_at, :naive_datetime
+    field :ended_at, :naive_datetime
     field :hours, :decimal
     field :notes, :string
     belongs_to :mentor, Tzn.Transizion.Mentor
@@ -15,7 +16,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
   @doc false
   def changeset(timesheet_entry, attrs) do
     timesheet_entry
-    |> cast(attrs, [:date, :notes, :hours, :mentor_id, :mentee_id])
-    |> validate_required([:date, :notes, :hours])
+    |> cast(attrs, [:started_at, :ended_at, :notes, :hours, :mentor_id, :mentee_id])
+    |> validate_required([:started_at, :ended_at, :notes, :hours, :mentor_id])
   end
 end

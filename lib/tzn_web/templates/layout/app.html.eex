@@ -3,31 +3,29 @@
   <head>
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
-    <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-    <title>Tzn · Phoenix Framework</title>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <title>Transizion</title>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header>
-      <section class="container">
-        <nav role="navigation">
-          <ul>
-            <%= if function_exported?(Routes, :live_dashboard_path, 2) do %>
-              <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index) %></li>
-              <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
-              <li>Mentor Timeline</li>
-            <% end %>
-          </ul>
-        </nav>
-        <a href="/mentor" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
-        </a>
-      </section>
+    <header class="container">
+      <a href="/mentor" class="phx-logo">
+        <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
+      </a>
+      <br />
+      <nav role="navigation" class="nav-inline text-align-center">
+      <ul>
+        <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
+        <li><%= link "Mentor Timeline", to: Routes.mentor_timeline_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
+        <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
+      </ul>
+      </nav>
     </header>
     <main role="main" class="container">
-      <p class="alert alert-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="alert alert-danger" role="alert"><%= get_flash(@conn, :error) %></p>
+      <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
       <%= @inner_content %>
     </main>
   </body>

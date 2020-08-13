@@ -9,9 +9,13 @@
   <%= select f, :mentee_id, [{'None', nil} | Enum.map(@mentees, fn mentee ->  {"#{mentee.name} #{mentee.internal_name}", mentee.id} end)] %>
   <%= error_tag f, :mentee_id %>
 
-  <%= label f, :date %>
-  <%= datetime_select f, :date %>
-  <%= error_tag f, :date %>
+  <%= label f, :started_at %>
+  <%= datetime_local_input f, :started_at %>
+  <%= error_tag f, :started_at %>
+  
+  <%= label f, :ended_at %>
+  <%= datetime_local_input f, :ended_at %>
+  <%= error_tag f, :ended_at %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>

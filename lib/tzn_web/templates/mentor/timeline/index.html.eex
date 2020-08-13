@@ -1,0 +1,32 @@
+<h2>Upcoming Events</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Date</td>
+      <th>Grade level</td>
+      <th>Details</td>
+      <th>Status</td>
+    </tr>
+  </thead>
+  <%= for event <- upcoming_events(@events) do %>
+    <%= render "event.html", Map.put(assigns, :event, event) %>
+  <% end %>
+</table>
+
+<h2>All:</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Date</td>
+      <th>Grade level</td>
+      <th>Details</td>
+      <th>Status</td>
+    </tr>
+  </thead>
+  <%= for event <- @events do %>
+    <%= render "event.html", Map.put(assigns, :event, event) %>
+  <% end %>
+</table>
+
+
+

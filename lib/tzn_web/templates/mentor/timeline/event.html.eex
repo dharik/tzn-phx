@@ -1,0 +1,26 @@
+
+<%= if @event.completed_by_user do %>
+  <tr class="background-light-200">
+<% else %>
+  <tr>
+<% end %>
+  <td>
+    <%= @event.date %>
+    <%= if @event.is_hard_deadline do %>
+      <span class="color-warning-600 font-weight-bold">HARD DEADLINE</span>
+    <% end %>
+  </td>
+  <td>
+    <%= @event.grade %>
+  </td>
+  <td>
+    <%= @event.notes %>
+  </td>
+  <td>
+    <%= if @event.completed_by_user do %>
+      <%= link "Mark incomplete", to: Routes.mentor_timeline_path(@conn, :delete, @event), method: :delete %>
+    <% else %>
+      <%= link "Mark complete", to: Routes.mentor_timeline_path(@conn, :create, %{event_id: @event.id}), method: :post %>
+    <% end %>
+  </td>
+</tr>

@@ -29,18 +29,6 @@ defmodule TznWeb.Router do
     get "/", MenteeController, :index
 
     #
-    # Mentor app
-    #
-    # /mentor/mentees - index
-    # /mentor/mentees/:mentee_id/ - show, edit
-    #   edit: internal note, internal name
-    #   show: timesheet entries (by me), all strategy sessions
-    #   
-
-    # /mentor/timeline
-
-
-    #
     # Admin app
     #
     # /admin/mentees
@@ -70,7 +58,7 @@ defmodule TznWeb.Router do
       resources "/mentees", Mentor.MenteeController
       resources "/timesheet_entries", Mentor.TimesheetEntryController, except: [:show]
       resources "/strategy_sessions", Mentor.StrategySessionController
-      # resources "/timeline", Mentor.MenteeController # todo
+      resources "/timeline", Mentor.TimelineController, only: [:index, :create, :delete]
     end
 
 
