@@ -30,7 +30,6 @@
         <td><%= timesheet_entry.started_at %></td>
         <td><%= timesheet_entry.ended_at %></td>
         <td><%= timesheet_entry.notes %></td>
-        <td><%= timesheet_entry.hours %></td>
         <td>
           <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %></span>
           <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete, data: [confirm: "Are you sure?"] %></span>

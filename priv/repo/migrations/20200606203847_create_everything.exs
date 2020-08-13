@@ -48,7 +48,6 @@ defmodule Tzn.Repo.Migrations.CreateEverything do
       add :started_at, :naive_datetime
       add :ended_at, :naive_datetime
       add :notes, :string
-      add :hours, :decimal
       add :mentor_id, references(:mentors, on_delete: :nothing)
       add :mentee_id, references(:mentees, on_delete: :nothing)
 
@@ -70,7 +69,7 @@ defmodule Tzn.Repo.Migrations.CreateEverything do
     create table(:contract_purchases) do
       add :mentee_id, references(:mentees, on_delete: :nothing)
 
-      add :hours, :float
+      add :hours, :decimal
       add :date, :naive_datetime
       add :notes, :string
       timestamps()

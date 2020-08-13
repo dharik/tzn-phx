@@ -21,10 +21,6 @@
   <%= textarea f, :notes %>
   <%= error_tag f, :notes %>
 
-  <%= label f, :hours %>
-  <%= number_input f, :hours, step: "any" %>
-  <%= error_tag f, :hours %>
-
   <div>
     <%= submit "Save" %>
   </div>
