@@ -1,48 +1,73 @@
 <h1 class="display-title"><%= @mentee.name %></h1>
 
-<h3>Internal data <%= link "(edit)", to: Routes.mentor_mentee_path(@conn, :edit, @mentee) %></h3>
-<p>
-  <strong>Internal Name:</strong>
-  <%= @mentee.internal_name || 'N/A' %>
-  <br />
-  <strong>Internal Note:</strong>
-  <%= @mentee.internal_note || 'N/A' %>
-</p>
 
-<hr />
+<div class="space-m"></div>
 
-<h3>Contract info</h3>
-<strong>Hours used:</strong>
-<%= @mentee.hour_counts.hours_used %>
-<br />
-<strong>Hours purchased:</strong>
-<%= @mentee.hour_counts.hours_purchased %>
 
-<%= if @mentee.hour_counts.hours_purchased |> Decimal.sub(@mentee.hour_counts.hours_used) |> Decimal.cmp(5) == :lt do %>
-  Few hours remaining
-<% end %>
+<p class="lead">Internal Information</p>
 
-<hr />
+<div class="flex flex-row">
+  <div class="flex-1">
+    <p>
+      Name: <br />
+      <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
+    </p>
+    <p>
+      Internal Note: <br />
+      <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
+    </p>
+  </div>
+  <div class="flex-1">
+    <%= if @mentee.hour_counts.hours_purchased |> Decimal.sub(@mentee.hour_counts.hours_used) |> Decimal.cmp(5) == :lt do %>
+      Few hours remaining
+    <% end %>
+    <p>
+      Hours used: <br />
+      <span class="color-grey"><%= @mentee.hour_counts.hours_used %></span>
+    </p>
+    <p>
+      Hours purchased:<br />
+      <span class="color-grey"><%= @mentee.hour_counts.hours_purchased %></span>
+    </p>
+  </div>
+</div>
+<div class="space-s"></div>
+<%= link "Edit internal information", to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
 
-<h3>Timesheet Entries</h3>
-<%= for timesheet_entry <- @mentee.timesheet_entries do %>
-  <p>
-    <strong><%= timesheet_entry.started_at %></strong>
-    <%= timesheet_entry.notes %>
-    <%= link "(Edit)", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %>
-  </p>
-<% end %>
-<%= link "New timesheet entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
 
-<h3>Strategy Sessions</h3>
+
+<div class="space-m"></div>
+
+<p class="lead">Strategy Sessions</p>
 <%= for strategy_session <- @mentee.strategy_sessions do %>
   <p>
-    <strong><%= strategy_session.title %></strong> <%= link "(edit)", to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session) %>
+    <%= strategy_session.title %> 
     <br />
-    <%= strategy_session.notes %>
+    <span class="color-grey"><%= strategy_session.notes %></span>
     <br />
     <small><%= strategy_session.date %> with <%= strategy_session.mentor.name %></small>
+    <%= link "Edit this strategy session", to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session), class: "button button-text button-xs" %>
   </p>
 <% end %>
-<%= link "New strategy session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary' %>
+<%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary button-border' %>
+
+<div class="space-m"></div>
+
+
+<p class="lead">Timesheet Entries</p>
+
+<%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary button-border' %>
+<div class="space-s"></div>
+<table>
+  <%= for timesheet_entry <- @mentee.timesheet_entries do %>
+    <tr>
+      <td><%= timesheet_entry.started_at %></td>
+      <td><span><%= timesheet_entry.notes %></span></td>
+      <td><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-border button-xs" %></td>
+    </tr>
+  <% end %>
+</table>
+
+
+
 

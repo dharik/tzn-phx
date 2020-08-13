@@ -48,7 +48,7 @@ defmodule Tzn.Repo.Migrations.CreateEverything do
       add :started_at, :naive_datetime
       add :ended_at, :naive_datetime
       add :notes, :string
-      add :hours, :float
+      add :hours, :decimal
       add :mentor_id, references(:mentors, on_delete: :nothing)
       add :mentee_id, references(:mentees, on_delete: :nothing)
 

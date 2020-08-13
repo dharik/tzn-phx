@@ -1,4 +1,4 @@
-<h2>My mentees</h2>
+<h1>My Mentees</h1>
 <table>
   <thead>
     <tr>
@@ -8,14 +8,14 @@
     </tr>
   </thead>
   <tbody>
-<%= for mentee <- @mentees do %>
-    <tr>
-      <td>
-        <%= link mentee.name, to: Routes.mentor_mentee_path(@conn, :show, mentee) %>
-      </td>
-      <td><%= mentee.internal_name %></td>
-      <td><%= mentee.hour_counts.hours_used %> / <%= mentee.hour_counts.hours_purchased %></td>
-    </tr>
-<% end %>
+    <%= for mentee <- @mentees do %>
+      <tr>
+        <td>
+          <%= link mentee.name, to: Routes.mentor_mentee_path(@conn, :show, mentee) %>
+        </td>
+        <td><%= mentee.internal_name %></td>
+        <td><%= mentee.hour_counts.hours_used %> / <%= mentee.hour_counts.hours_purchased %></td>
+      </tr>
+    <% end %>
   </tbody>
 </table>

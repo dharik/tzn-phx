@@ -10,7 +10,8 @@
   <thead>
     <tr>
       <th>Mentee Name</th>
-      <th>Date</th>
+      <th>Start Date</th>
+      <th>End Date</th>
       <th>Notes</th>
       <th>Hours</th>
       <th></th>
@@ -26,7 +27,8 @@
             N/A
           <% end %>
         </td>
-        <td><%= timesheet_entry.date %></td>
+        <td><%= timesheet_entry.started_at %></td>
+        <td><%= timesheet_entry.ended_at %></td>
         <td><%= timesheet_entry.notes %></td>
         <td><%= timesheet_entry.hours %></td>
         <td>
