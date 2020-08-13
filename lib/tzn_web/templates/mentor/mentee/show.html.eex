@@ -39,6 +39,7 @@
 <div class="space-m"></div>
 
 <p class="lead">Strategy Sessions</p>
+<%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary' %>
 <%= for strategy_session <- @mentee.strategy_sessions do %>
   <p>
     <%= strategy_session.title %> 
@@ -49,14 +50,13 @@
     <%= link "Edit this strategy session", to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session), class: "button button-text button-xs" %>
   </p>
 <% end %>
-<%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary button-border' %>
 
 <div class="space-m"></div>
 
 
 <p class="lead">Timesheet Entries</p>
 
-<%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary button-border' %>
+<%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
 <div class="space-s"></div>
 <table>
   <%= for timesheet_entry <- @mentee.timesheet_entries do %>
