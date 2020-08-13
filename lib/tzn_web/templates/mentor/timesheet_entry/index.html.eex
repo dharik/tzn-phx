@@ -1,5 +1,4 @@
-<h1>Timesheet Entries
-</h1>
+<h1>Timesheet Entries</h1>
 
 <div>
   <%= link "New Timesheet entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
@@ -13,7 +12,6 @@
       <th>Start Date</th>
       <th>End Date</th>
       <th>Notes</th>
-      <th>Hours</th>
       <th></th>
     </tr>
   </thead>
@@ -42,8 +40,24 @@
   </tbody>
 </table>
 
-<div class="text-align-center">
-  Total hours:
-  <%= total_hours(@timesheet_entries) %>
-</div>
+<h2>Hours by month</h2>
+<table>
+  <thead>
+    <tr>
+      <th>Year</th>
+      <th>Month</th>
+      <th>Total hours</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for month_data <- @monthly_report do %>
+      <tr>
+        <td><%= month_data.year %></td>
+        <td><%= month_data.month_name %></td>
+        <td><%= Decimal.round(month_data.hours, 2) %></td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
 

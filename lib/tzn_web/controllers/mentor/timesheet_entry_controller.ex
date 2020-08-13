@@ -3,14 +3,17 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
 
   import TznWeb.MentorPlugs
   plug :load_my_mentees
+  plug :load_mentor_profile
   
   alias Tzn.Transizion
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Repo
   
   def index(conn, _params) do
+    import Ecto.Query
     timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_user}) |> Repo.preload(:mentee)
-    render(conn, "index.html", timesheet_entries: timesheet_entries)
+    monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
+    render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report)
   end
 
   def new(conn, _params) do

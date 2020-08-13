@@ -7,6 +7,7 @@ defmodule Tzn.Transizion do
 
   alias Tzn.Repo
   alias Tzn.Transizion.Mentor
+  alias Tzn.Transizion.MentorHourCounts
   alias Tzn.Transizion.Mentee
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Transizion.StrategySession
@@ -259,7 +260,7 @@ defmodule Tzn.Transizion do
   end
 
   def list_timesheet_entries(%{mentor: mentor}) do
-    Repo.all(from e in TimesheetEntry, where: e.mentor_id == ^mentor.id)
+    Repo.all(from e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at])
   end
 
   @doc """
@@ -382,5 +383,9 @@ defmodule Tzn.Transizion do
   
   def delete_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = mentor_timeline_event_marking) do
     Repo.delete(mentor_timeline_event_marking)
+  end
+
+  def mentor_timesheet_aggregate(mentor_id) do
+    Repo.all(from h in MentorHourCounts, where: h.mentor_id == ^mentor_id)
   end
 end
