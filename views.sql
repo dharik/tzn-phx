@@ -1,5 +1,5 @@
  SELECT mentees.id AS mentee_id,
-    ( SELECT COALESCE(sum(date_part('minute'::text, timesheet_entries.ended_at - timesheet_entries.started_at) / 60::double precision), 0::numeric::double precision) AS "coalesce"
+    ( SELECT COALESCE(sum((date_part('epoch'::text, timesheet_entries.ended_at) - date_part('epoch'::text, timesheet_entries.started_at)) / 3600::double precision), 0::numeric::double precision) AS "coalesce"
            FROM timesheet_entries
           WHERE timesheet_entries.mentee_id = mentees.id) AS hours_used,
     ( SELECT COALESCE(sum(contract_purchases.hours)::double precision, 0::numeric::double precision) AS "coalesce"
