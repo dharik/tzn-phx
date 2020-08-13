@@ -17,7 +17,7 @@ defmodule Tzn.Transizion.StrategySession do
   @doc false
   def changeset(strategy_session, attrs) do
     strategy_session
-    |> cast(attrs, [:published, :date, :title, :notes, :mentee_id, :email_subject])
-    |> validate_required([:published, :date, :title, :notes, :mentee_id, :email_subject])
+    |> cast(attrs, [:published, :date, :title, :notes, :mentee_id, :mentor_id, :email_subject])
+    |> validate_required([:published, :date, :title, :notes, :mentee_id, :mentor_id, :email_subject])
   end
 end

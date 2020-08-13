@@ -3,6 +3,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
 
   import TznWeb.MentorPlugs
   plug :load_my_mentees
+  plug :load_mentor_profile
 
   alias Tzn.Transizion
   alias Tzn.Transizion.StrategySession
@@ -18,7 +19,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
   end
 
   def create(conn, %{"strategy_session" => strategy_session_params}) do
-    case Transizion.create_strategy_session(strategy_session_params) do
+    case Transizion.create_strategy_session(strategy_session_params |> Map.put_new("mentor_id", conn.assigns.current_user.id)) do
       {:ok, strategy_session} ->
         conn
         |> put_flash(:info, "Strategy session created successfully.")
