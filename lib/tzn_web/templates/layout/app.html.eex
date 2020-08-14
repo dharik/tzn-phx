@@ -21,6 +21,7 @@
           <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index) %></li>
           <li><%= link "Mentor Timeline", to: Routes.mentor_timeline_path(@conn, :index) %></li>
           <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
+          <li>TODO: Help</li>
         </ul>
       </nav>
     </header>

@@ -1,3 +1,6 @@
 <h1>New Timesheet entry</h1>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :create)) %>
+
+<div class="space-m"></div>
+<%= link "Back to my timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %>

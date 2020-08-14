@@ -5,7 +5,7 @@
 
 <%= if low_hours_warning?(@mentee.hour_counts.hours_used |> Decimal.to_float, @mentee.hour_counts.hours_purchased |> Decimal.to_float) do %>
   <div class="background-warning-200 padding-xxs border-radius text-align-center">
-    This student's contract hours are running low.
+    This student's contract hours are running low. Please inform Jason to reload hours.
   </div>
   <div class="space-m"></div>
 <% end %>

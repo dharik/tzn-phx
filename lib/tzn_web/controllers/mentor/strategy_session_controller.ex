@@ -7,7 +7,8 @@ defmodule TznWeb.Mentor.StrategySessionController do
 
   alias Tzn.Transizion
   alias Tzn.Transizion.StrategySession
-
+  alias Tzn.Repo
+  
   def index(conn, _params) do
     strategy_sessions = Transizion.list_strategy_sessions()
     render(conn, "index.html", strategy_sessions: strategy_sessions)
@@ -35,7 +36,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
   end
 
   def edit(conn, %{"id" => id}) do
-    strategy_session = Transizion.get_strategy_session!(id)
+    strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload(:mentee)
     changeset = Transizion.change_strategy_session(strategy_session)
     render(conn, "edit.html", strategy_session: strategy_session, changeset: changeset)
   end
