@@ -25,8 +25,8 @@
             N/A
           <% end %>
         </td>
-        <td><%= timesheet_entry.started_at %></td>
-        <td><%= timesheet_entry.ended_at %></td>
+        <td><%= timesheet_entry.started_at |> format_date %></td>
+        <td><%= timesheet_entry.ended_at |> format_date %></td>
         <td><%= timesheet_entry.notes %></td>
         <td>
           <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %></span>

@@ -5,15 +5,18 @@
     </div>
   <% end %>
 
-  <%= label f, :mentee_id %>
+  <p class="field">
+
+  <%= label f, :mentee_id, class: "select" %>
   <%= select f, :mentee_id, Enum.map(@mentees, fn mentee -> {"#{mentee.name} #{mentee.internal_name}", mentee.id} end) %>
   <%= error_tag f, :mentee_id %>
+  </p>
 
-  <%= label f, :published %>
+  <%= label f, :published, class: "control checkbox" %>
   <%= checkbox f, :published %>
   <%= error_tag f, :published %>
 
-  <%= label f, :date %>
+  <%= label f, :date, class: "control" %>
   <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>
 

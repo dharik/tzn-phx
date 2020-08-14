@@ -22,8 +22,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
     case Transizion.create_strategy_session(strategy_session_params |> Map.put_new("mentor_id", conn.assigns.current_user.id)) do
       {:ok, strategy_session} ->
         conn
-        |> put_flash(:info, "Strategy session created successfully.")
-        |> redirect(to: Routes.mentor_strategy_session_path(conn, :show, strategy_session))
+        |> redirect(to: Routes.mentor_strategy_session_path(conn, :edit, strategy_session))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset)

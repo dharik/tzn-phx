@@ -10,17 +10,18 @@
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
   </head>
   <body>
-    <header class="container">
-      <a href="/mentor" class="phx-logo">
-        <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
-      </a>
-      <br />
-      <nav role="navigation" class="nav-inline text-align-center">
-      <ul>
-        <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
-        <li><%= link "Mentor Timeline", to: Routes.mentor_timeline_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
-        <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index), class: 'button button-pill button-m button-primary button-border' %></li>
-      </ul>
+    <header class="container flex padding-m align-items-center">
+      <div class="flex-1">
+        <a href="/mentor" class="phx-logo">
+          <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
+        </a>
+      </div>
+      <nav role="navigation" class="nav-inline flex-1 text-align-center">
+        <ul>
+          <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index) %></li>
+          <li><%= link "Mentor Timeline", to: Routes.mentor_timeline_path(@conn, :index) %></li>
+          <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
+        </ul>
       </nav>
     </header>
     <main role="main" class="container">
