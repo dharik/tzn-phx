@@ -14,4 +14,18 @@ defmodule TznWeb.Mentor.TimelineView do
   def days_from_now(date) do
     NaiveDateTime.diff(date, NaiveDateTime.local_now(), :second) / 3600 / 24
   end
+
+  def grouped_by_year_month(events) do
+    events
+    |> Enum.group_by(fn e -> date_to_year_month_str(e.date) end)
+  end
+
+  def date_to_year_month_str(date) do
+    case Timex.format(date, "%B %Y", :strftime) do
+      {:ok, formatted} -> formatted
+      {:error, _} -> "N/A"
+      _ -> "N/A"
+    end
+  end
+
 end
