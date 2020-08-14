@@ -29,8 +29,8 @@
         <td><%= timesheet_entry.ended_at |> format_date %></td>
         <td><%= timesheet_entry.notes %></td>
         <td>
-          <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry) %></span>
-          <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete, data: [confirm: "Are you sure?"] %></span>
+          <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
+          <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
         </td>
       </tr>
 
@@ -53,7 +53,7 @@
     <%= for month_data <- @monthly_report do %>
       <tr>
         <td><%= month_data.year %></td>
-        <td><%= month_data.month_name %></td>
+        <td><%= month_data.month_name |> humanize %></td>
         <td><%= Decimal.round(month_data.hours, 2) %></td>
       </tr>
     <% end %>
