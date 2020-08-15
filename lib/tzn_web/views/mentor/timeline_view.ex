@@ -3,7 +3,7 @@ defmodule TznWeb.Mentor.TimelineView do
 
   def upcoming_events(events) do
     Enum.filter(events, fn event ->
-      days_from_now(event.date) > 0 && days_from_now(event.date) < 30
+      days_from_now(event.date) > 0 && days_from_now(event.date) < 360
     end)
   end
 
@@ -24,6 +24,14 @@ defmodule TznWeb.Mentor.TimelineView do
     case Timex.format(date, "%B %Y", :strftime) do
       {:ok, formatted} -> formatted
       {:error, _} -> "N/A"
+      _ -> "N/A"
+    end
+  end
+
+  def format_date(date) do
+    case Timex.format(date, "%b %d", :strftime) do
+      {:ok, formatted} -> formatted
+      {:error, _} -> date
       _ -> "N/A"
     end
   end

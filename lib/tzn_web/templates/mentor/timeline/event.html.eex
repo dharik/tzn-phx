@@ -1,26 +1,26 @@
 
 <%= if @event.completed_by_user do %>
-  <tr class="color-light-600">
+  <tr class="color-grey">
 <% else %>
   <tr>
 <% end %>
   <td>
-    <%= @event.date |> NaiveDateTime.to_date %>
+    <%= @event.date |> format_date %>
+  </td>
+  <td>
+    <%= @event.grade |> humanize %>
+  </td>
+  <td>
     <%= if @event.is_hard_deadline do %>
       <span class="color-warning-600 font-weight-bold">HARD DEADLINE</span>
+      <br />
     <% end %>
-  </td>
-  <td>
-    <%= @event.grade %>
-  </td>
-  <td>
     <%= @event.notes %>
   </td>
   <td>
-    <%= if @event.completed_by_user do %>
-      <%= link "Mark incomplete", to: Routes.mentor_timeline_path(@conn, :delete, @event), method: :delete, class: "button button-outline button-s" %>
-    <% else %>
-      <%= link "Mark complete", to: Routes.mentor_timeline_path(@conn, :create, %{event_id: @event.id}), method: :post, class: "button button-primary button-s" %>
-    <% end %>
+    <textarea></textarea>
+      <%= link "Save", to: Routes.mentor_timeline_path(@conn, :create, %{event_id: @event.id}), method: :post, class: "button button-primary button-s" %>
+      <input type="checkbox" /> Completed?
+    
   </td>
 </tr>
