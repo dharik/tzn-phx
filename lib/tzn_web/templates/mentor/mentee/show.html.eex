@@ -54,6 +54,9 @@
       <br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
+      <%= if strategy_session.published do %>
+        <span class="color-success">(published)</span>
+      <% end %>
       </small>
       <br />
       <%= link "Edit", 

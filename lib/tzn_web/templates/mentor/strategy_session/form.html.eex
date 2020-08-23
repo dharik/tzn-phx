@@ -5,6 +5,13 @@
     </div>
   <% end %>
 
+  <%= if @changeset.data.published do %>
+    <p class="color-info">
+      This strategy session is <strong>published</strong>. That means it is locked for editing
+      because an email has or will soon be delivered to the mentee + parent(s).
+    </p>
+  <% end %>
+
   <p class="field">
     <%= label f, :mentee_id, class: "select" %>
     <%= select f, :mentee_id, Enum.map(@mentees, fn mentee -> {"#{mentee.name} #{mentee.internal_name}", mentee.id} end) %>
@@ -35,15 +42,17 @@
   <% end %>
   <%= error_tag f, :published %>
 
-  <p class="color-grey">
-    Once published, an email will be sent to the parent with details of the strategy session.
-    The session will also be locked so no edits can be made once the email has been sent.
-  </p>
+
+  <%= unless @changeset.data.published do %>
+    <%= submit "Save", name: "submit_btn", value: "save", class: "button button-primary button-border" %>
+    <span class="space-m"></span>
+    <%= submit "Save & Publish", name: "submit_btn", value: "publish", class: "button button-primary" %>
+ 
+    <p class="color-grey">
+      Once published, the session will be locked to editing and an email will be
+      sent to the mentee and parent(s) with details of the strategy session.
+    </p>
+  <% end %>
 
 
-  <div class="space-m"></div>
-
-  <div>
-    <%= submit "Save" %>
-  </div>
 <% end %>

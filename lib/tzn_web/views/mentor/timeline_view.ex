@@ -36,4 +36,19 @@ defmodule TznWeb.Mentor.TimelineView do
     end
   end
 
+  def is_complete?(event, event_markings) do
+    false
+    # case event_markings |> Map.get(event.id) do
+    #   nil -> false
+    #   marking -> marking.completed
+    # end
+  end
+
+  def get_marking(event, event_markings) do
+    event_markings |> Map.get(event.id)
+  end
+  
+  def marking_changeset do
+
+  end
 end

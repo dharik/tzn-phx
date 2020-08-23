@@ -1,9 +1,10 @@
 
-<%= if @event.completed_by_user do %>
+<%= if is_complete?(@event, @event_markings) do %>
   <tr class="color-grey">
 <% else %>
   <tr>
 <% end %>
+<%= form_for @conn, Routes.mentor_timeline_path(@conn, :update), fn f -> %>
   <td>
     <%= @event.date |> format_date %>
   </td>
@@ -16,11 +17,22 @@
       <br />
     <% end %>
     <%= @event.notes %>
+
   </td>
   <td>
-    <textarea></textarea>
-      <%= link "Save", to: Routes.mentor_timeline_path(@conn, :create, %{event_id: @event.id}), method: :post, class: "button button-primary button-s" %>
-      <input type="checkbox" /> Completed?
-    
+    <%= for mentee <- @mentees do %>
+      <%= checkbox f, :completed_for_mentees %> <%= mentee.name %>
+    <% end %>
   </td>
+  <td>
+    <%= textarea f, :notes, placeholder: "test" %>
+    <%= hidden_input f, :event_id, value: @event.id %>
+    <%= if get_marking(@event, @event_markings) do %>
+      <%= hidden_input f, :id, value: get_marking(@event, @event_markings).id %>
+    <% end %>
+  </td>
+  <td>
+    <%= submit "Save", class: "button button-primary button-s" %>
+  </td>
+<%= end %>
 </tr>

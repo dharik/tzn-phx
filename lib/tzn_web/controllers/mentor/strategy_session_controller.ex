@@ -8,7 +8,8 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Transizion
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo
-  
+  import IEx
+
   def index(conn, _params) do
     strategy_sessions = Transizion.list_strategy_sessions()
     render(conn, "index.html", strategy_sessions: strategy_sessions)
@@ -20,7 +21,10 @@ defmodule TznWeb.Mentor.StrategySessionController do
   end
 
   def create(conn, %{"strategy_session" => strategy_session_params}) do
-    case Transizion.create_strategy_session(strategy_session_params |> Map.put_new("mentor_id", conn.assigns.current_user.id)) do
+    case Transizion.create_strategy_session(
+           strategy_session_params
+           |> Map.put_new("mentor_id", conn.assigns.current_user.id)
+         ) do
       {:ok, strategy_session} ->
         conn
         |> redirect(to: Routes.mentor_strategy_session_path(conn, :edit, strategy_session))
@@ -41,10 +45,24 @@ defmodule TznWeb.Mentor.StrategySessionController do
     render(conn, "edit.html", strategy_session: strategy_session, changeset: changeset)
   end
 
-  def update(conn, %{"id" => id, "strategy_session" => strategy_session_params}) do
+  def update(conn, %{
+        "id" => id,
+        "strategy_session" => strategy_session_params,
+        "submit_btn" => submit_btn
+      }) do
     strategy_session = Transizion.get_strategy_session!(id)
 
-    case Transizion.update_strategy_session(strategy_session, strategy_session_params) do
+    published =
+      if submit_btn == "publish" do
+        true
+      else
+        false
+      end
+
+    case Transizion.update_strategy_session(
+           strategy_session,
+           strategy_session_params |> Map.put("published", published)
+         ) do
       {:ok, strategy_session} ->
         conn
         |> put_flash(:info, "Strategy session updated successfully.")

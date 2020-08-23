@@ -260,7 +260,9 @@ defmodule Tzn.Transizion do
   end
 
   def list_timesheet_entries(%{mentor: mentor}) do
-    Repo.all(from e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at])
+    Repo.all(
+      from e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at]
+    )
   end
 
   @doc """
@@ -344,24 +346,19 @@ defmodule Tzn.Transizion do
     TimesheetEntry.changeset(timesheet_entry, attrs)
   end
 
-  def mentor_timeline_events(mentor) do
-    timeline_events =
-      Repo.all(from t in MentorTimelineEvent)
+  def mentor_timeline_events do
+    Repo.all(MentorTimelineEvent)
+  end
 
-    completed_event_ids =
-      Repo.all(
-        from tem in MentorTimelineEventMarking,
-          where: tem.mentor_id == ^mentor.id and tem.completed == true
-      )
-      |> Enum.filter(fn marking -> marking.completed end)
-      |> Enum.map(fn marking -> marking.mentor_timeline_event_id end)
-      |> MapSet.new()
-
-    events =
-      timeline_events
-      |> Enum.map(fn event ->
-        Map.put(event, :completed_by_user, MapSet.member?(completed_event_ids, event.id))
-      end)
+  def mentor_timeline_event_markings(mentor) do
+    markings = Repo.all(
+      from m in MentorTimelineEventMarking,
+        where: m.mentor_id == ^mentor.id
+    )
+    
+    # Returns a map of event id: marking for easy lookups later.
+    # assumes only one marking per event
+    Map.new(markings, fn marking -> {marking.mentor_timeline_event_id, marking} end)
   end
 
   def create_mentor_timeline_event_marking(attrs \\ %{}) do
@@ -369,20 +366,22 @@ defmodule Tzn.Transizion do
     |> MentorTimelineEventMarking.changeset(attrs)
     |> Repo.insert()
   end
-  
+
   def get_mentor_timeline_event_marking!(event_id, mentor_id) do
     Repo.one(
-      from t in MentorTimelineEventMarking, where: t.mentor_timeline_event_id == ^event_id and t.mentor_id == ^mentor_id
-      )
+      from t in MentorTimelineEventMarking,
+        where: t.mentor_timeline_event_id == ^event_id and t.mentor_id == ^mentor_id
+    )
+  end
+
+  def delete_mentor_timeline_event_marking(
+        %MentorTimelineEventMarking{} = mentor_timeline_event_marking
+      ) do
+    Repo.delete(mentor_timeline_event_marking)
   end
 
   def get_current_mentor(user_id) do
     Repo.one(from m in Mentor, where: m.user_id == ^user_id)
-  end
-
-  
-  def delete_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = mentor_timeline_event_marking) do
-    Repo.delete(mentor_timeline_event_marking)
   end
 
   def mentor_timesheet_aggregate(mentor_id) do

@@ -8,6 +8,8 @@
         <th>Grade level</th>
         <th>Details</th>
         <th>Status</th>
+        <th>My notes</th>
+        <th>Save</th>
       </tr>
     </thead>
     <tbody>
@@ -28,6 +30,8 @@
         <th>Grade level</th>
         <th>Details</th>
         <th>Status</th>
+        <th>My notes</th>
+        <th>Save</th>
       </tr>
     </thead>
     <tbody>
