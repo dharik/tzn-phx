@@ -14,6 +14,9 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.MentorTimelineEvent
   alias Tzn.Transizion.MentorTimelineEventMarking
 
+  require IEx
+
+
   def list_mentors do
     Repo.all(Mentor)
   end
@@ -367,17 +370,14 @@ defmodule Tzn.Transizion do
     |> Repo.insert()
   end
 
-  def get_mentor_timeline_event_marking!(event_id, mentor_id) do
-    Repo.one(
-      from t in MentorTimelineEventMarking,
-        where: t.mentor_timeline_event_id == ^event_id and t.mentor_id == ^mentor_id
-    )
+  def update_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = marking, attrs) do
+    marking
+    |> MentorTimelineEventMarking.changeset(attrs)
+    |> Repo.update()
   end
 
-  def delete_mentor_timeline_event_marking(
-        %MentorTimelineEventMarking{} = mentor_timeline_event_marking
-      ) do
-    Repo.delete(mentor_timeline_event_marking)
+  def get_mentor_timeline_event_marking!(id) do
+    Repo.get!(MentorTimelineEventMarking, id)
   end
 
   def get_current_mentor(user_id) do

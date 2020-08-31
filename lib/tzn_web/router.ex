@@ -59,7 +59,7 @@ defmodule TznWeb.Router do
       resources "/timesheet_entries", Mentor.TimesheetEntryController, except: [:show]
       resources "/strategy_sessions", Mentor.StrategySessionController
       get "/timeline", Mentor.TimelineController, :index
-      post "/timeline", Mentor.TimelineController, :update
+      post "/timeline", Mentor.TimelineController, :update_or_create
     end
 
 

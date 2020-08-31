@@ -1,5 +1,6 @@
 defmodule TznWeb.Mentor.TimelineView do
   use TznWeb, :view
+  import IEx
 
   def upcoming_events(events) do
     Enum.filter(events, fn event ->
@@ -36,19 +37,14 @@ defmodule TznWeb.Mentor.TimelineView do
     end
   end
 
-  def is_complete?(event, event_markings) do
+  def is_complete_for_mentee(event_marking, %{ id: mentee_id }) when is_nil(event_marking) do
     false
-    # case event_markings |> Map.get(event.id) do
-    #   nil -> false
-    #   marking -> marking.completed
-    # end
-  end
-
-  def get_marking(event, event_markings) do
-    event_markings |> Map.get(event.id)
   end
   
-  def marking_changeset do
-
+  def is_complete_for_mentee(event_marking, %{ id: mentee_id}) do
+    event_marking.completed_for_mentees
+    |> Enum.find(fn m -> m == mentee_id end)
+    |> is_integer
   end
+
 end

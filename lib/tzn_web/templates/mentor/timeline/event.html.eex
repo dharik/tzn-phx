@@ -1,38 +1,82 @@
 
-<%= if is_complete?(@event, @event_markings) do %>
-  <tr class="color-grey">
+<%
+  event_marking = @event_markings |> Map.get(@event.id)
+%>
+<%= if event_marking do %>
+  <tr>
+  <%= form_for @conn, Routes.mentor_timeline_path(@conn, :update_or_create), fn f -> %>
+    <%= hidden_input f, :event_marking_id, value: event_marking.id %>
+    <td>
+      <%= @event.date |> format_date %>
+    </td>
+    <td>
+      <%= @event.grade |> humanize %>
+    </td>
+    <td>
+      <%= if @event.is_hard_deadline do %>
+        <span class="color-warning-600 font-weight-bold">HARD DEADLINE</span>
+        <br />
+      <% end %>
+      <%= @event.notes %>
+    </td>
+    <td>
+      <%= for mentee <- @mentees do %>
+
+        <%= checkbox f, 
+            :completed_for_mentees,
+            name: "completed_for_mentees[]",
+            checked_value: mentee.id,
+            checked: event_marking |> is_complete_for_mentee(mentee),
+            hidden_input: false
+        %> <%= mentee.name %>
+      <% end %>
+    </td>
+    <td>
+      <%= textarea f, :notes, value: event_marking.notes %>
+      <%= hidden_input f, :event_id, value: @event.id %>
+    </td>
+    <td>
+      <%= submit "Save", class: "button button-primary button-s" %>
+    </td>
+  <%= end %>
+  </tr>
 <% else %>
   <tr>
-<% end %>
-<%= form_for @conn, Routes.mentor_timeline_path(@conn, :update), fn f -> %>
-  <td>
-    <%= @event.date |> format_date %>
-  </td>
-  <td>
-    <%= @event.grade |> humanize %>
-  </td>
-  <td>
-    <%= if @event.is_hard_deadline do %>
-      <span class="color-warning-600 font-weight-bold">HARD DEADLINE</span>
-      <br />
-    <% end %>
-    <%= @event.notes %>
+  <%= form_for @conn, Routes.mentor_timeline_path(@conn, :update_or_create), fn f -> %>
+    <td>
+      <%= @event.date |> format_date %>
+    </td>
+    <td>
+      <%= @event.grade |> humanize %>
+    </td>
+    <td>
+      <%= if @event.is_hard_deadline do %>
+        <span class="color-warning-600 font-weight-bold">HARD DEADLINE</span>
+        <br />
+      <% end %>
+      <%= @event.notes %>
 
-  </td>
-  <td>
-    <%= for mentee <- @mentees do %>
-      <%= checkbox f, :completed_for_mentees %> <%= mentee.name %>
-    <% end %>
-  </td>
-  <td>
-    <%= textarea f, :notes, placeholder: "test" %>
-    <%= hidden_input f, :event_id, value: @event.id %>
-    <%= if get_marking(@event, @event_markings) do %>
-      <%= hidden_input f, :id, value: get_marking(@event, @event_markings).id %>
-    <% end %>
-  </td>
-  <td>
-    <%= submit "Save", class: "button button-primary button-s" %>
-  </td>
-<%= end %>
-</tr>
+    </td>
+    <td>
+      <%= for mentee <- @mentees do %>
+        <%= checkbox f, 
+            :completed_for_mentees,
+            name: "completed_for_mentees[]",
+            checked_value: mentee.id,
+            checked: false,
+            hidden_input: false
+        %> <%= mentee.name %>
+      <% end %>
+    </td>
+    <td>
+      <%= textarea f, :notes %>
+      <%= hidden_input f, :event_id, value: @event.id %>
+    </td>
+    <td>
+      <%= submit "Save", class: "button button-primary button-s" %>
+    </td>
+  <%= end %>
+  </tr>
+<% end %>
+
+
