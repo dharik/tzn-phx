@@ -22,6 +22,22 @@
         Internal Note: <br />
         <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
       </p>
+      <p>
+        Parents: <br />
+        <%= if @mentee.parent1_email do %>
+          <span class="color-grey">
+            <%= @mentee.parent1_email %>
+            <%= if @mentee.parent1_name, do: "<#{@mentee.parent1_name}>" %>
+          </span>
+        <% end %>
+        <br />
+        <%= if @mentee.parent2_email do %>
+          <span class="color-grey">
+            <%= @mentee.parent2_email %>
+            <%= if @mentee.parent2_name, do: "<#{@mentee.parent2_name}>" %>
+          </span>
+        <% end %>
+      </p>
     </div>
     <div class="flex-1">
       <p>
@@ -83,7 +99,3 @@
     <% end %>
   </table>
 </div>
-
-
-
-

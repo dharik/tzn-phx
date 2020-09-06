@@ -7,6 +7,12 @@ defmodule Tzn.Transizion.Mentee do
     field :internal_name, :string
     field :internal_note, :string
 
+    field :parent1_email, :string
+    field :parent1_name, :string
+
+    field :parent2_email, :string
+    field :parent2_name, :string
+
     belongs_to :mentor, Tzn.Transizion.Mentor
     belongs_to :user, Tzn.Users.User
 
@@ -21,7 +27,14 @@ defmodule Tzn.Transizion.Mentee do
   @doc false
   def changeset(mentee, attrs) do
     mentee
-    |> cast(attrs, [:internal_name, :internal_note])
+    |> cast(attrs, [
+      :internal_name,
+      :internal_note,
+      :parent1_email,
+      :parent1_name,
+      :parent2_email,
+      :parent2_name
+    ])
   end
 
   def admin_changeset(mentee, attrs) do
