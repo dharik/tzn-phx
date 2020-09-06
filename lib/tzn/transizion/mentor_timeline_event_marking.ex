@@ -20,7 +20,7 @@ defmodule Tzn.Transizion.MentorTimelineEventMarking do
     |> validate_required([:completed_for_mentees, :mentor_id, :mentor_timeline_event_id])
   end
 
- 
+  # Use an empty array if completed_for_mentees doesn't exist
   def set_default_completed_for_mentees(changeset, attrs) do
     if attrs |> Map.get("completed_for_mentees") do
       changeset
