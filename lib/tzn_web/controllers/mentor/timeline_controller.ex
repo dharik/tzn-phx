@@ -8,10 +8,6 @@ defmodule TznWeb.Mentor.TimelineController do
   plug :load_mentor_profile
 
   alias Tzn.Transizion
-  alias Tzn.Transizion.Timeline
-  alias Tzn.Transizion.TimelineEvent
-  alias Tzn.Transizion.TimelineEventMarking
-  alias Tzn.Repo
 
   require IEx
 
