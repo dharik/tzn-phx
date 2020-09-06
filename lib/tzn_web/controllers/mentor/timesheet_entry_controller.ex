@@ -10,7 +10,6 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   alias Tzn.Repo
   
   def index(conn, _params) do
-    import Ecto.Query
     timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_user}) |> Repo.preload(:mentee)
     monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
     render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report)

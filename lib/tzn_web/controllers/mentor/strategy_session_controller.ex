@@ -8,7 +8,6 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Transizion
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo
-  import IEx
 
   def index(conn, _params) do
     strategy_sessions = Transizion.list_strategy_sessions()

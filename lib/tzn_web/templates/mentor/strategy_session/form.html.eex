@@ -30,7 +30,7 @@
   <%= textarea f, :notes %>
   <%= error_tag f, :notes %>
 
-  <hr />
+  <div class="space-l"></div>
 
 
   <%= label f, :email_subject %>

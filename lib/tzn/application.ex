@@ -14,7 +14,8 @@ defmodule Tzn.Application do
       # Start the PubSub system
       {Phoenix.PubSub, name: Tzn.PubSub},
       # Start the Endpoint (http/https)
-      TznWeb.Endpoint
+      TznWeb.Endpoint,
+      Tzn.Scheduler
       # Start a worker by calling: Tzn.Worker.start_link(arg)
       # {Tzn.Worker, arg}
     ]

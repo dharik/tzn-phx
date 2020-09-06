@@ -33,3 +33,9 @@ import_config "#{Mix.env()}.exs"
 config :tzn, :pow,
   user: Tzn.Users.User,
   repo: Tzn.Repo
+
+
+config :tzn, Tzn.Scheduler,
+jobs: [
+  {"@daily",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
+]
