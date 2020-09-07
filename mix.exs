@@ -47,7 +47,8 @@ defmodule Tzn.MixProject do
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
       {:pow, "~> 1.0.20"},
-      {:quantum, "~> 3.0"}
+      {:quantum, "~> 3.0"},
+      {:httpoison, "~> 1.6"}
     ]
   end
 
