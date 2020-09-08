@@ -19,7 +19,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     sessions =
       Repo.all(
         from s in StrategySession,
-          where: s.emailed == false and s.published == true
+          where: s.emailed == false and s.published ==  true
       )
       |> Repo.preload([:mentee, :mentor])
 
@@ -62,6 +62,8 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
 
       {:ok, body_json} = Jason.encode(body)
       IO.inspect(HTTPoison.post(url, body_json, headers))
+
+      StrategySession.email_sent_changeset(s) |> Repo.update
     end)
   end
 end
