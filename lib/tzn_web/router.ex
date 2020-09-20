@@ -60,6 +60,7 @@ defmodule TznWeb.Router do
       resources "/strategy_sessions", Mentor.StrategySessionController
       get "/timeline", Mentor.TimelineController, :index
       post "/timeline", Mentor.TimelineController, :update_or_create
+      get "/help", Mentor.HelpController, :show
     end
 
 
