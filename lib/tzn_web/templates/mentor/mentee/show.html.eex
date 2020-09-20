@@ -62,7 +62,7 @@
 <div class="border border-radius padding-s">
   <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary' %>
 
-  <%= for strategy_session <- @mentee.strategy_sessions do %>
+  <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>
       <span class="lead-xs"><%= strategy_session.title %></span>
       <br />
@@ -95,7 +95,7 @@
   <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
   <div class="space-s"></div>
   <table>
-    <%= for timesheet_entry <- @mentee.timesheet_entries do %>
+    <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
       <tr>
         <td><%= timesheet_entry.started_at |> format_date %></td>
         <td><span><%= timesheet_entry.notes %></span></td>
