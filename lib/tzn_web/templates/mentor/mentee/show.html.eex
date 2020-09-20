@@ -26,15 +26,13 @@
         Parents: <br />
         <%= if @mentee.parent1_email do %>
           <span class="color-grey">
-            <%= @mentee.parent1_email %>
-            <%= if @mentee.parent1_name, do: "<#{@mentee.parent1_name}>" %>
+            <%= "#{@mentee.parent1_name} <#{@mentee.parent1_email}>" %>
           </span>
         <% end %>
         <br />
-        <%= if @mentee.parent2_email do %>
+         <%= if @mentee.parent2_email do %>
           <span class="color-grey">
-            <%= @mentee.parent2_email %>
-            <%= if @mentee.parent2_name, do: "<#{@mentee.parent2_name}>" %>
+            <%= "#{@mentee.parent2_name} <#{@mentee.parent2_email}>" %>
           </span>
         <% end %>
       </p>
