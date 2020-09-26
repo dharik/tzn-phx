@@ -5,16 +5,11 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
   alias Tzn.Repo
 
   @auth ""
-  @template_id = ""
-  @sendgrid_url = "https://api.sendgrid.com/v3/mail/send"
+  @template_id ""
+  @sendgrid_url "https://api.sendgrid.com/v3/mail/send"
 
 
   def run do
-    headers = [
-      Authorization: @auth,
-      "Content-Type": "application/json"
-    ]
-
     sessions =
       Repo.all(
         from s in StrategySession,
@@ -39,7 +34,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
       end
 
       if s.mentee.parent2_email do
-        end_email(
+        send_email(
           s.mentee.parent2_email,
           s.mentee.parent2_name,
           s.mentee.name,
@@ -65,14 +60,19 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     session_title,
     subject,
     from_email,
-    from_name,
+    from_name
   ) do
+    headers = [
+      Authorization: @auth,
+      "Content-Type": "application/json"
+    ]
+
     body = %{
       personalizations: [
         %{
           to: [
             %{
-              email: to_email
+              email: to_email,
               name: to_name
             }
           ],
