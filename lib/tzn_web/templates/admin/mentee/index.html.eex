@@ -1,0 +1,40 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Name</th>
+      <th>Internal Name</th>
+      <th>Created at</th>
+      <th>Current Mentor</th>
+      <th>Hours used/purchased</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for mentee <- @mentees do %>
+      <tr>
+        <td>
+          <%= mentee.id %>
+        </td>
+        <td>
+          <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
+        </td>
+        <td>
+          <%= mentee.internal_name %>
+        </td>
+        <td>
+          <%= mentee.inserted_at %>
+        </td>
+        <td>
+          <%= if mentee.mentor do %>
+            <%= mentee.mentor.name %>
+          <% else %>
+            <span class="color-error">No mentor</span>
+          <% end %>
+        </td>
+        <td>
+          <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

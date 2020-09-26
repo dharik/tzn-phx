@@ -7,9 +7,14 @@ defmodule Tzn.Users do
 
   is_admin?(user)
 
-  """
+  make_admin(user)
+  remove_admin(user)
+  is_admin?(user)
 
+  """
+  alias Tzn.Repo
   alias Tzn.Users.Admin
+  alias Tzn.Users.User
 
   @doc """
   Returns the list of admins.
@@ -23,6 +28,30 @@ defmodule Tzn.Users do
   def list_admins do
     Repo.all(Admin)
   end
+
+  def list_users do
+    Repo.all(User) |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
+  end
+
+  def make_admin(user) do
+    # Create an admin record with user_id = user.id
+  end
+
+  def remove_admin(user) do
+    # Remove admin record where user_id = user.id
+  end
+
+  def is_admin?(user) do
+    p = user |> Repo.preload(:admin_profile)
+
+    if p do
+      true
+    else
+      false
+    end
+  end
+
+
 
   @doc """
   Gets a single admin.

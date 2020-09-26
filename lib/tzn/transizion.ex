@@ -88,6 +88,8 @@ defmodule Tzn.Transizion do
     Mentor.changeset(mentor, attrs)
   end
 
+  # Mentee stuff
+
   def list_mentees do
     Repo.all(Mentee)
   end
@@ -96,72 +98,41 @@ defmodule Tzn.Transizion do
     Repo.all(from m in Mentee, where: m.mentor_id == ^mentor.id)
   end
 
-  @doc """
-  Gets a single mentee.
-
-  Raises `Ecto.NoResultsError` if the Mentee does not exist.
-
-  """
   def get_mentee!(id), do: Repo.get!(Mentee, id)
+  def delete_mentee(%Mentee{} = mentee) do
+    Repo.delete(mentee)
+  end
 
-  @doc """
-  Creates a mentee.
+  def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
+    Mentee.changeset(mentee, attrs)
+  end
 
-  ## Examples
-
-      iex> create_mentee(%{field: value})
-      {:ok, %Mentee{}}
-
-      iex> create_mentee(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def create_mentee(attrs \\ %{}) do
     %Mentee{}
     |> Mentee.changeset(attrs)
     |> Repo.insert()
   end
 
-  @doc """
-  Updates a mentee.
-
-  ## Examples
-
-      iex> update_mentee(mentee, %{field: new_value})
-      {:ok, %Mentee{}}
-
-      iex> update_mentee(mentee, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
   def update_mentee(%Mentee{} = mentee, attrs) do
     mentee
     |> Mentee.changeset(attrs)
     |> Repo.update()
   end
 
-  @doc """
-  Deletes a mentee.
-
-  ## Examples
-
-      iex> delete_mentee(mentee)
-      {:ok, %Mentee{}}
-
-      iex> delete_mentee(mentee)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_mentee(%Mentee{} = mentee) do
-    Repo.delete(mentee)
+  def admin_change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
+    Mentee.admin_changeset(mentee, attrs)
   end
 
-  # def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
-  #   Mentee.changeset(mentee, attrs)
-  # end
+  def admin_create_mentee(attrs \\ %{}) do
+    %Mentee{}
+    |> Mentee.admin_changeset(attrs)
+    |> Repo.insert()
+  end
 
-  def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
-    Mentee.changeset(mentee, attrs)
+  def admin_update_mentee(%Mentee{} = mentee, attrs) do
+    mentee
+    |> Mentee.admin_changeset(attrs)
+    |> Repo.update()
   end
 
   @doc """

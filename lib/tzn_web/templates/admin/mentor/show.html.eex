@@ -1,5 +1,3 @@
-<h1>Show Mentor</h1>
-
 <ul>
 
   <li>
@@ -9,10 +7,9 @@
 
   Mentees:
   <%= for mentee <- @mentor.mentees do %>
-    <li><%= link mentee.name, to: Routes.mentee_path(@conn, :show, mentee) %></li>
+    <li><%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %></li>
   <% end %>
 
 </ul>
 
-<span><%= link "Edit", to: Routes.mentor_path(@conn, :edit, @mentor) %></span>
-<span><%= link "Back", to: Routes.mentor_path(@conn, :index) %></span>
+<span><%= link "Edit", to: Routes.admin_mentor_path(@conn, :edit, @mentor) %></span>

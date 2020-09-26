@@ -67,12 +67,11 @@ defmodule TznWeb.Router do
     scope "/admin", as: :admin do
       pipe_through [:browser, :protected]
 
-      get "/", MenteeController, :index
-      resources "/mentors", MentorController
-      resources "/mentees", MenteeController
-      resources "/users", MenteeController
-      resources "/admins", AdminController
-      resources "/contract_purchases", AdminController
+      resources "/users", Admin.UserController
+      resources "/mentees", Admin.MenteeController
+      resources "/mentors", Admin.MentorController
+      resources "/strategy_sessions", Admin.StrategySessionController
+      resources "/timesheet_entries", Admin.TimesheetEntryController
     end
   end
 

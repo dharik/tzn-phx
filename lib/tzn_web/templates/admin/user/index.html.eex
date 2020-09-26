@@ -1,0 +1,44 @@
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Created at</th>
+      <th>Admin?</th>
+      <th>Mentor?</th>
+      <th>Mentee?</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for user <- @users do %>
+      <tr>
+        <td>
+          <%= user.id %>
+        </td>
+        <td>
+          <%= user.email %>
+        </td>
+        <td>
+          <%= user.inserted_at %>
+        </td>
+        <td>
+          <%= if user.admin_profile do %>
+            Admin
+          <% end %>
+        </td>
+        <td>
+          <%= if user.mentor_profile do %>
+            <%= link user.mentor_profile.name, to: Routes.admin_mentor_path(@conn, :show, user.mentor_profile) %>
+          <% else %>
+            Create mentor profile
+          <% end %>
+        </td>
+        <td>
+          <%= if user.mentee_profile do %>
+            <%= link user.mentee_profile.name, to: Routes.admin_mentee_path(@conn, :show, user.mentee_profile) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

@@ -39,6 +39,17 @@ defmodule Tzn.Transizion.Mentee do
 
   def admin_changeset(mentee, attrs) do
     mentee
-    |> cast(attrs, [:internal_name, :internal_note, :mentor])
+    |> cast(attrs, [
+      :name,
+      :internal_name,
+      :internal_note,
+      :parent1_email,
+      :parent1_name,
+      :parent2_email,
+      :parent2_name,
+      :mentor_id,
+      :user_id
+    ])
+    |> validate_required([:name])
   end
 end

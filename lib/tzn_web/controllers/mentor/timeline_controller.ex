@@ -9,7 +9,6 @@ defmodule TznWeb.Mentor.TimelineController do
 
   alias Tzn.Transizion
 
-  require IEx
 
   def index(conn, _params) do
     events = Transizion.mentor_timeline_events()
