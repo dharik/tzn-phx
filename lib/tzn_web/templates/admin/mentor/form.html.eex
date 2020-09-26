@@ -9,6 +9,11 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
+  <%= label f, :user_id  %>
+  <%= select f, :user_id, [{'None', nil} | Enum.map(@users, fn user ->  {"#{user.email}", user.id} end)] %>
+  <%= error_tag f, :user_id %>
+
+  <div class="space-m"></div>
   <div>
     <%= submit "Save" %>
   </div>

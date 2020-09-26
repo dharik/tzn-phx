@@ -1,6 +1,19 @@
 <h1>Edit Timesheet entry</h1>
 
+<p>
+  Mentor:<br />
+  <%= link @timesheet_entry.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @timesheet_entry.mentor) %>
+</p>
+
+<%= if @timesheet_entry.mentee do %>
+  <p>
+    For Mentee:<br />
+  <%= link @timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, @timesheet_entry.mentee) %>
+  </p>
+<% end %>
+
+<div class="space-m"></div>
+
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_timesheet_entry_path(@conn, :update, @timesheet_entry)) %>
 
 <div class="space-m"></div>
-<%= link "Back to mentor", to: Routes.admin_mentor_path(@conn, :show, @timesheet_entry.mentor) %>

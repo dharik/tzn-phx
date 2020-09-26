@@ -3,8 +3,15 @@ defmodule TznWeb.Admin.MenteeController do
   alias Tzn.Repo
   alias Tzn.Transizion
   alias Tzn.Transizion.Mentee
+  alias Tzn.Users
 
   plug :load_mentor_list
+  plug :load_users
+
+  def load_users(conn, _params) do
+    users = Users.list_users()
+    conn |> assign(:users, users)
+  end
 
   def load_mentor_list(conn, _) do
     mentors = Transizion.list_mentors()
@@ -41,6 +48,7 @@ defmodule TznWeb.Admin.MenteeController do
         :timesheet_entries,
         :hour_counts,
         :contract_purchases,
+        :user,
         strategy_sessions: [:mentor]
       ])
 

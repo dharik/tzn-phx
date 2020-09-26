@@ -5,8 +5,8 @@
       <th>Email</th>
       <th>Created at</th>
       <th>Admin?</th>
-      <th>Mentor?</th>
-      <th>Mentee?</th>
+      <th>Mentor Profile</th>
+      <th>Mentee Profile</th>
     </tr>
   </thead>
   <tbody>
@@ -23,14 +23,12 @@
         </td>
         <td>
           <%= if user.admin_profile do %>
-            Admin
+            Yes
           <% end %>
         </td>
         <td>
           <%= if user.mentor_profile do %>
             <%= link user.mentor_profile.name, to: Routes.admin_mentor_path(@conn, :show, user.mentor_profile) %>
-          <% else %>
-            Create mentor profile
           <% end %>
         </td>
         <td>

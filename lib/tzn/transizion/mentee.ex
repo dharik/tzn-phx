@@ -50,6 +50,7 @@ defmodule Tzn.Transizion.Mentee do
       :mentor_id,
       :user_id
     ])
+    |> cast_assoc(:user)
     |> validate_required([:name])
   end
 end

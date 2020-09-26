@@ -21,10 +21,14 @@
   <%= select f, :mentor_id, [{'None', nil} | Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end)] %>
   <%= error_tag f, :mentor_id %>
 
+  <%= label f, :user_id  %>
+  <%= select f, :user_id, [{'None', nil} | Enum.map(@users, fn user ->  {"#{user.email}", user.id} end)] %>
+  <%= error_tag f, :user_id %>
+
   <div class="space-m"></div>
 
   <%= label f, :parent1_email %>
-  <%= text_input f, :parent1_email %>
+  <%= email_input f, :parent1_email %>
   <%= error_tag f, :parent1_email %>
 
   <%= label f, :parent1_name %>
@@ -34,7 +38,7 @@
   <div class="space-m"></div>
   
   <%= label f, :parent2_email %>
-  <%= text_input f, :parent2_email %>
+  <%= email_input f, :parent2_email %>
   <%= error_tag f, :parent2_email %>
 
   <%= label f, :parent2_name %>

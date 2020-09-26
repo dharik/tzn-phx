@@ -1,16 +1,33 @@
 <h1 class="display-title">
-  <%= @mentor.name %> 
+  Mentor
 </h1>
-<span><%= link "Edit Name", to: Routes.admin_mentor_path(@conn, :edit, @mentor) %></span>
-
 <div class="space-m"></div>
 
-<p class="lead">Mentees</p>
-<ul>
-  <%= for mentee <- @mentor.mentees do %>
-    <li><%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %></li>
-  <% end %>
-</ul>
+<div class="border border-radius padding-s flex flex-row">
+  <div class="flex-1">
+    <p>
+      Name:<br />
+      <span class="color-grey"><%= @mentor.name %></span>
+    </p>
+    <%= if @mentor.user do %>
+      <p>
+        Login details<br />
+        <span class="color-grey">
+          <%= @mentor.user.email %> (ID=<%= @mentor.user.id %>)
+        </span>
+      </p>
+    <% end %>
+    <%= link "Edit", to: Routes.admin_mentor_path(@conn, :edit, @mentor), class: "button button-outline button-s" %>
+  </div>
+  <div class="flex-1">
+    <p class="lead">Mentees</p>
+    <ol> 
+      <%= for mentee <- @mentor.mentees do %>
+        <li><%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %></li>
+      <% end %>
+    </ol>
+  </div>
+</div>
 
 <div class="space-m"></div>
 

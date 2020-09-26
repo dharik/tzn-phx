@@ -15,7 +15,8 @@ defmodule Tzn.Transizion.Mentor do
   @doc false
   def changeset(mentor, attrs) do
     mentor
-    |> cast(attrs, [:name])
+    |> cast(attrs, [:name, :user_id])
     |> validate_required([:name])
+    |> cast_assoc(:user)
   end
 end
