@@ -5,7 +5,7 @@
 
 <%= if low_hours_warning?(@mentee.hour_counts.hours_used |> Decimal.to_float, @mentee.hour_counts.hours_purchased |> Decimal.to_float) do %>
   <div class="background-warning-200 padding-xxs border-radius text-align-center">
-    This student's contract hours are running low. Please inform Jason to reload hours.
+    This student's contract hours are running low.
   </div>
   <div class="space-m"></div>
 <% end %>
@@ -95,9 +95,6 @@
 <div class="space-m"></div>
 
 <p class="lead">Timesheet Entries</p>
-<div class="border border-radius padding-s">
-
-  <div class="space-s"></div>
   <table>
     <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
       <tr>
@@ -107,4 +104,19 @@
       </tr>
     <% end %>
   </table>
+
+<div class="space-m"></div>
+
+<p class="lead">Contract Purchases</p>
+<div class="border border-radius padding-s">
+  <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new), class: 'button button-primary' %>
+  <%= for contract_purchase <- @mentee.contract_purchases do %>
+    <p>
+      <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %>
+      <br />
+      <span class="color-grey"><%= contract_purchase.notes %></span>
+      <br />
+      <%= link "Delete", to: Routes.admin_contract_purchase_path(@conn, :delete, contract_purchase), method: :delete, data: [confirm: "Are you sure?"] %>
+    </p>
+  <% end %>
 </div>

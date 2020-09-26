@@ -14,7 +14,8 @@ defmodule Tzn.Transizion.ContractPurchase do
   @doc false
   def changeset(contract_purchase, attrs) do
     contract_purchase
-    |> cast(attrs, [:hours, :date, :notes])
-    |> validate_required([:hours, :date, :notes])
+    |> cast(attrs, [:hours, :date, :notes, :mentee_id])
+    |> validate_required([:hours, :date, :notes, :mentee_id])
+    |> cast_assoc(:mentee)
   end
 end

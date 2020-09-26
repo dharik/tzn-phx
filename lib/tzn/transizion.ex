@@ -13,9 +13,9 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.StrategySession
   alias Tzn.Transizion.MentorTimelineEvent
   alias Tzn.Transizion.MentorTimelineEventMarking
+  alias Tzn.Transizion.ContractPurchase
 
   require IEx
-
 
   def list_mentors do
     Repo.all(Mentor)
@@ -99,6 +99,7 @@ defmodule Tzn.Transizion do
   end
 
   def get_mentee!(id), do: Repo.get!(Mentee, id)
+
   def delete_mentee(%Mentee{} = mentee) do
     Repo.delete(mentee)
   end
@@ -325,11 +326,12 @@ defmodule Tzn.Transizion do
   end
 
   def mentor_timeline_event_markings(mentor) do
-    markings = Repo.all(
-      from m in MentorTimelineEventMarking,
-        where: m.mentor_id == ^mentor.id
-    )
-    
+    markings =
+      Repo.all(
+        from m in MentorTimelineEventMarking,
+          where: m.mentor_id == ^mentor.id
+      )
+
     # Returns a map of event id: marking for easy lookups later.
     # assumes only one marking per event
     Map.new(markings, fn marking -> {marking.mentor_timeline_event_id, marking} end)
@@ -357,5 +359,27 @@ defmodule Tzn.Transizion do
 
   def mentor_timesheet_aggregate(mentor_id) do
     Repo.all(from h in MentorHourCounts, where: h.mentor_id == ^mentor_id)
+  end
+
+  def change_contract_purchase(%ContractPurchase{} = contract_purchase, attrs \\ %{}) do
+    ContractPurchase.changeset(contract_purchase, attrs)
+  end
+
+  def create_contract_purchase(attrs \\ %{}) do
+    %ContractPurchase{}
+    |> ContractPurchase.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_contract_purchase!(id), do: Repo.get!(ContractPurchase, id)
+
+  def update_contract_purchase(%ContractPurchase{} = contract_purchase, attrs) do
+    contract_purchase
+    |> ContractPurchase.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def delete_contract_purchase(%ContractPurchase{} = contract_purchase) do
+    Repo.delete(contract_purchase)
   end
 end

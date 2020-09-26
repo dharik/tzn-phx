@@ -40,6 +40,7 @@ defmodule TznWeb.Admin.MenteeController do
         :mentor,
         :timesheet_entries,
         :hour_counts,
+        :contract_purchases,
         strategy_sessions: [:mentor]
       ])
 
