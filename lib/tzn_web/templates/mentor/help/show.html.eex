@@ -1,3 +1,7 @@
 <p>
   Please reach out to Jason for help with the LMS.
+
+</p>
+<p>
+  <%= link "Change my password", to: Routes.pow_registration_path(@conn, :edit) %>
 </p>

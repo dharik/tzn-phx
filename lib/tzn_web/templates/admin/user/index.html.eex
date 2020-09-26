@@ -16,7 +16,7 @@
           <%= user.id %>
         </td>
         <td>
-          <%= user.email %>
+          <%= link user.email, to: Routes.admin_user_path(@conn, :edit, user) %>
         </td>
         <td>
           <%= user.inserted_at %>
