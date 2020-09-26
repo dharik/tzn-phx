@@ -32,7 +32,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.mentor.name,
           s.notes,
           s.title,
-          s.email_subject
+          s.email_subject,
           "dharik@transizion.com",
           s.mentor.name
         )
@@ -46,7 +46,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.mentor.name,
           s.notes,
           s.title,
-          s.email_subject
+          s.email_subject,
           "dharik@transizion.com",
           s.mentor.name
         )
