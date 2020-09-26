@@ -1,10 +1,6 @@
 defmodule TznWeb.Mentor.TimesheetEntryController do
   use TznWeb, :controller
 
-  import TznWeb.MentorPlugs
-  plug :load_my_mentees
-  plug :load_mentor_profile
-  
   alias Tzn.Transizion
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Repo

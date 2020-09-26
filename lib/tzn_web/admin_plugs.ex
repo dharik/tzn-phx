@@ -11,4 +11,12 @@ defmodule TznWeb.AdminPlugs do
 
     conn |> assign(:current_admin, admin_profile)
   end
+
+  def ensure_admin_profile(conn, _) do
+    if conn.assigns.current_admin do
+      conn
+    else
+      conn |> halt
+    end
+  end
 end

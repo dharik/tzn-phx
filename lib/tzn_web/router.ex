@@ -1,6 +1,8 @@
 defmodule TznWeb.Router do
   use TznWeb, :router
   use Pow.Phoenix.Router
+  import TznWeb.AdminPlugs
+  import TznWeb.MentorPlugs
 
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
@@ -8,10 +10,15 @@ defmodule TznWeb.Router do
 
   pipeline :admin do
     plug :put_layout, {TznWeb.LayoutView, :admin}
+    plug :load_admin_profile
+    plug :ensure_admin_profile
   end
-
+  
   pipeline :mentor do
     plug :put_layout, {TznWeb.LayoutView, :mentor}
+    plug :load_mentor_profile
+    plug :ensure_mentor_profile
+    plug :load_my_mentees
   end
 
 

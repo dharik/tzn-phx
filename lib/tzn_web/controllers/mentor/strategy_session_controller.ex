@@ -1,10 +1,6 @@
 defmodule TznWeb.Mentor.StrategySessionController do
   use TznWeb, :controller
 
-  import TznWeb.MentorPlugs
-  plug :load_my_mentees
-  plug :load_mentor_profile
-
   alias Tzn.Transizion
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo

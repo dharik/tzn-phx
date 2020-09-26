@@ -3,12 +3,7 @@ require IEx
 defmodule TznWeb.Mentor.TimelineController do
   use TznWeb, :controller
 
-  import TznWeb.MentorPlugs
-  plug :load_my_mentees
-  plug :load_mentor_profile
-
   alias Tzn.Transizion
-
 
   def index(conn, _params) do
     events = Transizion.mentor_timeline_events()
