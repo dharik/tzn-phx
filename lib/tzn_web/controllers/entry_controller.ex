@@ -13,7 +13,7 @@ defmodule TznWeb.EntryController do
       conn.assigns.current_mentor ->
         conn |> redirect(to: Routes.mentor_mentee_path(conn, :index))
       true ->
-        conn |> halt
+        render(conn, "no_profile.html")
     end
   end
 

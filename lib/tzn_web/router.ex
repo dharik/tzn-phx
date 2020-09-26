@@ -41,14 +41,11 @@ defmodule TznWeb.Router do
   end
 
   scope "/", TznWeb do
-
+    pipe_through :browser
     get "/", EntryController, :launch_app
 
-    # /admin/contract_purchases/new?mentee_id=#
-
     scope "/mentor", as: :mentor do
-      pipe_through [:browser, :protected, :mentor]
-
+      pipe_through [:protected, :mentor]
 
       get "/", Mentor.MenteeController, :index
       resources "/mentees", Mentor.MenteeController
@@ -59,11 +56,9 @@ defmodule TznWeb.Router do
       get "/help", Mentor.HelpController, :show
     end
 
-
     scope "/admin", as: :admin do
-      pipe_through [:browser, :protected, :admin]
+      pipe_through [:protected, :admin]
       
-
       get "/", Admin.UserController, :index
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
@@ -73,8 +68,6 @@ defmodule TznWeb.Router do
       resources "/contract_purchases", Admin.ContractPurchaseController
     end
   end
-
-
 
   # Other scopes may use custom stacks.
   # scope "/api", TznWeb do
