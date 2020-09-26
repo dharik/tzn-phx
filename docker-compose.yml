@@ -5,6 +5,8 @@ db:
     - '5432:5432'
   environment:
     POSTGRES_PASSWORD: dev
+  volumes:
+    - ./dockerdb:/var/lib/postgresql/data
 
 web:
   build: .
