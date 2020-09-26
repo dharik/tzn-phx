@@ -26,7 +26,7 @@ defmodule TznWeb.Admin.StrategySessionController do
 
   def delete(conn, %{"id" => id}) do
     strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload(:mentee)
-    {:ok, _mentor} = Transizion.delete_strategy_session(strategy_session)
+    {:ok, strategy_session} = Transizion.delete_strategy_session(strategy_session)
 
     conn
     |> put_flash(:info, "Strategy Session deleted successfully.")
