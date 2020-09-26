@@ -1,5 +1,5 @@
 <h1>Edit Mentor</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.mentor_path(@conn, :update, @mentor)) %>
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_mentor_path(@conn, :update, @mentor)) %>
 
-<span><%= link "Back", to: Routes.mentor_path(@conn, :index) %></span>
+<span><%= link "Back", to: Routes.admin_mentor_path(@conn, :index) %></span>

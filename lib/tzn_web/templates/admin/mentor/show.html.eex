@@ -1,15 +1,109 @@
+<h1 class="display-title">
+  <%= @mentor.name %> 
+</h1>
+<span><%= link "Edit Name", to: Routes.admin_mentor_path(@conn, :edit, @mentor) %></span>
+
+<div class="space-m"></div>
+
+<p class="lead">Mentees</p>
 <ul>
-
-  <li>
-    <strong>Name:</strong>
-    <%= @mentor.name %>
-  </li>
-
-  Mentees:
   <%= for mentee <- @mentor.mentees do %>
     <li><%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %></li>
   <% end %>
-
 </ul>
 
-<span><%= link "Edit", to: Routes.admin_mentor_path(@conn, :edit, @mentor) %></span>
+<div class="space-m"></div>
+
+
+<p class="lead">Timesheet Entries</p>
+<table>
+  <thead>
+    <tr>
+      <th>Mentee Name</th>
+      <th>Start Date</th>
+      <th>End Date</th>
+      <th>Notes</th>
+      <th></th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for timesheet_entry <- @mentor.timesheet_entries do %>
+      <tr>
+        <td>
+          <%= if timesheet_entry.mentee do %>
+            <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+          <% else %>
+            N/A
+          <% end %>
+        </td>
+        <td><%= timesheet_entry.started_at |> format_date %></td>
+        <td><%= timesheet_entry.ended_at |> format_date %></td>
+        <td><%= timesheet_entry.notes %></td>
+        <td>
+          <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
+          <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
+        </td>
+      </tr>
+
+    <% end %>
+    <tr>
+    </tr>
+  </tbody>
+</table>
+
+<div class="space-m"></div>
+
+<p class="lead">Strategy Sessions</p>
+<div class="border border-radius padding-s">
+  <%= for strategy_session <- @mentor.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
+    <p>
+      <span class="lead-xs"><%= strategy_session.title %></span>
+      <br />
+      <span class="color-grey"><%= strategy_session.notes %></span>
+      <br />
+      <small class="color-grey">
+        <%= strategy_session.date |> format_date %>
+      <%= cond do %>
+        <% strategy_session.published && strategy_session.emailed -> %>
+          <span class="color-success">published and email sent to parent(s)</span>
+        <% strategy_session.published -> %>
+          <span class="color-success">published</span>
+        <% true -> %>
+          <span></span>
+      <% end %>
+      </small>
+      <br />
+      <%= link "Edit", 
+          to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
+          class: "button button-border button-xs" %>
+    </p>
+  <% end %>
+</div>
+
+<div class="space-m"></div>
+
+
+<p class="lead">Hour counts by month</p>
+<table>
+  <thead>
+    <tr>
+      <th>Month, Year</th>
+      <th>Hours</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for stat <- @mentor.monthly_hour_counts do %>
+      <tr>
+        <td>
+          <%= stat.month_name |> humanize %>, <%= stat.year %>
+        </td>
+        <td>
+          <%= stat.hours |> Decimal.round(1) %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>
+
+
+

@@ -8,6 +8,7 @@ defmodule Tzn.Transizion.Mentor do
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
     has_many :strategy_sessions, Tzn.Transizion.StrategySession
     belongs_to :user, Tzn.Users.User
+    has_many :monthly_hour_counts, Tzn.Transizion.MentorHourCounts
     timestamps()
   end
 
