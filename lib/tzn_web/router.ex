@@ -28,27 +28,7 @@ defmodule TznWeb.Router do
 
     get "/", MenteeController, :index
 
-    #
-    # Admin app
-    #
-    # /admin/mentees
-
-    # /admin/mentees/:mentee_id
-    #   edit: mentor_id, internal note, name, internal name
-    #   show: 
-    #   new: 
-
     # /admin/contract_purchases/new?mentee_id=#
-
-
-    # /admin/mentors/:mentor_id/
-    #   edit: 
-    #   show: mentees, name, 
-
-
-    # /admin/users/:user_id/new, edit, index, show
-    #   show mentee profile, mentor profile, admin profile
-
 
     scope "/mentor", as: :mentor do
       pipe_through [:browser, :protected]
@@ -67,6 +47,7 @@ defmodule TznWeb.Router do
     scope "/admin", as: :admin do
       pipe_through [:browser, :protected]
 
+      get "/", Admin.UserController, :index
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
       resources "/mentors", Admin.MentorController
