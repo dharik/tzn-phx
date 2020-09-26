@@ -95,7 +95,7 @@
     <%= for stat <- @mentor.monthly_hour_counts do %>
       <tr>
         <td>
-          <%= stat.month_name |> humanize %>, <%= stat.year %>
+          <%= stat.month_name |> humanize %><%= stat.year %>
         </td>
         <td>
           <%= stat.hours |> Decimal.round(1) %>

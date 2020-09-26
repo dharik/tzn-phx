@@ -71,7 +71,7 @@ defmodule TznWeb.Router do
       resources "/mentees", Admin.MenteeController
       resources "/mentors", Admin.MentorController
       resources "/strategy_sessions", Admin.StrategySessionController
-      resources "/timesheet_entries", Admin.TimesheetEntryController
+      resources "/timesheet_entries", Admin.TimesheetEntryController, only: [:edit, :update, :delete]
     end
   end
 

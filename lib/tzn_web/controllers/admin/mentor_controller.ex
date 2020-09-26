@@ -10,22 +10,22 @@ defmodule TznWeb.Admin.MentorController do
     render(conn, "index.html", mentors: mentors)
   end
 
-    def new(conn, _params) do
-      changeset = Transizion.change_mentor(%Mentor{})
-      render(conn, "new.html", changeset: changeset)
-    end
+  def new(conn, _params) do
+    changeset = Transizion.change_mentor(%Mentor{})
+    render(conn, "new.html", changeset: changeset)
+  end
 
-    def create(conn, %{"mentor" => mentor_params}) do
-      case Transizion.create_mentor(mentor_params) do
-        {:ok, mentor} ->
-          conn
-          |> put_flash(:info, "Mentor created successfully.")
-          |> redirect(to: Routes.admin_mentor_path(conn, :show, mentor))
+  def create(conn, %{"mentor" => mentor_params}) do
+    case Transizion.create_mentor(mentor_params) do
+      {:ok, mentor} ->
+        conn
+        |> put_flash(:info, "Mentor created successfully.")
+        |> redirect(to: Routes.admin_mentor_path(conn, :show, mentor))
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "new.html", changeset: changeset)
-      end
+      {:error, %Ecto.Changeset{} = changeset} ->
+        render(conn, "new.html", changeset: changeset)
     end
+  end
 
   def show(conn, %{"id" => id}) do
     mentor =

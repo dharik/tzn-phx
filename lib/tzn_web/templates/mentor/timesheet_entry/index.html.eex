@@ -44,7 +44,6 @@
 <table>
   <thead>
     <tr>
-      <th>Year</th>
       <th>Month</th>
       <th>Total hours</th>
     </tr>
@@ -52,8 +51,7 @@
   <tbody>
     <%= for month_data <- @monthly_report do %>
       <tr>
-        <td><%= month_data.year %></td>
-        <td><%= month_data.month_name |> humanize %></td>
+        <td><%= month_data.month_name |> humanize %> <%= month_data.year %></td>
         <td><%= Decimal.round(month_data.hours, 2) %></td>
       </tr>
     <% end %>
