@@ -6,6 +6,15 @@ defmodule TznWeb.Router do
     plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
   end
 
+  pipeline :admin do
+    plug :put_layout, {TznWeb.LayoutView, :admin}
+  end
+
+  pipeline :mentor do
+    plug :put_layout, {TznWeb.LayoutView, :mentor}
+  end
+
+
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -31,7 +40,7 @@ defmodule TznWeb.Router do
     # /admin/contract_purchases/new?mentee_id=#
 
     scope "/mentor", as: :mentor do
-      pipe_through [:browser, :protected]
+      pipe_through [:browser, :protected, :mentor]
 
 
       get "/", Mentor.MenteeController, :index
@@ -45,7 +54,8 @@ defmodule TznWeb.Router do
 
 
     scope "/admin", as: :admin do
-      pipe_through [:browser, :protected]
+      pipe_through [:browser, :protected, :admin]
+      
 
       get "/", Admin.UserController, :index
       resources "/users", Admin.UserController

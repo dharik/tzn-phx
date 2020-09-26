@@ -4,7 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
-    <title>Transizion</title>
+    <title>Admin - Transizion</title>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
     <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
@@ -12,13 +12,15 @@
   <body>
     <header class="container flex padding-m align-items-center">
       <div class="flex-1">
-        <a href="/" class="phx-logo">
+        <a href="<%= Routes.admin_user_path(@conn, :index) %>" class="phx-logo">
           <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
         </a>
       </div>
       <nav role="navigation" class="nav-inline flex-1 text-align-center">
         <ul>
-          
+          <li><%= link "Users", to: Routes.admin_user_path(@conn, :index) %></li>
+          <li><%= link "Mentees", to: Routes.admin_mentee_path(@conn, :index) %></li>
+          <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
         </ul>
       </nav>
     </header>
