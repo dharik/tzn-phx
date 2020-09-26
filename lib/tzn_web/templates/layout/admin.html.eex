@@ -21,7 +21,7 @@
           <li><%= link "Users", to: Routes.admin_user_path(@conn, :index) %></li>
           <li><%= link "Mentees", to: Routes.admin_mentee_path(@conn, :index) %></li>
           <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
-          <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
+          <li><%= link "Log out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>
       </nav>
     </header>
