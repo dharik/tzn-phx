@@ -68,19 +68,21 @@
       <br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
-      <%= cond do %>
-        <%= strategy_session.published && strategy_session.emailed -> %>
-          <span class="color-success">published and email sent to parent(s)</span>
-        <%= strategy_session.published -> %>
-          <span class="color-success">published</span>
-        <%= true -> %>
-          <span></span>
-      <% end %>
+        <%= cond do %>
+          <%= strategy_session.published && strategy_session.emailed -> %>
+            <span class="color-success">published and email sent to parent(s)</span>
+          <%= strategy_session.published -> %>
+            <span class="color-success">published</span>
+          <%= true -> %>
+            <span></span>
+        <% end %>
       </small>
       <br />
-      <%= link "Edit", 
-          to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session),
-          class: "button button-border button-xs" %>
+      <%= unless strategy_session.published do %>
+        <%= link "Edit", 
+            to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session),
+            class: "button button-border button-xs" %>
+      <% end %>
     </p>
   <% end %>
 </div>
