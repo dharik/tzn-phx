@@ -1,0 +1,6 @@
+<h1>Edit Strategy session</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_strategy_session_path(@conn, :update, @strategy_session)) %>
+
+<div class="space-m"></div>
+<%= link "Back to mentee", to: Routes.admin_mentee_path(@conn, :show, @strategy_session.mentee) %>

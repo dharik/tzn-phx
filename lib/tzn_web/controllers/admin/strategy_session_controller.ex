@@ -25,12 +25,12 @@ defmodule TznWeb.Admin.StrategySessionController do
   end
 
   def delete(conn, %{"id" => id}) do
-    strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload(:mentor)
+    strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload(:mentee)
     {:ok, _mentor} = Transizion.delete_strategy_session(strategy_session)
 
     conn
     |> put_flash(:info, "Strategy Session deleted successfully.")
-    |> redirect(to: Routes.admin_mentor_path(conn, :show, strategy_session.mentor))
+    |> redirect(to: Routes.admin_mentee_path(conn, :show, strategy_session.mentee))
   end
 
 end

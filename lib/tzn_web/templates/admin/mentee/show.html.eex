@@ -93,11 +93,13 @@
       <% end %>
       </small>
       <br />
-      <%= unless strategy_session.emailed do %>
-        <%= link "Edit", 
-            to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
-            class: "button button-border button-xs" %>
-      <% end %>
+      <%= link "Edit", 
+          to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
+          class: "button button-border button-xs margin-right-xs" %>
+      <%= link "Delete", 
+          to: Routes.admin_strategy_session_path(@conn, :delete, strategy_session), 
+          method: :delete, data: [confirm: "Are you sure?"], 
+          class: "button button-s button-text button-warning" %>
     </p>
   <% end %>
 </div>
