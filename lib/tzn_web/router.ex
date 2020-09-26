@@ -42,7 +42,7 @@ defmodule TznWeb.Router do
 
   scope "/", TznWeb do
 
-    get "/", MenteeController, :index
+    get "/", EntryController, :launch_app
 
     # /admin/contract_purchases/new?mentee_id=#
 
