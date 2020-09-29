@@ -4,8 +4,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo
 
-  @auth ""
-  @template_id ""
+  @template_id "d-6b8a7733b8fb4a4a957fcb9a24f9f61a"
   @sendgrid_url "https://api.sendgrid.com/v3/mail/send"
 
 
@@ -63,7 +62,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     from_name
   ) do
     headers = [
-      Authorization: @auth,
+      Authorization: Application.get_env(:tzn, :sendgrid_auth),
       "Content-Type": "application/json"
     ]
 
