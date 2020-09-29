@@ -6,7 +6,7 @@ defmodule TznWeb.Mentor.TimelineController do
   alias Tzn.Transizion
 
   def index(conn, _params) do
-    events = Transizion.mentor_timeline_events()
+    events = Transizion.list_mentor_timeline_events()
     event_markings = Transizion.mentor_timeline_event_markings(conn.assigns.current_mentor)
     render(conn, "index.html", events: events, event_markings: event_markings)
   end

@@ -321,9 +321,27 @@ defmodule Tzn.Transizion do
     TimesheetEntry.changeset(timesheet_entry, attrs)
   end
 
-  def mentor_timeline_events do
+  def list_mentor_timeline_events do
     Repo.all(MentorTimelineEvent)
   end
+
+  def change_mentor_timeline_event(%MentorTimelineEvent{} = event, attrs \\ %{}) do
+    MentorTimelineEvent.changeset(event, attrs)
+  end
+
+  def update_mentor_timeline_event(%MentorTimelineEvent{} = event, attrs) do
+    event
+    |> MentorTimelineEvent.changeset(attrs)
+    |> Repo.update()
+  end
+
+  def create_mentor_timeline_event(attrs \\ %{}) do
+    %MentorTimelineEvent{}
+    |> MentorTimelineEvent.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def get_mentor_timeline_event!(id), do: Repo.get!(MentorTimelineEvent, id)
 
   def mentor_timeline_event_markings(mentor) do
     markings =

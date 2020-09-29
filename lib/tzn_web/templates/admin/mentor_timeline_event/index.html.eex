@@ -1,0 +1,27 @@
+<p class="lead">Mentor Timeline</p>
+<%= link "Add new timeline event", to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-primary" %>
+
+<%= for event <- @events |> Enum.sort_by(&(&1.date), {:asc, Date}) do %>
+  <p>
+    <strong>
+      <%= event.date |> format_date %>
+    </strong>
+
+    <%= if event.is_hard_deadline do %>
+      <span class="color-warning">(Hard deadline)</span>
+    <% end %>
+
+    <br />
+
+    <span class="color-grey">
+      <%= event.notes %>
+    </span>
+
+    <br />
+
+    <span class="color-grey"><%= event.grade %></span>
+    <br />
+
+    <%= link "Edit", to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) %>
+  </p>
+<% end %>

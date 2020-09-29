@@ -1,0 +1,7 @@
+<h1>Edit Mentor Timeline Event</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_mentor_timeline_event_path(@conn, :update, @event)) %>
+
+<div class="space-m"></div>
+
+<%= link "Back", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %>
