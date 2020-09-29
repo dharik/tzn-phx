@@ -6,9 +6,9 @@
       <tr>
         <th>Date</th>
         <th>Grade level</th>
-        <th>Details</th>
-        <th>Status</th>
-        <th>My notes</th>
+        <th width="35%">Details</th>
+        <th width="15%">Status</th>
+        <th width="30%">My notes</th>
         <th>Save</th>
       </tr>
     </thead>
@@ -28,9 +28,9 @@
       <tr>
         <th>Date</th>
         <th>Grade level</th>
-        <th>Details</th>
-        <th>Status</th>
-        <th>My notes</th>
+        <th width="35%">Details</th>
+        <th width="15%">Status</th>
+        <th width="30%">My notes</th>
         <th>Save</th>
       </tr>
     </thead>

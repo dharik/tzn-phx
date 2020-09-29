@@ -3,14 +3,6 @@ defmodule TznWeb.MentorPlugs do
   alias Tzn.Repo
   alias Tzn.Transizion
 
-  def load_my_mentees(conn, _) do
-    mentees =
-      Transizion.list_mentees(%{mentor: conn.assigns.current_user})
-      |> Repo.preload(:hour_counts)
-
-    conn |> assign(:mentees, mentees)
-  end
-
   def load_mentor_profile(conn, _) do
     mentor_profile = Transizion.get_current_mentor(conn.assigns.current_user.id)
 
@@ -23,5 +15,14 @@ defmodule TznWeb.MentorPlugs do
     else
       conn |> halt
     end
+  end
+
+  # These should all be one method if they have dependencies on each other
+  def load_my_mentees(conn, _) do
+    mentees =
+      Transizion.list_mentees(%{mentor: conn.assigns.current_mentor})
+      |> Repo.preload(:hour_counts)
+
+    conn |> assign(:mentees, mentees)
   end
 end

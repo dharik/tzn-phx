@@ -1,3 +1,6 @@
+<h1>Listing Mentees</h1>
+<%= link "Create Mentee Profile", to: Routes.admin_mentee_path(@conn, :new), class: "button button-primary" %>
+
 <table>
   <thead>
     <tr>

@@ -15,7 +15,7 @@
   <div class="flex flex-row">
     <div class="flex-1">
       <p>
-        Name: <br />
+        Internal Name: <br />
         <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
       </p>
       <p>

@@ -8,10 +8,7 @@ defmodule TznWeb.Mentor.MenteeController do
   require Logger
 
   def index(conn, _params) do
-    mentees =
-      Transizion.list_mentees(%{mentor: conn.assigns.current_user}) |> Repo.preload(:hour_counts)
-
-    render(conn, "index.html", mentees: mentees)
+    render(conn, "index.html", mentees: conn.assigns.mentees)
   end
 
   def new(conn, _params) do

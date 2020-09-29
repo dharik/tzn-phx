@@ -21,14 +21,15 @@
     </td>
     <td>
       <%= for mentee <- @mentees do %>
-
-        <%= checkbox f, 
-            :completed_for_mentees,
-            name: "completed_for_mentees[]",
-            checked_value: mentee.id,
-            checked: event_marking |> is_complete_for_mentee(mentee),
-            hidden_input: false
-        %> <%= mentee.name %>
+        <label>
+          <%= checkbox f, 
+              :completed_for_mentees,
+              name: "completed_for_mentees[]",
+              checked_value: mentee.id,
+              checked: event_marking |> is_complete_for_mentee(mentee),
+              hidden_input: false
+          %> <%= mentee.name %>
+        </label>
       <% end %>
     </td>
     <td>

@@ -18,7 +18,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
   def create(conn, %{"strategy_session" => strategy_session_params}) do
     case Transizion.create_strategy_session(
            strategy_session_params
-           |> Map.put_new("mentor_id", conn.assigns.current_user.id)
+           |> Map.put_new("mentor_id", conn.assigns.current_mentor.id)
          ) do
       {:ok, strategy_session} ->
         conn

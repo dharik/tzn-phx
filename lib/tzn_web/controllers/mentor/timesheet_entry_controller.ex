@@ -6,7 +6,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   alias Tzn.Repo
   
   def index(conn, _params) do
-    timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_user}) |> Repo.preload(:mentee)
+    timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_mentor}) |> Repo.preload(:mentee)
     monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
     render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report)
   end
@@ -18,7 +18,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
 
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
     # TODO: Merge params or inject mentor_id into form
-    case Transizion.create_timesheet_entry(timesheet_entry_params |> Map.put("mentor_id", conn.assigns.current_user.id)) do
+    case Transizion.create_timesheet_entry(timesheet_entry_params |> Map.put("mentor_id", conn.assigns.current_mentor.id)) do
       {:ok, timesheet_entry} ->
         conn
         |> put_flash(:info, "Timesheet entry created successfully.")
