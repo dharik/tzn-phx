@@ -1,5 +1,5 @@
 <h1>Upcoming Events</h1>
-<%= for {key, events} <- @events |> upcoming_events |> grouped_by_year_month do %>
+<%= for {key, events} <- @events |> upcoming_events |> grouped_by_year_month |> sort_groups_asc do %>
   <h2><%= key %></h2>
   <table>
     <thead>
