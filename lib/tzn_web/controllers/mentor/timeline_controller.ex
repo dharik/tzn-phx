@@ -38,7 +38,7 @@ defmodule TznWeb.Mentor.TimelineController do
         conn
         |> redirect(to: Routes.mentor_timeline_path(conn, :index))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
+      {:error, %Ecto.Changeset{} = _changeset} ->
         conn
         |> put_flash(:info, "Error marking this task complete. Try again")
         |> redirect(to: Routes.mentor_timeline_path(conn, :index))

@@ -1,7 +1,6 @@
 defmodule TznWeb.AdminPlugs do
   import Plug.Conn
   alias Tzn.Repo
-  alias Tzn.Transizion
 
   def load_admin_profile(conn, _) do
     admin_profile =

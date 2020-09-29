@@ -1,6 +1,5 @@
 defmodule TznWeb.Mentor.TimelineView do
   use TznWeb, :view
-  import IEx
 
   def upcoming_events(events) do
     Enum.filter(events, fn event ->

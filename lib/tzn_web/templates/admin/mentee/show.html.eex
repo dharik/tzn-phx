@@ -84,11 +84,11 @@
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
       <%= cond do %>
-        <%= strategy_session.published && strategy_session.emailed -> %>
+        <% strategy_session.published && strategy_session.emailed -> %>
           <span class="color-success">published and email sent to parent(s)</span>
-        <%= strategy_session.published -> %>
+        <% strategy_session.published -> %>
           <span class="color-success">published</span>
-        <%= true -> %>
+        <% true -> %>
           <span></span>
       <% end %>
       </small>

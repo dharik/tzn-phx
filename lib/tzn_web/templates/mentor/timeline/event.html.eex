@@ -38,7 +38,7 @@
     <td>
       <%= submit "Save", class: "button button-primary button-s" %>
     </td>
-  <%= end %>
+  <% end %>
   </tr>
 <% else %>
   <tr>
@@ -75,7 +75,7 @@
     <td>
       <%= submit "Save", class: "button button-primary button-s" %>
     </td>
-  <%= end %>
+  <% end %>
   </tr>
 <% end %>
 

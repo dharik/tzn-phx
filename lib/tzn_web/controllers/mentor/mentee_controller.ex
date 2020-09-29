@@ -3,10 +3,8 @@ defmodule TznWeb.Mentor.MenteeController do
 
   alias Tzn.Transizion
   alias Tzn.Transizion.Mentee
-  alias Tzn.Transizion.Mentor
   alias Tzn.Repo
 
-  import Ecto.Query
   require Logger
 
   def index(conn, _params) do
