@@ -54,6 +54,12 @@ defmodule TznWeb.Mentor.StrategySessionController do
         false
       end
 
+    to = if published do
+      Routes.mentor_mentee_path(conn, :show, strategy_session.mentee_id)
+    else
+      Routes.mentor_strategy_session_path(conn, :edit, strategy_session)
+    end
+
     case Transizion.update_strategy_session(
            strategy_session,
            strategy_session_params |> Map.put("published", published)
@@ -61,7 +67,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
       {:ok, strategy_session} ->
         conn
         |> put_flash(:info, "Strategy session updated successfully.")
-        |> redirect(to: Routes.mentor_strategy_session_path(conn, :edit, strategy_session))
+        |> redirect(to: to)
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", strategy_session: strategy_session, changeset: changeset)
