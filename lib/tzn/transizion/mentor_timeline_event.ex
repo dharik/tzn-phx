@@ -6,7 +6,7 @@ defmodule Tzn.Transizion.MentorTimelineEvent do
     field :date, :naive_datetime
     field :grade, :string
     field :is_hard_deadline, :boolean, default: false
-    field :notes, :text
+    field :notes, :string
 
     timestamps()
   end
