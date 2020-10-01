@@ -7,8 +7,11 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
   @template_id "d-6b8a7733b8fb4a4a957fcb9a24f9f61a"
   @sendgrid_url "https://api.sendgrid.com/v3/mail/send"
 
-
+  import Logger
+  
   def run do
+    Logger.info "Running strategy session emails job"
+
     sessions =
       Repo.all(
         from s in StrategySession,
@@ -27,7 +30,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.notes,
           s.title,
           s.email_subject,
-          "dharik@transizion.com",
+          s.mentor.email,
           s.mentor.name
         )
       end
@@ -41,7 +44,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.notes,
           s.title,
           s.email_subject,
-          "dharik@transizion.com",
+          s.mentor.email,
           s.mentor.name
         )
       end
@@ -58,7 +61,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     session_notes,
     session_title,
     subject,
-    from_email,
+    reply_to_email,
     from_name
   ) do
     headers = [
@@ -66,6 +69,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
       "Content-Type": "application/json"
     ]
 
+    Logger.info "Sending strategy session email to #{to_email}"
     body = %{
       personalizations: [
         %{
@@ -85,8 +89,12 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
         }
       ],
       from: %{
-        email: from_email,
+        email: "mentors@transizion.com",
         name: from_name
+      },
+      reply_to: %{
+        name: mentor_name,
+        email: reply_to_email
       },
       subject: "Strategy session: #{session_title}",
       template_id: @template_id

@@ -9,6 +9,10 @@
       Name:<br />
       <span class="color-grey"><%= @mentor.name %></span>
     </p>
+    <p>
+      Email address (mentee/parent facing):<br />
+      <span class="color-grey"><%= @mentor.email %></span>
+    </p>
     <%= if @mentor.user do %>
       <p>
         Login details<br />

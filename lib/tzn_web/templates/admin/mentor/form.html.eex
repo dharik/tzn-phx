@@ -9,6 +9,10 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
+  <%= label f, :email %>
+  <%= email_input f, :email %>
+  <%= error_tag f, :email %>
+
   <%= label f, :user_id  %>
   <%= select f, :user_id, [{'None', nil} | Enum.map(@users, fn user ->  {"#{user.email}", user.id} end)] %>
   <%= error_tag f, :user_id %>
