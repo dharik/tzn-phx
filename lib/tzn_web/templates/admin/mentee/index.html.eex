@@ -10,6 +10,7 @@
       <th>Created at</th>
       <th>Current Mentor</th>
       <th>Hours used/purchased</th>
+      <th>Hours left</th>
     </tr>
   </thead>
   <tbody>
@@ -36,6 +37,16 @@
         </td>
         <td>
           <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased %>
+        </td>
+        <td>
+          <%
+            hours_left = mentee.hour_counts.hours_purchased |> Decimal.sub(mentee.hour_counts.hours_used)
+          %>
+          <%= if hours_left |> Decimal.lt?(5) do %>
+            <span class="color-error"><%= hours_left %></span>
+          <% else %>
+            <%= hours_left %>
+          <% end %>
         </td>
       </tr>
     <% end %>
