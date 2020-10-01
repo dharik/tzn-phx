@@ -3,7 +3,7 @@ defmodule Tzn.Repo.Migrations.CreateMentorTimelineEvents do
 
   def change do
     create table(:mentor_timeline_events) do
-      add :notes, :string
+      add :notes, :text
       add :grade, :string
       add :is_hard_deadline, :boolean, default: false, null: false
       add :date, :naive_datetime
