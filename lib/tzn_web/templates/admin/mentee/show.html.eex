@@ -19,6 +19,10 @@
         <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
       </p>
       <p>
+        Grade: <br />
+        <span class="color-grey"><%= @mentee.grade || 'Not set' %></span>
+      </p>
+      <p>
         Internal Note: <br />
         <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
       </p>

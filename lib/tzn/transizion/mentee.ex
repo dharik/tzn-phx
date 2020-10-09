@@ -13,6 +13,8 @@ defmodule Tzn.Transizion.Mentee do
     field :parent2_email, :string
     field :parent2_name, :string
 
+    field :grade, :string
+
     belongs_to :mentor, Tzn.Transizion.Mentor
     belongs_to :user, Tzn.Users.User
 
@@ -33,7 +35,8 @@ defmodule Tzn.Transizion.Mentee do
       :parent1_email,
       :parent1_name,
       :parent2_email,
-      :parent2_name
+      :parent2_name,
+      :grade
     ])
   end
 
@@ -48,7 +51,8 @@ defmodule Tzn.Transizion.Mentee do
       :parent2_email,
       :parent2_name,
       :mentor_id,
-      :user_id
+      :user_id,
+      :grade
     ])
     |> cast_assoc(:user)
     |> validate_required([:name])
