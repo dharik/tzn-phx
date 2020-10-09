@@ -1,6 +1,6 @@
-<h1>Upcoming Events</h1>
-<%= for {key, events} <- @events |> upcoming_events |> grouped_by_year_month |> sort_groups_asc do %>
-  <h2><%= key %></h2>
+<%= for events_by_month <- @events |> chunked_by_year_month do %>
+  <% first = List.first(events_by_month) %>
+  <h2><%= date_to_year_month_str(first.date) %></h2>
   <table>
     <thead>
       <tr>
@@ -13,36 +13,9 @@
       </tr>
     </thead>
     <tbody>
-      <%= for event <- events do %>
+      <%= for event <- events_by_month do %>
         <%= render "event.html", Map.put(assigns, :event, event) %> 
       <% end %>
     </tbody>
   </table>
 <% end %>
-
-<h1>Past Events</h1>
-<%= for {key, events} <- @events |> past_events |> grouped_by_year_month do %>
-  <h2><%= key %></h2>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Grade level</th>
-        <th width="35%">Details</th>
-        <th width="15%">Status</th>
-        <th width="30%">My notes</th>
-        <th>Save</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for event <- events do %>
-        <%= render "event.html", Map.put(assigns, :event, event) %> 
-      <% end %>
-    </tbody>
-  </table>
-<% end %>
-
-
-
-
-
