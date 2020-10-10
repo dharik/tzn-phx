@@ -322,7 +322,7 @@ defmodule Tzn.Transizion do
   end
 
   def list_mentor_timeline_events do
-    MentorTimelineEvent |> order_by(asc: :date) |> Repo.all
+    MentorTimelineEvent |> order_by(asc: :date, desc: :is_hard_deadline) |> Repo.all
   end
 
   def change_mentor_timeline_event(%MentorTimelineEvent{} = event, attrs \\ %{}) do
