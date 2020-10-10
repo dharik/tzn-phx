@@ -1,6 +1,9 @@
+<%= for mentee <- @mentees do %>
+  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %><br />
+<% end %>
 <%= for events_by_month <- @events |> chunked_by_year_month do %>
   <% first = List.first(events_by_month) %>
-  <h2><%= date_to_year_month_str(first.date) %></h2>
+  <h3><%= date_to_year_month_str(first.date) %></h3>
   <table>
     <thead>
       <tr>

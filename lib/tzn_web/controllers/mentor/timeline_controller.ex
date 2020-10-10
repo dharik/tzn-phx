@@ -5,6 +5,14 @@ defmodule TznWeb.Mentor.TimelineController do
 
   alias Tzn.Transizion
 
+  def index(conn, params = %{"mentee_id" => mentee_id}) do
+    mentee = Transizion.get_mentee!(mentee_id)
+    events = Transizion.list_mentor_timeline_events()
+       |> Enum.filter(fn event -> event.grade == mentee.grade end)
+    event_markings = Transizion.mentor_timeline_event_markings(conn.assigns.current_mentor)
+    render(conn, "index.html", events: events, event_markings: event_markings)
+  end
+
   def index(conn, _params) do
     events = Transizion.list_mentor_timeline_events()
     event_markings = Transizion.mentor_timeline_event_markings(conn.assigns.current_mentor)
