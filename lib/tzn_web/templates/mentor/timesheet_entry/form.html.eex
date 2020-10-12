@@ -6,7 +6,7 @@
   <% end %>
 
   <%= label f, :mentee_id %>
-  <%= select f, :mentee_id, [{'None', nil} | Enum.map(@mentees, fn mentee ->  {"#{mentee.name} #{mentee.internal_name}", mentee.id} end)] %>
+  <%= select f, :mentee_id, [{"No specific mentee - general / admin work", nil} | Enum.map(@mentees, fn mentee ->  {"#{mentee.name} #{mentee.internal_name}", mentee.id} end)] %>
   <%= error_tag f, :mentee_id %>
 
   <%= label f, :started_at %>
