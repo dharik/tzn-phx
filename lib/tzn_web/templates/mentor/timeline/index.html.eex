@@ -1,24 +1,49 @@
 <%= for mentee <- @mentees do %>
   <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %><br />
 <% end %>
+<table>
 <%= for events_by_month <- @events |> chunked_by_year_month do %>
-  <% first = List.first(events_by_month) %>
-  <h3><%= date_to_year_month_str(first.date) %></h3>
-  <table>
-    <thead>
-      <tr>
-        <th>Date</th>
-        <th>Grade level</th>
-        <th width="35%">Details</th>
-        <th width="15%">Status</th>
-        <th width="30%">My notes</th>
-        <th>Save</th>
-      </tr>
-    </thead>
-    <tbody>
-      <%= for event <- events_by_month do %>
-        <%= render "event.html", Map.put(assigns, :event, event) %> 
+  <tr>
+    <td colspan="3">
+       <% first = List.first(events_by_month) %>
+      <h3><%= date_to_year_month_str(first.date) %></h3>
+    </td>
+  </tr>
+  <td width="33%">
+    <div class="text-align-center margin-m">Incomplete</div>
+    <%= for event <- events_by_month do %>
+      <% 
+        event_marking = @event_markings |> Map.get(event.id)
+        is_complete =  if event_marking do
+                          event_marking |> is_complete_for_mentee(@mentee)
+                        else
+                          false
+                        end
+        bg_color = cond do
+                    event.is_hard_deadline -> "background-warning-100 border-color-warning-300"
+                    is_complete -> "background-success-50 border-color-success-200"
+                    true -> ""
+                    end
+      %>
+      <div class="border border-radius margin-bottom-m border-color-light-200	padding-s <%= bg_color %>">
+        <%= event.date |> format_date %> <br />
+        <p class="overflow-wrap-break-word">
+          <%= event.notes %>
+        </p>
+        <%= if event_marking do %>
+          <p><em><%= event_marking.notes %></em></p>
+        <% end %>
+        <%= link "Edit", to: "" %> | 
+        <%= link "Move to in progress", to: "" %>
+      </div>
       <% end %>
-    </tbody>
-  </table>
+    </td>
+    <td width="33%">
+      <div class="text-align-center margin-m">In Progress</div>
+    </td>
+    <td width="33%">
+      <div class="text-align-center margin-m">Complete</div>
+    </td>
+  </div>
 <% end %>
+<%= # render "event.html", Map.put(assigns, :event, event) %> 

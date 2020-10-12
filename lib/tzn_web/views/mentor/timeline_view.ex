@@ -27,8 +27,6 @@ defmodule TznWeb.Mentor.TimelineView do
   end
 
   def is_complete_for_mentee(event_marking, %{id: mentee_id}) do
-    event_marking.completed_for_mentees
-    |> Enum.find(fn m -> m == mentee_id end)
-    |> is_integer
+    event_marking.mentee_id == mentee_id
   end
 end
