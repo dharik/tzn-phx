@@ -28,7 +28,6 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.mentee.name,
           s.mentor.name,
           s.notes,
-          s.title,
           s.email_subject,
           s.mentor.email,
           s.mentor.name
@@ -42,7 +41,6 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.mentee.name,
           s.mentor.name,
           s.notes,
-          s.title,
           s.email_subject,
           s.mentor.email,
           s.mentor.name
@@ -59,7 +57,6 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     mentee_name,
     mentor_name,
     session_notes,
-    session_title,
     subject,
     reply_to_email,
     from_name
@@ -79,6 +76,12 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
               name: to_name
             }
           ],
+          cc: [
+            %{
+              email: reply_to_email,
+              name: from_name
+            }
+          ],
           dynamic_template_data: %{
             mentee_name: mentee_name,
             parent_name: to_name,
@@ -96,7 +99,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
         name: mentor_name,
         email: reply_to_email
       },
-      subject: "Strategy session: #{session_title}",
+      subject: "Strategy Session Notes",
       template_id: @template_id
     }
 

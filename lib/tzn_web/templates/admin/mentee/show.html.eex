@@ -15,7 +15,7 @@
   <div class="flex flex-row">
     <div class="flex-1">
       <p>
-        Name: <br />
+        Internal Name: <br />
         <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
       </p>
       <p>
@@ -77,17 +77,15 @@
 <div class="border border-radius padding-s">
   <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>
-      <span class="lead-xs"><%= strategy_session.title %></span>
-      <br />
-      <span class="color-grey"><%= strategy_session.notes %></span>
-      <br />
+      <span class="lead-xs"><%= strategy_session.email_subject %></span><br />
+      <span class="color-grey"><%= strategy_session.notes %></span><br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
       <%= cond do %>
         <% strategy_session.published && strategy_session.emailed -> %>
-          <span class="color-success">published and email sent to parent(s)</span>
+          <span class="color-info">email sent</span>
         <% strategy_session.published -> %>
-          <span class="color-success">published</span>
+          <span class="color-info">email queued to send</span>
         <% true -> %>
           <span></span>
       <% end %>
@@ -132,3 +130,5 @@
     </p>
   <% end %>
 </div>
+
+<div class="space-l"></div>

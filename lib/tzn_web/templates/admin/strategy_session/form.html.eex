@@ -5,13 +5,14 @@
     </div>
   <% end %>
 
+  <p>
+    Mentee: <br />
+    <%= @strategy_session.mentee.name %>
+  </p>
+
   <%= label f, :date, class: "control" %>
   <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>
-
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>
@@ -38,15 +39,10 @@
     
   <div class="space-l"></div>
 
-
   <%= label f, :email_subject %>
   <%= text_input f, :email_subject %>
   <%= error_tag f, :email_subject %>
 
-
-
   <%= submit "Save", class: "button button-primary button-border" %>
  
-
-
 <% end %>

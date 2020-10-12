@@ -7,8 +7,8 @@
 
   <%= if @changeset.data.published do %>
     <p class="color-info">
-      This strategy session is <strong>published</strong>. That means it is locked for editing
-      because an email has or will soon be delivered to the mentee + parent(s).
+      This strategy session is locked for editing because an email has been
+      (or will soon be) delivered to the mentee + parent(s).
     </p>
   <% end %>
 
@@ -22,9 +22,11 @@
   <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>
 
-  <%= label f, :title %>
-  <%= text_input f, :title %>
-  <%= error_tag f, :title %>
+  <div class="space-l"></div>
+
+  <%= label f, :email_subject %>
+  <%= text_input f, :email_subject %>
+  <%= error_tag f, :email_subject %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>
@@ -33,10 +35,6 @@
   <div class="space-l"></div>
 
 
-  <%= label f, :email_subject %>
-  <%= text_input f, :email_subject %>
-  <%= error_tag f, :email_subject %>
-
   <%= label f, :published, class: "control checkbox" do %>
     <%= checkbox f, :published %>
   <% end %>
@@ -44,13 +42,12 @@
 
 
   <%= unless @changeset.data.published do %>
-    <%= submit "Save", name: "submit_btn", value: "save", class: "button button-primary button-border" %>
+    <%= submit "Save without sending", name: "submit_btn", value: "save", class: "button button-primary button-border" %>
     <span class="space-m"></span>
-    <%= submit "Save & Publish", name: "submit_btn", value: "publish", class: "button button-primary" %>
+    <%= submit "Save and send email", name: "submit_btn", value: "publish", class: "button button-primary" %>
  
     <p class="color-grey">
-      Once published, the session will be locked to editing and an email will be
-      sent to the mentee and parent(s) with details of the strategy session.
+      After the email is sent, this session will be locked for editing. 
     </p>
   <% end %>
 
