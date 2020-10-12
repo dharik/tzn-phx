@@ -1,12 +1,14 @@
 <% 
-  bg_color = if @event.is_hard_deadline do 
-               "background-warning-100 border-color-warning-300"
+  hard_deadline_class = if @event.is_hard_deadline do 
+               "background-error-100 padding-vertical-xs padding-horizontal-xxs"
              else
-               "background-white"
+               ""
              end
 %>
-<div id="event-<%= @event.id %>" class="border-radius margin-bottom-m padding-s box-shadow-s <%= bg_color %>">
-  <%= @event.date |> format_date %> <br />
+<div id="event-<%= @event.id %>" class="border-radius margin-bottom-m padding-s box-shadow-s background-white">
+  <p>
+    <span class="<%= hard_deadline_class %>"><%= @event.date |> format_date %></span>
+  </p>
   <p class="overflow-wrap-break-word">
     <%= @event.notes %>
   </p>
