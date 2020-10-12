@@ -355,6 +355,10 @@ defmodule Tzn.Transizion do
     Map.new(markings, fn marking -> {marking.mentor_timeline_event_id, marking} end)
   end
 
+  def change_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = marking, attrs \\ %{}) do
+    MentorTimelineEventMarking.changeset(marking, attrs)
+  end
+
   def create_mentor_timeline_event_marking(attrs \\ %{}) do
     %MentorTimelineEventMarking{}
     |> MentorTimelineEventMarking.changeset(attrs)

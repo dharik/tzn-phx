@@ -1,49 +1,32 @@
 <%= for mentee <- @mentees do %>
-  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %><br />
+  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade %><br />
 <% end %>
-<table>
-<%= for events_by_month <- @events |> chunked_by_year_month do %>
-  <tr>
-    <td colspan="3">
-       <% first = List.first(events_by_month) %>
-      <h3><%= date_to_year_month_str(first.date) %></h3>
-    </td>
-  </tr>
-  <td width="33%">
-    <div class="text-align-center margin-m">Incomplete</div>
-    <%= for event <- events_by_month do %>
-      <% 
-        event_marking = @event_markings |> Map.get(event.id)
-        is_complete =  if event_marking do
-                          event_marking |> is_complete_for_mentee(@mentee)
-                        else
-                          false
-                        end
-        bg_color = cond do
-                    event.is_hard_deadline -> "background-warning-100 border-color-warning-300"
-                    is_complete -> "background-success-50 border-color-success-200"
-                    true -> ""
-                    end
-      %>
-      <div class="border border-radius margin-bottom-m border-color-light-200	padding-s <%= bg_color %>">
-        <%= event.date |> format_date %> <br />
-        <p class="overflow-wrap-break-word">
-          <%= event.notes %>
-        </p>
-        <%= if event_marking do %>
-          <p><em><%= event_marking.notes %></em></p>
-        <% end %>
-        <%= link "Edit", to: "" %> | 
-        <%= link "Move to in progress", to: "" %>
-      </div>
+
+<%= for events_by_month <- view_data(@events, @event_markings) do %>
+  <div class="margin-vertical-m sticky position-top background-white">
+    <% first = List.first(events_by_month) %>
+    <h3><%= date_to_year_month_str(first.date) %></h3>
+  </div>
+
+  <div class="flex">
+    <div class="padding-s background-light-50 border-radius" style="width: 33%">
+      <div class="text-align-center margin-bottom-m">Incomplete</div>
+      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "incomplete") end) do %>
+        <%= render "incomplete_event.html", Map.put(assigns, :event, event) %> 
       <% end %>
-    </td>
-    <td width="33%">
-      <div class="text-align-center margin-m">In Progress</div>
-    </td>
-    <td width="33%">
-      <div class="text-align-center margin-m">Complete</div>
-    </td>
+    </div>
+    <div class="padding-s background-secondary-50 border-radius margin-horizontal-s" style="width: 33%">
+      <div class="text-align-center margin-bottom-m">In Progress</div>
+      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "in_progress") end) do %>
+        <%= render "in_progress_event.html", Map.put(assigns, :event, event) %> 
+      <% end %>
+    </div>
+    <div class="padding-s background-success-50 border-radius" style="width: 33%">
+      <div class="text-align-center margin-bottom-m">Complete</div>
+      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "complete") end) do %>
+        <%= render "complete_event.html", Map.put(assigns, :event, event) %> 
+      <% end %>
+    </div>
   </div>
 <% end %>
-<%= # render "event.html", Map.put(assigns, :event, event) %> 
+<div class="space-l"></div>

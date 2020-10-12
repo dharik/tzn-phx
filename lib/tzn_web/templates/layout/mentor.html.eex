@@ -19,7 +19,7 @@
       <nav role="navigation" class="nav-inline flex-1 text-align-center">
         <ul>
           <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index) %></li>
-          <li><%= link "Mentor Timeline", to: Routes.mentor_timeline_path(@conn, :index) %></li>
+          <li><%= link "Mentee Timelines", to: Routes.mentor_timeline_path(@conn, :index) %></li>
           <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
           <li><%= link "Help", to: Routes.mentor_help_path(@conn, :show) %></li>
           <li><%= link "Log out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>

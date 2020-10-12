@@ -1,9 +1,29 @@
 defmodule TznWeb.Mentor.TimelineView do
   use TznWeb, :view
 
-  def chunked_by_year_month(events) do
+  # Formats data more conveniently
+  # events +
+  # markings 
+  # ---------
+  # { 
+  #   ...event,
+  #   year_month_str, 
+  #   marking: marking | nil, 
+  #   status: "incomplete" | "in_progress" | "complete" 
+  # }
+  def view_data(events, markings) do
     events
-    |> Enum.chunk_by(fn e -> date_to_year_month_str(e.date) end)
+    |> Enum.map(fn e -> Map.put(e, :year_month_str, date_to_year_month_str(e.date)) end)
+    |> Enum.map(fn e -> Map.put(e, :marking, markings |> Map.get(e.id)) end)
+    |> Enum.chunk_by(fn e -> e.year_month_str end)
+  end
+
+  def has_status(event, status) do
+    if event.marking do
+      event.marking.status == status
+    else
+      status == "incomplete"
+    end
   end
 
   def date_to_year_month_str(date) do
@@ -20,13 +40,5 @@ defmodule TznWeb.Mentor.TimelineView do
       {:error, _} -> date
       _ -> "N/A"
     end
-  end
-
-  def is_complete_for_mentee(event_marking, %{id: mentee_id}) when is_nil(event_marking) do
-    false
-  end
-
-  def is_complete_for_mentee(event_marking, %{id: mentee_id}) do
-    event_marking.mentee_id == mentee_id
   end
 end
