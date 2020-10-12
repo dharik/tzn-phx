@@ -15,7 +15,7 @@
         <%= render "incomplete_event.html", Map.put(assigns, :event, event) %> 
       <% end %>
     </div>
-    <div class="padding-s background-secondary-50 border-radius margin-horizontal-s" style="width: 33%">
+    <div class="padding-s background-primary-50 border-radius margin-horizontal-s" style="width: 33%">
       <div class="text-align-center margin-bottom-m">In Progress</div>
       <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "in_progress") end) do %>
         <%= render "in_progress_event.html", Map.put(assigns, :event, event) %> 
