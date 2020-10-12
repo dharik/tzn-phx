@@ -9,6 +9,23 @@
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
 
+  <%= label f, :grade %>
+  <%= radio_button f, :grade, "freshman" %> Freshman
+  <br />
+  <%= radio_button f, :grade, "rising sophomore" %> Rising Sophomore
+  <br />
+  <%= radio_button f, :grade, "sophomore" %> Sophomore
+  <br />
+  <%= radio_button f, :grade, "rising junior" %> Rising Junior
+  <br />
+  <%= radio_button f, :grade, "junior" %> Junior
+  <br />
+  <%= radio_button f, :grade, "rising senior" %> Rising Senior
+  <br />
+  <%= radio_button f, :grade, "senior" %> Senior
+  <br />
+  <%= error_tag f, :grade %>
+
   <%= label f, :internal_name %>
   <%= text_input f, :internal_name %>
   <%= error_tag f, :internal_name %>

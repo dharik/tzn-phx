@@ -322,7 +322,7 @@ defmodule Tzn.Transizion do
   end
 
   def list_mentor_timeline_events do
-    Repo.all(MentorTimelineEvent)
+    MentorTimelineEvent |> order_by(asc: :date, desc: :is_hard_deadline) |> Repo.all
   end
 
   def change_mentor_timeline_event(%MentorTimelineEvent{} = event, attrs \\ %{}) do
@@ -343,16 +343,20 @@ defmodule Tzn.Transizion do
 
   def get_mentor_timeline_event!(id), do: Repo.get!(MentorTimelineEvent, id)
 
-  def mentor_timeline_event_markings(mentor) do
+  def mentor_timeline_event_markings(mentee) do
     markings =
       Repo.all(
         from m in MentorTimelineEventMarking,
-          where: m.mentor_id == ^mentor.id
+          where: m.mentee_id == ^mentee.id
       )
 
     # Returns a map of event id: marking for easy lookups later.
     # assumes only one marking per event
     Map.new(markings, fn marking -> {marking.mentor_timeline_event_id, marking} end)
+  end
+
+  def change_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = marking, attrs \\ %{}) do
+    MentorTimelineEventMarking.changeset(marking, attrs)
   end
 
   def create_mentor_timeline_event_marking(attrs \\ %{}) do

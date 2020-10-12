@@ -1,0 +1,19 @@
+<% 
+  bg_color = if @event.is_hard_deadline do 
+               "background-warning-100 border-color-warning-300"
+             else
+                "background-white"
+             end
+%>
+<div id="event-<%= @event.id %>" class="border-radius margin-bottom-m padding-s box-shadow-s <%= bg_color %>">
+  <%= @event.date |> format_date %> <br />
+  <p class="overflow-wrap-break-word">
+    <%= @event.notes %>
+  </p>
+  <%= if @event.marking do %>
+    <p><strong><em><%= @event.marking.notes %></em></strong></p>
+    <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :edit, @event.marking.id) %>
+  <% else %>
+    <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :new, event_id: @event.id, mentee_id: @mentee.id) %>
+  <% end %>
+</div>

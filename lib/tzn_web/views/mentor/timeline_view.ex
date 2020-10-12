@@ -1,30 +1,29 @@
 defmodule TznWeb.Mentor.TimelineView do
   use TznWeb, :view
 
-  def upcoming_events(events) do
-    Enum.filter(events, fn event ->
-      days_from_now(event.date) > 0 && days_from_now(event.date) < 360
-    end)
-  end
-
-  def past_events(events) do
-    Enum.filter(events, fn event -> days_from_now(event.date) < 0 end)
-  end
-
-  def days_from_now(date) do
-    NaiveDateTime.diff(date, NaiveDateTime.local_now(), :second) / 3600 / 24
-  end
-
-  def grouped_by_year_month(events) do
+  # Formats data more conveniently
+  # events +
+  # markings 
+  # ---------
+  # { 
+  #   ...event,
+  #   year_month_str, 
+  #   marking: marking | nil, 
+  #   status: "incomplete" | "in_progress" | "complete" 
+  # }
+  def view_data(events, markings) do
     events
-    |> Enum.group_by(fn e -> date_to_year_month_str(e.date) end)
+    |> Enum.map(fn e -> Map.put(e, :year_month_str, date_to_year_month_str(e.date)) end)
+    |> Enum.map(fn e -> Map.put(e, :marking, markings |> Map.get(e.id)) end)
+    |> Enum.chunk_by(fn e -> e.year_month_str end)
   end
 
-  def sort_groups_asc(groups) do
-    groups
-    |> Enum.sort_by(fn {key, g} ->
-      g |> List.first() |> Map.get(:date) |> days_from_now
-    end)
+  def has_status(event, status) do
+    if event.marking do
+      event.marking.status == status
+    else
+      status == "incomplete"
+    end
   end
 
   def date_to_year_month_str(date) do
@@ -41,15 +40,5 @@ defmodule TznWeb.Mentor.TimelineView do
       {:error, _} -> date
       _ -> "N/A"
     end
-  end
-
-  def is_complete_for_mentee(event_marking, %{id: mentee_id}) when is_nil(event_marking) do
-    false
-  end
-
-  def is_complete_for_mentee(event_marking, %{id: mentee_id}) do
-    event_marking.completed_for_mentees
-    |> Enum.find(fn m -> m == mentee_id end)
-    |> is_integer
   end
 end
