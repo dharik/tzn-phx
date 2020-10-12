@@ -21,12 +21,9 @@
   <%= hidden_input f, :mentor_timeline_event_id %>
 
   <%= label f, :status %>
-  <%= radio_button f, :status, "incomplete" %> Incomplete
-  <br />
-  <%= radio_button f, :status, "in_progress" %> In Progress
-  <br />
-  <%= radio_button f, :status, "complete" %> Completed
-  <br />
+  <%= select f, :status, [
+    {"Incomplete", "incomplete"}, {"In Progress", "in_progress"}, 
+    {"Complete", "complete"}] %>
   <%= error_tag f, :status %>
 
   <%= label f, :notes %>
