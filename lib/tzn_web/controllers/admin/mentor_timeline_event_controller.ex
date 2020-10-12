@@ -22,7 +22,7 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
             |> redirect(to: Routes.admin_mentor_timeline_event_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changese: changeset)
+        render(conn, "new.html", changeset: changeset)
     end
   end
 
