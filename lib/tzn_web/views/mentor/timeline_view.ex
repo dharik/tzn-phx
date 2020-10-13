@@ -1,6 +1,7 @@
 defmodule TznWeb.Mentor.TimelineView do
   use TznWeb, :view
 
+  alias Tzn.Transizion.MentorTimelineEventMarking
   # Formats data more conveniently
   # events +
   # markings 
@@ -18,12 +19,31 @@ defmodule TznWeb.Mentor.TimelineView do
     |> Enum.chunk_by(fn e -> e.year_month_str end)
   end
 
+  def has_status(%{ marking: %MentorTimelineEventMarking{ status: "complete" }}, "complete") do
+    true
+  end
+  def has_status(%{ marking: nil}, "complete") do
+    false
+  end
+
+  def has_status(%{ marking: %MentorTimelineEventMarking{ status: "in_progress" }}, "in_progress") do
+    true
+  end
+  def has_status(%{ marking: nil}, "in_progress") do
+    false
+  end
+
+  def has_status(%{ marking: %MentorTimelineEventMarking{ status: "incomplete" }}, "incomplete") do
+    true
+  end
+  def has_status(%{ marking: %MentorTimelineEventMarking{ status: nil }}, "incomplete") do
+    true
+  end
+  def has_status(%{ marking: nil}, "incomplete") do
+    true
+  end
   def has_status(event, status) do
-    if event.marking do
-      event.marking.status == status
-    else
-      status == "incomplete"
-    end
+    false
   end
 
   def date_to_year_month_str(date) do
