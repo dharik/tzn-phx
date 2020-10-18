@@ -30,7 +30,8 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.notes,
           s.email_subject,
           s.mentor.email,
-          s.mentor.name
+          s.mentor.name,
+          s.mentee.email
         )
       end
 
@@ -43,7 +44,8 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           s.notes,
           s.email_subject,
           s.mentor.email,
-          s.mentor.name
+          s.mentor.name,
+          s.mentee.email
         )
       end
 
@@ -59,14 +61,36 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     session_notes,
     subject,
     reply_to_email,
-    from_name
+    from_name,
+    mentee_email
   ) do
     headers = [
-      Authorization: Application.get_env(:tzn, :sendgrid_auth),
+      Authorization: "Bearer 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",
       "Content-Type": "application/json"
     ]
 
     Logger.info "Sending strategy session email to #{to_email}"
+
+    cc = if mentee_email do
+       [
+            %{
+              email: reply_to_email,
+              name: from_name
+            },
+            %{
+                email: mentee_email,
+                name: mentee_name
+              }
+          ]
+    else
+        [
+            %{
+              email: reply_to_email,
+              name: from_name
+            }
+          ]
+    end
+
     body = %{
       personalizations: [
         %{
@@ -76,12 +100,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
               name: to_name
             }
           ],
-          cc: [
-            %{
-              email: reply_to_email,
-              name: from_name
-            }
-          ],
+          cc: cc,
           dynamic_template_data: %{
             mentee_name: mentee_name,
             parent_name: to_name,
