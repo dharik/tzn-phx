@@ -58,7 +58,7 @@
 
 <p class="lead">Strategy Sessions</p>
 <div class="border border-radius padding-s">
-  <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new), class: 'button button-primary' %>
+  <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
 
   <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>

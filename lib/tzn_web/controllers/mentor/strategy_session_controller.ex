@@ -5,8 +5,8 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo
 
-  def new(conn, _params) do
-    changeset = Transizion.change_strategy_session(%StrategySession{})
+  def new(conn, params) do
+    changeset = Transizion.change_strategy_session(%StrategySession{}, params)
     render(conn, "new.html", changeset: changeset)
   end
 
