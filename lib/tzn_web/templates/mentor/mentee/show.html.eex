@@ -92,7 +92,7 @@
 <p class="lead">Timesheet Entries</p>
 <div class="border border-radius padding-s">
 
-  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
+  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
   <div class="space-s"></div>
   <table>
     <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>

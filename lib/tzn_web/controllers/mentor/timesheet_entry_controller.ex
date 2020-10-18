@@ -11,8 +11,8 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
     render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report)
   end
 
-  def new(conn, _params) do
-    changeset = Transizion.change_timesheet_entry(%TimesheetEntry{})
+  def new(conn, params) do
+    changeset = Transizion.change_timesheet_entry(%TimesheetEntry{}, params)
     render(conn, "new.html", changeset: changeset)
   end
 
