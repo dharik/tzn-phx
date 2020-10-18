@@ -2,7 +2,7 @@
 <%= link "Add new timeline event", to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-primary" %>
 
 <%= for event <- @events |> Enum.sort_by(&(&1.date), {:asc, Date}) do %>
-  <p>
+  <div class="border border-radius box-shadow-s padding-s margin-vertical-s">
     <strong>
       <%= event.date |> format_date %>
     </strong>
@@ -23,5 +23,5 @@
     <br />
 
     <%= link "Edit", to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) %>
-  </p>
+  </div>
 <% end %>
