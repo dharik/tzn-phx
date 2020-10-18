@@ -104,3 +104,13 @@
     <% end %>
   </table>
 </div>
+
+<div class="space-m"></div>
+
+
+<p class="lead">Timeline</p>
+<div class="border border-radius padding-s">
+  <%= link "Open #{@mentee.name}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, mentee_id: @mentee.id), class: "button button-primary" %>
+</div>
+
+<div class="space-l"></div>
