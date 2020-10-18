@@ -4,6 +4,8 @@ defmodule Tzn.Transizion.Mentee do
 
   schema "mentees" do
     field :name, :string
+    field :email, :string
+
     field :internal_name, :string
     field :internal_note, :string
 
@@ -52,7 +54,8 @@ defmodule Tzn.Transizion.Mentee do
       :parent2_name,
       :mentor_id,
       :user_id,
-      :grade
+      :grade,
+      :email
     ])
     |> cast_assoc(:user)
     |> validate_required([:name])

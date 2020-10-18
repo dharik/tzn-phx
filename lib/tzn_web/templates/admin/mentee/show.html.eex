@@ -15,16 +15,31 @@
   <div class="flex flex-row">
     <div class="flex-1">
       <p>
-        Internal Name: <br />
-        <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
-      </p>
-      <p>
         Grade: <br />
         <span class="color-grey"><%= @mentee.grade || 'Not set' %></span>
       </p>
       <p>
-        Internal Note: <br />
-        <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
+        Mentor:<br />
+        <%= if @mentee.mentor do %>
+          <%= link @mentee.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentee.mentor) %>
+        <% else %>
+          <span class="color-error">No mentor assigned yet</span>
+        <% end %>
+      </p>
+      <p>
+        Hours used: <br />
+        <span class="color-grey"><%= @mentee.hour_counts.hours_used |> Decimal.round(1) %></span>
+      </p>
+      <p>
+        Hours purchased:<br />
+        <span class="color-grey"><%= @mentee.hour_counts.hours_purchased |> Decimal.round(1) %></span>
+      </p>
+    </div>
+    <div class="flex-1">
+      
+      <p>
+        Email<br />
+        <span class="color-grey"><%= @mentee.email || "Not set" %></span>
       </p>
       <p>
         Parents: <br />
@@ -43,31 +58,28 @@
     </div>
     <div class="flex-1">
       <p>
-        Hours used: <br />
-        <span class="color-grey"><%= @mentee.hour_counts.hours_used |> Decimal.round(1) %></span>
+        Login details<br />
+        <span class="color-grey">
+          <%= if @mentee.user do %>
+            <%= @mentee.user.email %> (ID=<%= @mentee.user.id %>)
+          <% else %>
+            N/A
+          <% end %>
+        </span>
       </p>
       <p>
-        Hours purchased:<br />
-        <span class="color-grey"><%= @mentee.hour_counts.hours_purchased |> Decimal.round(1) %></span>
+        Internal Name: <br />
+        <span class="color-grey"><%= @mentee.internal_name || 'N/A' %></span>
+      </p>
+      <p>
+        Internal Note: <br />
+        <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
       </p>
     </div>
   </div>
-  <p>
-    Mentor:<br />
-    <%= if @mentee.mentor do %>
-      <%= link @mentee.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentee.mentor) %>
-    <% else %>
-      <span class="color-error">No mentor assigned yet</span>
-    <% end %>
-  </p>
-  <%= if @mentee.user do %>
-    <p>
-      Login details<br />
-      <span class="color-grey">
-        <%= @mentee.user.email %> (ID=<%= @mentee.user.id %>)
-      </span>
-    </p>
-  <% end %>
+  
+  
+  
   <div class="space-s"></div>
 
   <%= link "Edit internal information", to: Routes.admin_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
