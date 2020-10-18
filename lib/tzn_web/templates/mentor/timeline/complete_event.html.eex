@@ -1,19 +1,20 @@
-<% 
-  hard_deadline_class = if @event.is_hard_deadline do 
-               "background-error-100 padding-vertical-xs padding-horizontal-xxs"
-             else
-               ""
-             end
-%>
-<div id="event-<%= @event.id %>" class="border-radius margin-bottom-m padding-s box-shadow-s background-white">
+<%=  if @event.is_hard_deadline do %>
+  <div class="border-radius-top border-color-error-200 background-error-200 box-shadow-s font-size-s">
+    &nbsp;
+  </div>
+<% end %>
+<div class="border-radius-bottom padding-s box-shadow-s background-white <%= unless @event.is_hard_deadline, do: "border-radius" %>">
   <p>
-    <span class="<%= hard_deadline_class %>"><%= @event.date |> format_date %></span>
-  </p>  <p class="overflow-wrap-break-word">
+    <%= @event.date |> format_date %>
+  </p>
+  <p class="overflow-wrap-break-word">
     <%= @event.notes %>
   </p>
   <%= if @event.marking do %>
     <p><strong><em><%= @event.marking.notes %></em></strong></p>
-    <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :edit, @event.marking.id) %>
+    <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :edit, @event.marking.id) %> | 
+     <%= link "Mark Incomplete", to: Routes.mentor_timeline_event_marking_path(@conn, :update, @event.marking, mentor_timeline_event_marking: %{status: "incomplete"}), method: :patch %> | 
+     <%= link "Mark In Progress", to: Routes.mentor_timeline_event_marking_path(@conn, :update, @event.marking, mentor_timeline_event_marking: %{status: "in_progress"}), method: :patch %>
   <% else %>
     <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :new, event_id: @event.id, mentee_id: @mentee.id) %>
   <% end %>

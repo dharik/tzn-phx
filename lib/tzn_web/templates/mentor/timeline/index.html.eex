@@ -1,32 +1,36 @@
 <%= for mentee <- @mentees do %>
   <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade %><br />
 <% end %>
-
 <%= for events_by_month <- view_data(@events, @event_markings) do %>
-  <div class="margin-vertical-m sticky position-top background-white">
-    <% first = List.first(events_by_month) %>
+  <% first = List.first(events_by_month) %>
+  <div class="background-white text-align-center">
     <h3><%= date_to_year_month_str(first.date) %></h3>
   </div>
 
-  <div class="flex">
-    <div class="padding-s background-light-50 border-radius" style="width: 33%">
-      <div class="text-align-center margin-bottom-m">Incomplete</div>
-      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "incomplete") end) do %>
-        <%= render "incomplete_event.html", Map.put(assigns, :event, event) %> 
-      <% end %>
-    </div>
-    <div class="padding-s background-primary-50 border-radius margin-horizontal-s" style="width: 33%">
-      <div class="text-align-center margin-bottom-m">In Progress</div>
-      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "in_progress") end) do %>
-        <%= render "in_progress_event.html", Map.put(assigns, :event, event) %> 
-      <% end %>
-    </div>
-    <div class="padding-s background-success-50 border-radius" style="width: 33%">
-      <div class="text-align-center margin-bottom-m">Complete</div>
-      <%= for event <- events_by_month |> Enum.filter(fn e -> has_status(e, "complete") end) do %>
-        <%= render "complete_event.html", Map.put(assigns, :event, event) %> 
-      <% end %>
-    </div>
+  <div class="flex text-align-center">
+    <div class="background-light-50 padding-s" style="width: 33%">Incomplete</div>
+    <div class="background-primary-50 padding-s margin-horizontal-s" style="width: 33%">In Progress</div>
+    <div class="background-success-50 padding-s" style="width: 33%">Complete</div>
   </div>
+
+  <%= for event <- events_by_month do %>
+    <div class="flex" id="event-<%= event.id %>">
+      <div class="padding-s background-light-50" style="width: 33%">
+        <%= if has_status(event, "incomplete") do %>
+          <%= render "incomplete_event.html", Map.put(assigns, :event, event) %>
+        <% end %>
+      </div>
+      <div class="padding-s background-primary-50 margin-horizontal-s" style="width: 33%">
+        <%= if has_status(event, "in_progress") do %>
+          <%= render "in_progress_event.html", Map.put(assigns, :event, event) %> 
+        <% end %>
+      </div>
+      <div class="padding-s background-success-50" style="width: 33%">
+        <%= if has_status(event, "complete") do %>
+          <%= render "complete_event.html", Map.put(assigns, :event, event) %> 
+        <% end %>
+      </div>
+    </div>
+  <% end %>
+  <div class="space-l"></div>
 <% end %>
-<div class="space-l"></div>
