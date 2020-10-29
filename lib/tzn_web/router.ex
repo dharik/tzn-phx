@@ -63,6 +63,7 @@ defmodule TznWeb.Router do
       pipe_through [:admin]
       
       get "/", Admin.UserController, :index
+      get "/matching", Admin.MatchingAlgorithmController, :show
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
       resources "/mentors", Admin.MentorController

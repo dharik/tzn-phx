@@ -13,3 +13,8 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
+
+import { h, render } from 'preact';
+import MatchingApp from './matching';
+
+render(<MatchingApp />, document.getElementById('matching-app'));
