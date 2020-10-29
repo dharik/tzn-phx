@@ -3,11 +3,10 @@ defmodule Tzn.Repo.Migrations.AddColumnsForMatchingAlgorithm do
 
   def change do
     alter table :mentors do
-      add :career_interests, :string
-      add :school_tiers, :string
+      add :career_interests, {:array, :string}
+      add :school_tiers, {:array, :string}
       add :gender, :string
-      add :experience_level, :string
-      add :hobbies, :string
+      add :hobbies, {:array, :string}
       add :disability_experience, :boolean
       add :social_factor, :string
       add :international_experience, :boolean

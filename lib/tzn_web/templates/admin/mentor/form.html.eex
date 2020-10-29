@@ -17,7 +17,89 @@
   <%= select f, :user_id, [{'None', nil} | Enum.map(@users, fn user ->  {"#{user.email}", user.id} end)] %>
   <%= error_tag f, :user_id %>
 
+  <div class="space-l"></div>
+  <p class="lead">Matching Algorithm Data</p>
+  
+  <%= label f, :career_interests  %>
+  <%= multiple_select f, :career_interests, [
+    "Business, finance, entrepreneurship": "business",
+    "Computer science, coding": "computer_science",
+    "Engineering": "engineering",
+    "Journalism, writing, marketing": "journalism",
+    "Chemistry, biology": "chemistry",
+    "Physics": "physics",
+    "Nursing": "nursing",
+    "Pre-med (close to chem and bio)": "premed",
+    "Sports nutrition": "sports_nutrition",
+    "Economics": "economics",
+    "Undeclared/liberal arts, humanities": "liberal_arts",
+    "Math": "math",
+    "Political science": "political_science",
+  ], size: 15 %>
+  <%= error_tag f, :career_interests %>
+
+  <%= label f, :school_tiers  %>
+  <%= multiple_select f, :school_tiers, [
+    "Ivy League": "ivy",
+    "Top 20-50": "top_20_50",
+    "Top 50-100": "top_50_100",
+    "Top 100+": "top_100_plus"
+  ], size: 4 %>
+  <%= error_tag f, :school_tiers %>
+
+  <%= label f, :gender  %>
+  <%= radio_button f, :gender, "male" %> Male
+  <br />
+  <%= radio_button f, :gender, "female" %> Female
+  <br />
+  <%= radio_button f, :gender, "non-binary" %> Non-binary
+  <br />
+  <%= error_tag f, :gender %>
+
+  <div></div>
+
+  <%= label f, :hobbies  %>
+  <%= multiple_select f, :hobbies, [
+    "Travel": "travel",
+    "Volunteering": "volunteering",
+    "Hiking": "hiking",
+    "Watching sports": "watching_sports",
+    "Playing sports": "playing_sports",
+    "Singing": "singing",
+    "Playing instruments": "playing_instruments",
+    "Gaming": "gaming",
+    "Writing/blogging": "writing_blogging",
+    "Learning and speaking languages": "languages",
+    "Yoga": "yoga",
+    "Lifting/exercise/running": "lift_exercise_run",
+    "Movies/TV": "movies_tv",
+    "Teaching/tutoring": "teaching_tutoring",
+    "Photography": "photography",
+    "Cooking/foodie": "cooking",
+    "Poker/cards": "poker",
+    "Reading": "reading",
+    "Trivia": "trivia",
+    "Painting": "painting"
+  ], size: 25 %>
+  <%= error_tag f, :hobbies %>
+
+
+  <%= label f, :disability_experience  %>
+  <%= checkbox f, :disability_experience %> Yes
+  <%= error_tag f, :disability_experience %>
+  <br />
+
+  <%= label f, :social_factor  %>
+  <%= select f, :social_factor, [1, 2, 3, 4, "5 - Ultra Social": 5] %>
+  <%= error_tag f, :social_factor %>
+
+  <%= label f, :international_experience  %>
+  <%= checkbox f, :international_experience %> Yes
+  <%= error_tag f, :international_experience %>
+
   <div class="space-m"></div>
+
+  
   <div>
     <%= submit "Save" %>
   </div>

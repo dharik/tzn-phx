@@ -7,10 +7,10 @@ defmodule Tzn.Transizion.Mentor do
     field :email, :string
 
     # Matching algorithm
-    field :career_interests, :string
-    field :school_tiers, :string
+    field :career_interests, {:array, :string}
+    field :school_tiers, {:array, :string}
     field :gender, :string
-    field :hobbies, :string
+    field :hobbies, {:array, :string}
     field :disability_experience, :boolean
     field :social_factor, :string
     field :international_experience, :boolean
