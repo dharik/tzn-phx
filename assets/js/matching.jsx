@@ -41,7 +41,7 @@ export default () => {
       }
     });
 
-    if (mentor.gender == genderPreference) {
+    if (genderPreference && mentor.gender == genderPreference) {
       console.log("mentor has matching gender", genderPreference);
       genderScore += 10;
     }
@@ -51,7 +51,7 @@ export default () => {
       disabilityScore += 10;
     }
 
-    if (mentor.social_factor == new String(socialFactor)) {
+    if (socialFactor && mentor.social_factor == new String(socialFactor)) {
       console.log("mentor has matching social factor");
       socialFactorScore += 10;
     }
