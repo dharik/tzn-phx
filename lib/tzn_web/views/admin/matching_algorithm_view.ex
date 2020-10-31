@@ -15,10 +15,10 @@ defmodule TznWeb.Admin.MatchingAlgorithmView do
 
   def mentor(%Tzn.Transizion.Mentor{} = mentor) do
     Map.new
-    |> Map.put(:career_interests, mentor.career_interests)
-    |> Map.put(:school_tiers, mentor.school_tiers)
+    |> Map.put(:career_interests, mentor.career_interests || [])
+    |> Map.put(:school_tiers, mentor.school_tiers || [])
     |> Map.put(:gender, mentor.gender)
-    |> Map.put(:hobbies, mentor.hobbies)
+    |> Map.put(:hobbies, mentor.hobbies || [])
     |> Map.put(:disability_experience, mentor.disability_experience)
     |> Map.put(:social_factor, mentor.social_factor)
     |> Map.put(:international_experience, mentor.international_experience)
