@@ -17,4 +17,6 @@ import "phoenix_html"
 import { h, render } from 'preact';
 import MatchingApp from './matching';
 
-render(<MatchingApp />, document.getElementById('matching-app'));
+if(document.getElementById('matching-app')) {
+  render(<MatchingApp />, document.getElementById('matching-app'));
+}

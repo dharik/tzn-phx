@@ -21,30 +21,11 @@
   <p class="lead">Matching Algorithm Data</p>
   
   <%= label f, :career_interests  %>
-  <%= multiple_select f, :career_interests, [
-    "Business, finance, entrepreneurship": "business",
-    "Computer science, coding": "computer_science",
-    "Engineering": "engineering",
-    "Journalism, writing, marketing": "journalism",
-    "Chemistry, biology": "chemistry",
-    "Physics": "physics",
-    "Nursing": "nursing",
-    "Pre-med (close to chem and bio)": "premed",
-    "Sports nutrition": "sports_nutrition",
-    "Economics": "economics",
-    "Undeclared/liberal arts, humanities": "liberal_arts",
-    "Math": "math",
-    "Political science": "political_science",
-  ], size: 15 %>
+  <%= multiple_select f, :career_interests, Tzn.Transizion.Mentor.career_interest_options, size: 15 %>
   <%= error_tag f, :career_interests %>
 
   <%= label f, :school_tiers  %>
-  <%= multiple_select f, :school_tiers, [
-    "Ivy League": "ivy",
-    "Top 20-50": "top_20_50",
-    "Top 50-100": "top_50_100",
-    "Top 100+": "top_100_plus"
-  ], size: 4 %>
+  <%= multiple_select f, :school_tiers, Tzn.Transizion.Mentor.school_tier_options, size: 4 %>
   <%= error_tag f, :school_tiers %>
 
   <%= label f, :gender  %>
@@ -52,35 +33,14 @@
   <br />
   <%= radio_button f, :gender, "female" %> Female
   <br />
-  <%= radio_button f, :gender, "non-binary" %> Non-binary
+  <%= radio_button f, :gender, "non_binary" %> Non-binary
   <br />
   <%= error_tag f, :gender %>
 
   <div></div>
 
   <%= label f, :hobbies  %>
-  <%= multiple_select f, :hobbies, [
-    "Travel": "travel",
-    "Volunteering": "volunteering",
-    "Hiking": "hiking",
-    "Watching sports": "watching_sports",
-    "Playing sports": "playing_sports",
-    "Singing": "singing",
-    "Playing instruments": "playing_instruments",
-    "Gaming": "gaming",
-    "Writing/blogging": "writing_blogging",
-    "Learning and speaking languages": "languages",
-    "Yoga": "yoga",
-    "Lifting/exercise/running": "lift_exercise_run",
-    "Movies/TV": "movies_tv",
-    "Teaching/tutoring": "teaching_tutoring",
-    "Photography": "photography",
-    "Cooking/foodie": "cooking",
-    "Poker/cards": "poker",
-    "Reading": "reading",
-    "Trivia": "trivia",
-    "Painting": "painting"
-  ], size: 25 %>
+  <%= multiple_select f, :hobbies, Tzn.Transizion.Mentor.hobby_options, size: 25 %>
   <%= error_tag f, :hobbies %>
 
 
@@ -99,7 +59,7 @@
 
   <div class="space-m"></div>
 
-  
+
   <div>
     <%= submit "Save" %>
   </div>

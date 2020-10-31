@@ -1,1 +1,6 @@
+<script id="matching-data" type="application/json">
+  <%= raw data() %>
+</script>
 <div id="matching-app"></div>
+
+<div class="space-xl"></div>
