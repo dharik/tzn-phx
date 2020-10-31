@@ -236,23 +236,42 @@ export default () => {
           </label>
         ))}
       </div>
-      <div className="flex-1">
+      <div className="flex-1 sticky position-top">
         Suggested mentors
         {scoredMentors.map((mentor, idx) => (
           <div
             key={idx}
-            className="box-shadow-s border-radius margin-vertical-s"
+            className="box-shadow-s border-radius margin-vertical-s padding-s"
           >
             <h1 className="all-caps">{mentor.name}</h1>
-            Score: {mentor.totalScore}
-            {mentor.careerScore > 0 && (
-              <div>Career interests: {mentor.career_interests.join(", ")}</div>
-            )}
-            {mentor.hobbiesScore > 0 && (
-              <div>Hobbies: {mentor.hobbies.join(", ")}</div>
-            )}
           </div>
         ))}
+        <table>
+          <thead>
+            <tr>
+              <th>Name</th>
+              <th>Career</th>
+              <th>Tier</th>
+              <th>Gender</th>
+              <th>Disability</th>
+              <th>Social Factor</th>
+              <th>Hobbies</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          {scoredMentors.map((mentor, idx) => (
+            <tr key={idx}>
+              <td>{mentor.name}</td>
+              <td>{mentor.careerScore}</td>
+              <td>{mentor.tierScore}</td>
+              <td>{mentor.genderScore}</td>
+              <td>{mentor.disabilityScore}</td>
+              <td>{mentor.socialFactorScore}</td>
+              <td>{mentor.hobbiesScore}</td>
+              <td>{mentor.totalScore}</td>
+            </tr>
+          ))}
+        </table>
       </div>
     </div>
   );
