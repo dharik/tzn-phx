@@ -11,17 +11,18 @@
   </head>
   <body>
     <header class="container flex padding-m align-items-center">
-      <div class="flex-1">
+      <div class="flex-0">
         <a href="<%= Routes.admin_user_path(@conn, :index) %>" class="phx-logo">
           <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
         </a>
       </div>
-      <nav role="navigation" class="nav-inline flex-1 text-align-center">
+      <nav role="navigation" class="nav-inline flex-1 text-align-right">
         <ul>
           <li><%= link "Users", to: Routes.admin_user_path(@conn, :index) %></li>
           <li><%= link "Mentees", to: Routes.admin_mentee_path(@conn, :index) %></li>
           <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
           <li><%= link "Mentor Timeline", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
+          <li><%= link "Matching Algorithm", to: Routes.admin_matching_algorithm_path(@conn, :show) %></li>
           <li><%= link "Log out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>
       </nav>

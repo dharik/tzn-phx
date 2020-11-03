@@ -23,5 +23,6 @@ defmodule TznWeb.Admin.MatchingAlgorithmView do
     |> Map.put(:social_factor, mentor.social_factor)
     |> Map.put(:international_experience, mentor.international_experience)
     |> Map.put(:name, mentor.name)
+    |> Map.put(:id, mentor.id)
   end
 end
