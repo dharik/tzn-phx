@@ -20,10 +20,6 @@
     {"Junior", "junior"}, {"Rising Senior", "rising senior"}, {"Senior", "senior"}] %>
   <%= error_tag f, :grade %>
 
-  <%= label f, :internal_name %>
-  <%= text_input f, :internal_name %>
-  <%= error_tag f, :internal_name %>
-
   <%= label f, :internal_note %>
   <%= text_input f, :internal_note %>
   <%= error_tag f, :internal_note %>

@@ -6,7 +6,6 @@ defmodule Tzn.Transizion.Mentee do
     field :name, :string
     field :email, :string
 
-    field :internal_name, :string
     field :internal_note, :string
 
     field :parent1_email, :string
@@ -32,7 +31,6 @@ defmodule Tzn.Transizion.Mentee do
   def changeset(mentee, attrs) do
     mentee
     |> cast(attrs, [
-      :internal_name,
       :internal_note,
       :parent1_email,
       :parent1_name,
@@ -46,7 +44,6 @@ defmodule Tzn.Transizion.Mentee do
     mentee
     |> cast(attrs, [
       :name,
-      :internal_name,
       :internal_note,
       :parent1_email,
       :parent1_name,

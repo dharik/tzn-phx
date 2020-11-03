@@ -6,7 +6,6 @@
     <tr>
       <th>ID</th>
       <th>Name</th>
-      <th>Internal Name</th>
       <th>Created at</th>
       <th>Current Mentor</th>
       <th>Hours used/purchased</th>
@@ -21,9 +20,6 @@
         </td>
         <td>
           <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
-        </td>
-        <td>
-          <%= mentee.internal_name %>
         </td>
         <td>
           <%= mentee.inserted_at %>

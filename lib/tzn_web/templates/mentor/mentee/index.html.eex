@@ -3,7 +3,6 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Internal Name</th>
       <th>Hours used / hours purchased</th>
       <th>Hours left</th>
     </tr>
@@ -14,7 +13,6 @@
         <td>
           <%= link mentee.name, to: Routes.mentor_mentee_path(@conn, :show, mentee) %>
         </td>
-        <td><%= mentee.internal_name %></td>
         <td>
           <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased |> Decimal.round(1) %>
         </td>
