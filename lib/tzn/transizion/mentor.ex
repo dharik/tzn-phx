@@ -5,6 +5,7 @@ defmodule Tzn.Transizion.Mentor do
   schema "mentors" do
     field :name, :string
     field :email, :string
+    field :photo_url, :string
 
     # Matching algorithm
     field :career_interests, {:array, :string}
@@ -30,13 +31,14 @@ defmodule Tzn.Transizion.Mentor do
       :name,
       :user_id,
       :email,
+      :photo_url,
       :career_interests,
       :school_tiers,
       :gender,
       :hobbies,
       :disability_experience,
       :social_factor,
-      :international_experience
+      :international_experience,
     ])
     |> validate_required([:name, :email])
     |> cast_assoc(:user)

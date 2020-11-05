@@ -279,15 +279,20 @@ export default () => {
               <h1 className="all-caps">{mentor.name}</h1>
             </a>
             <div className="flex margin-vertical-xs">
-              <svg
-                fill="lavender"
-                viewBox="0 0 24 24"
-                width="120"
-                height="120"
-                xmlns="http://www.w3.org/2000/svg"
-              >
-                <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
-              </svg>
+              {mentor.photo_url ? (
+                  <img src={mentor.photo_url} width="120" height="120"  className="margin-right-s"/>
+              ) : (
+                <svg
+                  fill="lavender"
+                  viewBox="0 0 24 24"
+                  width="120"
+                  height="120"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              )}
+
               <div className="flex-1">
                 {mentor.careerScore > 0 && (
                   <p>

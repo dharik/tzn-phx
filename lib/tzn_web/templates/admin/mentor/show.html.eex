@@ -5,6 +5,9 @@
 
 <div class="border border-radius padding-s flex flex-row">
   <div class="flex-1">
+    <%= if @mentor.photo_url do %>
+      <img src="<%= @mentor.photo_url %>" width="200" height"200" />
+    <% end %>
     <p>
       Name:<br />
       <span class="color-grey"><%= @mentor.name %></span>
