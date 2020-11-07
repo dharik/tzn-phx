@@ -2,13 +2,14 @@ defmodule Tzn.Users do
   alias Tzn.Repo
   alias Tzn.Users.Admin
   alias Tzn.Users.User
-
+  import Ecto.Query
+  
   def list_admins do
     Repo.all(Admin)
   end
 
   def list_users do
-    Repo.all(User) |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
+    User |> order_by(desc: :id) |> Repo.all |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
   end
 
   def get_user!(id), do: Repo.get!(User, id)

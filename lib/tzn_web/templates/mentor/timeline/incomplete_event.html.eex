@@ -17,9 +17,15 @@
     <%= link "Mark Complete", to: Routes.mentor_timeline_event_marking_path(@conn, :update, @event.marking, mentor_timeline_event_marking: %{status: "complete"}), method: :patch %>
   <% else %>
     <%= link "Edit", to: Routes.mentor_timeline_event_marking_path(@conn, :new, event_id: @event.id, mentee_id: @mentee.id) %> |
-    <%= link "Move to in progress", 
+    <%= link "Mark In progress", 
         to: Routes.mentor_timeline_event_marking_path(@conn, :create, mentor_timeline_event_marking: %{
               mentee_id: @mentee.id, mentor_timeline_event_id: @event.id, status: "in_progress"
+            }),
+        method: :post 
+    %> | 
+    <%= link "Mark Complete", 
+        to: Routes.mentor_timeline_event_marking_path(@conn, :create, mentor_timeline_event_marking: %{
+              mentee_id: @mentee.id, mentor_timeline_event_id: @event.id, status: "complete"
             }),
         method: :post 
     %>

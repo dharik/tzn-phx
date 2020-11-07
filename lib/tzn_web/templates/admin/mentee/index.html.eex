@@ -6,7 +6,7 @@
     <tr>
       <th>ID</th>
       <th>Name</th>
-      <th>Created at</th>
+      <th>Created</th>
       <th>Current Mentor</th>
       <th>Hours used/purchased</th>
       <th>Hours left</th>
@@ -36,7 +36,7 @@
         </td>
         <td>
           <%
-            hours_left = mentee.hour_counts.hours_purchased |> Decimal.sub(mentee.hour_counts.hours_used)
+            hours_left = mentee.hour_counts.hours_purchased |> Decimal.sub(mentee.hour_counts.hours_used) |> Decimal.round(1)
           %>
           <%= if hours_left |> Decimal.lt?(5) do %>
             <span class="color-error"><%= hours_left %></span>

@@ -328,7 +328,7 @@ export default () => {
             </div>
           </div>
         ))}
-        {scoredMentorTable}
+        {/* {scoredMentorTable} */}
       </div>
     </div>
   );

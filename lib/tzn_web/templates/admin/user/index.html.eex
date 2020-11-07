@@ -4,7 +4,7 @@
     <tr>
       <th>ID</th>
       <th>Email</th>
-      <th>Created at</th>
+      <th>Created</th>
       <th>Admin?</th>
       <th>Mentor Profile</th>
       <th>Mentee Profile</th>
