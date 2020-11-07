@@ -25,11 +25,17 @@
   <%= error_tag f, :internal_note %>
 
   <%= label f, :mentor_id  %>
-  <%= select f, :mentor_id, [{'None', nil} | Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end)] %>
+  <%= select f, :mentor_id, [
+    {'None', nil} | 
+    Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
+  ] %>
   <%= error_tag f, :mentor_id %>
 
   <%= label f, :user_id  %>
-  <%= select f, :user_id, [{'None', nil} | Enum.map(@users, fn user ->  {"#{user.email}", user.id} end)] %>
+  <%= select f, :user_id, [
+    {'None', nil} |
+    @users |> Enum.sort_by(fn user -> user.id end ) |> Enum.reverse |> Enum.map(fn user -> {"#{user.email}", user.id} end)
+  ] %>
   <%= error_tag f, :user_id %>
 
   <div class="space-m"></div>
