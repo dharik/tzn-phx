@@ -13,7 +13,7 @@
     <header class="container flex padding-m align-items-center">
       <div class="flex-1">
         <a href="<%= Routes.mentor_mentee_path(@conn, :index) %>" class="phx-logo">
-          <img src="<%= Routes.static_path(@conn, "/images/tzn-logo.png") %>" />
+          <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300" />
         </a>
       </div>
       <nav role="navigation" class="nav-inline flex-1 text-align-center">
@@ -22,7 +22,7 @@
           <li><%= link "Mentee Timelines", to: Routes.mentor_timeline_path(@conn, :index) %></li>
           <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
           <li><%= link "Help", to: Routes.mentor_help_path(@conn, :show) %></li>
-          <li><%= link "Log out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
+          <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>
       </nav>
     </header>

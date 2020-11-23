@@ -7,7 +7,7 @@
       <th>ID</th>
       <th>Name</th>
       <th>Created</th>
-      <th>Current Mentor</th>
+      <th>Current mentor</th>
       <th>Hours used/purchased</th>
       <th>Hours left</th>
     </tr>
