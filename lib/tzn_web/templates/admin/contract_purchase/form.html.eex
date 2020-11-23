@@ -17,7 +17,7 @@
   <%= error_tag f, :notes %>
 
   <%= label f, :hours %>
-  <%= number_input f, :hours %>
+  <%= number_input f, :hours, step: 0.1 %>
   <%= error_tag f, :hours %>
 
   
