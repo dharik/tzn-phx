@@ -8,7 +8,8 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   def index(conn, _params) do
     timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_mentor}) |> Repo.preload(:mentee)
     monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
-    render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report)
+    current_mentor = conn.assigns.current_mentor
+    render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report, mentor: current_mentor)
   end
 
   def new(conn, params) do

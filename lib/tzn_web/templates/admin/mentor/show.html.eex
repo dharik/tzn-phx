@@ -115,6 +115,7 @@
     <tr>
       <th>Month, Year</th>
       <th>Hours</th>
+      <th>Estimated Pay</th>
     </tr>
   </thead>
   <tbody>
@@ -126,10 +127,15 @@
         <td>
           <%= stat.hours |> Decimal.round(1) %>
         </td>
+        <td>
+          <%= if @mentor.hourly_rate do %>
+            <%= Decimal.mult(stat.hours, @mentor.hourly_rate) |> Decimal.round(2) %>            
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </tbody>
 </table>
 
 
-
+<div class="space-l"></div>

@@ -17,6 +17,10 @@
   <%= text_input f, :photo_url %>
   <%= error_tag f, :photo_url %>
 
+  <%= label f, :hourly_rate %>
+  <%= number_input f, :hourly_rate, step: 0.01 %>
+  <%= error_tag f, :hourly_rate %>
+
   <%= label f, :user_id  %>
   <%= select f, :user_id, [
     {'None', nil} | 

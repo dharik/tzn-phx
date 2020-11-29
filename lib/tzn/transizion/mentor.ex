@@ -16,6 +16,8 @@ defmodule Tzn.Transizion.Mentor do
     field :social_factor, :string
     field :international_experience, :boolean
 
+    field :hourly_rate, :decimal
+
     has_many :mentees, Tzn.Transizion.Mentee
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
     has_many :strategy_sessions, Tzn.Transizion.StrategySession
@@ -39,8 +41,9 @@ defmodule Tzn.Transizion.Mentor do
       :disability_experience,
       :social_factor,
       :international_experience,
+      :hourly_rate
     ])
-    |> validate_required([:name, :email])
+    |> validate_required([:name, :email, :hourly_rate])
     |> cast_assoc(:user)
   end
 
