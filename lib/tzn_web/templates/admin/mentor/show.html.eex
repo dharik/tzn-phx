@@ -78,7 +78,7 @@
 <div class="space-m"></div>
 
 <p class="lead">Strategy Sessions</p>
-<div class="border border-radius padding-s">
+<div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">
   <%= for strategy_session <- @mentor.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>
       <span class="lead-xs"><%= strategy_session.email_subject %></span>
