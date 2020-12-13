@@ -32,7 +32,8 @@ import_config "#{Mix.env()}.exs"
 
 config :tzn, :pow,
   user: Tzn.Users.User,
-  repo: Tzn.Repo
+  repo: Tzn.Repo,
+  extensions: [PowPersistentSession]
 
 
 config :tzn, Tzn.Scheduler,
