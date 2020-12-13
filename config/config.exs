@@ -37,5 +37,5 @@ config :tzn, :pow,
 
 config :tzn, Tzn.Scheduler,
 jobs: [
-  {"@daily",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
+  {"0 */3 * * *",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
 ]
