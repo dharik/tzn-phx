@@ -4,7 +4,6 @@
 <table>
   <thead>
     <tr>
-      <th>ID</th>
       <th>Name</th>
       <th>Mentees</th>
     </tr>
@@ -12,9 +11,6 @@
   <tbody>
 <%= for mentor <- @mentors do %>
     <tr>
-      <td>
-        <%= mentor.id %>
-      </td>
       <td>
         <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
       </td>

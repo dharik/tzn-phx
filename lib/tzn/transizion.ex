@@ -18,7 +18,7 @@ defmodule Tzn.Transizion do
   require IEx
 
   def list_mentors do
-    Mentor |> order_by(desc: :id) |> Repo.all
+    Mentor |> order_by(asc: :name) |> Repo.all
   end
 
   def get_mentor!(id), do: Repo.get!(Mentor, id)
@@ -91,7 +91,7 @@ defmodule Tzn.Transizion do
   # Mentee stuff
 
   def list_mentees do
-    Mentee |> order_by(desc: :id) |> Repo.all
+    Mentee |> order_by(asc: :name) |> Repo.all
   end
 
   def list_mentees(%{mentor: mentor}) do
