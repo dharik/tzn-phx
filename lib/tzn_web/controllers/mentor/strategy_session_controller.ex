@@ -6,7 +6,10 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Repo
 
   def new(conn, params) do
-    changeset = Transizion.change_strategy_session(%StrategySession{}, params)
+    default_datetime = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime  
+    changeset = Transizion.change_strategy_session(%StrategySession{
+      date: default_datetime
+    }, params)
     render(conn, "new.html", changeset: changeset)
   end
 

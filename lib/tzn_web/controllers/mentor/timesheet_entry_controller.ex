@@ -4,7 +4,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   alias Tzn.Transizion
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Repo
-  
+
   def index(conn, _params) do
     timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_mentor}) |> Repo.preload(:mentee)
     monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
@@ -13,7 +13,14 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def new(conn, params) do
-    changeset = Transizion.change_timesheet_entry(%TimesheetEntry{}, params)
+    default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime  
+    changeset = Transizion.change_timesheet_entry(
+      %TimesheetEntry{
+        started_at: default_started_at,
+        ended_at: default_started_at |> Timex.shift(minutes: 30)
+      }, 
+      params
+    )
     render(conn, "new.html", changeset: changeset)
   end
 
@@ -37,7 +44,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
-    timesheet_entry = Transizion.get_timesheet_entry!(id)
+    timesheet_entry = Transizion.get_timesheet_entry!(id) |> Repo.preload(:mentee)
 
     case Transizion.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, timesheet_entry} ->

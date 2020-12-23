@@ -17,5 +17,33 @@ defmodule Tzn.Transizion.TimesheetEntry do
     timesheet_entry
     |> cast(attrs, [:started_at, :ended_at, :notes, :mentor_id, :mentee_id])
     |> validate_required([:started_at, :ended_at, :notes, :mentor_id])
+    |> ended_after_started()
+    |> duration_is_reasonable()
+  end
+
+  def ended_after_started(changeset) do
+    validate_change(changeset, :ended_at, fn (:ended_at, _value) ->
+      started_at = get_field(changeset, :started_at)
+      ended_at = get_field(changeset, :ended_at)
+      
+      if NaiveDateTime.compare(ended_at, started_at) != :gt do
+        [ended_at: "must end after start time"]
+      else
+        []
+      end
+    end)
+  end
+
+  def duration_is_reasonable(changeset) do
+    validate_change(changeset, :ended_at, fn (:ended_at, _value) ->
+      started_at = get_field(changeset, :started_at)
+      ended_at = get_field(changeset, :ended_at)
+      
+      if NaiveDateTime.diff(ended_at, started_at, :second) > 3600 * 3 do
+        [ended_at: "shouldn't be greater than 3 hours"]
+      else
+        []
+      end
+    end)
   end
 end
