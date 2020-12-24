@@ -21,7 +21,7 @@
       </td>
       <td>
         <%= if most_recent_counts do %>
-          <%= most_recent_counts.hours %> for <%= most_recent_counts.month_name |> humanize %>
+          <%= most_recent_counts.hours |> Decimal.round(1) %> in <%= most_recent_counts.month_name |> humanize %>
         <% end %>
       </td>
     </tr>
