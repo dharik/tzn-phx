@@ -6,16 +6,23 @@
     <tr>
       <th>Name</th>
       <th>Mentees</th>
+      <th>Hours</th>
     </tr>
   </thead>
   <tbody>
 <%= for mentor <- @mentors do %>
+  <% most_recent_counts = mentor.monthly_hour_counts |> List.first %>
     <tr>
       <td>
         <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
       </td>
       <td>
         <%= mentor.mentees |> Enum.map(fn mentee -> mentee.name end) |> Enum.join(", ") %>
+      </td>
+      <td>
+        <%= if most_recent_counts do %>
+          <%= most_recent_counts.hours %> for <%= most_recent_counts.month_name |> humanize %>
+        <% end %>
       </td>
     </tr>
 <% end %>
