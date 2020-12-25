@@ -33,7 +33,8 @@ import_config "#{Mix.env()}.exs"
 config :tzn, :pow,
   user: Tzn.Users.User,
   repo: Tzn.Repo,
-  extensions: [PowPersistentSession]
+  extensions: [PowPersistentSession],
+  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks
 
 
 config :tzn, Tzn.Scheduler,
