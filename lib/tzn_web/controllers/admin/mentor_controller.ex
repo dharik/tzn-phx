@@ -23,9 +23,9 @@ defmodule TznWeb.Admin.MentorController do
       if most_recent_month_data && 
         most_recent_month_data.year == Date.utc_today.year && 
         most_recent_month_data.month == Date.utc_today.month do
-        most_recent_month_data.hours
+        most_recent_month_data.hours |> Decimal.to_float
       else
-        0
+        0.0
       end
     end, :desc)
 
