@@ -69,7 +69,7 @@
       </p>
       <p>
         Internal Note: <br />
-        <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
+        <pre><%= @mentee.internal_note || 'N/A' %></pre>
       </p>
     </div>
   </div>
