@@ -12,8 +12,11 @@ defmodule TznWeb.Admin.ContractPurchaseController do
     conn |> assign(:mentees, mentees)
   end
 
-  def new(conn, _params) do
-    changeset = Transizion.change_contract_purchase(%ContractPurchase{})
+  def new(conn, params) do
+    changeset = Transizion.change_contract_purchase(%ContractPurchase{
+      date:  Timex.now() |> Timex.shift(hours: -5) |> Timex.to_naive_datetime,
+      hours: 5.0
+    }, params)
     render(conn, "new.html", changeset: changeset)
   end
 

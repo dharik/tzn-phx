@@ -131,7 +131,7 @@
 
 <p class="lead">Contract Purchases</p>
 <div class="border border-radius padding-s">
-  <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new), class: 'button button-primary' %>
+  <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
   <%= for contract_purchase <- @mentee.contract_purchases do %>
     <p>
       <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %>
