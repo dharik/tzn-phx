@@ -40,7 +40,7 @@
 
 
 <p class="lead">Timesheet Entries</p>
-<table>
+<table class="overflow-y-scroll display-block" style="max-height: 50vh">
   <thead>
     <tr>
       <th>Mentee Name</th>
