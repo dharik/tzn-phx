@@ -34,3 +34,16 @@
   <% end %>
   <div class="space-l"></div>
 <% end %>
+
+Marked as not applicable:
+<div class="space-s"></div>
+<%= for events_by_month <- view_data(@events, @event_markings) do %>
+  <%= for event <- events_by_month do %>
+    <%= if has_status(event, "not_applicable") do %>
+      <div>
+        <%= render "not_applicable_event.html", Map.put(assigns, :event, event) %>
+      </div>
+      <div class="space-s"></div>
+    <% end %>
+  <% end %>
+<% end %>

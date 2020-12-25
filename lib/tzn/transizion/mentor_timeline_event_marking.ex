@@ -15,7 +15,7 @@ defmodule Tzn.Transizion.MentorTimelineEventMarking do
   def changeset(mentor_timeline_event, attrs) do
     mentor_timeline_event
     |> cast(attrs, [:mentee_id, :mentor_timeline_event_id, :notes, :status])
-    |> validate_inclusion(:status, ["incomplete", "in_progress", "complete"])
+    |> validate_inclusion(:status, ["incomplete", "in_progress", "complete", "not_applicable"])
     |> validate_required([:mentee_id, :mentor_timeline_event_id, :status])
   end
 end

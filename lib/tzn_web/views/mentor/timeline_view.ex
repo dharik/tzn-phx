@@ -33,6 +33,13 @@ defmodule TznWeb.Mentor.TimelineView do
     false
   end
 
+  def has_status(%{ marking: %MentorTimelineEventMarking{ status: "not_applicable" }}, "not_applicable") do
+    true
+  end
+  def has_status(%{ marking: nil}, "not_applicable") do
+    false
+  end
+
   def has_status(%{ marking: %MentorTimelineEventMarking{ status: "incomplete" }}, "incomplete") do
     true
   end
@@ -45,6 +52,7 @@ defmodule TznWeb.Mentor.TimelineView do
   def has_status(event, status) do
     false
   end
+
 
   def date_to_year_month_str(date) do
     case Timex.format(date, "%B %Y", :strftime) do
