@@ -38,7 +38,9 @@ defmodule TznWeb.Mentor.MenteeController do
         strategy_sessions: [:mentor]
       ])
 
-    render(conn, "show.html", mentee: mentee)
+    changeset = Transizion.change_mentee(mentee)
+
+    render(conn, "show.html", mentee: mentee, changeset: changeset)
   end
 
   def edit(conn, %{"id" => id}) do

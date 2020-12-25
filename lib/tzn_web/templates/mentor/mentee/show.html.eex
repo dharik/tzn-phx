@@ -1,6 +1,5 @@
 <h1 class="display-title"><%= @mentee.name %> (<%= @mentee.grade %>)</h1>
 
-
 <div class="space-m"></div>
 
 <%= if low_hours_warning?(@mentee.hour_counts.hours_used |> Decimal.to_float, @mentee.hour_counts.hours_purchased |> Decimal.to_float) do %>
@@ -14,10 +13,6 @@
 <div class="border border-radius padding-s">
   <div class="flex flex-row">
     <div class="flex-1">
-      <p>
-        Internal note: <br />
-        <span class="color-grey"><%= @mentee.internal_note || 'N/A' %></span>
-      </p>
       <p>
         Parents: <br />
         <%= if @mentee.parent1_email do %>
@@ -48,6 +43,14 @@
   <%= link "Edit internal information", to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
 </div>
 
+<div class="space-m"></div>
+
+<p class="lead">My notes for <%= @mentee.name %>:</p>
+<%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
+  <%= textarea f, :internal_note, rows: 7 %>
+  <%= error_tag f, :internal_note %>
+  <%= submit "Save" %>
+<% end %>
 
 <div class="space-m"></div>
 
