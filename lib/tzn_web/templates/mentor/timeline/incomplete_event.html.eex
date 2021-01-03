@@ -8,7 +8,7 @@
     <%= @event.date |> format_date %>
   </p>
   <p class="overflow-wrap-break-word">
-    <%= @event.notes %>
+    <%= raw @event.notes %>
   </p>
   <%= if @event.marking do %>
     <p class="overflow-wrap-break-word">

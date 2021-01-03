@@ -2,20 +2,26 @@ import { h, render, Component, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import "preact/devtools";
 
-const data = JSON.parse(document.getElementById("matching-data").textContent);
+let data = { mentors: [] };
+if (document.getElementById("matching-data")) {
+  data = JSON.parse(document.getElementById("matching-data").textContent);
+}
 const options = data.options;
 const mentors = data.mentors;
 
 const slugToLabel = {};
-options.careers.forEach(([label, value]) => {
-  slugToLabel[value] = label;
-});
-options.hobbies.forEach(([label, value]) => {
-  slugToLabel[value] = label;
-});
-options.school_tiers.forEach(([label, value]) => {
-  slugToLabel[value] = label;
-});
+
+if (options) {
+  options.careers.forEach(([label, value]) => {
+    slugToLabel[value] = label;
+  });
+  options.hobbies.forEach(([label, value]) => {
+    slugToLabel[value] = label;
+  });
+  options.school_tiers.forEach(([label, value]) => {
+    slugToLabel[value] = label;
+  });
+}
 
 export default () => {
   // form stuff
@@ -280,7 +286,12 @@ export default () => {
             </a>
             <div className="flex margin-vertical-xs">
               {mentor.photo_url ? (
-                  <img src={mentor.photo_url} width="120" height="120"  className="margin-right-s"/>
+                <img
+                  src={mentor.photo_url}
+                  width="120"
+                  height="120"
+                  className="margin-right-s"
+                />
               ) : (
                 <svg
                   fill="lavender"

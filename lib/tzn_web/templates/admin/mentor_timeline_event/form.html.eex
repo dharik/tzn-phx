@@ -17,7 +17,7 @@
   <%= error_tag f, :grade %>
 
   <%= label f, :notes %>
-  <%= textarea f, :notes %>
+  <%= textarea f, :notes, class: "rte" %>
   <%= error_tag f, :notes %>
 
   <%= checkbox f, :is_hard_deadline %>

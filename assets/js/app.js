@@ -13,10 +13,21 @@ import "../css/app.scss"
 //     import socket from "./socket"
 //
 import "phoenix_html"
-
+import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { h, render } from 'preact';
 import MatchingApp from './matching';
 
 if(document.getElementById('matching-app')) {
   render(<MatchingApp />, document.getElementById('matching-app'));
+}
+
+for (const element of document.getElementsByClassName('rte')) {
+  ClassicEditor
+    .create( element )
+    .then( editor => {
+        // console.log( "created editor", editor );
+    } )
+    .catch( error => {
+        // console.error( error );
+    } );
 }

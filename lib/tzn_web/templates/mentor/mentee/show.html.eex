@@ -47,7 +47,7 @@
 
 <p class="lead">My notes for <%= @mentee.name %>:</p>
 <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
-  <%= textarea f, :internal_note, rows: 7 %>
+  <%= textarea f, :internal_note, rows: 7, class: "rte" %>
   <%= error_tag f, :internal_note %>
   <%= submit "Save" %>
 <% end %>
@@ -97,7 +97,7 @@
     <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
       <tr>
         <td><%= timesheet_entry.started_at |> format_date %></td>
-        <td><span><%= timesheet_entry.notes %></span></td>
+        <td><span><%= raw timesheet_entry.notes %></span></td>
         <td><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-border button-xs" %></td>
       </tr>
     <% end %>

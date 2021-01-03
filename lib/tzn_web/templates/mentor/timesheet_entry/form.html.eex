@@ -18,7 +18,7 @@
   <%= error_tag f, :ended_at %>
 
   <%= label f, :notes %>
-  <%= textarea f, :notes %>
+  <%= textarea f, :notes, class: "rte" %>
   <%= error_tag f, :notes %>
 
   <div>

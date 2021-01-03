@@ -4,7 +4,7 @@ use Mix.Config
 config :tzn, Tzn.Repo,
   username: "postgres",
   password: "dev",
-  database: "tzn_dev",
+  database: "tzn2",
   hostname: "tzndb",
   show_sensitive_data_on_connection_error: true,
   pool_size: 2

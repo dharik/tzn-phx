@@ -8,7 +8,7 @@
     <%= @event.date |> format_date %>
   </p>
   <p class="overflow-wrap-break-word">
-    <%= @event.notes %>
+    <%= raw @event.notes %>
   </p>
   <%= link "Move back to timeline (incomplete)", to: Routes.mentor_timeline_event_marking_path(@conn, :update, @event.marking, mentor_timeline_event_marking: %{status: "incomplete"}), method: :patch %>
 </div>

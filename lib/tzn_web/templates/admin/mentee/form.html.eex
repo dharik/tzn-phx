@@ -21,7 +21,7 @@
   <%= error_tag f, :grade %>
 
   <%= label f, :internal_note %>
-  <%= textarea f, :internal_note %>
+  <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
 
   <%= label f, :mentor_id  %>
