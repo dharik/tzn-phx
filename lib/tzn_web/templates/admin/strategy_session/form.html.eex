@@ -19,7 +19,7 @@
   <%= error_tag f, :email_subject %>
   
   <%= label f, :notes %>
-  <%= textarea f, :notes %>
+  <%= textarea f, :notes, class: "rte" %>
   <%= error_tag f, :notes %>
   
   <div class="space-m"></div>

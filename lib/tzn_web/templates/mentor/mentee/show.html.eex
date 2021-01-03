@@ -63,7 +63,7 @@
     <p>
       <span class="lead-xs"><%= strategy_session.email_subject %></span>
       <br />
-      <span class="color-grey"><%= strategy_session.notes %></span>
+      <span class="color-grey"><%= raw strategy_session.notes %></span>
       <br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>

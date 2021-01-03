@@ -90,7 +90,7 @@
   <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>
       <span class="lead-xs"><%= strategy_session.email_subject %></span><br />
-      <span class="color-grey"><%= strategy_session.notes %></span><br />
+      <span class="color-grey"><%= raw strategy_session.notes %></span><br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
       <%= cond do %>
