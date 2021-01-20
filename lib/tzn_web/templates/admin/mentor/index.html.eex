@@ -4,9 +4,9 @@
 <table>
   <thead>
     <tr>
-      <th>Name</th>
-      <th>Mentees</th>
-      <th>Hours</th>
+      <th width="15%">Name</th>
+      <th width="15%">Hours</th>
+      <th width="70%">Mentees</th>
     </tr>
   </thead>
   <tbody>
@@ -17,12 +17,12 @@
         <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
       </td>
       <td>
-        <%= mentor.mentees |> Enum.map(fn mentee -> mentee.name end) |> Enum.join(", ") %>
-      </td>
-      <td>
         <%= if most_recent_counts do %>
           <%= most_recent_counts.hours |> Decimal.round(1) %> in <%= most_recent_counts.month_name |> humanize %>
         <% end %>
+      </td>
+      <td>
+        <%= mentor.mentees |> Enum.map(fn mentee -> mentee.name end) |> Enum.join(", ") %>
       </td>
     </tr>
 <% end %>
