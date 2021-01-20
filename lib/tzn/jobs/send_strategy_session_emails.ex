@@ -65,7 +65,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     mentee_email
   ) do
     headers = [
-      Authorization: "Bearer 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",
+      Authorization: Application.get_env(:tzn, :sendgrid_auth),
       "Content-Type": "application/json"
     ]
 
