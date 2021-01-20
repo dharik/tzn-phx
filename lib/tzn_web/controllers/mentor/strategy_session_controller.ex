@@ -5,12 +5,19 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Transizion.StrategySession
   alias Tzn.Repo
 
-  def new(conn, params) do
+  def new(conn, %{"mentee_id" => mentee_id} = params) do
     default_datetime = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime  
     changeset = Transizion.change_strategy_session(%StrategySession{
       date: default_datetime
     }, params)
-    render(conn, "new.html", changeset: changeset)
+
+      mentee = if mentee_id do
+                Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
+              else
+                nil
+              end
+
+    render(conn, "new.html", changeset: changeset, mentee: mentee)
   end
 
   def create(conn, %{"strategy_session" => strategy_session_params, "submit_btn" => submit_btn}) do
