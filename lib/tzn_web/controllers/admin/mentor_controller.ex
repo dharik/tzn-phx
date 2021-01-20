@@ -16,20 +16,7 @@ defmodule TznWeb.Admin.MentorController do
   def index(conn, _params) do
     mentors = Transizion.list_mentors() |> Repo.preload([:mentees, :monthly_hour_counts])
 
-    # Sort by hours this month
-    sorted_mentors = mentors 
-    |> Enum.sort_by(fn mentor ->
-      most_recent_month_data = mentor.monthly_hour_counts |> List.first
-      if most_recent_month_data && 
-        most_recent_month_data.year == Date.utc_today.year && 
-        most_recent_month_data.month == Date.utc_today.month do
-        most_recent_month_data.hours |> Decimal.to_float
-      else
-        0.0
-      end
-    end, :desc)
-
-    render(conn, "index.html", mentors: sorted_mentors)
+    render(conn, "index.html", mentors: mentors)
   end
 
   def new(conn, _params) do

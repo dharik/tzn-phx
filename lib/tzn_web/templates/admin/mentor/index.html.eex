@@ -10,8 +10,8 @@
     </tr>
   </thead>
   <tbody>
-<%= for mentor <- @mentors do %>
-  <% most_recent_counts = mentor.monthly_hour_counts |> List.first %>
+<%= for mentor <- sorted_by_hours_this_month(@mentors) do %>
+  <% most_recent_counts = most_recent_month(mentor.monthly_hour_counts) %>
     <tr>
       <td>
         <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
