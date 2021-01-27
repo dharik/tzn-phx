@@ -5,6 +5,7 @@
 </div>
 
 
+<div class="overflow-y-scroll" style="max-height: 60vh">
 <table>
   <thead>
     <tr>
@@ -39,6 +40,7 @@
     </tr>
   </tbody>
 </table>
+</div>
 
 <h2>Hours by month</h2>
 <small>All payments sent on 1st Wednesday of every month</small>
@@ -60,5 +62,3 @@
     <% end %>
   </tbody>
 </table>
-
-
