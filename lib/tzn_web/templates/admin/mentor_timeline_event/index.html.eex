@@ -14,7 +14,7 @@
     <br />
 
     <span class="color-grey">
-      <%= event.notes %>
+      <%= raw event.notes %>
     </span>
 
     <br />

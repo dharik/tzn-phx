@@ -40,40 +40,42 @@
 
 
 <p class="lead">Timesheet Entries</p>
-<table class="overflow-y-scroll display-block" style="max-height: 50vh">
-  <thead>
-    <tr>
-      <th>Mentee Name</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Notes</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= for timesheet_entry <- @mentor.timesheet_entries do %>
+<div class="overflow-y-scroll" style="max-height: 50vh">
+  <table>  
+    <thead>
       <tr>
-        <td>
-          <%= if timesheet_entry.mentee do %>
-            <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
-          <% else %>
-            N/A
-          <% end %>
-        </td>
-        <td><%= timesheet_entry.started_at |> format_date %></td>
-        <td><%= timesheet_entry.ended_at |> format_date %></td>
-        <td><%= timesheet_entry.notes %></td>
-        <td>
-          <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
-          <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
-        </td>
+        <th>Mentee Name</th>
+        <th>Start Date</th>
+        <th>End Date</th>
+        <th>Notes</th>
+        <th></th>
       </tr>
+    </thead>
+    <tbody>
+      <%= for timesheet_entry <- @mentor.timesheet_entries do %>
+        <tr>
+          <td>
+            <%= if timesheet_entry.mentee do %>
+              <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+            <% else %>
+              N/A
+            <% end %>
+          </td>
+          <td><%= timesheet_entry.started_at |> format_date %></td>
+          <td><%= timesheet_entry.ended_at |> format_date %></td>
+          <td><%= timesheet_entry.notes %></td>
+          <td>
+            <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
+            <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
+          </td>
+        </tr>
 
-    <% end %>
-    <tr>
-    </tr>
-  </tbody>
-</table>
+      <% end %>
+      <tr>
+      </tr>
+    </tbody>
+  </table>
+</div>
 
 <div class="space-m"></div>
 
