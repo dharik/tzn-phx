@@ -7,6 +7,7 @@
       <th>Name</th>
       <th>Created</th>
       <th>Current mentor</th>
+      <th>Grade</th>
       <th>Hours used/purchased</th>
       <th>Hours left</th>
     </tr>
@@ -26,6 +27,9 @@
           <% else %>
             <span class="color-error">No mentor</span>
           <% end %>
+        </td>
+        <td>
+          <%= mentee.grade %>
         </td>
         <td>
           <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased %>
