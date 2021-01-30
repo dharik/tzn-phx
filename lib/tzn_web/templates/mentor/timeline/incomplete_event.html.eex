@@ -25,7 +25,7 @@
   <% else %>
     <%= link "Add notes", to: Routes.mentor_timeline_event_marking_path(@conn, :new, event_id: @event.id, mentee_id: @mentee.id) %>
     <br /><br />
-    <%= link "Mark In progress", 
+    <%= link "Mark In Progress", 
         to: Routes.mentor_timeline_event_marking_path(@conn, :create, mentor_timeline_event_marking: %{
               mentee_id: @mentee.id, mentor_timeline_event_id: @event.id, status: "in_progress"
             }),

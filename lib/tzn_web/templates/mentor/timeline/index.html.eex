@@ -1,5 +1,5 @@
 <%= for mentee <- @mentees do %>
-  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade %><br />
+  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade |> humanize %><br />
 <% end %>
 <%= for events_by_month <- view_data(@events, @event_markings) do %>
   <% first = List.first(events_by_month) %>

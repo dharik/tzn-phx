@@ -29,7 +29,7 @@
           <% end %>
         </td>
         <td>
-          <%= mentee.grade %>
+          <%= mentee.grade |> humanize %>
         </td>
         <td>
           <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased %>

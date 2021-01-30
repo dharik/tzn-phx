@@ -16,7 +16,7 @@
     <div class="flex-1">
       <p>
         Grade: <br />
-        <span class="color-grey"><%= @mentee.grade || 'Not set' %></span>
+        <span class="color-grey"><%= (@mentee.grade |> humanize) || 'Not set' %></span>
       </p>
       <p>
         Mentor:<br />
@@ -68,7 +68,7 @@
         </span>
       </p>
       <p>
-        Internal Note: <br />
+        Internal note: <br />
         <%= raw @mentee.internal_note || 'N/A' %>
       </p>
     </div>

@@ -1,3 +1,3 @@
 <%= for mentee <- @mentees do %>
-  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade %><br />
+  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade |> humanize %><br />
 <% end %>
