@@ -45,9 +45,9 @@
 
 <div class="space-m"></div>
 
-<p class="lead">My notes for <%= @mentee.name %>:</p>
+<p class="lead">My To-Do list for <%= @mentee.name %>:</p>
 <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
-  <%= textarea f, :internal_note, rows: 7, class: "rte" %>
+  <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
   <%= submit "Save" %>
 <% end %>
