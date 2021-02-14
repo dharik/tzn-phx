@@ -111,6 +111,9 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
             }
           ],
           cc: cc,
+          bcc: [%{
+            email: 'mentors@transizion.com'
+          }],
           dynamic_template_data: %{
             mentee_name: mentee_name,
             parent_name: to_name,
