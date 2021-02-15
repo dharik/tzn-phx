@@ -74,7 +74,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
         hours_left
       ) do
     headers = [
-      Application.get_env(:tzn, :sendgrid_auth),
+      Authorization: Application.get_env(:tzn, :sendgrid_auth),
       "Content-Type": "application/json"
     ]
 
