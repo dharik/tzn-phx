@@ -112,7 +112,7 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
           ],
           cc: cc,
           bcc: [%{
-            email: 'mentors@transizion.com'
+            email: "mentors@transizion.com"
           }],
           dynamic_template_data: %{
             mentee_name: mentee_name,
@@ -137,6 +137,6 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
     }
 
     {:ok, body_json} = Jason.encode(body)
-    IO.inspect(HTTPoison.post(@sendgrid_url, body_json, headers))
+    {:ok, %HTTPoison.Response{status_code: 202}} = HTTPoison.post(@sendgrid_url, body_json, headers)
   end
 end
