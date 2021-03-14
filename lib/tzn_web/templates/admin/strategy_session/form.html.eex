@@ -24,6 +24,11 @@
   
   <div class="space-m"></div>
 
+  <%= checkbox f, :cc_mentee %> CC the mentee?
+  <%= error_tag f, :cc_mentee %>
+
+  <div class="space-m"></div>
+
   <%= checkbox f, :published %> Published
   <%= error_tag f, :published %>
   <br />
