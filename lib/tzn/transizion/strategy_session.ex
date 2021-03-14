@@ -11,6 +11,8 @@ defmodule Tzn.Transizion.StrategySession do
     belongs_to :mentor, Tzn.Transizion.Mentor
     belongs_to :mentee, Tzn.Transizion.Mentee
 
+    field :cc_mentee, :boolean, default: true
+
     timestamps()
   end
 

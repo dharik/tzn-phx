@@ -32,14 +32,20 @@
   <%= textarea f, :notes, class: "rte", rows: 10 %>
   <%= error_tag f, :notes %>
 
-  <div class="space-l"></div>
-
 
   <%= label f, :published, class: "control checkbox" do %>
     <%= checkbox f, :published %>
   <% end %>
   <%= error_tag f, :published %>
 
+  <%= checkbox f, :cc_mentee %> 
+  <%= label f, :cc_mentee, class: "control checkbox" do %>
+    CC the Mentee?
+  <% end %>
+  <%= error_tag f, :cc_mentee %>
+
+  <div class="space-l"></div>
+  
 
   <%= unless @changeset.data.published do %>
     <%= submit "Save without sending", name: "submit_btn", value: "save", class: "button button-primary button-border" %>

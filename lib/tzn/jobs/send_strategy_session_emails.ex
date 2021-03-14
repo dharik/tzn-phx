@@ -19,46 +19,54 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
       )
       |> Repo.preload([:mentor, mentee: [:hour_counts]])
 
-    sessions
-    |> Enum.map(fn s ->
-      hours_left =
-        s.mentee.hour_counts.hours_purchased
-        |> Decimal.sub(s.mentee.hour_counts.hours_used)
-        |> Decimal.round(1)
-        |> Decimal.to_float()
+    Enum.each(sessions, &handle_strategy_session/1)
+  end
 
-      if s.mentee.parent1_email do
-        send_email(
-          s.mentee.parent1_email,
-          s.mentee.parent1_name,
-          s.mentee.name,
-          s.mentor.name,
-          s.notes,
-          s.email_subject,
-          s.mentor.email,
-          s.mentor.name,
-          s.mentee.email,
-          hours_left
-        )
+  def handle_strategy_session(%StrategySession{} = s) do
+    hours_left =
+      s.mentee.hour_counts.hours_purchased
+      |> Decimal.sub(s.mentee.hour_counts.hours_used)
+      |> Decimal.round(1)
+      |> Decimal.to_float()
+
+    mentee_email =
+      if s.cc_mentee && s.mentee.email do
+        s.mentee.email
+      else
+        nil
       end
 
-      if s.mentee.parent2_email do
-        send_email(
-          s.mentee.parent2_email,
-          s.mentee.parent2_name,
-          s.mentee.name,
-          s.mentor.name,
-          s.notes,
-          s.email_subject,
-          s.mentor.email,
-          s.mentor.name,
-          s.mentee.email,
-          hours_left
-        )
-      end
+    if s.mentee.parent1_email do
+      send_email(
+        s.mentee.parent1_email,
+        s.mentee.parent1_name,
+        s.mentee.name,
+        s.mentor.name,
+        s.notes,
+        s.email_subject,
+        s.mentor.email,
+        s.mentor.name,
+        mentee_email,
+        hours_left
+      )
+    end
 
-      StrategySession.email_sent_changeset(s) |> Repo.update()
-    end)
+    if s.mentee.parent2_email do
+      send_email(
+        s.mentee.parent2_email,
+        s.mentee.parent2_name,
+        s.mentee.name,
+        s.mentor.name,
+        s.notes,
+        s.email_subject,
+        s.mentor.email,
+        s.mentor.name,
+        mentee_email,
+        hours_left
+      )
+    end
+
+    StrategySession.email_sent_changeset(s) |> Repo.update()
   end
 
   def send_email(
@@ -73,11 +81,6 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
         mentee_email,
         hours_left
       ) do
-    headers = [
-      Authorization: Application.get_env(:tzn, :sendgrid_auth),
-      "Content-Type": "application/json"
-    ]
-
     Logger.info("Sending strategy session email to #{to_email}")
 
     cc =
@@ -111,9 +114,11 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
             }
           ],
           cc: cc,
-          bcc: [%{
-            email: "mentors@transizion.com"
-          }],
+          bcc: [
+            %{
+              email: "mentors@transizion.com"
+            }
+          ],
           dynamic_template_data: %{
             mentee_name: mentee_name,
             parent_name: to_name,
@@ -136,7 +141,14 @@ defmodule Tzn.Jobs.SendStrategySessionEmails do
       template_id: @template_id
     }
 
+    headers = [
+      Authorization: Application.get_env(:tzn, :sendgrid_auth),
+      "Content-Type": "application/json"
+    ]
+
     {:ok, body_json} = Jason.encode(body)
-    {:ok, %HTTPoison.Response{status_code: 202}} = HTTPoison.post(@sendgrid_url, body_json, headers)
+
+    {:ok, %HTTPoison.Response{status_code: 202}} =
+      HTTPoison.post(@sendgrid_url, body_json, headers)
   end
 end
