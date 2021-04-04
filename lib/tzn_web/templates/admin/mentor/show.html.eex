@@ -30,7 +30,12 @@
     <p class="lead">Mentees</p>
     <ol> 
       <%= for mentee <- @mentor.mentees do %>
-        <li><%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %></li>
+        <li>
+          <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
+            ★
+          <% end %>
+          <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
+        </li>
       <% end %>
     </ol>
   </div>

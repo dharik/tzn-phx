@@ -40,9 +40,9 @@ defmodule TznWeb.Admin.MentorController do
     mentor =
       Transizion.get_mentor!(id)
       |> Repo.preload([
-        :mentees,
         :monthly_hour_counts,
         :user,
+        mentees: [:hour_counts],
         timesheet_entries: [:mentee],
         strategy_sessions: [:mentee]
       ])
