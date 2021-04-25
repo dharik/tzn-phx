@@ -7,8 +7,13 @@
 
   <%= if @changeset.data.published do %>
     <p class="color-info">
-      This strategy session is locked for editing because an email has been
-      (or will soon be) delivered to the mentee + parent(s).
+      <%= if @changeset.data.emailed do %>
+        This strategy session is locked for editing because an email has been
+        delivered to the mentee + parent(s).
+      <% else %>
+        This strategy session is locked for editing because an email will soon be 
+        delivered to the mentee + parent(s).
+      <% end %>
     </p>
   <% end %>
 

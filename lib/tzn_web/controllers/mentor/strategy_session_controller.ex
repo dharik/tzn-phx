@@ -6,39 +6,40 @@ defmodule TznWeb.Mentor.StrategySessionController do
   alias Tzn.Repo
 
   def new(conn, %{"mentee_id" => mentee_id} = params) do
-    default_datetime = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime  
-    changeset = Transizion.change_strategy_session(%StrategySession{
-      date: default_datetime
-    }, params)
+    default_datetime = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime()
 
-      mentee = if mentee_id do
-                Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
-              else
-                nil
-              end
+    changeset =
+      Transizion.change_strategy_session(
+        %StrategySession{
+          date: default_datetime
+        },
+        params
+      )
+
+    mentee =
+      if mentee_id do
+        Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
+      else
+        nil
+      end
 
     render(conn, "new.html", changeset: changeset, mentee: mentee)
   end
 
-  def create(conn, %{"strategy_session" => strategy_session_params, "submit_btn" => submit_btn}) do
-    published =
-      if submit_btn == "publish" do
-        true
-      else
-        false
-      end
+  def create(conn, %{"strategy_session" => strategy_session_params = %{"mentee_id" => mentee_id}}) do
+    mentee = Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
 
     case Transizion.create_strategy_session(
            strategy_session_params
            |> Map.put_new("mentor_id", conn.assigns.current_mentor.id)
-           |> Map.put("published", published)
+           |> Map.put("published", true)
          ) do
       {:ok, strategy_session} ->
         conn
         |> redirect(to: Routes.mentor_strategy_session_path(conn, :edit, strategy_session))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, mentee: mentee)
     end
   end
 
@@ -55,33 +56,18 @@ defmodule TznWeb.Mentor.StrategySessionController do
 
   def update(conn, %{
         "id" => id,
-        "strategy_session" => strategy_session_params,
-        "submit_btn" => submit_btn
+        "strategy_session" => strategy_session_params
       }) do
     strategy_session = Transizion.get_strategy_session!(id)
 
-    published =
-      if submit_btn == "publish" do
-        true
-      else
-        false
-      end
-
-    to =
-      if published do
-        Routes.mentor_mentee_path(conn, :show, strategy_session.mentee_id)
-      else
-        Routes.mentor_strategy_session_path(conn, :edit, strategy_session)
-      end
-
     case Transizion.update_strategy_session(
            strategy_session,
-           strategy_session_params |> Map.put("published", published)
+           strategy_session_params |> Map.put("published", true)
          ) do
       {:ok, _trategy_session} ->
         conn
         |> put_flash(:info, "Strategy session updated successfully.")
-        |> redirect(to: to)
+        |> redirect(to: Routes.mentor_mentee_path(conn, :show, strategy_session.mentee_id))
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", strategy_session: strategy_session, changeset: changeset)
