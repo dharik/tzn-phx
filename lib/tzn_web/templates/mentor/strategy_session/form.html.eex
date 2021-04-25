@@ -24,7 +24,7 @@
 
   <div class="space-l"></div>
 
-  <%= label f, :email_subject %>
+  <%= label f, :email_subject, "Email Subject" %>
   <%= text_input f, :email_subject %>
   <%= error_tag f, :email_subject %>
 
@@ -48,9 +48,8 @@
   
 
   <%= unless @changeset.data.published do %>
-    <%= submit "Save without sending", name: "submit_btn", value: "save", class: "button button-primary button-border" %>
     <span class="space-m"></span>
-    <%= submit "Save and send email", name: "submit_btn", value: "publish", class: "button button-primary" %>
+    <%= submit "Save and send email", class: "button button-primary" %>
  
     <p class="color-grey">
       After the email is sent, this session will be locked for editing. 
