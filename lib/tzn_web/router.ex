@@ -1,6 +1,8 @@
 defmodule TznWeb.Router do
   use TznWeb, :router
   use Pow.Phoenix.Router
+  use Plugsnag
+  
   import TznWeb.AdminPlugs
   import TznWeb.MentorPlugs
 

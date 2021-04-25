@@ -41,3 +41,6 @@ config :tzn, Tzn.Scheduler,
 jobs: [
   {"0 */3 * * *",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
 ]
+
+config :bugsnag,
+  api_key: "78ca1a1066750db225de5e66c4c29bad"
