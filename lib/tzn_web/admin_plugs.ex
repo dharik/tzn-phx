@@ -18,4 +18,18 @@ defmodule TznWeb.AdminPlugs do
       conn |> halt
     end
   end
+
+  def override_current_user_for_impersonation(conn, _) do
+    user_id = conn |> get_session("impersonate_user_id")
+
+    if user_id do
+      u = Tzn.Users.get_user!(user_id)
+
+      conn
+      |> Pow.Plug.assign_current_user(u, Pow.Plug.fetch_config(conn))
+      |> assign(:impersonating, true)
+    else
+      conn |> assign(:impersonating, false)
+    end
+  end
 end

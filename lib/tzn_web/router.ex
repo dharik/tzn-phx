@@ -8,6 +8,7 @@ defmodule TznWeb.Router do
 
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
+    plug :override_current_user_for_impersonation
   end
 
   pipeline :admin do
@@ -45,6 +46,7 @@ defmodule TznWeb.Router do
   scope "/", TznWeb do
     pipe_through [:protected, :browser]
     get "/", EntryController, :launch_app
+    get "/impersonation/stop", Admin.ImpersonationController, :stop
 
     scope "/mentor", as: :mentor do
       pipe_through [:mentor]
@@ -66,6 +68,7 @@ defmodule TznWeb.Router do
       
       get "/", Admin.MentorController, :index
       get "/matching", Admin.MatchingAlgorithmController, :show
+      get "/impersonation/start", Admin.ImpersonationController, :start
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
       resources "/mentors", Admin.MentorController

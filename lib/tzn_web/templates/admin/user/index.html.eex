@@ -8,6 +8,7 @@
       <th>Admin?</th>
       <th>Mentor Profile</th>
       <th>Mentee Profile</th>
+      <th>Impersonate</th>
     </tr>
   </thead>
   <tbody>
@@ -36,6 +37,9 @@
           <%= if user.mentee_profile do %>
             <%= link user.mentee_profile.name, to: Routes.admin_mentee_path(@conn, :show, user.mentee_profile) %>
           <% end %>
+        </td>
+        <td>
+          <%= link "Impersonate", to: Routes.admin_impersonation_path(@conn, :start, user_id: user.id) %>
         </td>
       </tr>
     <% end %>

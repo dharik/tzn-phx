@@ -25,6 +25,7 @@
     <main role="main" class="container">
       <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
       <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
+      <%= render "impersonation_status.html", conn: @conn %>
       <%= @inner_content %>
     </main>
   </body>
