@@ -8,7 +8,6 @@ defmodule TznWeb.Router do
 
   pipeline :protected do
     plug Pow.Plug.RequireAuthenticated, error_handler: Pow.Phoenix.PlugErrorHandler
-    plug :override_current_user_for_impersonation
   end
 
   pipeline :admin do
@@ -31,6 +30,8 @@ defmodule TznWeb.Router do
     plug :fetch_flash
     plug :protect_from_forgery
     plug :put_secure_browser_headers
+    plug :override_current_user_for_impersonation
+
   end
 
   pipeline :api do
