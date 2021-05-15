@@ -1,4 +1,4 @@
-defmodule Tzn.Transizion.CollegeList do
+defmodule Tzn.CollegeList.CollegeList do
   use Ecto.Schema
   import Ecto.Changeset
 
@@ -6,7 +6,7 @@ defmodule Tzn.Transizion.CollegeList do
     belongs_to :mentee, Tzn.Transizion.Mentee
 
     field :state, :string
-    field :access_key, :string
+    field :access_key, :binary_id
     
     timestamps()
   end

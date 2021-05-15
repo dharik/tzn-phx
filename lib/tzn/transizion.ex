@@ -14,6 +14,9 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.MentorTimelineEvent
   alias Tzn.Transizion.MentorTimelineEventMarking
   alias Tzn.Transizion.ContractPurchase
+  alias Tzn.Transizion.CollegeList
+  alias Tzn.Transizion.CollegeListAnswer
+  alias Tzn.Transizion.CollegeListQuestion
 
   require IEx
 
