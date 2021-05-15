@@ -1,23 +1,19 @@
 defmodule Tzn.CollegeList do
-  @moduledoc """
-  The Transizion context.
-  """
-
   import Ecto.Query, warn: false
 
   alias Tzn.Repo
-  alias Tzn.Transizion.MentorHourCounts
   alias Tzn.Transizion.Mentee
-  alias Tzn.Transizion.CollegeList
-  alias Tzn.Transizion.CollegeListAnswer
-  alias Tzn.Transizion.CollegeListQuestion
 
-  def list_college_list_questions do
-    CollegeListQuestion |> Repo.all
-  end
+  alias Tzn.CollegeList.CollegeList
+  alias Tzn.CollegeList.Answer
+  alias Tzn.CollegeList.Question
+
 
   def get_college_list!(%{access_key: access_key}), do: Repo.get_by!(CollegeList, access_key: access_key)
   def get_college_list!(id), do: Repo.get!(CollegeList, id)
 
+  def list_active_questions do
+    Repo.all(from q in Question, where: q.active == true, order_by: q.display_order)
+  end
 
 end

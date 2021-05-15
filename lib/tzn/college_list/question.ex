@@ -1,4 +1,4 @@
-defmodule Tzn.CollegeList.CollegeListQuestion do
+defmodule Tzn.CollegeList.Question do
   use Ecto.Schema
   import Ecto.Changeset
 

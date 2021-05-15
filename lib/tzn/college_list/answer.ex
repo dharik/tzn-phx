@@ -1,10 +1,10 @@
-defmodule Tzn.CollegeList.CollegeListAnswer do
+defmodule Tzn.CollegeList.Answer do
   use Ecto.Schema
   import Ecto.Changeset
 
   schema "college_list_answers" do
-    belongs_to :college_list, Tzn.Transizion.CollegeList
-    belongs_to :college_list_question, Tzn.Transizion.CollegeListAnswer
+    belongs_to :college_list, Tzn.CollegeList.CollegeList
+    belongs_to :college_list_question, Tzn.CollegeList.Question
     
     field :from_pod, :string
     field :from_parent, :string

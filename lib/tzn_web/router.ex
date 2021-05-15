@@ -48,6 +48,7 @@ defmodule TznWeb.Router do
     pipe_through [:protected, :browser]
     get "/", EntryController, :launch_app
     get "/impersonation/stop", Admin.ImpersonationController, :stop
+    get "/college_list/:access_key", Parent.CollegeListController, :edit
 
     scope "/mentor", as: :mentor do
       pipe_through [:mentor]
@@ -62,6 +63,7 @@ defmodule TznWeb.Router do
       resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
 
       get "/help", Mentor.HelpController, :show
+      get "/cl", Mentor.CollegeListController, :show
     end
 
     scope "/admin", as: :admin do
@@ -83,6 +85,8 @@ defmodule TznWeb.Router do
         get "/mentors", Admin.MentorController, :index_json
       end
     end
+
+    
   end
 
   # Other scopes may use custom stacks.

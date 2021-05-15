@@ -4,6 +4,7 @@ defmodule Tzn.CollegeList.CollegeList do
 
   schema "college_lists" do
     belongs_to :mentee, Tzn.Transizion.Mentee
+    has_many :college_list_answers, Tzn.CollegeList.Answer
 
     field :state, :string
     field :access_key, :binary_id
