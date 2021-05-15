@@ -1,17 +1,28 @@
-This will be the college list, parent view:
-
-<br /><br />
-
-<h1 class="display-title display-title-s">First group</h1>
-
-<div class="padding-m border-bottom">
-<b>Question</b>
-
-<div class="rte"></div>
-</div>
-<br />
+<h1>Parent View</h1>
 
 <%= for q <- @questions do %>
-  <%= q.question %>
+  <b>
+    <%= q.question %>
+  </b>
+
+  <%= if q.parent_answer_required do %>
+    <span class="color-error-500 font-size-s">
+      Required
+    </span>
+  <% end %>
+
+  <%
+    answer = answer_for_question(q, @college_list.college_list_answers)
+  %>
+
+  <div class="rtem">
+    <%= 
+      if answer do
+        answer.from_parent
+      else
+        "None yet"
+      end
+    %>
+  </div>
+  <br />
 <% end %>
-<br /><br /><br />

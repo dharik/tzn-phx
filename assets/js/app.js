@@ -36,3 +36,16 @@ for (const element of document.getElementsByClassName('rte')) {
       // console.error( error );
     });
 }
+
+for (const element of document.getElementsByClassName('rtem')) {
+  ClassicEditor
+    .create( element, {
+      toolbar: ['bold', 'italic', 'bulletedlist', 'numberedlist']
+    })
+    .then( editor => {
+        // console.log( "created editor", editor );
+    } )
+    .catch( error => {
+        // console.error( error );
+    } );
+}
