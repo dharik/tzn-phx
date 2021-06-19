@@ -23,5 +23,9 @@
     <br />
 
     <%= link "Edit", to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) %>
+    <%= link "Delete", 
+          to: Routes.admin_mentor_timeline_event_path(@conn, :delete, event), 
+          method: :delete, data: [confirm: "Are you sure?"], 
+          class: "button button-s button-text button-warning margin-left-m" %>
   </div>
 <% end %>

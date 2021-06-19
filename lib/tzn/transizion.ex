@@ -343,6 +343,10 @@ defmodule Tzn.Transizion do
 
   def get_mentor_timeline_event!(id), do: Repo.get!(MentorTimelineEvent, id)
 
+  def delete_mentor_timeline_event(%MentorTimelineEvent{} = event) do
+    Repo.delete(event)
+  end
+
   def mentor_timeline_event_markings(mentee) do
     markings =
       Repo.all(

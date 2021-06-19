@@ -16,7 +16,7 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
 
   def create(conn, %{"mentor_timeline_event" => event_params}) do
     case Transizion.create_mentor_timeline_event(event_params) do
-      {:ok, event} -> 
+      {:ok, _} -> 
           conn 
             |> put_flash(:info, "Timeline event created successfully.") 
             |> redirect(to: Routes.admin_mentor_timeline_event_path(conn, :index))
@@ -44,5 +44,14 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "edit.html", event: mentor_timeline_event, changeset: changeset)
     end
+  end
+
+  def delete(conn, %{"id" => id}) do
+    event = Transizion.get_mentor_timeline_event!(id)
+    {:ok, _} = Transizion.delete_mentor_timeline_event(event)
+
+    conn
+    |> put_flash(:info, "Timeline event deleted successfully.")
+    |> redirect(to: Routes.admin_mentor_timeline_event_path(conn, :index))
   end
 end
