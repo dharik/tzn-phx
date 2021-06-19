@@ -1,6 +1,20 @@
 <p class="lead">Mentor Timeline</p>
 <%= link "Add new timeline event", to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-primary" %>
 
+<br /><br />
+Filter by grade:
+<div class="nav-inline">
+  <ul>
+    <%= for {label, value} <- [
+        {"All grades", ""},
+        {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"}, 
+        {"Sophomore", "sophomore"}, {"Rising Junior", "rising junior"},
+        {"Junior", "junior"}, {"Rising Senior", "rising senior"}, {"Senior", "senior"}] do %>
+      <li><%= link label, to: Routes.admin_mentor_timeline_event_path(@conn, :index, grade: value) %></li>
+    <% end %>
+  </ul>
+</div>
+
 <%= for event <- @events |> Enum.sort_by(&(&1.date), {:asc, Date}) do %>
   <div class="border border-radius box-shadow-s padding-s margin-vertical-s">
     <strong>

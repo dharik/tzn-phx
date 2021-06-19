@@ -4,6 +4,11 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
   alias Tzn.Transizion
   alias Tzn.Transizion.MentorTimelineEvent
 
+  def index(conn, %{"grade" => grade}) do
+    events = Transizion.list_mentor_timeline_events()
+    render(conn, "index.html", events: Enum.filter(events, fn e -> e.grade == grade end))
+  end
+
   def index(conn, _params) do
     events = Transizion.list_mentor_timeline_events()
     render(conn, "index.html", events: events)
