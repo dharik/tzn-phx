@@ -1,4 +1,9 @@
-<h1 class="display-title"><%= @mentee.name %></h1>
+<h1 class="display-title">
+  <%= @mentee.name %>
+  <%= if @mentee.archived do %>
+    (Archived)
+  <% end %>
+</h1>
 
 
 <div class="space-m"></div>

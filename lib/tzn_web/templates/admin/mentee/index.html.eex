@@ -6,7 +6,7 @@
     <tr>
       <th>Name</th>
       <th>Created</th>
-      <th>Current mentor</th>
+      <th>Mentor</th>
       <th>Grade</th>
       <th>Hours used/purchased</th>
       <th>Hours left</th>
@@ -17,6 +17,7 @@
       <tr>
         <td>
           <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
+          <%= if mentee.archived do %>(archived)<% end %>
         </td>
         <td>
           <%= mentee.inserted_at %>

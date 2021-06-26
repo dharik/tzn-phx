@@ -91,11 +91,11 @@ defmodule Tzn.Transizion do
   # Mentee stuff
 
   def list_mentees do
-    Mentee |> order_by(asc: :name) |> Repo.all
+    Mentee |> order_by(asc: :archived, asc: :name) |> Repo.all
   end
 
   def list_mentees(%{mentor: mentor}) do
-    Repo.all(from m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [desc: m.id])
+    Repo.all(from m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [asc: m.archived, desc: m.id])
   end
 
   def get_mentee!(id), do: Repo.get!(Mentee, id)

@@ -29,12 +29,13 @@
   <div class="flex-1">
     <p class="lead">Mentees</p>
     <ol> 
-      <%= for mentee <- @mentor.mentees do %>
+      <%= for mentee <- @mentor.mentees |> Enum.sort_by(fn mentee -> if mentee.archived do 1 else 0 end end) do %>
         <li>
           <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
             ★
           <% end %>
           <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
+          <%= if mentee.archived do %>(archived)<% end %>
         </li>
       <% end %>
     </ol>

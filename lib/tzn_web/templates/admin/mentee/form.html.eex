@@ -24,6 +24,11 @@
   <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
 
+  <%= label f, :archived do %>
+    <%= checkbox f, :archived %> Archived?
+  <% end %>
+  <%= error_tag f, :archived %>
+
   <%= label f, :mentor_id  %>
   <%= select f, :mentor_id, [
     {'None', nil} | 

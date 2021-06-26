@@ -22,6 +22,7 @@ defmodule TznWeb.MentorPlugs do
     mentees =
       Transizion.list_mentees(%{mentor: conn.assigns.current_mentor})
       |> Repo.preload(:hour_counts)
+      |> Enum.reject(fn m -> m.archived end)
 
     conn |> assign(:mentees, mentees)
   end
