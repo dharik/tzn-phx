@@ -23,7 +23,12 @@
         <% end %>
       </td>
       <td>
-        <%= mentor.mentees |> Enum.map(fn mentee -> mentee.name end) |> Enum.join(", ") %>
+        <%= 
+          mentor.mentees 
+          |> Enum.reject(fn m -> m.archived end) 
+          |> Enum.map(fn m -> m.name end) 
+          |> Enum.join(", ") 
+        %>
       </td>
     </tr>
 <% end %>
