@@ -18,7 +18,7 @@ defmodule Tzn.Transizion do
   require IEx
 
   def list_mentors do
-    Mentor |> order_by(asc: :name) |> Repo.all
+    Mentor |> order_by(asc: :archived, asc: :name) |> Repo.all
   end
 
   def get_mentor!(id), do: Repo.get!(Mentor, id)

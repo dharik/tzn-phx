@@ -15,6 +15,7 @@
     <tr>
       <td>
         <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
+        <%= if mentor.archived do %>(archived)<% end %>
       </td>
       <td>
         <%= if most_recent_counts do %>

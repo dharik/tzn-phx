@@ -14,7 +14,7 @@ defmodule TznWeb.Admin.MenteeController do
   end
 
   def load_mentor_list(conn, _) do
-    mentors = Transizion.list_mentors()
+    mentors = Transizion.list_mentors() |> Enum.reject(fn m -> m.archived end)
     conn |> assign(:mentors, mentors)
   end
 

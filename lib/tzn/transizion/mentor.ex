@@ -6,6 +6,7 @@ defmodule Tzn.Transizion.Mentor do
     field :name, :string
     field :email, :string
     field :photo_url, :string
+    field :archived, :boolean
 
     # Matching algorithm
     field :career_interests, {:array, :string}
@@ -41,7 +42,8 @@ defmodule Tzn.Transizion.Mentor do
       :disability_experience,
       :social_factor,
       :international_experience,
-      :hourly_rate
+      :hourly_rate,
+      :archived
     ])
     |> validate_required([:name, :email, :hourly_rate])
     |> cast_assoc(:user)

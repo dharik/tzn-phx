@@ -1,5 +1,6 @@
 <h1 class="display-title">
   Mentor
+  <%= if @mentor.archived do %>(archived)<% end %>
 </h1>
 <div class="space-m"></div>
 

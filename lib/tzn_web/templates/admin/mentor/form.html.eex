@@ -28,6 +28,11 @@
   ] %>
   <%= error_tag f, :user_id %>
 
+  <%= label f, :archived do %>
+    <%= checkbox f, :archived %> Archived?
+  <% end %>
+  <%= error_tag f, :archived %>
+
   <div class="space-l"></div>
   <p class="lead">Matching Algorithm Data</p>
   
