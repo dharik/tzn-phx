@@ -6,27 +6,41 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   alias Tzn.Repo
 
   def index(conn, _params) do
-    timesheet_entries = Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_mentor}) |> Repo.preload(:mentee)
+    timesheet_entries =
+      Transizion.list_timesheet_entries(%{mentor: conn.assigns.current_mentor})
+      |> Repo.preload(:mentee)
+
     monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
     current_mentor = conn.assigns.current_mentor
-    render(conn, "index.html", timesheet_entries: timesheet_entries, monthly_report: monthly_report, mentor: current_mentor)
+
+    render(conn, "index.html",
+      timesheet_entries: timesheet_entries,
+      monthly_report: monthly_report,
+      mentor: current_mentor
+    )
   end
 
   def new(conn, params) do
-    default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime  
-    changeset = Transizion.change_timesheet_entry(
-      %TimesheetEntry{
-        started_at: default_started_at,
-        ended_at: default_started_at |> Timex.shift(minutes: 30)
-      }, 
-      params
-    )
+    default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime()
+
+    changeset =
+      Transizion.change_timesheet_entry(
+        %TimesheetEntry{
+          started_at: default_started_at,
+          ended_at: default_started_at |> Timex.shift(minutes: 30)
+        },
+        params
+      )
+
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
     # TODO: Merge params or inject mentor_id into form
-    case Transizion.create_timesheet_entry(timesheet_entry_params |> Map.put("mentor_id", conn.assigns.current_mentor.id)) do
+    case Transizion.create_timesheet_entry(
+           timesheet_entry_params
+           |> Map.put("mentor_id", conn.assigns.current_mentor.id)
+         ) do
       {:ok, timesheet_entry} ->
         conn
         |> put_flash(:info, "Timesheet entry created successfully.")

@@ -256,20 +256,20 @@ defmodule Tzn.Transizion do
   """
   def get_timesheet_entry!(id), do: Repo.get!(TimesheetEntry, id)
 
-  @doc """
-  Creates a timesheet_entry.
 
-  ## Examples
+  def create_timesheet_entry(attrs \\ %{})
 
-      iex> create_timesheet_entry(%{field: value})
-      {:ok, %TimesheetEntry{}}
-
-      iex> create_timesheet_entry(%{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def create_timesheet_entry(attrs \\ %{}) do
+  def create_timesheet_entry(attrs = %{"hourly_rate" => _}) do
     %TimesheetEntry{}
+    |> TimesheetEntry.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def create_timesheet_entry(attrs = %{"mentor_id" => mentor_id}) do
+    mentor =  get_mentor!(mentor_id)
+
+    %TimesheetEntry{}
+    |> Map.put(:hourly_rate, mentor.hourly_rate)
     |> TimesheetEntry.changeset(attrs)
     |> Repo.insert()
   end

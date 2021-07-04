@@ -8,10 +8,14 @@
   <%= label f, :started_at %>
   <%= datetime_local_input f, :started_at %>
   <%= error_tag f, :started_at %>
-  
+
   <%= label f, :ended_at %>
   <%= datetime_local_input f, :ended_at %>
   <%= error_tag f, :ended_at %>
+
+  <%= label f, :hourly_rate %>
+  <%= number_input f, :hourly_rate, step: 0.01 %>
+  <%= error_tag f, :hourly_rate %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>
