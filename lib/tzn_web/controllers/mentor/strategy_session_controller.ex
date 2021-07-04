@@ -36,7 +36,17 @@ defmodule TznWeb.Mentor.StrategySessionController do
          ) do
       {:ok, strategy_session} ->
         conn
-        |> redirect(to: Routes.mentor_strategy_session_path(conn, :edit, strategy_session))
+        |> put_flash(:info, "Strategy session created. Add a corresponding timesheet entry.")
+        |> redirect(
+          to:
+            Routes.mentor_timesheet_entry_path(conn, :new,
+              notes: "Strategy session: #{strategy_session.email_subject}",
+              mentee_id: strategy_session.mentee_id,
+              started_at: strategy_session.date |> NaiveDateTime.to_string(),
+              ended_at:
+                strategy_session.date |> Timex.shift(minutes: 10) |> NaiveDateTime.to_string()
+            )
+        )
 
       {:error, %Ecto.Changeset{} = changeset} ->
         render(conn, "new.html", changeset: changeset, mentee: mentee)
