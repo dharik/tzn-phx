@@ -18,6 +18,8 @@ defmodule Tzn.Transizion.Mentee do
     field :grade, :string
 
     belongs_to :mentor, Tzn.Transizion.Mentor
+    field :mentor_rate, :decimal # Rates can change
+
     belongs_to :user, Tzn.Users.User
 
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
@@ -51,6 +53,7 @@ defmodule Tzn.Transizion.Mentee do
       :parent2_email,
       :parent2_name,
       :mentor_id,
+      :mentor_rate,
       :user_id,
       :grade,
       :email,

@@ -27,6 +27,7 @@
         Mentor:<br />
         <%= if @mentee.mentor do %>
           <%= link @mentee.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentee.mentor) %>
+          Hourly rate is <%= @mentee.mentor_rate || @mentee.mentor.hourly_rate %>
         <% else %>
           <span class="color-error">No mentor assigned yet</span>
         <% end %>
@@ -41,7 +42,7 @@
       </p>
     </div>
     <div class="flex-1">
-      
+
       <p>
         Email<br />
         <span class="color-grey"><%= @mentee.email || "Not set" %></span>
@@ -78,9 +79,9 @@
       </p>
     </div>
   </div>
-  
-  
-  
+
+
+
   <div class="space-s"></div>
 
   <%= link "Edit internal information", to: Routes.admin_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
@@ -108,12 +109,12 @@
       <% end %>
       </small>
       <br />
-      <%= link "Edit", 
+      <%= link "Edit",
           to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
           class: "button button-border button-xs margin-right-xs" %>
-      <%= link "Delete", 
-          to: Routes.admin_strategy_session_path(@conn, :delete, strategy_session), 
-          method: :delete, data: [confirm: "Are you sure?"], 
+      <%= link "Delete",
+          to: Routes.admin_strategy_session_path(@conn, :delete, strategy_session),
+          method: :delete, data: [confirm: "Are you sure?"],
           class: "button button-s button-text button-warning" %>
     </p>
   <% end %>

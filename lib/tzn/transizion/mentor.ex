@@ -17,7 +17,7 @@ defmodule Tzn.Transizion.Mentor do
     field :social_factor, :string
     field :international_experience, :boolean
 
-    field :hourly_rate, :decimal
+    field :hourly_rate, :decimal # Acts as a default hourly rate
 
     has_many :mentees, Tzn.Transizion.Mentee
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry

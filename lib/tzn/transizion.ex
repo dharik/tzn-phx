@@ -18,7 +18,7 @@ defmodule Tzn.Transizion do
   require IEx
 
   def list_mentors do
-    Mentor |> order_by(asc: :archived, asc: :name) |> Repo.all
+    Mentor |> order_by(asc: :archived, asc: :name) |> Repo.all()
   end
 
   def get_mentor!(id), do: Repo.get!(Mentor, id)
@@ -91,14 +91,17 @@ defmodule Tzn.Transizion do
   # Mentee stuff
 
   def list_mentees do
-    Mentee |> order_by(asc: :archived, asc: :name) |> Repo.all
+    Mentee |> order_by(asc: :archived, asc: :name) |> Repo.all()
   end
 
   def list_mentees(%{mentor: mentor}) do
-    Repo.all(from m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [asc: m.archived, desc: m.id])
+    Repo.all(
+      from(m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [asc: m.archived, desc: m.id])
+    )
   end
 
   def get_mentee!(id), do: Repo.get!(Mentee, id)
+  def get_mentee(id), do: Repo.get(Mentee, id)
 
   def delete_mentee(%Mentee{} = mentee) do
     Repo.delete(mentee)
@@ -236,7 +239,7 @@ defmodule Tzn.Transizion do
 
   def list_timesheet_entries(%{mentor: mentor}) do
     Repo.all(
-      from e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at]
+      from(e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at])
     )
   end
 
@@ -256,7 +259,6 @@ defmodule Tzn.Transizion do
   """
   def get_timesheet_entry!(id), do: Repo.get!(TimesheetEntry, id)
 
-
   def create_timesheet_entry(attrs \\ %{})
 
   def create_timesheet_entry(attrs = %{"hourly_rate" => _}) do
@@ -265,11 +267,25 @@ defmodule Tzn.Transizion do
     |> Repo.insert()
   end
 
-  def create_timesheet_entry(attrs = %{"mentor_id" => mentor_id}) do
-    mentor =  get_mentor!(mentor_id)
+  def create_timesheet_entry(attrs = %{"mentor_id" => mentor_id, "mentee_id" => mentee_id}) do
+    mentor = get_mentor!(mentor_id)
+
+    mentee =
+      if !is_nil(mentee_id) && mentee_id != "" do
+        get_mentee(mentee_id)
+      else
+        nil
+      end
+
+    rate =
+      if mentee && mentee.mentor_rate do
+        mentee.mentor_rate
+      else
+        mentor.hourly_rate
+      end
 
     %TimesheetEntry{}
-    |> Map.put(:hourly_rate, mentor.hourly_rate)
+    |> Map.put(:hourly_rate, rate)
     |> TimesheetEntry.changeset(attrs)
     |> Repo.insert()
   end
@@ -322,7 +338,7 @@ defmodule Tzn.Transizion do
   end
 
   def list_mentor_timeline_events do
-    MentorTimelineEvent |> order_by(asc: :date, desc: :is_hard_deadline) |> Repo.all
+    MentorTimelineEvent |> order_by(asc: :date, desc: :is_hard_deadline) |> Repo.all()
   end
 
   def change_mentor_timeline_event(%MentorTimelineEvent{} = event, attrs \\ %{}) do
@@ -350,8 +366,9 @@ defmodule Tzn.Transizion do
   def mentor_timeline_event_markings(mentee) do
     markings =
       Repo.all(
-        from m in MentorTimelineEventMarking,
+        from(m in MentorTimelineEventMarking,
           where: m.mentee_id == ^mentee.id
+        )
       )
 
     # Returns a map of event id: marking for easy lookups later.
@@ -380,11 +397,11 @@ defmodule Tzn.Transizion do
   end
 
   def get_current_mentor(user_id) do
-    Repo.one(from m in Mentor, where: m.user_id == ^user_id)
+    Repo.one(from(m in Mentor, where: m.user_id == ^user_id))
   end
 
   def mentor_timesheet_aggregate(mentor_id) do
-    Repo.all(from h in MentorHourCounts, where: h.mentor_id == ^mentor_id)
+    Repo.all(from(h in MentorHourCounts, where: h.mentor_id == ^mentor_id))
   end
 
   def change_contract_purchase(%ContractPurchase{} = contract_purchase, attrs \\ %{}) do

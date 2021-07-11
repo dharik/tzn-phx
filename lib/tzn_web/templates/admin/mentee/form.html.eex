@@ -15,7 +15,7 @@
 
   <%= label f, :grade %>
   <%= select f, :grade, [
-    {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"}, 
+    {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"},
     {"Sophomore", "sophomore"}, {"Rising Junior", "rising junior"},
     {"Junior", "junior"}, {"Rising Senior", "rising senior"}, {"Senior", "senior"}] %>
   <%= error_tag f, :grade %>
@@ -31,10 +31,14 @@
 
   <%= label f, :mentor_id  %>
   <%= select f, :mentor_id, [
-    {'None', nil} | 
+    {'None', nil} |
     Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
   ] %>
   <%= error_tag f, :mentor_id %>
+
+  <%= label f, :mentor_rate %>
+  <%= number_input f, :mentor_rate, step: 0.1 %>
+  <%= error_tag f, :mentor_rate %>
 
   <%= label f, :user_id  %>
   <%= select f, :user_id, [
@@ -54,7 +58,7 @@
   <%= error_tag f, :parent1_name %>
 
   <div class="space-m"></div>
-  
+
   <%= label f, :parent2_email %>
   <%= email_input f, :parent2_email %>
   <%= error_tag f, :parent2_email %>
