@@ -1,4 +1,8 @@
 defmodule Tzn.Scripts.SetMentorRateOnMentee do
+  # script didn't work so I ended up doing a raw query
+  # update mentees set
+	# mentor_rate = (SELECT hourly_rate from mentors where mentors.id = mentees.mentor_id)
+  # where mentees.mentor_id is not null
   def run do
     import Ecto.Query
     alias Tzn.Transizion.Mentee
