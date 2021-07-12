@@ -2,7 +2,7 @@ defmodule TznWeb.Router do
   use TznWeb, :router
   use Pow.Phoenix.Router
   use Plugsnag
-  
+
   import TznWeb.AdminPlugs
   import TznWeb.MentorPlugs
 
@@ -15,7 +15,7 @@ defmodule TznWeb.Router do
     plug :load_admin_profile
     plug :ensure_admin_profile
   end
-  
+
   pipeline :mentor do
     plug :put_layout, {TznWeb.LayoutView, :mentor}
     plug :load_mentor_profile
@@ -66,7 +66,7 @@ defmodule TznWeb.Router do
 
     scope "/admin", as: :admin do
       pipe_through [:admin]
-      
+
       get "/", Admin.MentorController, :index
       get "/matching", Admin.MatchingAlgorithmController, :show
       get "/impersonation/start", Admin.ImpersonationController, :start
@@ -77,6 +77,10 @@ defmodule TznWeb.Router do
       resources "/timesheet_entries", Admin.TimesheetEntryController, only: [:edit, :update, :delete]
       resources "/contract_purchases", Admin.ContractPurchaseController
       resources "/mentor_timeline_events", Admin.MentorTimelineEventController
+
+      scope "/api" do
+        get "/mentors", Admin.MentorController, :index_json
+      end
     end
   end
 

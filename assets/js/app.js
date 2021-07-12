@@ -16,18 +16,23 @@ import "phoenix_html"
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { h, render } from 'preact';
 import MatchingApp from './matching';
+import AdminMentorList from './admin/mentors';
 
-if(document.getElementById('matching-app')) {
+if (document.getElementById('matching-app')) {
   render(<MatchingApp />, document.getElementById('matching-app'));
+}
+
+if (document.getElementById('admin-mentors')) {
+  render(<AdminMentorList />, document.getElementById('admin-mentors'))
 }
 
 for (const element of document.getElementsByClassName('rte')) {
   ClassicEditor
-    .create( element )
-    .then( editor => {
-        // console.log( "created editor", editor );
-    } )
-    .catch( error => {
-        // console.error( error );
-    } );
+    .create(element)
+    .then(editor => {
+      // console.log( "created editor", editor );
+    })
+    .catch(error => {
+      // console.error( error );
+    });
 }

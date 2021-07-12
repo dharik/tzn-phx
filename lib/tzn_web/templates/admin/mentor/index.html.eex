@@ -1,37 +1,5 @@
 <h1>Listing Mentors</h1>
 <span><%= link "Create Mentor", to: Routes.admin_mentor_path(@conn, :new), class: "button button-primary" %></span>
 
-<table>
-  <thead>
-    <tr>
-      <th width="15%">Name</th>
-      <th width="15%">Hours</th>
-      <th width="70%">Mentees</th>
-    </tr>
-  </thead>
-  <tbody>
-<%= for mentor <- sorted_by_hours_this_month(@mentors) do %>
-  <% most_recent_counts = most_recent_month(mentor.monthly_hour_counts) %>
-    <tr>
-      <td>
-        <%= link mentor.name, to: Routes.admin_mentor_path(@conn, :show, mentor) %>
-        <%= if mentor.archived do %>(archived)<% end %>
-      </td>
-      <td>
-        <%= if most_recent_counts do %>
-          <%= most_recent_counts.hours |> Decimal.round(1) %> in <%= most_recent_counts.month_name |> humanize %>
-        <% end %>
-      </td>
-      <td>
-        <%= 
-          mentor.mentees 
-          |> Enum.reject(fn m -> m.archived end) 
-          |> Enum.map(fn m -> m.name end) 
-          |> Enum.join(", ") 
-        %>
-      </td>
-    </tr>
-<% end %>
-  </tbody>
-</table>
-
+<div id="admin-mentors">
+</div>

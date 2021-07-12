@@ -14,9 +14,13 @@ defmodule TznWeb.Admin.MentorController do
   end
 
   def index(conn, _params) do
+    render(conn, "index.html")
+  end
+
+  def index_json(conn, _) do
     mentors = Transizion.list_mentors() |> Repo.preload([:mentees, :monthly_hour_counts])
 
-    render(conn, "index.html", mentors: mentors)
+    render(conn, "index.json", mentors: mentors)
   end
 
   def new(conn, _params) do
