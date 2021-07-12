@@ -19,6 +19,7 @@ export default () => {
     } else if (!shouldShowArchived && !mentor.archived) {
       return true;
     }
+    return false;
   })
 
   return (
@@ -43,7 +44,7 @@ export default () => {
         </thead>
         <tbody>
           {filteredMentors.map((mentor) => {
-            const latestMonthCount = mentor.counts.reverse()[0];
+            const latestMonthCount = mentor.counts[mentor.counts.length - 1];
             return (
               <tr>
                 <td>
