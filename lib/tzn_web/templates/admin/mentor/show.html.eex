@@ -29,7 +29,7 @@
   </div>
   <div class="flex-1">
     <p class="lead">Mentees</p>
-    <ol> 
+    <ol>
       <%= for mentee <- @mentor.mentees |> Enum.sort_by(fn mentee -> if mentee.archived do 1 else 0 end end) do %>
         <li>
           <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
@@ -48,7 +48,7 @@
 
 <p class="lead">Timesheet Entries</p>
 <div class="overflow-y-scroll" style="max-height: 50vh">
-  <table>  
+  <table>
     <thead>
       <tr>
         <th>Mentee Name</th>
@@ -107,7 +107,7 @@
       </small>
       <br />
       <%= unless strategy_session.published do %>
-        <%= link "Edit", 
+        <%= link "Edit",
             to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
             class: "button button-border button-xs" %>
       <% end %>
@@ -128,18 +128,16 @@
     </tr>
   </thead>
   <tbody>
-    <%= for stat <- @mentor.monthly_hour_counts do %>
+    <%= for stat <- hour_counts_by_month(@mentor.timesheet_entries)  |> Enum.reverse() do %>
       <tr>
         <td>
-          <%= stat.month_name |> humanize %><%= stat.year %>
+          <%= stat.month_name %> <%= stat.year %>
         </td>
         <td>
-          <%= stat.hours |> Decimal.round(1) %>
+          <%= stat.hours %>
         </td>
         <td>
-          <%= if @mentor.hourly_rate do %>
-            <%= Decimal.mult(stat.hours, @mentor.hourly_rate) |> Decimal.round(2) %>            
-          <% end %>
+          <%= stat.pay %>
         </td>
       </tr>
     <% end %>

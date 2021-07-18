@@ -1,5 +1,6 @@
 defmodule TznWeb.Admin.MentorView do
   use TznWeb, :view
+  alias Tzn.Transizion.TimesheetEntry
 
   def render("index.json", %{mentors: mentors, conn: conn}) do
     mentors
@@ -47,5 +48,43 @@ defmodule TznWeb.Admin.MentorView do
       {:error, _} -> date
       _ -> "N/A"
     end
+  end
+
+  # [
+  # %{hours: 13.25, month: 11, month_name: "November", pay: 530.0, year: 2020},
+  # %{hours: 16.5, month: 1, month_name: "January", pay: 660.0, year: 2021},
+  # ]
+  def hour_counts_by_month(timesheet_entries) do
+    timesheet_entries
+    |> Enum.group_by(fn tse = %TimesheetEntry{} ->
+      {tse.started_at.year, tse.started_at.month}
+    end)
+    |> Enum.map(fn {{year, month}, entries} ->
+      hours_for_month =
+        entries
+        |> Enum.map(fn entry ->
+          seconds = NaiveDateTime.diff(entry.ended_at, entry.started_at)
+
+          seconds / 3600.0
+        end)
+        |> Enum.sum()
+
+      pay_for_month =
+        entries
+        |> Enum.map(fn entry ->
+          seconds = NaiveDateTime.diff(entry.ended_at, entry.started_at)
+
+           seconds / 3600.0 * Decimal.to_float(entry.hourly_rate)
+        end)
+        |> Enum.sum()
+
+      %{
+        year: year,
+        month: month,
+        month_name: Timex.month_name(month),
+        pay: Decimal.from_float(pay_for_month) |> Decimal.round(2),
+        hours: hours_for_month
+      }
+    end)
   end
 end
