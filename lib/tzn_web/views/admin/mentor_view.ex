@@ -8,6 +8,7 @@ defmodule TznWeb.Admin.MentorView do
       %{
         name: mentor.name,
         archived: mentor.archived,
+        experience_level: mentor.experience_level,
         mentee_names:
           mentor.mentees
           |> Enum.reject(fn m -> m.archived end)

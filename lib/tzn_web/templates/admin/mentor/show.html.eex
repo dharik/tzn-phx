@@ -12,6 +12,16 @@
     <p>
       Name:<br />
       <span class="color-grey"><%= @mentor.name %></span>
+      <%= case @mentor.experience_level do
+        "veteran" -> "⭐"
+        "rising" -> "🔷"
+        "rookie" -> "🔺"
+        _ -> ""
+      end %>
+    </p>
+    <p>
+      Experience Level:<br />
+      <span class="color-grey"><%= @mentor.experience_level |> humanize %></span>
     </p>
     <p>
       Email address (mentee/parent facing):<br />

@@ -17,13 +17,19 @@
   <%= text_input f, :photo_url %>
   <%= error_tag f, :photo_url %>
 
+  <%= label f, :experience_level %>
+  <%= select f, :experience_level, [
+    {"N/A", nil}, {"Veteran", "veteran"}, {"Rising", "rising"}, {"Rookie", "rookie"}
+  ] %>
+  <%= error_tag f, :experience_level %>
+
   <%= label f, :hourly_rate %>
   <%= number_input f, :hourly_rate, step: 0.01 %>
   <%= error_tag f, :hourly_rate %>
 
   <%= label f, :user_id  %>
   <%= select f, :user_id, [
-    {'None', nil} | 
+    {'None', nil} |
     @users |> Enum.sort_by(fn user -> user.id end ) |> Enum.reverse |> Enum.map(fn user -> {"#{user.email}", user.id} end)
   ] %>
   <%= error_tag f, :user_id %>
@@ -35,7 +41,7 @@
 
   <div class="space-l"></div>
   <p class="lead">Matching Algorithm Data</p>
-  
+
   <%= label f, :career_interests  %>
   <%= multiple_select f, :career_interests, Tzn.Transizion.Mentor.career_interest_options, size: 15 %>
   <%= error_tag f, :career_interests %>

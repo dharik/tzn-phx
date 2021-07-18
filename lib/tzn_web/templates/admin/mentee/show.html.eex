@@ -27,6 +27,13 @@
         Mentor:<br />
         <%= if @mentee.mentor do %>
           <%= link @mentee.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentee.mentor) %>
+          <%= case @mentee.mentor.experience_level do
+            "veteran" -> "⭐"
+            "rising" -> "🔷"
+            "rookie" -> "🔺"
+            _ -> ""
+          end %>
+          <br />
           Hourly rate is <%= @mentee.mentor_rate || @mentee.mentor.hourly_rate %>
         <% else %>
           <span class="color-error">No mentor assigned yet</span>

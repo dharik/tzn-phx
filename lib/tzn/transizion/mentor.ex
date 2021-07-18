@@ -18,6 +18,7 @@ defmodule Tzn.Transizion.Mentor do
     field :international_experience, :boolean
 
     field :hourly_rate, :decimal # Acts as a default hourly rate
+    field :experience_level, :string
 
     has_many :mentees, Tzn.Transizion.Mentee
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
@@ -43,8 +44,10 @@ defmodule Tzn.Transizion.Mentor do
       :social_factor,
       :international_experience,
       :hourly_rate,
-      :archived
+      :archived,
+      :experience_level
     ])
+    |> validate_inclusion(:experience_level, ["veteran", "rising", "rookie"])
     |> validate_required([:name, :email, :hourly_rate])
     |> cast_assoc(:user)
   end

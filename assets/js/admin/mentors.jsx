@@ -49,6 +49,9 @@ export default () => {
               <tr>
                 <td>
                   <a href={mentor.admin_path}>{mentor.name}</a>
+                  {mentor.experience_level === 'veteran' && '⭐️'}
+                  {mentor.experience_level === 'rising' && '🔷'}
+                  {mentor.experience_level === 'rookie' && '🔺'}
                 </td>
                 <td>{latestMonthCount && <>
                   {latestMonthCount.hours} in {latestMonthCount.month_name} {latestMonthCount.year}
