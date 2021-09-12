@@ -1,7 +1,10 @@
-<h1 class="display-title">
-  Mentor
-  <%= if @mentor.archived do %>(archived)<% end %>
-</h1>
+<div class="flex flex-row justify-content-space-between align-items-flex-end">
+  <h1 class="display-title">
+    Mentor: <%= @mentor.name %>
+    <%= if @mentor.archived do %>(archived)<% end %>
+  </h1>
+  <%= link "Login as #{@mentor.name}", to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button" %>
+</div>
 <div class="space-m"></div>
 
 <div class="border border-radius padding-s flex flex-row">
@@ -69,7 +72,7 @@
       </tr>
     </thead>
     <tbody>
-      <%= for timesheet_entry <- @mentor.timesheet_entries do %>
+      <%= for timesheet_entry <- @mentor.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, NaiveDateTime}) do %>
         <tr>
           <td>
             <%= if timesheet_entry.mentee do %>

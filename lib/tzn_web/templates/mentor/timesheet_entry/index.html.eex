@@ -52,12 +52,17 @@
       <th>Estimated Pay</th>
     </tr>
   </thead>
-  <tbody>
-    <%= for month_data <- @monthly_report do %>
+  <%= for stat <- TznWeb.Admin.MentorView.hour_counts_by_month(@timesheet_entries)  |> Enum.reverse() do %>
       <tr>
-        <td><%= month_data.month_name |> humanize %> <%= month_data.year %></td>
-        <td><%= Decimal.round(month_data.hours, 2) %></td>
-        <td><%= Decimal.mult(month_data.hours, @mentor.hourly_rate) |> Decimal.round(2) %></td>
+        <td>
+          <%= stat.month_name %> <%= stat.year %>
+        </td>
+        <td>
+          <%= stat.hours %>
+        </td>
+        <td>
+          <%= stat.pay %>
+        </td>
       </tr>
     <% end %>
   </tbody>
