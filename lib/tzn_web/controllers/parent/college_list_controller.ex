@@ -8,6 +8,6 @@ defmodule TznWeb.Parent.CollegeListController do
 
     questions = Tzn.CollegeList.list_active_questions()
 
-    render(conn, "show.html", college_list: college_list, questions: questions)
+    render(conn, "edit.html", college_list: college_list, questions: questions)
   end
 end

@@ -8,6 +8,8 @@ defmodule Tzn.Transizion.Mentor do
     field :photo_url, :string
     field :archived, :boolean
 
+    field :college_list_specialty, :boolean
+
     # Matching algorithm
     field :career_interests, {:array, :string}
     field :school_tiers, {:array, :string}

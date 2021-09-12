@@ -31,7 +31,13 @@ defmodule TznWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :override_current_user_for_impersonation
+  end
 
+  pipeline :browser_anonymous do
+    plug :accepts, ["html"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :put_secure_browser_headers
   end
 
   pipeline :api do
@@ -44,11 +50,11 @@ defmodule TznWeb.Router do
     pow_routes()
   end
 
+
   scope "/", TznWeb do
     pipe_through [:protected, :browser]
     get "/", EntryController, :launch_app
     get "/impersonation/stop", Admin.ImpersonationController, :stop
-    get "/college_list/:access_key", Parent.CollegeListController, :edit
 
     scope "/mentor", as: :mentor do
       pipe_through [:mentor]
@@ -61,6 +67,8 @@ defmodule TznWeb.Router do
       get "/timeline/:mentee_id", Mentor.TimelineController, :index
 
       resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
+
+      # resources "/college_lists", Mentor.CollegeListController, only: [:index, :update, :show]
 
       get "/help", Mentor.HelpController, :show
       get "/cl", Mentor.CollegeListController, :show
@@ -84,9 +92,16 @@ defmodule TznWeb.Router do
       scope "/api" do
         get "/mentors", Admin.MentorController, :index_json
       end
+      get "/college_list_questions", Admin.CollegeListController, :index
+      get "/college_list_questions.json", Admin.CollegeListController, :list_questions
+      post "/college_list_questions", Admin.CollegeListController, :update_questions
     end
+  end
 
-    
+  scope "/", TznWeb do
+    pipe_through [:browser_anonymous]
+    get "/college_list/:access_key", Parent.CollegeListController, :edit
+    post "/college_list/answer", Parent.CollegeListAnswerController, :create_or_update
   end
 
   # Other scopes may use custom stacks.

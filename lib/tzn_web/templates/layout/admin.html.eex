@@ -23,6 +23,7 @@
           <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
           <li><%= link "Mentor Timeline", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
           <li><%= link "Matching Algorithm", to: Routes.admin_matching_algorithm_path(@conn, :show) %></li>
+          <li><%= link "College List Questions", to: Routes.admin_college_list_path(@conn, :index) %></li>
           <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>
       </nav>

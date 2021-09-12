@@ -17,6 +17,7 @@ import ClassicEditor from '@ckeditor/ckeditor5-build-classic'
 import { h, render } from 'preact';
 import MatchingApp from './matching';
 import AdminMentorList from './admin/mentors';
+import CollegeListAdminApp from './admin/college_list_admin';
 
 if (document.getElementById('matching-app')) {
   render(<MatchingApp />, document.getElementById('matching-app'));
@@ -24,6 +25,10 @@ if (document.getElementById('matching-app')) {
 
 if (document.getElementById('admin-mentors')) {
   render(<AdminMentorList />, document.getElementById('admin-mentors'))
+}
+
+if(document.getElementById('college-list-admin')) {
+  render(<CollegeListAdminApp />, document.getElementById('college-list-admin'));
 }
 
 for (const element of document.getElementsByClassName('rte')) {

@@ -9,6 +9,14 @@ module.exports = (env, options) => {
   const devMode = options.mode !== 'production';
 
   return {
+    "resolve": { 
+      "alias": { 
+        "react": "preact/compat",
+        "react-dom/test-utils": "preact/test-utils",
+        "react-dom": "preact/compat",     // Must be below test-utils
+        "react/jsx-runtime": "preact/jsx-runtime"
+      },
+    },
     optimization: {
       minimizer: [
         new TerserPlugin({ cache: true, parallel: true, sourceMap: devMode }),
@@ -16,7 +24,7 @@ module.exports = (env, options) => {
       ]
     },
     entry: {
-      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.js'])
+      'app': glob.sync('./vendor/**/*.js').concat(['./js/app.tsx'])
     },
     output: {
       filename: '[name].js',
@@ -27,9 +35,9 @@ module.exports = (env, options) => {
     module: {
       rules: [
         {
-          test: /\.jsx?$/,
+          test: /\.jsx?|\.tsx?$/,
           resolve: {
-            extensions: ['.js', '.jsx']
+            extensions: ['.js', '.jsx', '.tsx', '.ts']
           },
           exclude: /node_modules/,
           use: {
