@@ -7,7 +7,7 @@ Filter by grade:
   <ul>
     <li><%= link "All grades", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
     <%= for {label, value} <- [
-        {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"}, 
+        {"Middle school", "middle_school"}, {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"},
         {"Sophomore", "sophomore"}, {"Rising Junior", "rising junior"},
         {"Junior", "junior"}, {"Rising Senior", "rising senior"}, {"Senior", "senior"}] do %>
       <li><%= link label, to: Routes.admin_mentor_timeline_event_path(@conn, :index, grade: value) %></li>
@@ -37,9 +37,9 @@ Filter by grade:
     <br />
 
     <%= link "Edit", to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) %>
-    <%= link "Delete", 
-          to: Routes.admin_mentor_timeline_event_path(@conn, :delete, event), 
-          method: :delete, data: [confirm: "Are you sure?"], 
+    <%= link "Delete",
+          to: Routes.admin_mentor_timeline_event_path(@conn, :delete, event),
+          method: :delete, data: [confirm: "Are you sure?"],
           class: "button button-s button-text button-warning margin-left-m" %>
   </div>
 <% end %>

@@ -10,7 +10,7 @@
 
   <%= label f, :grade %>
   <%= select f, :grade, [
-    {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"}, 
+    {"Middle school", "middle_school"}, {"Freshman", "freshman"}, {"Rising Sophomore", "rising sophomore"},
     {"Sophomore", "sophomore"}, {"Rising Junior", "rising junior"},
     {"Junior", "junior"}, {"Rising Senior", "rising senior"}, {"Senior", "senior"}] %>
   <%= error_tag f, :grade %>
