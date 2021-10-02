@@ -3,7 +3,11 @@
     Mentor: <%= @mentor.name %>
     <%= if @mentor.archived do %>(archived)<% end %>
   </h1>
-  <%= link "Login as #{@mentor.name}", to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button" %>
+  <%= if @mentor.user do %>
+    <%= link "Login as #{@mentor.name}", to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button" %>
+  <% else %>
+    Can't log in as mentor because no user attached yet
+  <% end %>
 </div>
 <div class="space-m"></div>
 
