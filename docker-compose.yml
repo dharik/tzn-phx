@@ -1,22 +1,23 @@
-db:
-  image: postgres
-  hostname: tzndb
-  ports:
-    - '5432:5432'
-  environment:
-    POSTGRES_PASSWORD: dev
-  volumes:
-    - ./dockerdb:/var/lib/postgresql/data
+services:
+  db:
+    image: postgres
+    hostname: tzndb
+    ports:
+      - '5432:5432'
+    environment:
+      POSTGRES_PASSWORD: dev
+    volumes:
+      - ./dockerdb:/var/lib/postgresql/data
 
-web:
-  build: .
-  volumes:
-    - ./:/app
-  ports:
-    - "4000:4000"
-  links:
-    - db
-  stdin_open: true # docker run -i
-  tty: true        # docker run -t
-  command: tail -f /dev/null
-    # - ./run.sh
+  web:
+    build: .
+    volumes:
+      - ./:/app
+    ports:
+      - "4000:4000"
+    links:
+      - db
+    stdin_open: true # docker run -i
+    tty: true        # docker run -t
+    command: tail -f /dev/null
+      # - ./run.sh
