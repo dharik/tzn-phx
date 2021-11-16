@@ -73,6 +73,7 @@ defmodule TznWeb.Router do
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
       resources "/mentors", Admin.MentorController
+      get "/mentor_payments", Admin.MentorPaymentsController, :index
       resources "/strategy_sessions", Admin.StrategySessionController
       resources "/timesheet_entries", Admin.TimesheetEntryController, only: [:edit, :update, :delete]
       resources "/contract_purchases", Admin.ContractPurchaseController

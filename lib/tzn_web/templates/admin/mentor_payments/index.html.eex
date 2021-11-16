@@ -1,0 +1,25 @@
+<h1>Mentor Payments</h1>
+<table>
+<% current_year = Timex.now().year %>
+<%= form_for @conn, Routes.admin_mentor_payments_path(@conn, :index), [method: :get], fn f -> %>
+    Month/Year:
+
+    <div class="input-group vertical-align-middle">
+        <%= select f, :start_month, 1..12 %>
+        <%= select f, :start_year, 2020..current_year %>
+        to
+        <%= select f, :end_month, 1..12 %>
+        <%= select f, :end_year, 2020..current_year %>
+    <%= submit "Submit" %>
+    </div>
+
+
+<% end %>
+
+<%= for m <- @mentors do %>
+    <tr>
+        <td><%= link m.name, to: Routes.admin_mentor_path(@conn, :show, m.id) %></td>
+        <td><%=  Number.Currency.number_to_currency(m.payment) %></td>
+    </tr>
+<% end %>
+</table>
