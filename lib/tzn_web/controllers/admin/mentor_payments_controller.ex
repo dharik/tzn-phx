@@ -11,14 +11,17 @@ defmodule TznWeb.Admin.MentorPaymentsController do
         "end_year" => end_year,
         "end_month" => end_month
       }) do
+    d = mentor_data(
+      start_year |> String.to_integer(),
+      start_month |> String.to_integer(),
+      end_year |> String.to_integer(),
+      end_month |> String.to_integer()
+    )
+
+    sum = d |> Enum.map(fn m -> m.payment end) |> Enum.sum
     render(conn, "index.html",
-      mentors:
-        mentor_data(
-          start_year |> String.to_integer(),
-          start_month |> String.to_integer(),
-          end_year |> String.to_integer(),
-          end_month |> String.to_integer()
-        )
+      mentors: d,
+      sum_total: sum
     )
   end
 

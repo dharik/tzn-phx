@@ -22,4 +22,8 @@
         <td><%=  Number.Currency.number_to_currency(m.payment) %></td>
     </tr>
 <% end %>
+    <tr class="background-light-200">
+        <td><strong>Total</strong></td>
+        <td><strong><%= Number.Currency.number_to_currency(@sum_total) %></strong></td>
+    </tr>
 </table>
