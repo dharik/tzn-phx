@@ -1,0 +1,18 @@
+<table>
+    <thead>
+        <tr>
+            <th>Mentee</th>
+            <th>List Status</th>
+            <th>View</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%= for q <- @lists do %>
+            <tr>
+                <td> <%= q.mentee.name %></td>
+                <td> <%= q.state %></td>
+                <td><%= link "View/Update", to: Routes.mentor_college_list_path(@conn, :edit, q) %>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

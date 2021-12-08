@@ -78,7 +78,7 @@
       </small>
       <br />
       <%= unless strategy_session.published do %>
-        <%= link "Edit", 
+        <%= link "Edit",
             to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session),
             class: "button button-border button-xs" %>
       <% end %>
@@ -108,6 +108,21 @@
 <p class="lead">Timeline</p>
 <div class="border border-radius padding-s">
   <%= link "Open #{@mentee.name}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, mentee_id: @mentee.id), class: "button button-primary" %>
+</div>
+
+<div class="space-m"></div>
+
+<div class="border border-radius padding-s">
+<p class="lead">College List</p>
+<%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
+  <%= q.state %>
+  <br />
+  <%= link "Open #{@mentee.name}'s college list", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+<% else %>
+  Not started
+  <br />
+  <%= link "Start #{@mentee.name}'s college list", to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id), class: "button", method: :post %>
+  <% end %>
 </div>
 
 <div class="space-l"></div>

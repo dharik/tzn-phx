@@ -1,5 +1,3 @@
-require IEx
-
 defmodule TznWeb.Mentor.TimelineController do
   use TznWeb, :controller
 

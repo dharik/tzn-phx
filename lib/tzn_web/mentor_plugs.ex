@@ -2,9 +2,10 @@ defmodule TznWeb.MentorPlugs do
   import Plug.Conn
   alias Tzn.Repo
   alias Tzn.Transizion
+  require Logger
 
   def load_mentor_profile(conn, _) do
-    mentor_profile = Transizion.get_current_mentor(conn.assigns.current_user.id)
+    mentor_profile = Transizion.get_mentor_profile(conn.assigns.current_user.id)
 
     conn |> assign(:current_mentor, mentor_profile)
   end
@@ -13,6 +14,7 @@ defmodule TznWeb.MentorPlugs do
     if conn.assigns.current_mentor do
       conn
     else
+      Logger.error("No mentor profile")
       conn |> halt
     end
   end

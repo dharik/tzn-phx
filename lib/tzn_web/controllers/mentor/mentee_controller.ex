@@ -35,6 +35,7 @@ defmodule TznWeb.Mentor.MenteeController do
         :mentor,
         :timesheet_entries,
         :hour_counts,
+        questionnaires: [:question_set],
         strategy_sessions: [:mentor]
       ])
 

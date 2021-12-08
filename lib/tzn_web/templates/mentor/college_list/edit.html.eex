@@ -1,0 +1,73 @@
+<h2>
+    <%= @questionnaire.question_set.name %> Questionnaire for <%= link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee) %>
+</h2>
+
+<%= if @conn.assigns.current_mentor.college_list_specialty do %>
+    <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+        <div class="input input-group">
+            <%= select f, :state, [
+                {"Needs info from parents or mentor", "needs_info"},
+                {"All info is provided. Ready to start college research", "ready_for_specialist"},
+                {"College research in progress", "specialist"},
+                {"Sent to designer to put togther PDF", "designer"},
+                {"Document is complete and sent to mentor", "complete"}
+            ], class: "select select-xl" %>
+            <%= submit "Update Status", class: "button button-primary button-xl" %>
+        </div>
+    <% end %>
+<% end %>
+
+
+<%= if @questionnaire.state === "needs_info" do %>
+    Fill out the right side of this form (Pod Response column) for each question.
+    In parallel, send the following link to <%= @mentee.name %>'s parent(s) to fill out the left side (Parent Response column):
+    <pre>http://collegerize.com/college_list/<%= @questionnaire.access_key %></pre>
+    Once the form is complete, submit it and a specialist will begin researching colleges.
+    The specialist will reach out to you directly if there is anything missing.
+    <br />
+    <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+        <%= hidden_input f, :state, value: "ready_for_specialist" %>
+        <%= submit "Submit to specialist", class: "button button-primary" %>
+    <% end %>
+<% else %>
+    <%= @questionnaire.state %>
+    TODO: Convert this to a clean message
+<% end %>
+
+<hr />
+
+<div class="padding-s">
+    <%= for q <- @questions do %>
+        <% answer = Enum.find(@answers, %{from_pod: "No Response", from_parent: "No Response"}, &(&1.question_id == q.id)) %>
+        <b><%= raw q.question %></b>
+        <table>
+            <thead>
+                <tr>
+                    <th>
+                        Parent response
+                    </th>
+                    <th>
+                        Pod response
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td width="50%">
+                    <%= Map.get(answer, :from_parent) %>
+                </td>
+                <td width="50%">
+                    <%= if @mentee.mentor_id == @conn.assigns.current_mentor.id do %>
+                        <%= react_component("Components.MentorAnswerInput", %{
+                                question_id: q.id,
+                                mentee_id: @mentee.id,
+                                value: Map.get(answer, :from_pod)
+                            }) %>
+                    <% else %>
+                        <%= Map.get(answer, :from_pod) %>
+                    <% end %>
+
+                </td>
+            </tr>
+        </table>
+    <% end %>
+</div>

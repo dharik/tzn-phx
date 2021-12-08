@@ -69,6 +69,7 @@ defmodule TznWeb do
       import TznWeb.ErrorHelpers
       import TznWeb.Gettext
       alias TznWeb.Router.Helpers, as: Routes
+      import ReactPhoenix.ClientSide
     end
   end
 

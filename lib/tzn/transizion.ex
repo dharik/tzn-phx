@@ -396,7 +396,11 @@ defmodule Tzn.Transizion do
     Repo.get!(MentorTimelineEventMarking, id)
   end
 
-  def get_current_mentor(user_id) do
+  def get_mentor_profile(%Mentee{} = mentee) do
+    Ecto.assoc(mentee, :mentor) |> Repo.one()
+  end
+
+  def get_mentor_profile(user_id) do
     Repo.one(from(m in Mentor, where: m.user_id == ^user_id))
   end
 

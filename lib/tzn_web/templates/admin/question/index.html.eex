@@ -1,0 +1,13 @@
+<div class="group-m">
+    <%= link "Create Question", to: Routes.admin_question_path(@conn, :new), class: "button button-primary" %>
+</div>
+<%= for q <- @questions do %>
+<div class="flex flex-row margin-vertical-s">
+    <div class="margin-right-s">
+        <%= link "Edit", to: Routes.admin_question_path(@conn, :edit, q), class: "button" %>
+    </div>
+    <div class="flex-1 flex align-items-center">
+        <%= raw q.question %>
+    </div>
+</div>
+<% end %>

@@ -50,7 +50,8 @@ defmodule Tzn.MixProject do
       {:pow, "~> 1.0.20"},
       {:quantum, "~> 3.0"},
       {:httpoison, "~> 1.6"},
-      {:number, "~> 1.0.3"}
+      {:number, "~> 1.0.3"},
+      {:react_phoenix, "~> 1.3"}
     ]
   end
 
