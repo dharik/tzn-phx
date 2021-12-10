@@ -1,44 +1,74 @@
 <h2>
-    <%= @questionnaire.question_set.name %> Questionnaire for <%= link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee) %>
+    <%= @questionnaire.question_set.name %> Questionnaire for
+    <%=
+        if @is_my_mentee do
+            link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
+        else
+            @mentee.name
+        end
+    %>
 </h2>
 
-<%= if @conn.assigns.current_mentor.college_list_specialty do %>
-    <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
-        <div class="input input-group">
-            <%= select f, :state, [
-                {"Needs info from parents or mentor", "needs_info"},
-                {"All info is provided. Ready to start college research", "ready_for_specialist"},
-                {"College research in progress", "specialist"},
-                {"Sent to designer to put togther PDF", "designer"},
-                {"Document is complete and sent to mentor", "complete"}
-            ], class: "select select-xl" %>
-            <%= submit "Update Status", class: "button button-primary button-xl" %>
-        </div>
+<div class="box-shadow-m margin-m padding-m">
+    <%= if @conn.assigns.current_mentor.college_list_specialty do %>
+        <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+            <label class="control radio">
+                <%= radio_button f, :state, "needs_info", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Needs info from parents or mentor</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "ready_for_specialist", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">All info is provided. Ready to start college research</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "specialist", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">College research in progress</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "designer", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Sent to designer to put togther PDF</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "complete", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Document is complete and sent to mentor</span>
+            </label>
+
+            <%= submit "Update Status", class: "button button-primary" %>
+        <% end %>
+    <% else %>
+        <em>
+            <%= case @questionnaire.state do
+                "needs_info" -> "Needs info from parents or mentor."
+                "ready_for_specialist" -> "Submitted to specialist mentor to begin research. Responses are locked."
+                "specialist" -> "Specialist mentor is creating the college list. Responses are locked."
+                "designer" -> "College list research is done. It's being compiled into a single document. Responses are locked."
+                "complete" -> "College list research is done and you should have received a document from the specialist mentee. Responses are locked."
+            end %>
+        </em>
     <% end %>
-<% end %>
+</div>
 
 
-<%= if @questionnaire.state === "needs_info" do %>
-    Fill out the right side of this form (Pod Response column) for each question.
-    In parallel, send the following link to <%= @mentee.name %>'s parent(s) to fill out the left side (Parent Response column):
+<%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
+    Fill out the Pod Response column for each question.
+    In parallel, send the following link to <%= @mentee.name %>'s parent(s) to fill out the Parent Response column
     <pre>http://collegerize.com/college_list/<%= @questionnaire.access_key %></pre>
-    Once the form is complete, submit it and a specialist will begin researching colleges.
-    The specialist will reach out to you directly if there is anything missing.
-    <br />
-    <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
-        <%= hidden_input f, :state, value: "ready_for_specialist" %>
-        <%= submit "Submit to specialist", class: "button button-primary" %>
-    <% end %>
-<% else %>
-    <%= @questionnaire.state %>
-    TODO: Convert this to a clean message
+    Once the form is complete and submitted, a specialist can get started putting together the college list.
+    The specialist will reach out to you directly if there is any missing information.
 <% end %>
 
-<hr />
 
-<div class="padding-s">
+<div class="space-l"></div>
+
+
+<div class="">
     <%= for q <- @questions do %>
-        <% answer = Enum.find(@answers, %{from_pod: "No Response", from_parent: "No Response"}, &(&1.question_id == q.id)) %>
+        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: ""}, &(&1.question_id == q.id)) %>
         <b><%= raw q.question %></b>
         <table>
             <thead>
@@ -56,7 +86,7 @@
                     <%= Map.get(answer, :from_parent) %>
                 </td>
                 <td width="50%">
-                    <%= if @mentee.mentor_id == @conn.assigns.current_mentor.id do %>
+                    <%= if @is_my_mentee && @questionnaire.state === "needs_info" do %>
                         <%= react_component("Components.MentorAnswerInput", %{
                                 question_id: q.id,
                                 mentee_id: @mentee.id,
@@ -71,3 +101,15 @@
         </table>
     <% end %>
 </div>
+
+<%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
+    <div class="space-m"></div>
+    <center>
+    <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+            <%= hidden_input f, :state, value: "ready_for_specialist" %>
+            <%= submit "Submit to specialist to begin research", class: "button button-primary" %>
+        <% end %>
+    </center>
+<% end %>
+
+<div class="space-l"></div>

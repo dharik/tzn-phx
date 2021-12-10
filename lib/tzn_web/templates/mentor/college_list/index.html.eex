@@ -3,15 +3,17 @@
         <tr>
             <th>Mentee</th>
             <th>List Status</th>
-            <th>View</th>
+            <th>View / Edit</th>
         </tr>
     </thead>
     <tbody>
-        <%= for q <- @lists do %>
+        <%= for q <- @lists |> Enum.sort_by(fn q -> q.state === "needs_info" end) do %>
             <tr>
-                <td> <%= q.mentee.name %></td>
-                <td> <%= q.state %></td>
-                <td><%= link "View/Update", to: Routes.mentor_college_list_path(@conn, :edit, q) %>
+                <td><%= q.mentee.name %></td>
+                <td>
+                    <%= q.state %>
+                </td>
+                <td><%= link "See Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-xs" %>
             </tr>
         <% end %>
     </tbody>

@@ -2,4 +2,5 @@
 
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_question_path(@conn, :create)) %>
 
+<div class="space-m"></div>
 <span><%= link "Back", to: Routes.admin_question_path(@conn, :index) %></span>

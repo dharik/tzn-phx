@@ -3,15 +3,18 @@
     <%= textarea f, :question, class: "rtem" %>
     <%= error_tag f, :question %>
 
-    <%= label f, :placeholder, "Placeholder Text" %>
-    <%= textarea f, :placeholder, placeholder: "This is what placeholder text looks like. It disappears when the user starts typing." %>
-    <%= error_tag f, :placeholder %>
+    <%#= label f, :placeholder, "Placeholder Text" %>
+    <%#= textarea f, :placeholder, placeholder: "This is what placeholder text looks like. It disappears when the user starts typing." %>
+    <%#= error_tag f, :placeholder %>
 
     <%= label f, :parent_answer_required do %>
         <%= checkbox f, :parent_answer_required %> Parent Answer Required?
-        <%= error_tag f, :parent_answer_required %>
     <% end %>
+    <%= error_tag f, :parent_answer_required %>
 
+    <div class="space-s"></div>
+    <%= label f, :question_sets %>
+    <small>(Select multiple)</small>
     <%=
         multiple_select f,
         :question_sets,
@@ -20,6 +23,7 @@
         class: "multi"
     %>
 
+    <div class="space-s"></div>
 
-    <%= submit "Save" %>
+    <%= submit "Save", class: "button-primary" %>
 <% end %>

@@ -1,5 +1,0 @@
-<ul>
-<%= for set <- @sets do %>
-<li><%= link set.name, to: Routes.admin_question_set_path(@conn, :edit, set) %></li>
-<% end %>
-</ul>

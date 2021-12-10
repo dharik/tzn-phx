@@ -11,15 +11,17 @@ defmodule TznWeb.Mentor.CollegeListController do
 
   def edit(conn, %{"id" => id}) do
     questionnaire = Questionnaire.get_questionnaire_by_id(id)
-    questions = Questionnaire.list_questions_in_set(questionnaire.question_set)
+    questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
     answers = Questionnaire.list_answers(questionnaire)
+    is_my_mentee = questionnaire.mentee.mentor_id == conn.assigns.current_mentor.id
 
     render(conn, "edit.html",
       mentee: questionnaire.mentee,
       questions: questions,
       answers: answers,
       questionnaire: questionnaire,
-      state_changeset: Questionnaire.Questionnaire.changeset(questionnaire)
+      state_changeset: Questionnaire.Questionnaire.changeset(questionnaire),
+      is_my_mentee: is_my_mentee
     )
   end
 
@@ -38,21 +40,22 @@ defmodule TznWeb.Mentor.CollegeListController do
   end
 
   def create(conn, %{"mentee_id" => mentee_id}) do
+    mentee = Tzn.Transizion.get_mentee!(mentee_id)
+
     case Questionnaire.create_questionnaire(%{
-           # TODO: Hard-coded question set
            question_set_id: Tzn.Questionnaire.college_list_question_set().id,
-           mentee_id: mentee_id,
-           state: "phase_1",
+           mentee_id: mentee.id,
+           state: "needs_info",
            access_key: nil
          }) do
       {:ok, questionnaire} ->
         conn
         |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
 
-      {:error, _} ->
+      {:error, _changeset} ->
         conn
         |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.mentor_mentee_path(conn, :show, mentee_id))
+        |> redirect(to: Routes.mentor_mentee_path(conn, :show, mentee))
     end
   end
 end

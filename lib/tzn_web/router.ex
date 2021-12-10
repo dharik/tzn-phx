@@ -92,7 +92,7 @@ defmodule TznWeb.Router do
       get "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up # Should be patch but nbd
       get "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
       resources "/questions", Admin.QuestionController
-      resources "/question_sets", Admin.QuestionSetController, only: [:index, :edit, :update]
+      resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
     end
   end
 

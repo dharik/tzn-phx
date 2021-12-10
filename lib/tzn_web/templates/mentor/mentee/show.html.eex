@@ -45,7 +45,10 @@
 
 <div class="space-m"></div>
 
-<p class="lead">My To-Do list for <%= @mentee.name %>:</p>
+<p class="lead">
+  My To-Do list for <%= @mentee.name %>
+</p>
+<small>This is an internal field and <%= @mentee.name %> will not see this.</small>
 <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
   <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
@@ -115,14 +118,28 @@
 <div class="border border-radius padding-s">
 <p class="lead">College List</p>
 <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
-  <%= q.state %>
-  <br />
-  <%= link "Open #{@mentee.name}'s college list", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+  <em>
+    <%=
+      case q.state do
+        "needs_info" -> "Needs info from you or parent(s)."
+        "ready_for_specialist" -> "Submitted to specialist mentor to begin research."
+        "specialist" -> "Specialist mentor is creating the college list."
+        "designer" -> "College list research is done. It's being compiled into a single document."
+        "complete" -> "College list research is done and you should have received a document from the specialist mentee."
+        _ -> "Unknown"
+      end
+    %>
+  </em>
+  <div class="space-m"></div>
+  <%= link "Open #{@mentee.name}'s college list research request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
 <% else %>
   Not started
-  <br />
-  <%= link "Start #{@mentee.name}'s college list", to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id), class: "button", method: :post %>
-  <% end %>
+  <div class="space-m"></div>
+  <%= link "Start #{@mentee.name}'s college list research request",
+      to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id),
+      class: "button button-primary", method: :post
+  %>
+<% end %>
 </div>
 
 <div class="space-l"></div>

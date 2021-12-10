@@ -5,6 +5,7 @@ defmodule Tzn.Questionnaire do
   alias Tzn.Questionnaire.QuestionSetQuestion
   alias Tzn.Questionnaire.Questionnaire
   alias Tzn.Questionnaire.Answer
+  alias Tzn.Transizion.Mentee
 
   import Ecto.Query
 
@@ -33,7 +34,7 @@ defmodule Tzn.Questionnaire do
   end
 
   def list_questions() do
-    Question |> order_by(asc: :id) |> Repo.all()
+    Question |> order_by(asc: :id) |> Repo.all() |> Repo.preload(:question_sets)
   end
 
   def get_question(id) do
@@ -52,7 +53,8 @@ defmodule Tzn.Questionnaire do
     get_question_set_by_slug("college_list")
   end
 
-  def list_questions_in_set(question_set) do
+  # Lists question in set *in order*
+  def ordered_questions_in_set(question_set) do
     Repo.all(
       from(qsq in QuestionSetQuestion,
         where: qsq.question_set_id == ^question_set.id,
@@ -92,49 +94,46 @@ defmodule Tzn.Questionnaire do
     end)
   end
 
-  def move_question_down(question_id, set_id)
-      when is_integer(question_id) and is_integer(set_id) do
+  def move_question_down(%Question{} = q, %QuestionSet{} = s) do
     next_question =
-      get_question_set(set_id)
-      |> list_questions_in_set()
+      ordered_questions_in_set(s)
       |> Enum.reverse()
-      |> Enum.take_while(fn q -> q.id !== question_id end)
+      |> Enum.take_while(fn ordered_question -> q.id !== ordered_question.id end)
       |> List.last()
 
     if next_question do
-      swap_question_order(question_id, next_question.id, set_id)
+      swap_questions_in_set(q, next_question, s)
       {:ok, "Moved down"}
     else
       {:error, "It's already the last question in the list"}
     end
   end
 
-  def move_question_up(question_id, set_id) when is_integer(question_id) and is_integer(set_id) do
+  def move_question_up(%Question{} = q, %QuestionSet{} = s) do
     previous_question =
-      get_question_set(set_id)
-      |> list_questions_in_set()
-      |> Enum.take_while(fn q -> q.id !== question_id end)
+      ordered_questions_in_set(s)
+      |> Enum.take_while(fn ordered_question -> q.id !== ordered_question.id end)
       |> List.last()
 
     if previous_question do
-      swap_question_order(question_id, previous_question.id, set_id)
+      swap_questions_in_set(q, previous_question, s)
       {:ok, "Moved up"}
     else
       {:error, "It's already the first question in the list"}
     end
   end
 
-  def swap_question_order(question1_id, question2_id, set_id) do
+  def swap_questions_in_set(question1, question2, set) do
     j1 =
       Repo.get_by(Tzn.Questionnaire.QuestionSetQuestion,
-        question_set_id: set_id,
-        question_id: question1_id
+        question_set_id: set.id,
+        question_id: question1.id
       )
 
     j2 =
       Repo.get_by(Tzn.Questionnaire.QuestionSetQuestion,
-        question_set_id: set_id,
-        question_id: question2_id
+        question_set_id: set.id,
+        question_id: question2.id
       )
 
     Tzn.Questionnaire.QuestionSetQuestion.changeset(j1, %{display_order: j2.display_order})
@@ -175,23 +174,20 @@ defmodule Tzn.Questionnaire do
     change_questionnaire(q, %{state: new_state}) |> Repo.update()
   end
 
-  def list_answers(%Tzn.Transizion.Mentee{} = mentee) do
-    Ecto.assoc(mentee, [:answers]) |> Repo.all()
-  end
-
+  @doc """
+  Note these will not be in order!
+  """
   def list_answers(%Questionnaire{} = q) do
-    questions = Ecto.assoc(q, [:question_set, :questions]) |> Repo.all() |> Enum.map(& &1.id)
+    question_ids = Ecto.assoc(q, [:question_set, :questions]) |> Repo.all() |> Enum.map(& &1.id)
 
     from(a in Answer,
       where: a.mentee_id == ^q.mentee.id,
-      where: a.question_id in ^questions
+      where: a.question_id in ^question_ids
     )
     |> Repo.all()
   end
 
-  def create_or_update_answer(question, mentee, params) do
-    # permission checks
-
+  defp create_or_update_answer(%Question{} = question, %Mentee{} = mentee, params) do
     case Repo.get_by(Answer, mentee_id: mentee.id, question_id: question.id) do
       nil -> %Answer{mentee: mentee, question: question}
       answer -> answer
@@ -200,4 +196,13 @@ defmodule Tzn.Questionnaire do
     |> Repo.insert_or_update()
   end
 
+  def set_parent_answer(%Question{} = question, %Mentee{} = mentee, answer)
+      when is_binary(answer) do
+    create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{from_parent: answer})
+  end
+
+  def set_pod_answer(%Question{} = question, %Mentee{} = mentee, answer)
+      when is_binary(answer) do
+    create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{from_pod: answer})
+  end
 end

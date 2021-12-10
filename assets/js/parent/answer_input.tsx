@@ -1,6 +1,5 @@
 import { h, render, Component, Fragment } from 'preact';
 import { useState } from 'preact/hooks';
-import { Textarea, Badge, ChakraProvider } from '@chakra-ui/react';
 import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
@@ -44,14 +43,14 @@ export default (props: Props) => {
   };
 
   return (
-    <ChakraProvider>
-      <Fragment>
-        <Textarea value={value} onChange={handleChange} isRequired={props.required}></Textarea>
-        {props.required && isEmpty && <Badge colorScheme="red">Required</Badge>}
-        {saveState === 'success' && !isEmpty && <Badge colorScheme="green">Saved</Badge>}
-        {saveState === 'saving' && !isEmpty && <Badge>Saving...</Badge>}
-        {saveState === 'fail' && !isEmpty && <Badge colorScheme="red">Unable to save</Badge>}
-      </Fragment>
-    </ChakraProvider>
+    <Fragment>
+      <textarea onChange={handleChange} required={props.required}>
+        {value}
+      </textarea>
+      {props.required && isEmpty && <span class="form-message error">Required</span>}
+      {saveState === 'success' && !isEmpty && <span class="form-message success">✓ Saved</span>}
+      {saveState === 'saving' && !isEmpty && <span class="form-message">Saving...</span>}
+      {saveState === 'fail' && !isEmpty && <span class="form-message error">Unable to save</span>}
+    </Fragment>
   );
 };
