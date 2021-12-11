@@ -115,8 +115,9 @@
 
 <div class="space-m"></div>
 
-<div class="border border-radius padding-s">
 <p class="lead">College List</p>
+<div class="border border-radius padding-s">
+<p><small>⚠️ This is a preview feature / still in development. You're welcome to poke around to try it out.</small></p>
 <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
   <em>
     <%=
