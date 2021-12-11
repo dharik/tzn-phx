@@ -1,0 +1,35 @@
+<h2>Question Sets</h2>
+<div class="group group-m">
+    <ul>
+        <%= for s <- @question_sets do %>
+            <li><%= link s.name, to: Routes.admin_question_set_path(@conn, :edit, s) %></li>
+
+        <% end %>
+    </ul>
+</div>
+
+
+<h2>Questions</h2>
+<div class="group-m">
+    <%= link "Create Question", to: Routes.admin_question_path(@conn, :new), class: "button button-primary" %>
+</div>
+
+<%= for q <- @questions do %>
+<div class="flex flex-row margin-vertical-s">
+    <div class="margin-right-s">
+        <%= link question_edit_text(q), to: Routes.admin_question_path(@conn, :edit, q), class: "button" %>
+    </div>
+    <div class="flex-1 flex align-items-center">
+        <%= raw q.question %>
+    </div>
+</div>
+<% end %>
+
+<div class="space-l"></div>
+<p>
+    <small>
+        To see questionnaires / research requests, impersonate a specialist mentor.
+        <br />
+        * indicates the question is not a member of any question sets
+    </small>
+</p>

@@ -12,13 +12,13 @@
   <body>
     <header class="container flex padding-m align-items-center">
       <div class="flex-1">
-        <a href="/" class="phx-logo">
+        <a href="/">
           <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300" />
         </a>
       </div>
       <nav role="navigation" class="nav-inline flex-1 text-align-center">
         <ul>
-          
+
         </ul>
       </nav>
     </header>

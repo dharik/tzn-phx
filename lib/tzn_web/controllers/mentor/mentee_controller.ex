@@ -5,8 +5,6 @@ defmodule TznWeb.Mentor.MenteeController do
   alias Tzn.Transizion.Mentee
   alias Tzn.Repo
 
-  require Logger
-
   def index(conn, _params) do
     render(conn, "index.html", mentees: conn.assigns.mentees)
   end
@@ -35,6 +33,7 @@ defmodule TznWeb.Mentor.MenteeController do
         :mentor,
         :timesheet_entries,
         :hour_counts,
+        questionnaires: [:question_set],
         strategy_sessions: [:mentor]
       ])
 

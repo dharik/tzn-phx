@@ -23,7 +23,6 @@ defmodule TznWeb.Router do
     plug :load_my_mentees
   end
 
-
   pipeline :browser do
     plug :accepts, ["html"]
     plug :fetch_session
@@ -31,11 +30,20 @@ defmodule TznWeb.Router do
     plug :protect_from_forgery
     plug :put_secure_browser_headers
     plug :override_current_user_for_impersonation
+  end
 
+  pipeline :browser_anonymous do
+    plug :accepts, ["html", "json"]
+    plug :fetch_session
+    plug :fetch_flash
+    plug :put_secure_browser_headers
   end
 
   pipeline :api do
     plug :accepts, ["json"]
+    plug :fetch_session
+    plug :put_secure_browser_headers
+    plug :override_current_user_for_impersonation
   end
 
   scope "/" do
@@ -61,6 +69,8 @@ defmodule TznWeb.Router do
 
       resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
 
+      resources "/college_lists", Mentor.CollegeListController, only: [:index, :edit, :update, :create]
+
       get "/help", Mentor.HelpController, :show
     end
 
@@ -79,16 +89,31 @@ defmodule TznWeb.Router do
       resources "/contract_purchases", Admin.ContractPurchaseController
       resources "/mentor_timeline_events", Admin.MentorTimelineEventController
 
-      scope "/api" do
-        get "/mentors", Admin.MentorController, :index_json
-      end
+      patch "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up
+      patch "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
+      resources "/questions", Admin.QuestionController
+      resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
     end
   end
 
-  # Other scopes may use custom stacks.
-  # scope "/api", TznWeb do
-  #   pipe_through :api
-  # end
+  scope "/", TznWeb do
+    pipe_through [:browser_anonymous]
+    get "/college_list/:access_key", Parent.CollegeListController, :edit
+    post "/college_list/:access_key", Parent.CollegeListController, :create_or_update_answer
+  end
+
+  scope "/admin/api", TznWeb do
+    pipe_through [:admin]
+    get "/mentors", Admin.MentorController, :index_json
+  end
+
+  scope "/mentor/api", TznWeb do
+    pipe_through [:api, :mentor]
+
+    post "/answers", Mentor.AnswerController, :create_or_update
+
+  end
+
 
   # Enables LiveDashboard only for development
   #

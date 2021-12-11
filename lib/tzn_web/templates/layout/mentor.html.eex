@@ -12,7 +12,7 @@
   <body>
     <header class="container flex padding-m align-items-center">
       <div class="flex-1">
-        <a href="<%= Routes.mentor_mentee_path(@conn, :index) %>" class="phx-logo">
+        <a href="<%= Routes.mentor_mentee_path(@conn, :index) %>">
           <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300" />
         </a>
       </div>
@@ -21,6 +21,9 @@
           <li><%= link "My Mentees", to: Routes.mentor_mentee_path(@conn, :index) %></li>
           <li><%= link "Mentee Timelines", to: Routes.mentor_timeline_path(@conn, :index) %></li>
           <li><%= link "My Timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %></li>
+          <%= if @current_mentor.college_list_specialty do %>
+            <li><%= link "College Lists", to: Routes.mentor_college_list_path(@conn, :index) %></li>
+          <% end %>
           <li><%= link "Help", to: Routes.mentor_help_path(@conn, :show) %></li>
           <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>

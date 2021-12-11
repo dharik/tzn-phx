@@ -1,0 +1,28 @@
+<table>
+    <thead>
+        <tr>
+            <th>Mentee</th>
+            <th>List Status</th>
+            <th>View / Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%= for q <- @lists |> Enum.sort_by(fn q ->
+            case q.state do
+                "needs_info" -> 4
+                "ready_for_specialist" -> 2
+                "specialist" -> 1
+                "designer" -> 3
+                "complete" -> 5
+            end
+        end) do %>
+            <tr>
+                <td><%= q.mentee.name %></td>
+                <td>
+                    <%= q.state %>
+                </td>
+                <td><%= link "See Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-xs" %>
+            </tr>
+        <% end %>
+    </tbody>
+</table>

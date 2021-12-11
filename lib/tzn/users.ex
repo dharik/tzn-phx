@@ -3,18 +3,27 @@ defmodule Tzn.Users do
   alias Tzn.Users.Admin
   alias Tzn.Users.User
   import Ecto.Query
-  
+
   def list_admins do
     Repo.all(Admin)
   end
 
   def list_users do
-    User |> order_by(desc: :id) |> Repo.all |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
+    User
+    |> order_by(desc: :id)
+    |> Repo.all()
+    |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
   end
 
   def get_user!(id), do: Repo.get!(User, id)
 
   def get_admin!(id), do: Repo.get!(Admin, id)
+
+  def admin?(%User{admin_profile: nil}), do: false
+  def admin?(%User{admin_profile: %Admin{}}), do: true
+  def admin?(%User{admin_profile: %Ecto.Association.NotLoaded{} } = u) do
+    u |> Ecto.assoc(:admin_profile) |> Repo.exists?()
+  end
 
   @doc """
   Creates a admin.

@@ -23,6 +23,13 @@
   ] %>
   <%= error_tag f, :experience_level %>
 
+  <%= label f, :college_list_specialty, class: "control switch" do %>
+    <%= checkbox f, :college_list_specialty %>
+    <span class="control-indicator"></span>
+    <span class="control-label">College list specialist?</span>
+  <% end %>
+  <%= error_tag f, :college_list_specialty %>
+
   <%= label f, :hourly_rate %>
   <%= number_input f, :hourly_rate, step: 0.01 %>
   <%= error_tag f, :hourly_rate %>

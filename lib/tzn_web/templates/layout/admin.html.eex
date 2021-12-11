@@ -12,7 +12,7 @@
   <body>
     <header class="container flex padding-m align-items-center">
       <div class="flex-0">
-        <a href="<%= Routes.admin_mentor_path(@conn, :index) %>" class="phx-logo">
+        <a href="<%= Routes.admin_mentor_path(@conn, :index) %>">
           <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300"/>
         </a>
       </div>
@@ -23,6 +23,7 @@
           <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
           <li><%= link "Mentor Timeline", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
           <li><%= link "Matching Algorithm", to: Routes.admin_matching_algorithm_path(@conn, :show) %></li>
+          <li><%= link "Questionnaires", to: Routes.admin_question_path(@conn, :index) %></li>
           <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>
       </nav>

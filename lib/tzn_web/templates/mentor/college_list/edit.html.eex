@@ -1,0 +1,116 @@
+<h2>
+    <%= @questionnaire.question_set.name %> Questionnaire for
+    <%=
+        if @is_my_mentee do
+            link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
+        else
+            @mentee.name
+        end
+    %>
+</h2>
+
+<div class="box-shadow-m margin-m padding-m">
+    <%= if @conn.assigns.current_mentor.college_list_specialty do %>
+        <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+            <label class="control radio">
+                <%= radio_button f, :state, "needs_info", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Needs info from parents or mentor</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "ready_for_specialist", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">All info is provided. Ready to start college research</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "specialist", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">College research in progress</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "designer", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Sent to designer to put togther PDF</span>
+            </label>
+            <label class="control radio">
+                <%= radio_button f, :state, "complete", class: "" %>
+                <span class="control-indicator"></span>
+                <span class="control-label">Document is complete and sent to mentor</span>
+            </label>
+
+            <%= submit "Update Status", class: "button button-primary" %>
+        <% end %>
+    <% else %>
+        <em>
+            <%= case @questionnaire.state do
+                "needs_info" -> "Needs info from parents or mentor."
+                "ready_for_specialist" -> "Submitted to specialist mentor to begin research. Responses are locked."
+                "specialist" -> "Specialist mentor is creating the college list. Responses are locked."
+                "designer" -> "College list research is done. It's being compiled into a single document. Responses are locked."
+                "complete" -> "College list research is done and you should have received a document from the specialist mentee. Responses are locked."
+            end %>
+        </em>
+    <% end %>
+</div>
+
+
+<%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
+    Fill out the Pod Response column for each question.
+    In parallel, <strike>send the following link to <%= @mentee.name %>'s parent(s) to fill out the Parent Response column</strike>
+    <p><small>⚠️ This is a preview feature / still in development. Do not send this to parents yet </small></p>
+    <pre>http://collegerize.com/college_list/<%= @questionnaire.access_key %></pre>
+    Once the form is complete and submitted, a specialist can get started putting together the college list.
+    The specialist will reach out to you directly if there is any missing information.
+<% end %>
+
+
+<div class="space-l"></div>
+
+
+<div class="">
+    <%= for q <- @questions do %>
+        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: ""}, &(&1.question_id == q.id)) %>
+        <%= raw q.question %>
+        <table class="margin-bottom-xxl">
+            <thead>
+                <tr>
+                    <th>
+                        Parent response
+                    </th>
+                    <th>
+                        Pod response
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td width="50%">
+                    <em class="color-grey-200"><%= answer.from_parent %></em>
+                </td>
+                <td width="50%">
+                    <%= if @is_my_mentee && @questionnaire.state === "needs_info" do %>
+                        <%= react_component("Components.MentorAnswerInput", %{
+                                question_id: q.id,
+                                mentee_id: @mentee.id,
+                                value: Map.get(answer, :from_pod)
+                            }) %>
+                    <% else %>
+                        <%= Map.get(answer, :from_pod) %>
+                    <% end %>
+
+                </td>
+            </tr>
+        </table>
+    <% end %>
+</div>
+
+<%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
+    <div class="space-m"></div>
+    <center>
+        <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
+            <%= hidden_input f, :state, value: "ready_for_specialist" %>
+            <%= submit "Submit to specialist to begin research", class: "button button-primary" %>
+        <% end %>
+    </center>
+<% end %>
+
+<div class="space-l"></div>

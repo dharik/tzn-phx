@@ -27,6 +27,9 @@ defmodule Tzn.Transizion.Mentee do
     has_many :contract_purchases, Tzn.Transizion.ContractPurchase
     has_one :hour_counts, Tzn.Transizion.MenteeHourCounts
 
+    has_many :questionnaires, Tzn.Questionnaire.Questionnaire
+    has_many :answers, Tzn.Questionnaire.Answer
+
     timestamps()
   end
 
