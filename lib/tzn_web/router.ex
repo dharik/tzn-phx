@@ -89,8 +89,8 @@ defmodule TznWeb.Router do
       resources "/contract_purchases", Admin.ContractPurchaseController
       resources "/mentor_timeline_events", Admin.MentorTimelineEventController
 
-      get "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up # Should be patch but nbd
-      get "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
+      patch "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up
+      patch "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
       resources "/questions", Admin.QuestionController
       resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
     end
@@ -114,12 +114,6 @@ defmodule TznWeb.Router do
 
   end
 
-
-
-  # Other scopes may use custom stacks.
-  # scope "/api", TznWeb do
-  #   pipe_through :api
-  # end
 
   # Enables LiveDashboard only for development
   #

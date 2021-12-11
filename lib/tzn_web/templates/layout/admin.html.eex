@@ -12,7 +12,7 @@
   <body>
     <header class="container flex padding-m align-items-center">
       <div class="flex-0">
-        <a href="<%= Routes.admin_mentor_path(@conn, :index) %>" class="phx-logo">
+        <a href="<%= Routes.admin_mentor_path(@conn, :index) %>">
           <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300"/>
         </a>
       </div>

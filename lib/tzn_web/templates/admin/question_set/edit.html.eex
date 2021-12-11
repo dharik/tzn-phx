@@ -6,8 +6,8 @@
     <div class="group group-m">
         <ul>
             <li><%= link "Edit this question", to: Routes.admin_question_path(@conn, :edit, q) %></li>
-            <li><%= link "Move Up", to: Routes.admin_move_question_up_path(@conn, :move_up, question_id: q.id, question_set_id: @set.id) %></li>
-            <li><%= link "Move Down", to: Routes.admin_move_question_down_path(@conn, :move_down, question_id: q.id, question_set_id: @set.id) %></li>
+            <li><%= link "Move Up", to: Routes.admin_move_question_up_path(@conn, :move_up, question_id: q.id, question_set_id: @set.id), method: :patch %></li>
+            <li><%= link "Move Down", to: Routes.admin_move_question_down_path(@conn, :move_down, question_id: q.id, question_set_id: @set.id), method: :patch %></li>
         </ul>
     </div>
     <hr />

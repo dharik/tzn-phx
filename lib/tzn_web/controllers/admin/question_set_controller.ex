@@ -10,10 +10,10 @@ defmodule TznWeb.Admin.QuestionSetController do
   end
 
   def move_down(conn, %{"question_id" => question_id, "question_set_id" => question_set_id}) do
-    q = Questionnaire.get_question(question_id)
-    s = Questionnaire.get_question_set(question_set_id)
+    question = Questionnaire.get_question(question_id)
+    set = Questionnaire.get_question_set(question_set_id)
 
-    {_, message} = Questionnaire.move_question_down(q, s)
+    {_, message} = Questionnaire.move_question_down(question, set, conn.assigns.current_user)
 
     conn
     |> put_flash(:info, message)
@@ -21,10 +21,10 @@ defmodule TznWeb.Admin.QuestionSetController do
   end
 
   def move_up(conn, %{"question_id" => question_id, "question_set_id" => question_set_id}) do
-    q = Questionnaire.get_question(question_id)
-    s = Questionnaire.get_question_set(question_set_id)
+    question = Questionnaire.get_question(question_id)
+    set = Questionnaire.get_question_set(question_set_id)
 
-    {_, message} = Questionnaire.move_question_up(q, s)
+    {_, message} = Questionnaire.move_question_up(question, set, conn.assigns.current_user)
 
     conn
     |> put_flash(:info, message)

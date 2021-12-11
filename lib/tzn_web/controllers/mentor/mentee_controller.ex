@@ -5,8 +5,6 @@ defmodule TznWeb.Mentor.MenteeController do
   alias Tzn.Transizion.Mentee
   alias Tzn.Repo
 
-  require Logger
-
   def index(conn, _params) do
     render(conn, "index.html", mentees: conn.assigns.mentees)
   end

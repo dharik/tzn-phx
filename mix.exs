@@ -51,7 +51,8 @@ defmodule Tzn.MixProject do
       {:quantum, "~> 3.0"},
       {:httpoison, "~> 1.6"},
       {:number, "~> 1.0.3"},
-      {:react_phoenix, "~> 1.3"}
+      {:react_phoenix, "~> 1.3"},
+      {:html_sanitize_ex, "~> 1.4"}
     ]
   end
 

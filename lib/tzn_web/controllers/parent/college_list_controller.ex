@@ -12,6 +12,7 @@ defmodule TznWeb.Parent.CollegeListController do
       questions: questions,
       answers: answers,
       mentor: mentor,
+      mentee: questionnaire.mentee,
       access_key: questionnaire.access_key
     )
   end

@@ -4,7 +4,7 @@ defmodule TznWeb.Admin.QuestionController do
   alias Tzn.Questionnaire
 
   def index(conn, _params) do
-    questions = Questionnaire.list_questions()
+    questions = Questionnaire.list_questions(conn.assigns.current_user)
     sets = Questionnaire.list_question_sets()
     render(conn, "index.html", questions: questions, question_sets: sets)
   end
@@ -29,7 +29,7 @@ defmodule TznWeb.Admin.QuestionController do
   end
 
   def create(conn, %{"question" => question_params}) do
-    case Questionnaire.create_question(question_params) do
+    case Questionnaire.create_question(question_params, conn.assigns.current_user) do
       {:ok, _question} ->
         conn
         |> put_flash(:info, "Question created successfully.")
@@ -45,7 +45,7 @@ defmodule TznWeb.Admin.QuestionController do
   def update(conn, %{"id" => id, "question" => question_params}) do
     question = Questionnaire.get_question(id)
 
-    case Questionnaire.update_question(question, question_params) do
+    case Questionnaire.update_question(question, question_params, conn.assigns.current_user) do
       {:ok, _} ->
         conn
         |> put_flash(:info, "Question updated successfully.")

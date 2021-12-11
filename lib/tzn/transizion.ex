@@ -14,6 +14,7 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.MentorTimelineEvent
   alias Tzn.Transizion.MentorTimelineEventMarking
   alias Tzn.Transizion.ContractPurchase
+  alias Tzn.Users.User
 
   require IEx
 
@@ -21,7 +22,30 @@ defmodule Tzn.Transizion do
     Mentor |> order_by(asc: :archived, asc: :name) |> Repo.all()
   end
 
+  def get_mentor(%User{mentor_profile: nil}), do: false
+  def get_mentor(%User{mentor_profile: %Mentor{} = m}), do: m
+
+  def get_mentor(%User{mentor_profile: %Ecto.Association.NotLoaded{}} = u) do
+    u |> Ecto.assoc(:mentor_profile) |> Repo.one()
+  end
+
   def get_mentor!(id), do: Repo.get!(Mentor, id)
+
+  def mentor?(%User{mentor_profile: nil}), do: false
+  def mentor?(%User{mentor_profile: %Mentor{}}), do: true
+
+  def mentor?(%User{mentor_profile: %Ecto.Association.NotLoaded{}} = u) do
+    !is_nil(get_mentor(u))
+  end
+
+
+  def college_list_speciality?(%User{mentor_profile: nil}), do: false
+  def college_list_speciality?(%User{mentor_profile: %Mentor{} = m}), do: m.college_list_specialty
+
+  def college_list_speciality?(%User{mentor_profile: %Ecto.Association.NotLoaded{}} = u) do
+    m = get_mentor(u)
+    m.college_list_specialty
+  end
 
   @doc """
   Creates a mentor.

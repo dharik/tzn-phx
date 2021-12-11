@@ -15,7 +15,21 @@ defmodule Tzn.Questionnaire.Answer do
   def changeset(answer, attrs) do
     answer
     |> cast(attrs, [:from_parent, :from_pod])
+    |> sanitize_pod_response()
+    |> sanitize_parent_response()
     |> foreign_key_constraint(:mentee_id)
     |> foreign_key_constraint(:question_id)
   end
+
+  def sanitize_pod_response(changeset = %{changes: %{from_pod: response}}) do
+    put_change(changeset, :from_pod, HtmlSanitizeEx.basic_html(response))
+  end
+
+  def sanitize_pod_response(changeset), do: changeset
+
+  def sanitize_parent_response(changeset = %{changes: %{from_parent: response}}) do
+    put_change(changeset, :from_parent, HtmlSanitizeEx.basic_html(response))
+  end
+
+  def sanitize_parent_response(changeset), do: changeset
 end

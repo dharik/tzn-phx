@@ -47,7 +47,8 @@ defmodule Tzn.Transizion.Mentor do
       :international_experience,
       :hourly_rate,
       :archived,
-      :experience_level
+      :experience_level,
+      :college_list_specialty
     ])
     |> validate_inclusion(:experience_level, ["veteran", "rising", "rookie"])
     |> validate_required([:name, :email, :hourly_rate])
