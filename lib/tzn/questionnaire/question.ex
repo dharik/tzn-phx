@@ -4,7 +4,7 @@ defmodule Tzn.Questionnaire.Question do
 
   schema "questions" do
     field :question, :string
-    field :placeholder, :string
+    field :placeholder, :string # Unused
     field :parent_answer_required, :boolean
 
     many_to_many :question_sets, Tzn.Questionnaire.QuestionSet,
@@ -18,7 +18,7 @@ defmodule Tzn.Questionnaire.Question do
 
   def changeset(question, attrs) do
     question
-    |> cast(attrs, [:question, :placeholder, :parent_answer_required]) # TODO: Remoev help
+    |> cast(attrs, [:question, :placeholder, :parent_answer_required])
     |> validate_required([:question, :parent_answer_required])
   end
 

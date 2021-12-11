@@ -420,6 +420,8 @@ defmodule Tzn.Transizion do
     Repo.get!(MentorTimelineEventMarking, id)
   end
 
+  # TODO: Just pattern match get_mentor(%Mentee)
+  # TODO: Handle already loaded association
   def get_mentor_profile(%Mentee{} = mentee) do
     Ecto.assoc(mentee, :mentor) |> Repo.one()
   end
