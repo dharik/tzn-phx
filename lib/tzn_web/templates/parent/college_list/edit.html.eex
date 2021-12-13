@@ -20,7 +20,7 @@
           <td width="55%">
               <%= react_component("Components.ParentAnswerInput", %{
                                 question_id: q.id,
-                                access_key: @access_key,
+                                id: @access_key,
                                 required: q.parent_answer_required,
                                 value: Map.get(answer, :from_parent)
                             }) %>

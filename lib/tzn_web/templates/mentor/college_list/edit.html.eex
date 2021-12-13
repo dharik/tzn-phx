@@ -58,7 +58,7 @@
     Fill out the Pod Response column for each question.
     In parallel, <strike>send the following link to <%= @mentee.name %>'s parent(s) to fill out the Parent Response column</strike>
     <p><small>⚠️ This is a preview feature / still in development. Do not send this to parents yet </small></p>
-    <pre>http://collegerize.com/college_list/<%= @questionnaire.access_key %></pre>
+    <pre>http://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
     Once the form is complete and submitted, a specialist can get started putting together the college list.
     The specialist will reach out to you directly if there is any missing information.
 <% end %>

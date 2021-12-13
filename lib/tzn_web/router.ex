@@ -98,8 +98,8 @@ defmodule TznWeb.Router do
 
   scope "/", TznWeb do
     pipe_through [:browser_anonymous]
-    get "/college_list/:access_key", Parent.CollegeListController, :edit
-    post "/college_list/:access_key", Parent.CollegeListController, :create_or_update_answer
+    get "/college_list/:access_key_short", Parent.CollegeListController, :edit
+    post "/college_list/:access_key_short", Parent.CollegeListController, :create_or_update_answer
   end
 
   scope "/admin/api", TznWeb do

@@ -52,7 +52,8 @@ defmodule Tzn.MixProject do
       {:httpoison, "~> 1.6"},
       {:number, "~> 1.0.3"},
       {:react_phoenix, "~> 1.3"},
-      {:html_sanitize_ex, "~> 1.4"}
+      {:html_sanitize_ex, "~> 1.4"},
+      {:shortuuid, "~> 2.0"}
     ]
   end
 

@@ -4,7 +4,7 @@ import { useDebouncedCallback } from 'use-debounce';
 
 interface Props {
   question_id: number;
-  access_key: string;
+  id: string;
   required: boolean;
   value: string;
 }
@@ -18,7 +18,7 @@ export default (props: Props) => {
   const save = useDebouncedCallback(() => {
     setSaveState('saving');
 
-    fetch('/college_list/' + props.access_key, {
+    fetch('/college_list/' + props.id, {
       method: 'POST',
       body: JSON.stringify({ question_id: props.question_id, response: value }),
       headers: {
