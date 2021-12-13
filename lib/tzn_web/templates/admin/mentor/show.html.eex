@@ -87,7 +87,7 @@
           </td>
           <td><%= timesheet_entry.started_at |> format_date %></td>
           <td><%= timesheet_entry.ended_at |> format_date %></td>
-          <td><%= timesheet_entry.notes %></td>
+          <td><%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes) %></td>
           <td>
             <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
             <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
@@ -109,7 +109,7 @@
     <p>
       <span class="lead-xs"><%= strategy_session.email_subject %></span>
       <br />
-      <span class="color-grey"><%= strategy_session.notes %></span>
+      <span class="color-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
       <br />
       <small class="color-grey">
         <%= strategy_session.date |> format_date %>

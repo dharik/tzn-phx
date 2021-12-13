@@ -144,7 +144,7 @@
       <tr>
         <td><%= timesheet_entry.started_at |> format_date %></td>
         <td><%= timesheet_entry.ended_at |> format_date %></td>
-        <td><%= Timex.diff(timesheet_entry.ended_at, timesheet_entry.started_at, :duration) |> Timex.Duration.to_hours() %></td>
+        <td><%= Timex.diff(timesheet_entry.ended_at, timesheet_entry.started_at, :duration) |> Timex.Duration.to_hours() |> Number.Conversion.to_decimal() |> Decimal.round(2) %></td>
         <td><span><%= raw timesheet_entry.notes %></span></td>
         <td><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-border button-xs" %></td>
       </tr>
