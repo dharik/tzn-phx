@@ -69,7 +69,7 @@
 
 <div class="">
     <%= for q <- @questions do %>
-        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: ""}, &(&1.question_id == q.id)) %>
+        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
         <%= raw q.question %>
         <table class="margin-bottom-xxl">
             <thead>
@@ -78,25 +78,35 @@
                         Parent response
                     </th>
                     <th>
-                        Pod response
+                        Pod response <br /><small>Parents can see this</small>
+                    </th>
+                    <th>
+                        Internal Notes <br /><small>Parents cannot see this</small>
                     </th>
                 </tr>
             </thead>
             <tr>
-                <td width="50%">
+                <td width="33%">
                     <em class="color-grey-200"><%= answer.from_parent %></em>
                 </td>
-                <td width="50%">
+                <td width="33%">
                     <%= if @is_my_mentee && @questionnaire.state === "needs_info" do %>
-                        <%= react_component("Components.MentorAnswerInput", %{
-                                question_id: q.id,
-                                mentee_id: @mentee.id,
-                                value: Map.get(answer, :from_pod)
-                            }) %>
+                        <%= react_component("Components.MentorAnswerPodInput", %{
+                            question_id: q.id,
+                            mentee_id: @mentee.id,
+                            value: Map.get(answer, :from_pod)
+                        }) %>
                     <% else %>
                         <%= Map.get(answer, :from_pod) %>
                     <% end %>
 
+                </td>
+                <td width="33%">
+                    <%= react_component("Components.MentorAnswerInternalInput", %{
+                        question_id: q.id,
+                        mentee_id: @mentee.id,
+                        value: Map.get(answer, :internal)
+                    }) %>
                 </td>
             </tr>
         </table>

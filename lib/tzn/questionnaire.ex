@@ -228,4 +228,10 @@ defmodule Tzn.Questionnaire do
     assert_admin_or_mentor(current_user)
     create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{from_pod: answer})
   end
+
+  def set_internal_note(%Question{} = question, %Mentee{} = mentee, note, %User{} = current_user)
+      when is_binary(note) do
+    assert_admin_or_mentor(current_user)
+    create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{internal: note})
+  end
 end

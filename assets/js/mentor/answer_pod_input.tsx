@@ -17,7 +17,7 @@ export default (props: Props) => {
 
     fetch('/mentor/api/answers', {
       method: 'POST',
-      body: JSON.stringify({ question_id: props.question_id, mentee_id: props.mentee_id, response: value }),
+      body: JSON.stringify({ question_id: props.question_id, mentee_id: props.mentee_id, from_pod: value }),
       headers: {
         'Content-Type': 'application/json',
       },

@@ -1,33 +1,37 @@
-<h2><%= @mentee.name %>'s College List</h2>
-<p>This is the college list....We need some information</p>
+<h2>
+  <%= @mentee.name %>'s College List
+</h2>
+<p>Hi there! Please add your preferences and answers for your child's list of colleges.</p>
 
-  <%= for q <- @questions do %>
-    <% answer = answer_for_question(q, @answers) %>
+<div class="space-m"></div>
 
-    <%= raw q.question %>
-    <table>
-      <thead>
-        <tr>
-            <th>
-                Parent Response
-            </th>
-            <th>
-                Mentor Response
-            </th>
-        </tr>
-      </thead>
-        <tr>
-          <td width="55%">
-              <%= react_component("Components.ParentAnswerInput", %{
-                                question_id: q.id,
-                                id: @access_key,
-                                required: q.parent_answer_required,
-                                value: Map.get(answer, :from_parent)
-                            }) %>
-          </td>
-          <td width="45%">
-            <em class="color-grey-200"><%= answer.from_pod %></em>
-          </td>
-        </tr>
-    </table>
-  <% end %>
+<%= for q <- @questions do %>
+  <% answer = answer_for_question(q, @answers) %>
+
+  <%= raw q.question %>
+  <table class="margin-bottom-xl">
+    <thead>
+      <tr>
+          <th>
+              Your Response
+          </th>
+          <th>
+              Mentor's Response
+          </th>
+      </tr>
+    </thead>
+      <tr>
+        <td width="55%">
+            <%= react_component("Components.ParentAnswerInput", %{
+                              question_id: q.id,
+                              id: @access_key,
+                              required: q.parent_answer_required,
+                              value: Map.get(answer, :from_parent)
+                          }) %>
+        </td>
+        <td width="45%">
+          <em class="color-grey-200"><%= answer.from_pod %></em>
+        </td>
+      </tr>
+  </table>
+<% end %>

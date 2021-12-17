@@ -44,7 +44,7 @@ defmodule Tzn.Transizion do
 
   def college_list_speciality?(%User{mentor_profile: %Ecto.Association.NotLoaded{}} = u) do
     m = get_mentor(u)
-    m.college_list_specialty
+    m && m.college_list_specialty
   end
 
   @doc """

@@ -10,7 +10,8 @@ import { h, render } from "preact";
 import MatchingApp from "./matching";
 import AdminMentorList from "./admin/mentors";
 
-import MentorAnswerInput from "./mentor/answer_input";
+import MentorAnswerPodInput from "./mentor/answer_pod_input";
+import MentorAnswerInternalInput from "./mentor/answer_internal_input";
 import ParentAnswerInput from "./parent/answer_input";
 
 import React from "react"
@@ -35,7 +36,8 @@ document.addEventListener("DOMContentLoaded", e => {
 })
 
 window.Components = {
-  MentorAnswerInput,
+  MentorAnswerPodInput,
+  MentorAnswerInternalInput,
   ParentAnswerInput
 }
 
