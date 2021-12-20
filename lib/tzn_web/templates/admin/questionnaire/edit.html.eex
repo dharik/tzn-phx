@@ -35,7 +35,7 @@
     <% end %>
 </div>
 
-<pre>http://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
+<pre>https://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
 
 <div class="space-l"></div>
 
