@@ -26,18 +26,59 @@ defmodule Tzn.Questionnaire do
     |> Question.changeset(attrs)
     |> Ecto.Changeset.put_assoc(:question_sets, question_sets)
     |> Repo.insert()
+    |> case do
+      {:ok, question} ->
+        # Ensure question gets added to end of list
+        Enum.each(question_sets, fn set ->
+          new_display_order = max_display_order(set) + 1
+
+          Repo.get_by!(QuestionSetQuestion, question_set_id: set.id, question_id: question.id)
+          |> QuestionSetQuestion.changeset(%{display_order: new_display_order})
+          |> Repo.update()
+        end)
+
+        {:ok, question}
+
+      result ->
+        result
+    end
   end
 
   def update_question(%Question{} = question, attrs, %User{} = current_user) do
     assert_admin(current_user)
 
-    question_sets = list_question_sets(attrs["question_sets"])
-    Enum.each(question_sets, &rewrite_display_orders/1)
+    previous_question_sets = question.question_sets
+    new_question_sets = list_question_sets(attrs["question_sets"])
+    Enum.each(new_question_sets, &rewrite_display_orders/1)
 
     question
     |> Question.changeset(attrs)
-    |> Ecto.Changeset.put_assoc(:question_sets, question_sets)
+    |> Ecto.Changeset.put_assoc(:question_sets, new_question_sets)
     |> Repo.update()
+    |> case do
+      {:ok, question} ->
+        # Ensure question is at bottom of new lists
+        Enum.each(new_question_sets -- previous_question_sets, fn set ->
+          new_display_order = max_display_order(set) + 1
+
+          Repo.get_by!(QuestionSetQuestion, question_set_id: set.id, question_id: question.id)
+          |> QuestionSetQuestion.changeset(%{display_order: new_display_order})
+          |> Repo.update()
+        end)
+
+        {:ok, question}
+
+      result ->
+        result
+    end
+  end
+
+  defp max_display_order(%QuestionSet{} = qs) do
+    from(qsq in QuestionSetQuestion,
+      where: qsq.question_set_id == ^qs.id,
+      select: max(qsq.display_order)
+    )
+    |> Repo.one()
   end
 
   def list_questions(%User{} = current_user) do
@@ -176,6 +217,7 @@ defmodule Tzn.Questionnaire do
   def get_questionnaire_by_id(id, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
     Questionnaire |> Repo.get(id) |> Repo.preload([:mentee, :question_set])
+
     # TODO: Only if admin, mentee in current_mentor.mentees OR current_mentor.college_list_specialty
   end
 
