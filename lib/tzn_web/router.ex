@@ -93,6 +93,7 @@ defmodule TznWeb.Router do
       patch "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
       resources "/questions", Admin.QuestionController
       resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
+      resources "/questionnaires", Admin.QuestionnaireController, only: [:edit, :update]
     end
   end
 
@@ -105,6 +106,7 @@ defmodule TznWeb.Router do
   scope "/admin/api", TznWeb do
     pipe_through [:admin]
     get "/mentors", Admin.MentorController, :index_json
+    post "/answers", Admin.AnswerController, :create_or_update
   end
 
   scope "/mentor/api", TznWeb do

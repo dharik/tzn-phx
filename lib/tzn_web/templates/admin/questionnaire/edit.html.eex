@@ -1,0 +1,91 @@
+<h2>
+    <%= @questionnaire.question_set.name %> Questionnaire for
+    <%=link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee) %>
+</h2>
+
+<div class="box-shadow-m margin-m padding-m">
+    <%= form_for @state_changeset, Routes.admin_questionnaire_path(@conn, :update, @questionnaire), fn f -> %>
+        <label class="control radio">
+            <%= radio_button f, :state, "needs_info", class: "" %>
+            <span class="control-indicator"></span>
+            <span class="control-label">Needs info from parents or mentor</span>
+        </label>
+        <label class="control radio">
+            <%= radio_button f, :state, "ready_for_specialist", class: "" %>
+            <span class="control-indicator"></span>
+            <span class="control-label">All info is provided. Ready to start college research</span>
+        </label>
+        <label class="control radio">
+            <%= radio_button f, :state, "specialist", class: "" %>
+            <span class="control-indicator"></span>
+            <span class="control-label">College research in progress</span>
+        </label>
+        <label class="control radio">
+            <%= radio_button f, :state, "designer", class: "" %>
+            <span class="control-indicator"></span>
+            <span class="control-label">Sent to designer to put togther PDF</span>
+        </label>
+        <label class="control radio">
+            <%= radio_button f, :state, "complete", class: "" %>
+            <span class="control-indicator"></span>
+            <span class="control-label">Document is complete and sent to mentor</span>
+        </label>
+
+        <%= submit "Update Status", class: "button button-primary" %>
+    <% end %>
+</div>
+
+<pre>http://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
+
+<div class="space-l"></div>
+
+
+<div class="">
+    <%= for q <- @questions do %>
+        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
+        <%= raw q.question %>
+        <table class="margin-bottom-xxl">
+            <thead>
+                <tr>
+                    <th>
+                        Parent response
+                    </th>
+                    <th>
+                        Pod response <br /><small>Parents can see this</small>
+                    </th>
+                    <th>
+                        Internal Notes <br /><small>Parents cannot see this</small>
+                    </th>
+                </tr>
+            </thead>
+            <tr>
+                <td width="33%">
+                    <%= react_component("Components.AdminAnswerInput", %{
+                        question_id: q.id,
+                        mentee_id: @mentee.id,
+                        answer_from: "from_parent",
+                        value: Map.get(answer, :from_parent)
+                    }) %>
+                </td>
+                <td width="33%">
+                    <%= react_component("Components.AdminAnswerInput", %{
+                        question_id: q.id,
+                        mentee_id: @mentee.id,
+                        answer_from: "from_pod",
+                        value: Map.get(answer, :from_pod)
+                    }) %>
+                </td>
+                <td width="33%">
+                    <%= react_component("Components.AdminAnswerInput", %{
+                        question_id: q.id,
+                        mentee_id: @mentee.id,
+                        answer_from: "internal",
+                        value: Map.get(answer, :internal)
+                    }) %>
+                </td>
+            </tr>
+        </table>
+    <% end %>
+</div>
+
+<div class="space-l"></div>

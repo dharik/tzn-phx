@@ -13,6 +13,7 @@ import AdminMentorList from "./admin/mentors";
 import MentorAnswerPodInput from "./mentor/answer_pod_input";
 import MentorAnswerInternalInput from "./mentor/answer_internal_input";
 import ParentAnswerInput from "./parent/answer_input";
+import AdminAnswerInput from "./admin/answer_input";
 
 import React from "react"
 import ReactDOM from "react-dom"
@@ -38,7 +39,8 @@ document.addEventListener("DOMContentLoaded", e => {
 window.Components = {
   MentorAnswerPodInput,
   MentorAnswerInternalInput,
-  ParentAnswerInput
+  ParentAnswerInput,
+  AdminAnswerInput
 }
 
 if (document.getElementById("matching-app")) {

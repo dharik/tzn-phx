@@ -6,7 +6,8 @@ defmodule TznWeb.Admin.QuestionController do
   def index(conn, _params) do
     questions = Questionnaire.list_questions(conn.assigns.current_user)
     sets = Questionnaire.list_question_sets()
-    render(conn, "index.html", questions: questions, question_sets: sets)
+    questionnaires = Questionnaire.list_questionnaires(conn.assigns.current_user)
+    render(conn, "index.html", questions: questions, question_sets: sets, questionnaires: questionnaires)
   end
 
   def edit(conn, %{"id" => id}) do

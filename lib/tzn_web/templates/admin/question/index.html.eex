@@ -28,8 +28,39 @@
 <div class="space-l"></div>
 <p>
     <small>
-        To see questionnaires / research requests, impersonate a specialist mentor.
-        <br />
         * indicates the question is not a member of any question sets
     </small>
 </p>
+
+
+<h2>Questionnaires</h2>
+<table>
+    <thead>
+        <tr>
+            <th>Mentee</th>
+            <th>List type</th>
+            <th>List Status</th>
+            <th>View / Edit</th>
+        </tr>
+    </thead>
+    <tbody>
+        <%= for q <- @questionnaires |> Enum.sort_by(fn q ->
+            case q.state do
+                "needs_info" -> 4
+                "ready_for_specialist" -> 2
+                "specialist" -> 1
+                "designer" -> 3
+                "complete" -> 5
+            end
+        end) do %>
+            <tr>
+                <td><%= q.mentee.name %></td>
+                <td><%= q.question_set.name %></td>
+                <td>
+                    <%= q.state %>
+                </td>
+                <td><%= link "See Request", to: Routes.admin_questionnaire_path(@conn, :edit, q), class: "button button-xs" %>
+            </tr>
+        <% end %>
+    </tbody>
+</table>
