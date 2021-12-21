@@ -3,5 +3,4 @@
     <%= link "Create Mentor", to: Routes.admin_mentor_path(@conn, :new), class: "button button-primary" %>
     <%= link "Mentor payments", to: Routes.admin_mentor_payments_path(@conn, :index), class: "button" %>
 </div>
-<div id="admin-mentors">
-</div>
+<%= react_component("Components.AdminMentorList") %>

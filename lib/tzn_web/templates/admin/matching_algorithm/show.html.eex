@@ -1,6 +1,2 @@
-<script id="matching-data" type="application/json">
-  <%= raw data() %>
-</script>
-<div id="matching-app"></div>
-
+<%= react_component("Components.MatchingApp", data()) %>
 <div class="space-xl"></div>

@@ -2,28 +2,21 @@ import { h, render, Component, Fragment } from "preact";
 import { useState } from "preact/hooks";
 import "preact/devtools";
 
-let data = { mentors: [] };
-if (document.getElementById("matching-data")) {
-  data = JSON.parse(document.getElementById("matching-data").textContent);
-}
-const options = data.options;
-const mentors = data.mentors;
+export default ({mentors, options}) => {
+  const slugToLabel = {};
 
-const slugToLabel = {};
+  if (options) {
+    options.careers.forEach(([label, value]) => {
+      slugToLabel[value] = label;
+    });
+    options.hobbies.forEach(([label, value]) => {
+      slugToLabel[value] = label;
+    });
+    options.school_tiers.forEach(([label, value]) => {
+      slugToLabel[value] = label;
+    });
+  }
 
-if (options) {
-  options.careers.forEach(([label, value]) => {
-    slugToLabel[value] = label;
-  });
-  options.hobbies.forEach(([label, value]) => {
-    slugToLabel[value] = label;
-  });
-  options.school_tiers.forEach(([label, value]) => {
-    slugToLabel[value] = label;
-  });
-}
-
-export default () => {
   // form stuff
   const [careers, setCareers] = useState(new Set());
   const [schoolTiers, setSchoolTiers] = useState(new Set());
