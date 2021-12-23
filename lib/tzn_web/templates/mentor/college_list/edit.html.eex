@@ -55,12 +55,43 @@
 
 
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-    Fill out the Pod Response column for each question.
-    In parallel, <strike>send the following link to <%= @mentee.name %>'s parent(s) to fill out the Parent Response column</strike>
-    <p><small>⚠️ This is a preview feature / still in development. Do not send this to parents yet </small></p>
-    <pre>https://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
-    Once the form is complete and submitted, a specialist can get started putting together the college list.
-    The specialist will reach out to you directly if there is any missing information.
+    Fill out the Pod Response column for each question. Then submit it for a specialist mentor to get started on. Once you've submitted the form, you'll be able to
+    invite the parent to fill out the Parent response column. The specialist will reach out to you directly if there is any missing information.
+<% end %>
+<%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
+    A specialist has been notified and will review your answers soon.
+    Now's a good time to have the parents begin filling in their answers.
+    You can use this form to send them an email.
+
+    <br />
+    <br />
+
+    <div class="border border-radius padding-s">
+    <strong>Subject:</strong> Preset subject
+    <br />
+    <br />
+    <textarea class="rte">
+        <p>
+            Hi [parent name],
+        </p>
+        <p>
+            Please fill out some info for [mentee name]'s college list by [soft deadline].
+            You can access the form <a href="todo">here</a> or with the URL below.
+
+        </p>
+        <p>
+            https://collegerize.com/link-to-form
+        </p>
+        <p>
+            Thanks,<br />
+            [mentor name]
+        </p>
+    </textarea>
+    <div class="space-s"></div>
+    <a href="#" class="button button-primary" data-confirm="Not implemented yet. Just testing out a preview :)">Send email to parents</a> / <span>An email was sent to the parents 2 hours ago</span>
+    </div>
+
+
 <% end %>
 
 
@@ -116,6 +147,7 @@
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
     <div class="space-m"></div>
     <center>
+        After submitting, you'll have an option to email this form to the parent.
         <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
             <%= hidden_input f, :state, value: "ready_for_specialist" %>
             <%= submit "Submit to specialist to begin research", class: "button button-primary" %>

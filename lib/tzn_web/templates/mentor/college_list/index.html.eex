@@ -20,6 +20,9 @@
                 <td><%= q.mentee.name %></td>
                 <td>
                     <%= q.state %>
+                    <%= if q.state == "ready_for_specialist" do %>
+                        <small><span class="color-warning-500 border-radius padding-horizontal-xxs">No parent activity, email sent # days ago</span></small>
+                    <% end  %>
                 </td>
                 <td><%= link "See Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-xs" %>
             </tr>
