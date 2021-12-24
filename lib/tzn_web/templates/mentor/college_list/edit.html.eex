@@ -9,8 +9,8 @@
     %>
 </h2>
 
-<div class="box-shadow-m margin-m padding-m">
-    <%= if @conn.assigns.current_mentor.college_list_specialty do %>
+<%= if @conn.assigns.current_mentor.college_list_specialty do %>
+    <div class="box-shadow-m margin-m padding-m">
         <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
             <label class="control radio">
                 <%= radio_button f, :state, "needs_info", class: "" %>
@@ -40,18 +40,8 @@
 
             <%= submit "Update Status", class: "button button-primary" %>
         <% end %>
-    <% else %>
-        <em>
-            <%= case @questionnaire.state do
-                "needs_info" -> "Needs info from parents or mentor."
-                "ready_for_specialist" -> "Submitted to specialist mentor to begin research. Responses are locked."
-                "specialist" -> "Specialist mentor is creating the college list. Responses are locked."
-                "designer" -> "College list research is done. It's being compiled into a single document. Responses are locked."
-                "complete" -> "College list research is done and you should have received a document from the specialist mentee. Responses are locked."
-            end %>
-        </em>
-    <% end %>
-</div>
+    </div>
+<% end %>
 
 
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
@@ -72,10 +62,10 @@
     <br />
     <textarea class="rte">
         <p>
-            Hi [parent name],
+            Hi,
         </p>
         <p>
-            Please fill out some info for [mentee name]'s college list by [soft deadline].
+            Please fill out some info for <%= @mentee.name %>'s college list by <b>[deadline]</b>.
             You can access the form <a href="todo">here</a> or with the URL below.
 
         </p>
@@ -84,16 +74,22 @@
         </p>
         <p>
             Thanks,<br />
-            [mentor name]
+            <%= @current_mentor.name %>
         </p>
     </textarea>
     <div class="space-s"></div>
     <a href="#" class="button button-primary" data-confirm="Not implemented yet. Just testing out a preview :)">Send email to parents</a> / <span>An email was sent to the parents 2 hours ago</span>
     </div>
-
-
 <% end %>
-
+<%= if @questionnaire.state === "specialist" && @is_my_mentee do %>
+    Specialist mentor is creating the college list. Responses are locked.
+<% end %>
+<%= if @questionnaire.state === "designer" && @is_my_mentee do %>
+    College list research is done. It's being compiled into a single document. Responses are locked.
+<% end %>
+<%= if @questionnaire.state === "complete" && @is_my_mentee do %>
+    College list research is done and you should have received a document from the specialist mentee. Responses are locked.
+<% end %>
 
 <div class="space-l"></div>
 
@@ -121,7 +117,7 @@
                     <em class="color-grey-200"><%= answer.from_parent %></em>
                 </td>
                 <td width="33%">
-                    <%= if @is_my_mentee && @questionnaire.state === "needs_info" do %>
+                    <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
                         <%= react_component("Components.MentorAnswerPodInput", %{
                             question_id: q.id,
                             mentee_id: @mentee.id,
