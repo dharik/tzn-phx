@@ -53,7 +53,8 @@ defmodule Tzn.MixProject do
       {:number, "~> 1.0.3"},
       {:react_phoenix, "~> 1.3"},
       {:html_sanitize_ex, "~> 1.4"},
-      {:shortuuid, "~> 2.0"}
+      {:shortuuid, "~> 2.0"},
+      {:swoosh, "~> 1.5"}
     ]
   end
 

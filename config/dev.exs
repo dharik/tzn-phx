@@ -77,3 +77,6 @@ config :phoenix, :plug_init_mode, :runtime
 
 config :bugsnag,
   release_stage: "development"
+
+config :tzn, Tzn.Mailer,
+  adapter: Swoosh.Adapters.Local
