@@ -1,7 +1,7 @@
 defmodule Tzn.Emails.Questionnaire do
   import Swoosh.Email
 
-  #Tzn.Emails.Questionnaire.welcome() |> Tzn.Mailer.deliver()
+  #Tzn.Emails.Questionnaire.welcome("test") |> Tzn.Mailer.deliver()
   def welcome(body) do
     new()
     |> to({"Dharik Patel Name", "dharik@transizion.com"})

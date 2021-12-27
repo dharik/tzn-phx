@@ -54,7 +54,3 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
-
-config :tzn, Tzn.Mailer,
-  adapter: Swoosh.Adapters.Sendgrid,
-  api_key: {:system, "SENDGRID_AUTH_HEADER"}
