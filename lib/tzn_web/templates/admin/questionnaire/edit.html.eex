@@ -1,5 +1,5 @@
 <%
-public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
 %>
 
 <h2>
