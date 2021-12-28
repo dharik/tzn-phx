@@ -34,18 +34,32 @@ defmodule TznWeb.Mentor.CollegeListController do
       conn.assigns.current_user
     )
 
-    conn |> put_flash(:info, "Updated.") |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+    conn
+    |> put_flash(:info, "Updated.")
+    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+  end
+
+  def update(conn, %{"id" => id, "body" => body}) do
+    questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
+
+    Tzn.Questionnaire.send_parent_email(questionnaire, body)
+
+    conn
+    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
   end
 
   def create(conn, %{"mentee_id" => mentee_id}) do
     mentee = Tzn.Transizion.get_mentee!(mentee_id)
 
-    case Questionnaire.create_questionnaire(%{
-           question_set_id: Tzn.Questionnaire.college_list_question_set().id,
-           mentee_id: mentee.id,
-           state: "needs_info",
-           access_key: nil
-         }, conn.assigns.current_user) do
+    case Questionnaire.create_questionnaire(
+           %{
+             question_set_id: Tzn.Questionnaire.college_list_question_set().id,
+             mentee_id: mentee.id,
+             state: "needs_info",
+             access_key: nil
+           },
+           conn.assigns.current_user
+         ) do
       {:ok, questionnaire} ->
         conn
         |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))

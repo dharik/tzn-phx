@@ -210,8 +210,17 @@ defmodule Tzn.Questionnaire do
     |> Repo.preload([:question_set, :mentee])
   end
 
-  def get_questionnaire_by_access_key(key) do
-    Questionnaire |> Repo.get_by!(access_key: key) |> Repo.preload([:mentee, :question_set])
+  @doc """
+  This will modify the questionnaire
+  """
+  def get_questionnaire_by_access_key(key, current_user) do
+    q = Questionnaire |> Repo.get_by!(access_key: key)
+
+    if current_user == nil do
+      change_questionnaire(q, %{access_key_used_at: Timex.now()}) |> Repo.update()
+    end
+
+    Repo.preload(q, [:mentee, :question_set])
   end
 
   def get_questionnaire_by_id(id, %User{} = current_user) do
@@ -275,5 +284,36 @@ defmodule Tzn.Questionnaire do
       when is_binary(note) do
     assert_admin_or_mentor(current_user)
     create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{internal: note})
+  end
+
+  def send_parent_email(%Questionnaire{} = questionnaire, email_body)
+      when is_binary(email_body) do
+    mentee = questionnaire.mentee
+    mentor = Tzn.Transizion.get_mentor_profile(mentee)
+
+    if mentee.parent1_email do
+      Tzn.Emails.Questionnaire.welcome(
+        email_body,
+        mentee.name,
+        mentee.parent1_email,
+        mentor.name,
+        mentor.email
+      )
+      |> Tzn.Mailer.deliver!()
+    end
+
+    if mentee.parent2_email do
+      Tzn.Emails.Questionnaire.welcome(
+        email_body,
+        mentee.name,
+        mentee.parent2_email,
+        mentor.name,
+        mentor.email
+      )
+      |> Tzn.Mailer.deliver!()
+    end
+
+    # Mark as email sent
+    change_questionnaire(questionnaire, %{parent_email_sent_at: Timex.now()}) |> Repo.update()
   end
 end

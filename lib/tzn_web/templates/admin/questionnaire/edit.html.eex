@@ -1,3 +1,11 @@
+<%
+public_url = if Mix.env() == :prod do
+            "https://collegerize.com/college_list/#{@questionnaire.access_key |> ShortUUID.encode!()}"
+        else
+            "http://localhost:4000/college_list/#{@questionnaire.access_key |> ShortUUID.encode!()}"
+        end
+%>
+
 <h2>
     <%= @questionnaire.question_set.name %> Questionnaire for
     <%=link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee) %>
@@ -35,8 +43,13 @@
     <% end %>
 </div>
 
-<pre>https://collegerize.com/college_list/<%= ShortUUID.encode!(@questionnaire.access_key) %></pre>
-
+<pre><%=public_url %></pre>
+<%= if @questionnaire.parent_email_sent_at do %>
+    <p>Email sent to parents at <%= (@questionnaire.parent_email_sent_at) %></p>
+<% end %>
+<%= if @questionnaire.access_key_used_at do %>
+    <p>Form opened via public URL at <%= (@questionnaire.access_key_used_at) %></p>
+<% end %>
 <div class="space-l"></div>
 
 

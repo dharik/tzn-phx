@@ -9,12 +9,15 @@ defmodule Tzn.Questionnaire.Questionnaire do
     field :state, :string
     field :access_key, :binary_id
 
+    field :access_key_used_at, :naive_datetime
+    field :parent_email_sent_at, :naive_datetime
+
     timestamps()
   end
 
   def changeset(q, attrs \\ %{}) do
     q
-    |> cast(attrs, [:state, :access_key, :mentee_id, :question_set_id])
+    |> cast(attrs, [:state, :access_key, :mentee_id, :question_set_id, :access_key_used_at, :parent_email_sent_at])
     |> ensure_access_key
     |> validate_required([:state, :access_key])
     |> validate_inclusion(:state, [

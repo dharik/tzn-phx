@@ -65,4 +65,17 @@ defmodule Tzn.Transizion.Mentee do
     |> cast_assoc(:user)
     |> validate_required([:name])
   end
+
+  def parent_names(%{parent1_name: nil, parent2_name: nil}) do
+    ""
+  end
+  def parent_names(%{parent1_name: p1, parent2_name: nil})  do
+    p1
+  end
+  def parent_names(%{parent1_name: nil, parent2_name: p2}) do
+    p2
+  end
+  def parent_names(%{parent1_name: p1, parent2_name: p2}) when is_binary(p1) and is_binary(p2) do
+    p1 <> " and " <> p2
+  end
 end

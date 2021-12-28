@@ -4,7 +4,9 @@ defmodule TznWeb.Parent.CollegeListController do
 
   def edit(conn, %{"access_key_short" => access_key}) do
     questionnaire =
-      access_key |> ShortUUID.decode!() |> Questionnaire.get_questionnaire_by_access_key()
+      access_key
+      |> ShortUUID.decode!()
+      |> Questionnaire.get_questionnaire_by_access_key(conn.assigns.current_user)
 
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
     answers = Questionnaire.list_answers(questionnaire)
@@ -25,7 +27,9 @@ defmodule TznWeb.Parent.CollegeListController do
         "response" => response
       }) do
     questionnaire =
-      access_key |> ShortUUID.decode!() |> Questionnaire.get_questionnaire_by_access_key()
+      access_key
+      |> ShortUUID.decode!()
+      |> Questionnaire.get_questionnaire_by_access_key(conn.assigns.current_user)
 
     mentee = questionnaire.mentee
     question = Tzn.Questionnaire.get_question(question_id)

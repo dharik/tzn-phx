@@ -20,8 +20,21 @@
                 <td><%= q.mentee.name %></td>
                 <td>
                     <%= q.state %>
-                    <%= if q.state == "ready_for_specialist" do %>
-                        <small><span class="color-warning-500 border-radius padding-horizontal-xxs">No parent activity, email sent # days ago</span></small>
+                    <%= if q.state == "ready_for_specialist" && q.parent_email_sent_at && !q.access_key_used_at do %>
+                        <small>
+                            <span class="color-warning-500 border-radius padding-horizontal-xxs">
+                                No parent activity, email sent
+                                <%= Timex.Format.DateTime.Formatters.Relative.format!(q.parent_email_sent_at, "{relative}") %>
+                            </span>
+                        </small>
+                    <% end  %>
+                    <%= if q.state == "ready_for_specialist" && q.parent_email_sent_at && q.access_key_used_at do %>
+                        <small>
+                            <span class="color-info-500 border-radius padding-horizontal-xxs">
+                                Parent opened form
+                                <%= Timex.Format.DateTime.Formatters.Relative.format!(q.access_key_used_at, "{relative}") %>
+                            </span>
+                        </small>
                     <% end  %>
                 </td>
                 <td><%= link "See Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-xs" %>
