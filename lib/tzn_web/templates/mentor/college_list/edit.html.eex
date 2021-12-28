@@ -59,7 +59,8 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
         <%= if @questionnaire.parent_email_sent_at do %>
             <span>
                 An email was sent to the parents
-                <%= Timex.Format.DateTime.Formatters.Relative.format!(@questionnaire.parent_email_sent_at, "{relative}") %>.
+                <%= Timex.Format.DateTime.Formatters.Relative.format!(@questionnaire.parent_email_sent_at, "{relative}") %>
+                 with the following link: <pre class="margin-horizontal-l"><%= public_url %></pre>
             </span>
         <% else %>
             Now's a good time to have the parents begin filling in their answers.
