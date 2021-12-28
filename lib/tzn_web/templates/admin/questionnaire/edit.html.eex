@@ -1,9 +1,5 @@
 <%
-public_url = if Mix.env() == :prod do
-            "https://collegerize.com/college_list/#{@questionnaire.access_key |> ShortUUID.encode!()}"
-        else
-            "http://localhost:4000/college_list/#{@questionnaire.access_key |> ShortUUID.encode!()}"
-        end
+public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
 %>
 
 <h2>
