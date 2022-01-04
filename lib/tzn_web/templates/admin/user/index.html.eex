@@ -19,6 +19,9 @@
         </td>
         <td>
           <%= link user.email, to: Routes.admin_user_path(@conn, :edit, user) %>
+          <%= if user.email_confirmed_at do %>
+            <span class="form-message success">Confirmed</span>
+          <% end %>
         </td>
         <td>
           <%= user.inserted_at %>
