@@ -1,6 +1,8 @@
 defmodule TznWeb.Router do
   use TznWeb, :router
   use Pow.Phoenix.Router
+  use Pow.Extension.Phoenix.Router,
+    extensions: [PowEmailConfirmation, PowResetPassword]
   use Plugsnag
 
   import TznWeb.AdminPlugs
@@ -50,6 +52,7 @@ defmodule TznWeb.Router do
     pipe_through :browser
 
     pow_routes()
+    pow_extension_routes()
   end
 
   scope "/", TznWeb do

@@ -42,6 +42,16 @@ defmodule TznWeb do
     end
   end
 
+  def mailer_view do
+    quote do
+      use Phoenix.View,
+        root: "lib/tzn_web/templates",
+        namespace: MyAppWeb
+
+      use Phoenix.HTML
+    end
+  end
+
   def router do
     quote do
       use Phoenix.Router

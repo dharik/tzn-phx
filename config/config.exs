@@ -33,8 +33,11 @@ import_config "#{Mix.env()}.exs"
 config :tzn, :pow,
   user: Tzn.Users.User,
   repo: Tzn.Repo,
-  extensions: [PowPersistentSession],
-  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks
+  extensions: [PowEmailConfirmation, PowResetPassword, PowPersistentSession],
+  controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
+  web_module: TznWeb,
+  mailer_backend: Tzn.PowMailer,
+  web_mailer_module: TznWeb
 
 
 config :tzn, Tzn.Scheduler,
