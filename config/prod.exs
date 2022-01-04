@@ -10,9 +10,10 @@ use Mix.Config
 # which you should run after static files are built and
 # before starting your production server.
 config :tzn, TznWeb.Endpoint,
-  url: [host: "collegerize.com", port: 80],
+  url: [host: "collegerize.com"],
   cache_static_manifest: "priv/static/cache_manifest.json",
-  force_ssl: [rewrite_on: [:x_forwarded_proto], host: nil]
+  force_ssl: [rewrite_on: [:x_forwarded_proto], host: nil],
+  server: true
 
 # Do not print debug messages in production
 config :logger, level: :info
