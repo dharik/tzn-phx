@@ -11,7 +11,7 @@ defmodule TznWeb.Admin.ImpersonationController do
       |> Map.get(:admin_profile)
 
     if admin_profile do
-      conn 
+      conn
         |> put_flash(:error, "You cannot impersonate another admin")
         |> redirect(to: Routes.admin_user_path(conn, :index))
     else
@@ -23,8 +23,8 @@ defmodule TznWeb.Admin.ImpersonationController do
 
   # Anyone can access
   def stop(conn, _) do
-    conn 
-      |> put_session("impersonate_user_id", nil) 
+    conn
+      |> put_session("impersonate_user_id", nil)
       |> redirect(to: Routes.admin_user_path(conn, :index))
   end
 end
