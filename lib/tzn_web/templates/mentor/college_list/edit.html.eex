@@ -1,5 +1,5 @@
 <%
-public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
 %>
 
 <h2>
@@ -49,12 +49,18 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
 
 
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-    Fill out the Pod Response column for each question. Then submit it for a specialist mentor to get started on. Once you've submitted the form, you'll be able to
-    invite the parent to fill out the Parent response column. The specialist will reach out to you directly if there is any missing information.
+    Fill out the Pod Response column for each question.
+    Then submit it for a specialist mentor to get started.
+    Once you've submitted the form,
+    you'll be able to invite the parent to fill out the Parent Response column.
+    The specialist will reach out to you directly if there is any missing information.
+    You will be able to go back and change your answers,
+    but try to have the most accurate response the first time.
+    Your responses will be auto-saved! 🙂
 <% end %>
 <%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
     <%= form_for @conn, Routes.mentor_college_list_path(@conn, :update, @questionnaire), [method: :patch], fn f -> %>
-        A specialist has been notified and will review your answers soon.
+        The specialist team has been notified and will review your answers.
 
         <%= if @questionnaire.parent_email_sent_at do %>
             <span>
@@ -63,9 +69,10 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
                  with the following link: <pre class="margin-horizontal-l"><%= public_url %></pre>
             </span>
         <% else %>
-            Now's a good time to have the parents begin filling in their answers.
-            You can use this form to send them an email.
-
+            Now is a good time to have the parents fill in their answers.
+            You can use this form to send them an email to fill out their information.
+            You will be able to access the link to the form later, just in case.
+            Don't forget to edit name(s), date(s), and any other custom info as needed :)
             <br />
             <br />
 
@@ -170,6 +177,7 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
     <div class="space-m"></div>
     <center>
         After submitting, you'll have an option to email this form to the parent.
+        <div class="space-s"></div>
         <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
             <%= hidden_input f, :state, value: "ready_for_specialist" %>
             <%= submit "Submit to specialist to begin research", class: "button button-primary" %>
