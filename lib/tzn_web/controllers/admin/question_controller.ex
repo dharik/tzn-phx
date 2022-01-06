@@ -54,13 +54,13 @@ defmodule TznWeb.Admin.QuestionController do
 
       {:error, %Ecto.Changeset{} = changeset} ->
         question_sets = Questionnaire.list_question_sets()
-        selected_sets = question.selected_sets
+        selected_sets = Questionnaire.list_question_sets(question_params["question_sets"])
 
         render(conn, "edit.html",
           question: question,
           changeset: changeset,
           question_sets: question_sets,
-          selected_sets: question.selected_sets
+          selected_sets: selected_sets
         )
     end
   end
