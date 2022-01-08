@@ -13,7 +13,7 @@ defmodule TznWeb.EntryController do
       conn.assigns[:current_admin],
       conn.assigns[:current_mentor],
       parent_profile
-    ]
+    ] |> Enum.reject(&is_nil/1)
     cond do
       Enum.count(available_profiles) > 1 ->
         render(conn, "choose_profile.html", parent_profile: parent_profile)
