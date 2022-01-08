@@ -29,6 +29,11 @@ defmodule Tzn.Transizion do
     u |> Ecto.assoc(:mentor_profile) |> Repo.one()
   end
 
+   # TODO: Handle already loaded association
+   def get_mentor(%Mentee{} = mentee) do
+    Ecto.assoc(mentee, :mentor) |> Repo.one()
+  end
+
   def get_mentor!(id), do: Repo.get!(Mentor, id)
 
   def mentor?(%User{mentor_profile: nil}), do: false
@@ -38,6 +43,9 @@ defmodule Tzn.Transizion do
     !is_nil(get_mentor(u))
   end
 
+  def get_hour_counts(%Mentee{} = m) do
+    Ecto.assoc(m, :hour_counts) |> Repo.one()
+  end
 
   def college_list_speciality?(%User{mentor_profile: nil}), do: false
   def college_list_speciality?(%User{mentor_profile: %Mentor{} = m}), do: m.college_list_specialty
@@ -126,6 +134,7 @@ defmodule Tzn.Transizion do
 
   def get_mentee!(id), do: Repo.get!(Mentee, id)
   def get_mentee(id), do: Repo.get(Mentee, id)
+  def get_mentee_by_email(email), do: Repo.get_by(Mentee, email: email)
 
   def delete_mentee(%Mentee{} = mentee) do
     Repo.delete(mentee)
@@ -261,9 +270,15 @@ defmodule Tzn.Transizion do
     Repo.all(TimesheetEntry)
   end
 
-  def list_timesheet_entries(%{mentor: mentor}) do
+  def list_timesheet_entries(%Mentor{} = mentor) do
     Repo.all(
       from(e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at])
+    )
+  end
+
+  def list_timesheet_entries(%Mentee{} = mentee) do
+    Repo.all(
+      from(e in TimesheetEntry, where: e.mentee_id == ^mentee.id, order_by: [desc: :started_at])
     )
   end
 
@@ -420,11 +435,7 @@ defmodule Tzn.Transizion do
     Repo.get!(MentorTimelineEventMarking, id)
   end
 
-  # TODO: Just pattern match get_mentor(%Mentee)
-  # TODO: Handle already loaded association
-  def get_mentor_profile(%Mentee{} = mentee) do
-    Ecto.assoc(mentee, :mentor) |> Repo.one()
-  end
+
 
   def get_mentor_profile(user_id) do
     Repo.one(from(m in Mentor, where: m.user_id == ^user_id))

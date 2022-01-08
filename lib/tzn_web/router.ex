@@ -98,6 +98,10 @@ defmodule TznWeb.Router do
       resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
       resources "/questionnaires", Admin.QuestionnaireController, only: [:edit, :update]
     end
+
+    scope "/", as: :parent do
+      get "/dashboard", Parent.DashboardController, :show
+    end
   end
 
   scope "/", TznWeb do
@@ -132,7 +136,7 @@ defmodule TznWeb.Router do
 
     scope "/" do
       pipe_through :browser
-      live_dashboard "/dashboard", metrics: TznWeb.Telemetry
+      live_dashboard "/LiveDashboard", metrics: TznWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
   end

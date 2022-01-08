@@ -1,0 +1,31 @@
+<h1><%= @mentee.name %></h1>
+<%= @mentor.name %>
+
+<h2>Work log:</h2>
+<%= for {e, idx} <- Enum.with_index(@timesheet_entries) do %>
+    <div class="flex padding-s margin-vertical-s <%= if(rem(idx,2) == 0, do: "background-light-50", else: "background-white") %>">
+        <div class="margin-horizontal-m flex-0-1-auto">
+            <%= e.started_at |> format_date() %>
+        </div>
+        <div class="flex flex-1-1-auto">
+            <%= raw e.notes %>
+        </div>
+    </div>
+<% end %>
+
+<p>
+    <b>Total Hours Used:</b> <%= @hours_used %>
+</p>
+
+
+<h2>Refer a friend</h2>
+
+Email:
+<input type="text" />
+
+<br />
+Note:
+<textarea></textarea>
+
+<br />
+<button class="button-primary">Send Email</button>

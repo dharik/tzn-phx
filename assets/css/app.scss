@@ -1,1 +1,38 @@
+.parent_layout {
+  display: grid;
+  grid-template-areas:
+    "nav . ."
+    "nav main right";
+  grid-template-rows: 80px 1fr;
+  grid-template-columns: 20% 1fr 10%;
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+  height: 100vh;
+  margin: 0;
 
+  /* Stack the layout on small devices/viewports. */
+  @media all and (max-width: 575px) {
+    grid-template-areas:
+      "nav"
+      "main"
+      "right";
+    grid-template-rows: auto;
+    grid-template-columns: 1fr;
+  }
+
+  nav {
+    grid-area: nav;
+  }
+
+  header {
+    grid-area: header;
+  }
+
+  main {
+    grid-area: main;
+  }
+
+  .right {
+    grid-area: right;
+  }
+}

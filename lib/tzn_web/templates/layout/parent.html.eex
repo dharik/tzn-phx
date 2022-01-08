@@ -1,0 +1,50 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8"/>
+    <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <title>Transizion</title>
+    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/parent_app.js") %>"></script>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" type="text/css" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
+  </head>
+  <body>
+    <div class="parent_layout">
+      <nav role="navigation" class="nav padding-horizontal-xs padding-vertical-m background-light-100">
+        <center>
+          <a href="<%= Routes.parent_dashboard_path(@conn, :show) %>">
+            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300" />
+          </a>
+        </center>
+
+        <hr />
+        <div class="space-m"></div>
+
+        <div class="group group-column group-stretch group-m">
+          <ul>
+            <%= if Enum.count(@mentees) > 1 do %>
+              <%= for m <- @mentees do %>
+                <li><%= link m.name, to: Routes.parent_dashboard_path(@conn, :show, mentee: m.id), class: "" %></li>
+              <% end %>
+            <% end %>
+
+            <li><%= link "Dashboard", to: Routes.parent_dashboard_path(@conn, :show), class: "" %></li>
+            <li><%= link "Timeline", to: Routes.parent_dashboard_path(@conn, :show), class: "" %></li>
+            <li><%= link "Refer to Jason", to: Routes.parent_dashboard_path(@conn, :show), class: "" %></li>
+
+          </ul>
+        </div>
+      </nav>
+
+      <main role="main" class="padding-m">
+        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
+        <%= render "impersonation_status.html", conn: @conn %>
+        <%= @inner_content %>
+        
+      </main>
+
+    </div>
+  </body>
+</html>
