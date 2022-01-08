@@ -19,16 +19,23 @@ defmodule Tzn.Profiles do
   up by foriegn keys
   """
   defp get_parent_by_email(email) do
+    mentees =
+      from(m in Mentee, where: m.parent1_email == ^email or m.parent2_email == ^email) |> Repo.exists?()
+
     p1_names =
       from(m in Mentee, where: m.parent1_email == ^email, select: m.parent1_name) |> Repo.all()
 
     p2_names =
       from(m in Mentee, where: m.parent2_email == ^email, select: m.parent2_name) |> Repo.all()
 
-    # Have to pick the best name because they can vary
-    name = (p1_names ++ p2_names) |> Enum.reject(&is_nil/1) |> List.first()
+    if mentees do
+      # Have to pick the best name because they can vary
+      name = (p1_names ++ p2_names) |> Enum.reject(&is_nil/1) |> List.first()
 
-    %Parent{name: name, email: email}
+      %Parent{name: name, email: email}
+    else
+      nil
+    end
   end
 
   def list_parents(%Mentee{} = m) do
@@ -60,7 +67,7 @@ defmodule Tzn.Profiles do
   end
 
   def parent?(%User{email: email}) do
-    !is_nil(get_parent(email))
+    !is_nil(get_parent_by_email(email))
   end
 
 
