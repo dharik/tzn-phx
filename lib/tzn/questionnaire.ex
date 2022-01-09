@@ -289,7 +289,7 @@ defmodule Tzn.Questionnaire do
   def send_parent_email(%Questionnaire{} = questionnaire, email_body)
       when is_binary(email_body) do
     mentee = questionnaire.mentee
-    mentor = Tzn.Transizion.get_mentor_profile(mentee)
+    mentor = Tzn.Transizion.get_mentor(mentee)
 
     if mentee.parent1_email do
       Tzn.Emails.Questionnaire.welcome(

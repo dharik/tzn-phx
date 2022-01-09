@@ -10,7 +10,7 @@ defmodule TznWeb.Parent.CollegeListController do
 
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
     answers = Questionnaire.list_answers(questionnaire)
-    mentor = Tzn.Transizion.get_mentor_profile(questionnaire.mentee)
+    mentor = Tzn.Transizion.get_mentor(questionnaire.mentee)
 
     render(conn, "edit.html",
       questions: questions,
