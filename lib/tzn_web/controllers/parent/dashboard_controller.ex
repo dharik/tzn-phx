@@ -1,6 +1,7 @@
 defmodule TznWeb.Parent.DashboardController do
   use TznWeb, :controller
   plug :put_layout, "parent.html"
+  plug :ensure_parent_and_mentees
   alias Tzn.Transizion
 
   def show(conn, %{"mentee" => mentee_id}) do
@@ -23,7 +24,7 @@ defmodule TznWeb.Parent.DashboardController do
     mentees = Tzn.Profiles.list_mentees(parent_profile)
 
     mentee =
-      if mentee_id_from_session do
+      if mentee_id_from_session && mentee_id_from_session in Enum.map(mentees, & &1.id) do
         Transizion.get_mentee!(mentee_id_from_session)
       else
         hd(mentees)
@@ -42,5 +43,16 @@ defmodule TznWeb.Parent.DashboardController do
       mentor: mentor,
       mentees: mentees
     )
+  end
+
+  def ensure_parent_and_mentees(conn, _) do
+    parent_profile = Tzn.Profiles.get_parent(conn.assigns.current_user)
+    mentees = Tzn.Profiles.list_mentees(parent_profile)
+
+    if mentees |> Enum.any?() do
+      conn
+    else
+      conn |> redirect(to: Routes.entry_path(conn, :launch_app)) |> halt()
+    end
   end
 end

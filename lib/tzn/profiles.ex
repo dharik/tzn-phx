@@ -101,4 +101,8 @@ defmodule Tzn.Profiles do
 
     Repo.all(q)
   end
+
+  def list_mentees(nil) do
+    []
+  end
 end
