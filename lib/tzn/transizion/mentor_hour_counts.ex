@@ -3,7 +3,7 @@ defmodule Tzn.Transizion.MentorHourCounts do
 
   @primary_key false
   schema "mentor_hour_counts" do
-    belongs_to :mentor, Tzn.Transizion.Mentee
+    belongs_to :mentor, Tzn.Transizion.Mentor
     field :year, :integer
     field :month, :integer
     field :hours, :decimal
