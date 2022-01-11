@@ -17,15 +17,3 @@
     <b>Total Hours Used:</b> <%= @hours_used %>
 </p>
 
-
-<h2>Refer a friend</h2>
-
-Email:
-<input type="text" />
-
-<br />
-Note:
-<textarea></textarea>
-
-<br />
-<button class="button-primary">Send Email</button>

@@ -2,13 +2,13 @@
   Welcome! You have multiple profiles. Choose which profile you want to continue with this session.
 </p>
 
-<%= if @conn.assigns.current_admin do %>
+<%= if @current_admin do %>
   <p>
     <%= link "Continue as admin", to: Routes.admin_mentor_path(@conn, :index) %>
   </p>
 <% end %>
 
-<%= if @conn.assigns.current_mentor do %>
+<%= if @current_mentor do %>
   <p>
     <%= link "Continue as mentor", to: Routes.mentor_mentee_path(@conn, :index) %>
   </p>

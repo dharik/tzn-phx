@@ -1,0 +1,12 @@
+<h2>Refer Somebody To Jason</h2>
+<p>A referral is the highest complement.</p>
+
+<%= form_for @conn, Routes.parent_referral_path(@conn, :create), [as: :referral], fn f -> %>
+    <%= label f, :note, "* Note for Jason" %>
+    <%= textarea f, :note, rows: 10, value: "Hi Jason,\n\nI know somebody who may be interested in CollegeRize.  You can contact them via:\n\nEmail address: \nPhone Number:\n\nSincerely,\n#{@parent_profile.name}" %>
+    <%= error_tag f, :note %>
+
+    <div class="space-s"></div>
+
+    <%= submit "Send Email To Jason", class: "button-primary" %>
+<% end %>

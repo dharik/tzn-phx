@@ -101,6 +101,8 @@ defmodule TznWeb.Router do
 
     scope "/", as: :parent do
       get "/dashboard", Parent.DashboardController, :show
+      get "/refer", Parent.ReferralController, :show
+      post "/refer", Parent.ReferralController, :create
     end
   end
 
