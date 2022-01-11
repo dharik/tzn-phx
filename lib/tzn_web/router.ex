@@ -103,6 +103,7 @@ defmodule TznWeb.Router do
       get "/dashboard", Parent.DashboardController, :show
       get "/refer", Parent.ReferralController, :show
       post "/refer", Parent.ReferralController, :create
+      get "/timeline", Parent.TimelineController, :show
     end
   end
 
