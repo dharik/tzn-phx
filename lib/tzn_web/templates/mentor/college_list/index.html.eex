@@ -2,39 +2,62 @@
     <thead>
         <tr>
             <th>Mentee</th>
+            <th>Mentor</th>
             <th>List Status</th>
             <th>View / Edit</th>
         </tr>
     </thead>
     <tbody>
-        <%= for q <- @lists |> Enum.sort_by(fn q ->
-            case q.state do
-                "needs_info" -> 4
-                "ready_for_specialist" -> 2
-                "specialist" -> 1
-                "designer" -> 3
-                "complete" -> 5
-            end
-        end) do %>
+        <%= for q <- order_by_state(@lists) do %>
             <tr>
                 <td><%= q.mentee.name %></td>
+                <td><%= mentor_name(q.mentee) %></td>
                 <td>
-                    <%= q.state %>
-                    <%= if q.state == "ready_for_specialist" && q.parent_email_sent_at && !q.access_key_used_at do %>
-                        <small>
-                            <span class="color-warning-500 border-radius padding-horizontal-xxs">
-                                No parent activity, email sent
-                                <%= Timex.Format.DateTime.Formatters.Relative.format!(q.parent_email_sent_at, "{relative}") %>
-                            </span>
-                        </small>
+                    <%= if q.state == "needs_info" do %>
+                        Pod needs to provide data
                     <% end  %>
-                    <%= if q.state == "ready_for_specialist" && q.parent_email_sent_at && q.access_key_used_at do %>
-                        <small>
-                            <span class="color-info-500 border-radius padding-horizontal-xxs">
-                                Parent opened form
-                                <%= Timex.Format.DateTime.Formatters.Relative.format!(q.access_key_used_at, "{relative}") %>
-                            </span>
-                        </small>
+
+                    <%= if q.state == "ready_for_specialist" do %>
+                        Ready for SST
+                        
+                        <%= if parent_state(q) == :opened do %>
+                            <small>
+                                <span class="color-success-300 padding-horizontal-xxs">
+                                    Parent opened form <%= Tzn.Util.format_date_relative(q.access_key_used_at) %>
+                                </span>
+                            </small>
+                        <% end %>
+                         <%= if parent_state(q) == :email_not_sent do %>
+                            <small>
+                                <span class="color-grey-200 padding-horizontal-xxs">
+                                    Email not sent to parents
+                                </span>
+                            </small>
+                        <% end  %>
+                        <%= if parent_state(q) == :in_grace_period do %>
+                            <small>
+                                <span class="color-grey-200 padding-horizontal-xxs">
+                                    Email sent to parents <%= Tzn.Util.format_date_relative(q.parent_email_sent_at) %> but they haven't opened it yet
+                                </span>
+                            </small>
+                        <% end %>
+                        <%= if parent_state(q) == :past_grace_period do %>
+                            <small>
+                                <span class="color-error-300 padding-horizontal-xxs">
+                                    Email sent to parents <%= Tzn.Util.format_date_relative(q.parent_email_sent_at) %> but they haven't opened it yet
+                                </span>
+                            </small>
+                        <% end %>
+                    <% end  %>
+                   
+                    <%= if q.state == "specialist" do %>
+                        SST is working on it
+                    <% end  %>
+                    <%= if q.state == "designer" do %>
+                        Designer is working on it
+                    <% end  %>
+                    <%= if q.state == "complete" do %>
+                        Completed
                     <% end  %>
                 </td>
                 <td><%= link "See Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-xs" %>

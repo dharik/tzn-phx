@@ -207,7 +207,7 @@ defmodule Tzn.Questionnaire do
     Questionnaire
     |> order_by(desc: :inserted_at)
     |> Repo.all()
-    |> Repo.preload([:question_set, :mentee])
+    |> Repo.preload([:question_set, mentee: [:mentor]])
   end
 
   @doc """
