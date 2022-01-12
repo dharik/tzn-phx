@@ -18,7 +18,9 @@ defmodule Tzn.Transizion.Mentee do
     field :grade, :string
 
     belongs_to :mentor, Tzn.Transizion.Mentor
-    field :mentor_rate, :decimal # Rates can change
+
+    # Rates can change and this allows for overriding the mentor's rate
+    field :mentor_rate, :decimal
 
     belongs_to :user, Tzn.Users.User
 
@@ -29,6 +31,7 @@ defmodule Tzn.Transizion.Mentee do
 
     has_many :questionnaires, Tzn.Questionnaire.Questionnaire
     has_many :answers, Tzn.Questionnaire.Answer
+    has_many :parents, Tzn.Transizion.Parent
 
     timestamps()
   end
@@ -42,8 +45,10 @@ defmodule Tzn.Transizion.Mentee do
       :parent1_name,
       :parent2_email,
       :parent2_name,
-      :grade
+      :grade,
     ])
+    |> to_lowercase(:parent1_email)
+    |> to_lowercase(:parent2_email)
   end
 
   def admin_changeset(mentee, attrs) do
@@ -62,19 +67,32 @@ defmodule Tzn.Transizion.Mentee do
       :email,
       :archived
     ])
+    |> to_lowercase(:parent1_email)
+    |> to_lowercase(:parent2_email)
+    |> to_lowercase(:email)
     |> cast_assoc(:user)
     |> validate_required([:name])
+  end
+
+  def to_lowercase(changeset, fieldname) do
+    case fetch_change(changeset, fieldname) do
+      {:ok, value} -> put_change(changeset, fieldname, String.downcase(value))
+      :error -> changeset
+    end
   end
 
   def parent_names(%{parent1_name: nil, parent2_name: nil}) do
     ""
   end
-  def parent_names(%{parent1_name: p1, parent2_name: nil})  do
+
+  def parent_names(%{parent1_name: p1, parent2_name: nil}) do
     p1
   end
+
   def parent_names(%{parent1_name: nil, parent2_name: p2}) do
     p2
   end
+
   def parent_names(%{parent1_name: p1, parent2_name: p2}) when is_binary(p1) and is_binary(p2) do
     p1 <> " and " <> p2
   end
