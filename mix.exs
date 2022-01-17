@@ -54,7 +54,10 @@ defmodule Tzn.MixProject do
       {:react_phoenix, "~> 1.3"},
       {:html_sanitize_ex, "~> 1.4"},
       {:shortuuid, "~> 2.0"},
-      {:swoosh, "~> 1.5"}
+      {:swoosh, "~> 1.5"},
+      {:ex_aws, "~> 2.2.9"},
+      {:ex_aws_s3, "~> 2.3.2"},
+      {:sweet_xml, "~> 0.7.2"}
     ]
   end
 

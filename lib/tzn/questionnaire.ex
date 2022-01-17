@@ -220,20 +220,31 @@ defmodule Tzn.Questionnaire do
       change_questionnaire(q, %{access_key_used_at: Timex.now()}) |> Repo.update()
     end
 
-    Repo.preload(q, [:mentee, :question_set])
+    Repo.preload(q, [
+      :mentee,
+      :question_set,
+      files: from(f in Tzn.Files.MenteeFile, where: is_nil(f.deleted_at))
+    ])
   end
 
   def get_questionnaire_by_id(id, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
-    Questionnaire |> Repo.get(id) |> Repo.preload([:mentee, :question_set])
 
-    # TODO: Only if admin, mentee in current_mentor.mentees OR current_mentor.college_list_specialty
+    Questionnaire
+    |> Repo.get(id)
+    |> Repo.preload([
+      :mentee,
+      :question_set,
+      files: from(f in Tzn.Files.MenteeFile, where: is_nil(f.deleted_at))
+    ])
   end
 
+  # TODO: Only if admin, mentee in current_mentor.mentees OR current_mentor.college_list_specialty
   def change_questionnaire(%Questionnaire{} = q, attrs \\ %{}) do
     Questionnaire.changeset(q, attrs)
   end
 
+  # TODO: Only if admin | mentor
   def create_questionnaire(attrs, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
 
@@ -315,5 +326,45 @@ defmodule Tzn.Questionnaire do
 
     # Mark as email sent
     change_questionnaire(questionnaire, %{parent_email_sent_at: Timex.now()}) |> Repo.update()
+  end
+
+  def attach_file(%Questionnaire{} = q, %Plug.Upload{} = file, %User{} = current_user) do
+    # If there's a current_user, it should be an admin, mentor, or specialist mentor
+    assert_admin_or_mentor(current_user)
+
+    object_path = Ecto.UUID.generate() <> "/" <> file.filename
+
+    Tzn.Files.upload!(object_path, File.read!(file.path), [questionnaire_id: q.id], file.content_type)
+
+    Tzn.Files.MenteeFile.upload_changeset(%Tzn.Files.MenteeFile{}, %{
+      object_path: object_path,
+      file_name: file.filename,
+      file_size: File.stat!(file.path).size,
+      file_content_type: file.content_type,
+      uploaded_by: current_user.id,
+      questionnaire_id: q.id,
+      mentee_id: q.mentee_id
+    })
+    |> Repo.insert()
+  end
+
+  @doc """
+  This doesn't take a current user because parents can use the form anonymously
+  and upload. So it'll be important to somehow keep these clean
+  """
+  def attach_file(%Questionnaire{} = q, %Plug.Upload{} = file, nil) do
+    object_path = Ecto.UUID.generate() <> "/" <> file.filename
+
+    Tzn.Files.upload!(object_path, File.read!(file.path), [questionnaire_id: q.id], file.content_type)
+
+    Tzn.Files.MenteeFile.upload_changeset(%Tzn.Files.MenteeFile{}, %{
+      object_path: object_path,
+      file_name: file.filename,
+      file_size: File.stat!(file.path).size,
+      file_content_type: file.content_type,
+      questionnaire_id: q.id,
+      mentee_id: q.mentee_id
+    })
+    |> Repo.insert()
   end
 end

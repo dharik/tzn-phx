@@ -80,3 +80,16 @@ config :bugsnag,
 
 config :tzn, Tzn.Mailer,
   adapter: Swoosh.Adapters.Local
+
+config :ex_aws,
+  access_key_id: ["set in dev.secret.exs", :instance_role],
+  secret_access_key: ["set in dev.secret.exs", :instance_role]
+
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "nyc3.digitaloceanspaces.com",
+  port: 443
+
+config :tzn, s3_bucket: "collegerize-dev"
+
+import_config "dev.secret.exs"

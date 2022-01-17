@@ -3,7 +3,6 @@ defmodule TznWeb.Admin.QuestionnaireController do
 
   alias Tzn.Questionnaire
 
-
   def edit(conn, %{"id" => id}) do
     questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
@@ -27,8 +26,8 @@ defmodule TznWeb.Admin.QuestionnaireController do
       conn.assigns.current_user
     )
 
-    conn |> put_flash(:info, "Updated.") |> redirect(to: Routes.admin_questionnaire_path(conn, :edit, questionnaire))
+    conn
+    |> put_flash(:info, "Updated.")
+    |> redirect(to: Routes.admin_questionnaire_path(conn, :edit, questionnaire))
   end
-
-
 end

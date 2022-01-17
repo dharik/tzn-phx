@@ -50,6 +50,21 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
 
 
 <div class="">
+     <div class=" padding-xs border margin-bottom-xxl">
+        <p>
+            Attached Files
+        </p>
+
+        
+        <ul>
+            <%= for file <- @questionnaire.files do %>
+                <li>
+                    <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
+                </li>
+            <% end %>
+        </ul>
+    </div> 
+
     <%= for q <- @questions do %>
         <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
         <%= raw q.question %>

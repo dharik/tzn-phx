@@ -26,10 +26,6 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
-# Import environment specific config. This must remain at the bottom
-# of this file so it overrides the configuration defined above.
-import_config "#{Mix.env()}.exs"
-
 config :tzn, :pow,
   user: Tzn.Users.User,
   repo: Tzn.Repo,
@@ -47,3 +43,7 @@ jobs: [
 
 config :bugsnag,
   api_key: "78ca1a1066750db225de5e66c4c29bad"
+
+# Import environment specific config. This must remain at the bottom
+# of this file so it overrides the configuration defined above.
+import_config "#{Mix.env()}.exs"

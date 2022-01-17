@@ -110,6 +110,7 @@ defmodule TznWeb.Router do
   scope "/", TznWeb do
     pipe_through [:browser_anonymous]
     get "/college_list/:access_key_short", Parent.CollegeListController, :edit
+    put "/college_list/:access_key_short", Parent.CollegeListController, :upload
     post "/college_list/:access_key_short", Parent.CollegeListController, :create_or_update_answer
   end
 
@@ -123,7 +124,6 @@ defmodule TznWeb.Router do
     pipe_through [:api, :mentor]
 
     post "/answers", Mentor.AnswerController, :create_or_update
-
   end
 
 

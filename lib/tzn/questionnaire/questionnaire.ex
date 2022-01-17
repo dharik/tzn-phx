@@ -12,6 +12,8 @@ defmodule Tzn.Questionnaire.Questionnaire do
     field :access_key_used_at, :naive_datetime
     field :parent_email_sent_at, :naive_datetime
 
+    has_many :files, Tzn.Files.MenteeFile
+
     timestamps()
   end
 

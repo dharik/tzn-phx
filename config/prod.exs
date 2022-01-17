@@ -55,3 +55,10 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+config :ex_aws, :s3,
+  scheme: "https://",
+  host: "nyc3.digitaloceanspaces.com",
+  port: 443
+
+config :tzn, s3_bucket: "collegerize"

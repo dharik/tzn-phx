@@ -43,7 +43,7 @@ defmodule TznWeb.Endpoint do
   plug Plug.Telemetry, event_prefix: [:phoenix, :endpoint]
 
   plug Plug.Parsers,
-    parsers: [:urlencoded, :multipart, :json],
+    parsers: [:urlencoded, :json, {:multipart, length: 20_000_000}],
     pass: ["*/*"],
     json_decoder: Phoenix.json_library()
 

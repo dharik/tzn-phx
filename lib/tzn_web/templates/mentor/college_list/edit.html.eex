@@ -128,6 +128,25 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
 
 
 <div class="">
+    <div class="background-light-100 padding-xs border margin-bottom-xxl">
+        <p>
+            Feel free to attach any files that would help the research team.
+        </p>
+
+        <%= form_for @conn, Routes.mentor_college_list_path(@conn, :update, @questionnaire), [multipart: true, method: :put], fn f -> %>
+            <%= file_input f, :attachment %>
+            <%= submit "Upload File", class: "button button-secondary button-s"%>
+        <% end %>
+        
+        <ul>
+            <%= for file <- @questionnaire.files do %>
+                <li>
+                    <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
+                </li>
+            <% end %>
+        </ul>
+    </div>    
+
     <%= for q <- @questions do %>
         <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
         <%= raw q.question %>

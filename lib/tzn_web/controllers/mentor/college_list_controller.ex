@@ -48,6 +48,16 @@ defmodule TznWeb.Mentor.CollegeListController do
     |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
   end
 
+  def update(conn, %{"id" => id, "attachment" => file}) do
+    questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
+
+    Questionnaire.attach_file(questionnaire, file, conn.assigns.current_user)
+
+    conn
+    |> put_flash(:info, "File Uploaded Successfully")
+    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+  end
+
   def create(conn, %{"mentee_id" => mentee_id}) do
     mentee = Tzn.Transizion.get_mentee!(mentee_id)
 

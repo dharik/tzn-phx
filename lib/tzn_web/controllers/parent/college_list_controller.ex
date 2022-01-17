@@ -17,8 +17,22 @@ defmodule TznWeb.Parent.CollegeListController do
       answers: answers,
       mentor: mentor,
       mentee: questionnaire.mentee,
-      access_key: ShortUUID.encode!(questionnaire.access_key)
+      access_key: ShortUUID.encode!(questionnaire.access_key),
+      files: questionnaire.files
     )
+  end
+
+  def upload(conn, %{"access_key_short" => access_key, "attachment" => file}) do
+    questionnaire =
+      access_key
+      |> ShortUUID.decode!()
+      |> Questionnaire.get_questionnaire_by_access_key(conn.assigns.current_user)
+
+    Questionnaire.attach_file(questionnaire, file, conn.assigns.current_user)
+
+    conn
+    |> put_flash(:info, "File Uploaded Successfully.")
+    |> redirect(to: Routes.college_list_path(conn, :edit, access_key))
   end
 
   def create_or_update_answer(conn, %{

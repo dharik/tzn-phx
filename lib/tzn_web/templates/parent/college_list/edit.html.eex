@@ -5,6 +5,25 @@
   Hi there! Please add your preferences and answers for your child's list of colleges. Your responses will be auto-saved!
 </p>
 
+<div class="background-light-100 padding-xs border margin-bottom-xxl">
+    <p>
+        Feel free to attach any files that would help the research team.
+    </p>
+    
+    <%= form_for @conn, Routes.college_list_path(@conn, :upload, @access_key), [multipart: true, method: :put], fn f -> %>
+        <%= file_input f, :attachment %>
+        <%= submit "Upload File", class: "button button-secondary button-s"%>
+    <% end %>
+    
+    <ul>
+        <%= for file <- @files do %>
+            <li>
+                <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external"%>
+            </li>
+        <% end %>
+    </ul>
+</div> 
+
 <%= for q <- @questions do %>
   <% answer = answer_for_question(q, @answers) %>
 
