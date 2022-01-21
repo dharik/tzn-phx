@@ -10,7 +10,7 @@ defmodule TznWeb.Admin.ImpersonationController do
       |> Repo.preload(:admin_profile)
       |> Map.get(:admin_profile)
 
-    if admin_profile do
+    if admin_profile && Application.get_env(:tzn, :allow_impersonating_admins) == false do
       conn
         |> put_flash(:error, "You cannot impersonate another admin")
         |> redirect(to: Routes.admin_user_path(conn, :index))

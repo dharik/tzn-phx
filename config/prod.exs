@@ -62,3 +62,5 @@ config :ex_aws, :s3,
   port: 443
 
 config :tzn, s3_bucket: "collegerize"
+
+config :tzn, allow_impersonating_admins: false

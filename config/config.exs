@@ -44,6 +44,8 @@ jobs: [
 config :bugsnag,
   api_key: "78ca1a1066750db225de5e66c4c29bad"
 
+config :tzn, allow_impersonating_admins: false
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env()}.exs"

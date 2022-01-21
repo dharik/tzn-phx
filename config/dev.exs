@@ -92,4 +92,6 @@ config :ex_aws, :s3,
 
 config :tzn, s3_bucket: "collegerize-dev"
 
+config :tzn, allow_impersonating_admins: true
+
 import_config "dev.secret.exs"

@@ -1,1 +1,33 @@
- TODO
+<script>
+  document.addEventListener('alpine:init', () => {
+      Alpine.data('parentTimeline', () => ({
+          selectedTimeline: "<%= default_timeline(@mentee) %>",
+          selectTimeline(newTimeline) {
+             this.selectedTimeline = newTimeline;
+          },
+          timelines: <%= raw Jason.encode!(timeline_data()) %>,
+          timelineOrder: <%= raw Jason.encode!(timeline_order()) %>
+      }))
+  });
+</script>
+<div x-data="parentTimeline">
+  <div class="button-group">
+    <template x-for="grade in timelineOrder">
+      <button
+        :disabled="selectedTimeline === grade"
+        :class="selectedTimeline === grade ? 'button-primary' : ''"
+        @click="selectTimeline(grade)"
+        x-text="grade"
+      ></button>
+    </template>
+  </div>
+  <div class="space-m"></div>
+  <template x-for="monthData in timelines[selectedTimeline]">
+    <div class="timeline-item">
+      <h2 x-text="monthData.monthName"></h2>
+      <div class="border-radius box-shadow-l padding-m" :class="monthData.colorClass">
+        <div x-html="monthData.content"></div>
+      </div>
+    </div>
+  </template>
+</div>
