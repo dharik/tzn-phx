@@ -1,9 +1,8 @@
-<h2>Refer Somebody To Jason</h2>
-<p>A referral is the highest complement.</p>
+<h2>Refer a Friend to Jason</h2>
+<p>Get $100 every time a friend enrolls. It's free money!</p>
 
 <%= form_for @conn, Routes.parent_referral_path(@conn, :create), [as: :referral], fn f -> %>
-    <%= label f, :note, "* Note for Jason" %>
-    <%= textarea f, :note, rows: 10, value: "Hi Jason,\n\nI know somebody who may be interested in CollegeRize.  You can contact them via:\n\nEmail address: \nPhone Number:\n\nSincerely,\n#{@parent_profile.name}" %>
+    <%= textarea f, :note, rows: 10, value: "Hi Jason,\n\nI know someone who might be interested in Transizion. This is their contact info:\n\nName:\nPhone #:\nEmail:\n\nSincerely,\n#{@parent_profile.name}" %>
     <%= error_tag f, :note %>
 
     <div class="space-s"></div>

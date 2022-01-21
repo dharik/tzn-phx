@@ -10,4 +10,11 @@ defmodule Tzn.Util do
   def within_n_days_ago(date, n) do
     date |> Timex.after?(Timex.shift(Timex.now(), days: -n))
   end
+
+  def diff_in_hours(time1, time2, places \\ 2) do
+    Timex.diff(time1, time2, :duration)
+    |> Timex.Duration.to_hours()
+    |> Number.Conversion.to_decimal()
+    |> Decimal.round(places)
+  end
 end

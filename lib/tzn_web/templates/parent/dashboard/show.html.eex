@@ -1,5 +1,15 @@
-<h1><%= @mentee.name %></h1>
-<%= @mentor.name %>
+
+<div class="flex flex-wrap">
+    <div class="flex-1 flex align-items-center">
+        <h1><%= @mentee.name %></h1>
+    </div>
+    <div class="flex-1 flex justify-content-center">
+        <div class="flex-0-1 text-align-center box-shadow-m padding-l ">
+            <h3>Hours Mentored</h3>
+            <span class="font-size-xl"><%= @hours_used %></span>
+        </div>
+    </div>
+</div>
 
 <h2>Work log:</h2>
 <%= for {e, idx} <- Enum.with_index(@timesheet_entries) do %>
@@ -7,13 +17,11 @@
         <div class="margin-horizontal-m flex-0-1-auto">
             <%= e.started_at |> format_date() %>
         </div>
+        <div class="flex-0-1-auto margin-horizontal-m">
+            <%= Tzn.Util.diff_in_hours(e.ended_at, e.started_at) %> hours
+        </div>
         <div class="flex flex-1-1-auto">
             <%= raw e.notes %>
         </div>
     </div>
 <% end %>
-
-<p>
-    <b>Total Hours Used:</b> <%= @hours_used %>
-</p>
-
