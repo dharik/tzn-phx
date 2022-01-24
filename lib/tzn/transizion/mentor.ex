@@ -9,6 +9,8 @@ defmodule Tzn.Transizion.Mentor do
     field :archived, :boolean
 
     field :college_list_specialty, :boolean
+    field :ecvo_list_specialty, :boolean
+    field :scholarship_list_specialty, :boolean
 
     # Matching algorithm
     field :career_interests, {:array, :string}
@@ -48,7 +50,9 @@ defmodule Tzn.Transizion.Mentor do
       :hourly_rate,
       :archived,
       :experience_level,
-      :college_list_specialty
+      :college_list_specialty,
+      :ecvo_list_specialty,
+      :scholarship_list_specialty
     ])
     |> validate_inclusion(:experience_level, ["veteran", "rising", "rookie"])
     |> validate_required([:name, :email, :hourly_rate])

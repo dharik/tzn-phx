@@ -1,4 +1,4 @@
-defmodule TznWeb.Mentor.CollegeListController do
+defmodule TznWeb.Mentor.ECVOListController do
   use TznWeb, :controller
   alias Tzn.Questionnaire
 
@@ -6,7 +6,7 @@ defmodule TznWeb.Mentor.CollegeListController do
   def index(conn, _) do
     questionnaires =
       Questionnaire.list_questionnaires(conn.assigns.current_user)
-      |> Enum.filter(&(&1.question_set_id == Tzn.Questionnaire.college_list_question_set().id))
+      |> Enum.filter(&(&1.question_set_id == Tzn.Questionnaire.ecvo_list_question_set().id))
 
     render(conn, "index.html", lists: questionnaires)
   end
@@ -38,7 +38,7 @@ defmodule TznWeb.Mentor.CollegeListController do
 
     conn
     |> put_flash(:info, "Updated.")
-    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+    |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
   end
 
   def update(conn, %{"id" => id, "body" => body}) do
@@ -47,7 +47,7 @@ defmodule TznWeb.Mentor.CollegeListController do
     Tzn.Questionnaire.send_parent_email(questionnaire, body)
 
     conn
-    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+    |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
   end
 
   def update(conn, %{"id" => id, "attachment" => file}) do
@@ -57,7 +57,7 @@ defmodule TznWeb.Mentor.CollegeListController do
 
     conn
     |> put_flash(:info, "File Uploaded Successfully")
-    |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+    |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
   end
 
   def create(conn, %{"mentee_id" => mentee_id}) do
@@ -65,7 +65,7 @@ defmodule TznWeb.Mentor.CollegeListController do
 
     case Questionnaire.create_questionnaire(
            %{
-             question_set_id: Tzn.Questionnaire.college_list_question_set().id,
+             question_set_id: Tzn.Questionnaire.ecvo_list_question_set().id,
              mentee_id: mentee.id,
              state: "needs_info",
              access_key: nil
@@ -74,7 +74,7 @@ defmodule TznWeb.Mentor.CollegeListController do
          ) do
       {:ok, questionnaire} ->
         conn
-        |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+        |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
 
       {:error, _changeset} ->
         conn

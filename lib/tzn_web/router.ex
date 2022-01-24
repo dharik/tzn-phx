@@ -73,6 +73,7 @@ defmodule TznWeb.Router do
       resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
 
       resources "/college_lists", Mentor.CollegeListController, only: [:index, :edit, :update, :create]
+      resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :edit, :update, :create]
 
       get "/help", Mentor.HelpController, :show
     end
@@ -112,6 +113,10 @@ defmodule TznWeb.Router do
     get "/college_list/:access_key_short", Parent.CollegeListController, :edit
     put "/college_list/:access_key_short", Parent.CollegeListController, :upload
     post "/college_list/:access_key_short", Parent.CollegeListController, :create_or_update_answer
+
+    get "/ecvo_list/:access_key_short", Parent.ECVOListController, :edit
+    put "/ecvo_list/:access_key_short", Parent.ECVOListController, :upload
+    post "/ecvo_list/:access_key_short", Parent.ECVOListController, :create_or_update_answer
   end
 
   scope "/admin/api", TznWeb do

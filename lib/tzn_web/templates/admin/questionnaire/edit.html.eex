@@ -1,5 +1,9 @@
 <%
-public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+public_url = case @questionnaire.question_set.slug do
+    "college_list" -> Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+    "ec_vo_list" -> Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+    "scholarship_list" -> Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+end
 %>
 
 <h2>
@@ -17,12 +21,12 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
         <label class="control radio">
             <%= radio_button f, :state, "ready_for_specialist", class: "" %>
             <span class="control-indicator"></span>
-            <span class="control-label">All info is provided. Ready to start college research</span>
+            <span class="control-label">All info is provided. Ready to start research</span>
         </label>
         <label class="control radio">
             <%= radio_button f, :state, "specialist", class: "" %>
             <span class="control-indicator"></span>
-            <span class="control-label">College research in progress</span>
+            <span class="control-label">Research in progress</span>
         </label>
         <label class="control radio">
             <%= radio_button f, :state, "designer", class: "" %>
@@ -55,7 +59,7 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
             Attached Files
         </p>
 
-        
+
         <ul>
             <%= for file <- @questionnaire.files do %>
                 <li>
@@ -63,7 +67,7 @@ public_url = "https://collegerize.com" <> Routes.college_list_path(@conn, :edit,
                 </li>
             <% end %>
         </ul>
-    </div> 
+    </div>
 
     <%= for q <- @questions do %>
         <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>

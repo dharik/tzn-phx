@@ -103,6 +103,10 @@ defmodule Tzn.Questionnaire do
     get_question_set_by_slug("college_list")
   end
 
+  def ecvo_list_question_set do
+    get_question_set_by_slug("ec_vo_list")
+  end
+
   @doc """
   Lists question in set in order, using display_order on the join table
   """
@@ -302,8 +306,14 @@ defmodule Tzn.Questionnaire do
     mentee = questionnaire.mentee
     mentor = Tzn.Transizion.get_mentor(mentee)
 
+    subject = cond do
+      questionnaire.question_set_id == college_list_question_set().id -> "#{mentee.name}'s College List"
+      questionnaire.question_set_id == ecvo_list_question_set().id -> "#{mentee.name}'s Extracurricular/Volunteer Opportunity List"
+    end
+
     if mentee.parent1_email do
       Tzn.Emails.Questionnaire.welcome(
+        subject,
         email_body,
         mentee.name,
         mentee.parent1_email,
@@ -315,6 +325,7 @@ defmodule Tzn.Questionnaire do
 
     if mentee.parent2_email do
       Tzn.Emails.Questionnaire.welcome(
+        subject,
         email_body,
         mentee.name,
         mentee.parent2_email,
