@@ -27,6 +27,9 @@
           <%= if @current_mentor.ecvo_list_specialty do %>
             <li><%= link "EC/VO Lists", to: Routes.mentor_ecvo_list_path(@conn, :index) %></li>
           <% end %>
+          <%= if @current_mentor.scholarship_list_specialty do %>
+            <li><%= link "Scholarship Lists", to: Routes.mentor_scholarship_list_path(@conn, :index) %></li>
+          <% end %>
           <li><%= link "Help", to: Routes.mentor_help_path(@conn, :show) %></li>
           <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
         </ul>

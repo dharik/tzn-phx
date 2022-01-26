@@ -154,4 +154,31 @@
   %>
   <% end %>
 </div>
+<div class="space-m"></div>
+<p class="lead">Scholarship Opportunity List</p>
+<div class="border border-radius padding-s">
+  <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
+    <em>
+      <%=
+      case q.state do
+        "needs_info" -> "Needs info from you or parent(s)."
+        "ready_for_specialist" -> "Submitted to specialist mentor to begin research."
+        "specialist" -> "Specialist mentor is creating the Scholarship opportunity list."
+        "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
+        "complete" -> "Scholarship opportunity research is done and you should have received a document from the specialist mentee."
+        _ -> "Unknown"
+      end
+    %>
+    </em>
+    <div class="space-m"></div>
+    <%= link "Open #{@mentee.name}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
+  <% else %>
+    Not started
+    <div class="space-m"></div>
+    <%= link "Start #{@mentee.name}'s Scholarship Opportunity List Research Request",
+      to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
+      class: "button button-primary", method: :post
+  %>
+  <% end %>
+</div>
 <div class="space-l"></div>

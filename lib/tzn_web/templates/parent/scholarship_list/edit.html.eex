@@ -1,0 +1,58 @@
+<h2>
+  <%= @mentee.name %>'s Scholarship List
+</h2>
+<p class="margin-bottom-l">
+  Hi there! Please add your preferences and answers for your child's list of scholarship opportunities. Your responses will be auto-saved!
+</p>
+
+<div class="background-light-100 padding-xs border margin-bottom-xxl">
+    <p>
+        Feel free to attach any files that would help the research team.
+    </p>
+
+    <%= form_for @conn, Routes.scholarship_list_path(@conn, :upload, @access_key), [multipart: true, method: :put], fn f -> %>
+        <%= file_input f, :attachment %>
+        <%= submit "Upload File", class: "button button-secondary button-s"%>
+    <% end %>
+
+    <ul>
+        <%= for file <- @files do %>
+            <li>
+                <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external"%>
+            </li>
+        <% end %>
+    </ul>
+</div>
+
+<%= for q <- @questions do %>
+  <% answer = answer_for_question(q, @answers) %>
+
+  <%= raw q.question %>
+  <table class="margin-bottom-xl">
+    <thead>
+      <tr>
+          <th>
+              Your Response
+          </th>
+          <th>
+              Mentor's Response
+          </th>
+      </tr>
+    </thead>
+      <tr>
+        <td width="55%">
+            <%= react_component("Components.ParentAnswerInput", %{
+                              question_id: q.id,
+                              id: @access_key,
+                              required: q.parent_answer_required,
+                              value: Map.get(answer, :from_parent)
+                          }) %>
+        </td>
+        <td width="45%">
+          <em class="color-grey-200"><%= answer.from_pod %></em>
+        </td>
+      </tr>
+  </table>
+<% end %>
+
+<div class="space-l"></div>

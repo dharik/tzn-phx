@@ -33,9 +33,16 @@
   <%= label f, :ecvo_list_specialty, class: "control switch" do %>
     <%= checkbox f, :ecvo_list_specialty %>
     <span class="control-indicator"></span>
-    <span class="control-label">Extracurricular/Volunteer Opportunity specialist?</span>
+    <span class="control-label">Extracurricular/Volunteer Opportunity list specialist?</span>
   <% end %>
   <%= error_tag f, :ecvo_list_specialty %>
+
+  <%= label f, :scholarship_list_specialty, class: "control switch" do %>
+    <%= checkbox f, :scholarship_list_specialty %>
+    <span class="control-indicator"></span>
+    <span class="control-label">Scholarship list specialist?</span>
+  <% end %>
+  <%= error_tag f, :scholarship_list_specialty %>
 
   <%= label f, :hourly_rate %>
   <%= number_input f, :hourly_rate, step: 0.01 %>

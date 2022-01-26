@@ -74,6 +74,7 @@ defmodule TznWeb.Router do
 
       resources "/college_lists", Mentor.CollegeListController, only: [:index, :edit, :update, :create]
       resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :edit, :update, :create]
+      resources "/scholarship_lists", Mentor.ScholarshipListController, only: [:index, :edit, :update, :create]
 
       get "/help", Mentor.HelpController, :show
     end
@@ -117,6 +118,10 @@ defmodule TznWeb.Router do
     get "/ecvo_list/:access_key_short", Parent.ECVOListController, :edit
     put "/ecvo_list/:access_key_short", Parent.ECVOListController, :upload
     post "/ecvo_list/:access_key_short", Parent.ECVOListController, :create_or_update_answer
+
+    get "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :edit
+    put "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :upload
+    post "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :create_or_update_answer
   end
 
   scope "/admin/api", TznWeb do

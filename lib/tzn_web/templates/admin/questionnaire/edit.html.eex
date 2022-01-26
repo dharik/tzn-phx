@@ -2,7 +2,7 @@
 public_url = case @questionnaire.question_set.slug do
     "college_list" -> Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
     "ec_vo_list" -> Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
-    "scholarship_list" -> Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
+    "scholarship_list" -> Routes.scholarship_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
 end
 %>
 
