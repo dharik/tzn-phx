@@ -9,12 +9,12 @@
     <p>
         Feel free to attach any files that would help the research team.
     </p>
-    
-    <%= form_for @conn, Routes.college_list_path(@conn, :upload, @access_key), [multipart: true, method: :put], fn f -> %>
+
+    <%= form_for @conn, Routes.questionnaire_path(@conn, :upload, @access_key), [multipart: true, method: :put], fn f -> %>
         <%= file_input f, :attachment %>
         <%= submit "Upload File", class: "button button-secondary button-s"%>
     <% end %>
-    
+
     <ul>
         <%= for file <- @files do %>
             <li>
@@ -22,7 +22,7 @@
             </li>
         <% end %>
     </ul>
-</div> 
+</div>
 
 <%= for q <- @questions do %>
   <% answer = answer_for_question(q, @answers) %>

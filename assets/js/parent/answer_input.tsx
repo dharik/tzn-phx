@@ -18,7 +18,7 @@ export default (props: Props) => {
   const save = useDebouncedCallback(() => {
     setSaveState('saving');
 
-    fetch('/college_list/' + props.id, {
+    fetch('/research_list/' + props.id, {
       method: 'POST',
       body: JSON.stringify({ question_id: props.question_id, response: value }),
       headers: {

@@ -111,17 +111,12 @@ defmodule TznWeb.Router do
 
   scope "/", TznWeb do
     pipe_through [:browser_anonymous]
+
     get "/college_list/:access_key_short", Parent.CollegeListController, :edit
-    put "/college_list/:access_key_short", Parent.CollegeListController, :upload
-    post "/college_list/:access_key_short", Parent.CollegeListController, :create_or_update_answer
-
     get "/ecvo_list/:access_key_short", Parent.ECVOListController, :edit
-    put "/ecvo_list/:access_key_short", Parent.ECVOListController, :upload
-    post "/ecvo_list/:access_key_short", Parent.ECVOListController, :create_or_update_answer
-
     get "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :edit
-    put "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :upload
-    post "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :create_or_update_answer
+    post "/research_list/:access_key_short", Parent.QuestionnaireController, :create_or_update_answer
+    put "/research_list/:access_key_short", Parent.QuestionnaireController, :upload
   end
 
   scope "/admin/api", TznWeb do
