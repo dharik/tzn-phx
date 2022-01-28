@@ -1,4 +1,4 @@
-<%= for mentee <- @mentees do %>
+<%= for mentee <- sort_by_grade(@mentees) do %>
   <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade |> humanize %><br />
 <% end %>
 <%= for events_by_month <- view_data(@events, @event_markings) do %>
@@ -22,12 +22,12 @@
       </div>
       <div class="padding-s background-primary-50 margin-horizontal-s" style="width: 33%">
         <%= if has_status(event, "in_progress") do %>
-          <%= render "in_progress_event.html", Map.put(assigns, :event, event) %> 
+          <%= render "in_progress_event.html", Map.put(assigns, :event, event) %>
         <% end %>
       </div>
       <div class="padding-s background-success-50" style="width: 33%">
         <%= if has_status(event, "complete") do %>
-          <%= render "complete_event.html", Map.put(assigns, :event, event) %> 
+          <%= render "complete_event.html", Map.put(assigns, :event, event) %>
         <% end %>
       </div>
     </div>

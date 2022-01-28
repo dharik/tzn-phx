@@ -4,13 +4,13 @@ defmodule TznWeb.Mentor.TimelineView do
   alias Tzn.Transizion.MentorTimelineEventMarking
   # Formats data more conveniently
   # events +
-  # markings 
+  # markings
   # ---------
-  # { 
+  # {
   #   ...event,
-  #   year_month_str, 
-  #   marking: marking | nil, 
-  #   status: "incomplete" | "in_progress" | "complete" 
+  #   year_month_str,
+  #   marking: marking | nil,
+  #   status: "incomplete" | "in_progress" | "complete"
   # }
   def view_data(events, markings) do
     events
@@ -68,5 +68,21 @@ defmodule TznWeb.Mentor.TimelineView do
       {:error, _} -> date
       _ -> "N/A"
     end
+  end
+
+  def sort_by_grade(mentees) do
+    Enum.sort_by(mentees, fn m ->
+      case m.grade do
+        "middle_school" -> 0
+        "rising_freshman" -> 1
+        "freshman" -> 2
+        "rising sophomore" -> 3
+        "sophomore" -> 4
+        "rising junior" -> 5
+        "junior" -> 6
+        "rising senior" -> 7
+        "senior" -> 8
+      end
+    end)
   end
 end
