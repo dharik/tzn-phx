@@ -76,7 +76,8 @@ defmodule Tzn.Transizion.Mentee do
 
   def to_lowercase(changeset, fieldname) do
     case fetch_change(changeset, fieldname) do
-      {:ok, value} -> put_change(changeset, fieldname, String.downcase(value))
+      {:ok, value} when is_binary(value) -> put_change(changeset, fieldname, String.downcase(value))
+      {:ok, value} when is_nil(value) -> changeset
       :error -> changeset
     end
   end
