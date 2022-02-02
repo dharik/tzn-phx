@@ -1,9 +1,11 @@
 <h2>
   <%= @mentee.name %>'s Extracurricular/Volunteer Opportunity List
 </h2>
-<p class="margin-bottom-l">
+<p >
   Hi there! Please add your preferences and answers for your child's list of extracurriculars. Your responses will be auto-saved!
 </p>
+<p class="margin-bottom-l">Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
+
 
 <div class="background-light-100 padding-xs border margin-bottom-xxl">
     <p>

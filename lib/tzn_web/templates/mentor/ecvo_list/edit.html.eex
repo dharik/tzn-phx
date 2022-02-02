@@ -58,6 +58,7 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
     but try to have the most accurate response the first time.
     Your responses will be auto-saved! 🙂
 <% end %>
+<p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
 <%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
     <%= form_for @conn, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), [method: :patch], fn f -> %>
         The specialist team has been notified and will review your answers.
@@ -96,6 +97,8 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
                 <p>
                     <%= public_url %>
                 </p>
+                <p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
+
                 <p>
                     Thanks,<br />
                     <%= @current_mentor.name %>
