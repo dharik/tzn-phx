@@ -18,6 +18,19 @@ defmodule TznWeb.Mentor.CollegeListView do
     end)
   end
 
+  def only_hidden(questionnaires) do
+    Enum.filter(questionnaires, fn q ->
+      q.state == "needs_info" || q.state == "complete"
+    end)
+  end
+
+  def only_shown(questionnaires) do
+    Enum.reject(questionnaires, fn q ->
+      q.state == "needs_info" || q.state == "complete"
+    end)
+  end
+
+
   def mentor_name(%Mentee{} = m) do
     if m.mentor do
       m.mentor.name

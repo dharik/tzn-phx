@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        <%= for q <- order_by_state(@lists) do %>
+        <%= for q <- @lists |> only_shown() |> order_by_state() do %>
             <tr>
                 <td><%= q.mentee.name %></td>
                 <td><%= mentor_name(q.mentee) %></td>
@@ -19,7 +19,7 @@
 
                     <%= if q.state == "ready_for_specialist" do %>
                         Ready for SST
-                        
+
                         <%= if parent_state(q) == :opened do %>
                             <small>
                                 <span class="color-success-300 padding-horizontal-xxs">
@@ -49,7 +49,7 @@
                             </small>
                         <% end %>
                     <% end  %>
-                   
+
                     <%= if q.state == "specialist" do %>
                         SST is working on it
                     <% end  %>
@@ -65,3 +65,11 @@
         <% end %>
     </tbody>
 </table>
+
+<div class="space-l"></div>
+<% hidden_count =  @lists |> only_hidden() |> Enum.count() %>
+<%= if hidden_count > 0 do %>
+    <span class="color-grey-100 font-size-s">
+        (<%= hidden_count %> hidden because they are complete or not ready for SST yet)
+    </span>
+<% end %>
