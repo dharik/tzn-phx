@@ -5,11 +5,12 @@
   <thead>
     <tr>
       <th>Name</th>
-      <th>Created</th>
       <th>Mentor</th>
+      <th>Parent(s)</th>
       <th>Grade</th>
       <th>Hours used/purchased</th>
       <th>Hours left</th>
+      <th>Hourly Rate</th>
     </tr>
   </thead>
   <tbody>
@@ -20,14 +21,14 @@
           <%= if mentee.archived do %>(archived)<% end %>
         </td>
         <td>
-          <%= mentee.inserted_at %>
-        </td>
-        <td>
           <%= if mentee.mentor do %>
             <%= mentee.mentor.name %>
           <% else %>
             <span class="color-error">No mentor</span>
           <% end %>
+        </td>
+        <td>
+          <%= Tzn.Transizion.Mentee.parent_names(mentee) %>
         </td>
         <td>
           <%= mentee.grade |> humanize %>
@@ -43,6 +44,11 @@
             <span class="color-error"><%= hours_left %></span>
           <% else %>
             <%= hours_left %>
+          <% end %>
+        </td>
+        <td>
+          <%= if mentee.mentor_rate do %>
+            <%= mentee.mentor_rate |> Decimal.round(1) %>
           <% end %>
         </td>
       </tr>
