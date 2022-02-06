@@ -11,14 +11,16 @@ defmodule TznWeb.Admin.MentorPaymentsController do
         "end_year" => end_year,
         "end_month" => end_month
       }) do
-    d = mentor_data(
-      start_year |> String.to_integer(),
-      start_month |> String.to_integer(),
-      end_year |> String.to_integer(),
-      end_month |> String.to_integer()
-    )
+    d =
+      mentor_data(
+        start_year |> String.to_integer(),
+        start_month |> String.to_integer(),
+        end_year |> String.to_integer(),
+        end_month |> String.to_integer()
+      )
 
-    sum = d |> Enum.map(fn m -> m.payment end) |> Enum.sum
+    sum = d |> Enum.map(fn m -> m.payment end) |> Enum.sum()
+
     render(conn, "index.html",
       mentors: d,
       sum_total: sum
@@ -57,6 +59,16 @@ defmodule TznWeb.Admin.MentorPaymentsController do
       %{
         name: mentor.name,
         id: mentor.id,
+        hours:
+          mentor.timesheet_entries
+          |> Enum.filter(fn tse ->
+            Timex.between?(tse.started_at, filter_start, filter_end, inclusive: true)
+          end)
+          |> Enum.map(fn tse ->
+            seconds = NaiveDateTime.diff(tse.ended_at, tse.started_at)
+            seconds / 3600.0
+          end)
+          |> Enum.sum(),
         payment:
           mentor.timesheet_entries
           |> Enum.filter(fn tse ->

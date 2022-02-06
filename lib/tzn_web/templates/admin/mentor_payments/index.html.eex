@@ -1,5 +1,10 @@
 <h1>Mentor Payments</h1>
 <table>
+    <tr>
+        <th>Mentor Name</th>
+        <th>Hours</th>
+        <th>Pay</th>
+    </tr>
 <% current_year = Timex.now().year %>
 <%= form_for @conn, Routes.admin_mentor_payments_path(@conn, :index), [method: :get], fn f -> %>
     Month/Year:
@@ -19,11 +24,13 @@
 <%= for m <- @mentors do %>
     <tr>
         <td><%= link m.name, to: Routes.admin_mentor_path(@conn, :show, m.id) %></td>
+        <td><%= m.hours |> Number.Conversion.to_decimal() |> Decimal.round(2) %></td>
         <td><%=  Number.Currency.number_to_currency(m.payment) %></td>
     </tr>
 <% end %>
     <tr class="background-light-200">
         <td><strong>Total</strong></td>
+        <td></td>
         <td><strong><%= Number.Currency.number_to_currency(@sum_total) %></strong></td>
     </tr>
 </table>
