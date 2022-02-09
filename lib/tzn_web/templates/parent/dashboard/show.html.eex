@@ -1,27 +1,29 @@
+<h1><%= @mentee.name %></h1>
 
-<div class="flex flex-wrap">
-    <div class="flex-1 flex align-items-center">
-        <h1><%= @mentee.name %></h1>
-    </div>
-    <div class="flex-1 flex justify-content-center">
-        <div class="flex-0-1 text-align-center box-shadow-m padding-l ">
-            <h3>Hours Mentored</h3>
-            <span class="font-size-xl"><%= @hours_used %></span>
-        </div>
-    </div>
-</div>
 
-<h2>Work log:</h2>
-<%= for {e, idx} <- Enum.with_index(@timesheet_entries) do %>
-    <div class="flex padding-s margin-vertical-s <%= if(rem(idx,2) == 0, do: "background-light-50", else: "background-white") %>">
-        <div class="margin-horizontal-m flex-0-1-auto">
-            <%= e.started_at |> format_date() %>
-        </div>
-        <div class="flex-0-1-auto margin-horizontal-m">
-            <%= Tzn.Util.diff_in_hours(e.ended_at, e.started_at) %> hours
-        </div>
-        <div class="flex flex-1-1-auto">
-            <%= raw e.notes %>
-        </div>
-    </div>
-<% end %>
+Hi <%= @mentee |> Tzn.Transizion.Mentee.parent_names() %>!
+
+<div class="space-m"></div>
+
+<b><%= @mentee.name %> needs your help to get the following items done:</b>
+<p>
+  <%= raw @mentee.parent_todo_notes %>
+</p>
+
+
+<div class="space-s"></div>
+
+
+Here is what <%= @mentee.name %> is working on with <%= @mentor.name %>:
+<p>
+  <%= raw @mentee.mentee_todo_notes %>
+</p>
+
+
+<div class="space-s"></div>
+
+
+Here is what <%= @mentor.name %> is working on between meetings:
+<p class="padding-left-s">
+  <%= raw @mentee.mentor_todo_notes %>
+</p>

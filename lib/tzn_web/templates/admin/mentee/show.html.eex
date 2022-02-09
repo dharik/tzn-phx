@@ -97,6 +97,17 @@
 
 <div class="space-m"></div>
 
+<p class="lead">Todos</p>
+<div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">
+  <p class="font-weight-bold">Mentor Todos:</p>
+  <div class=""><%= raw @mentee.mentor_todo_notes %></div>
+  <p class="font-weight-bold">Mentee Todos:</p>
+  <div class=""><%= raw @mentee.mentee_todo_notes %></div>
+  <p class="font-weight-bold">Parent Todos:</p>
+  <div class=""><%= raw @mentee.parent_todo_notes %></div>
+</div>
+
+<div class="space-m"></div>
 
 <p class="lead">Strategy Sessions</p>
 <div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">

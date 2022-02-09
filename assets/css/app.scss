@@ -87,3 +87,18 @@ $border-color: lightgray;
   //     1 90%;
   // }
 }
+
+.ql-toolbar {
+  background: #f9f9f9;
+}
+
+.ql-editor {
+  ul, ol, li {
+    padding-left: 1em !important;
+    margin-left: 0
+  }
+}
+
+.ql-container {
+  font-family: inherit !important;
+}

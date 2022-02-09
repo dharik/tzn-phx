@@ -253,6 +253,7 @@ defmodule Tzn.Questionnaire do
   end
 
   # TODO: Only if admin | mentor
+  # TODO: No duplicates, at least for now
   def create_questionnaire(attrs, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
 

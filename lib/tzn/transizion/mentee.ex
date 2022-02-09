@@ -9,6 +9,10 @@ defmodule Tzn.Transizion.Mentee do
 
     field :internal_note, :string
 
+    field :mentor_todo_notes, :string
+    field :parent_todo_notes, :string
+    field :mentee_todo_notes, :string
+
     field :parent1_email, :string
     field :parent1_name, :string
 
@@ -46,6 +50,9 @@ defmodule Tzn.Transizion.Mentee do
       :parent2_email,
       :parent2_name,
       :grade,
+      :mentor_todo_notes,
+      :parent_todo_notes,
+      :mentee_todo_notes
     ])
     |> to_lowercase(:parent1_email)
     |> to_lowercase(:parent2_email)

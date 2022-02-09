@@ -63,7 +63,7 @@ for (const element of document.getElementsByClassName('rte')) {
 
 for (const el of document.getElementsByClassName('rtem')) {
   ClassicEditor.create(el, {
-    toolbar: ['bold', 'italic', 'bulletedlist', 'numberedlist'],
+    toolbar: ['bold', 'italic', 'bulletedlist', 'numberedlist', 'link'],
   })
     .then((editor) => {
       // console.log( "created editor", editor );

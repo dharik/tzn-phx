@@ -62,6 +62,33 @@ defmodule TznWeb.Mentor.MenteeController do
     end
   end
 
+  def update(conn, %{"id" => id, "parent_todo_notes" => parent_todo_notes}) do
+    mentee = Transizion.get_mentee!(id)
+
+    case Transizion.update_mentee(mentee, %{"parent_todo_notes" => parent_todo_notes}) do
+      {:ok, mentee} -> json(conn, %{value: mentee.parent_todo_notes})
+      {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
+    end
+  end
+
+  def update(conn, %{"id" => id, "mentee_todo_notes" => mentee_todo_notes}) do
+    mentee = Transizion.get_mentee!(id)
+
+    case Transizion.update_mentee(mentee, %{"mentee_todo_notes" => mentee_todo_notes}) do
+      {:ok, mentee} -> json(conn, %{value: mentee.mentee_todo_notes})
+      {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
+    end
+  end
+
+  def update(conn, %{"id" => id, "mentor_todo_notes" => mentor_todo_notes}) do
+    mentee = Transizion.get_mentee!(id)
+
+    case Transizion.update_mentee(mentee, %{"mentor_todo_notes" => mentor_todo_notes}) do
+      {:ok, mentee} -> json(conn, %{value: mentee.mentor_todo_notes})
+      {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
+    end
+  end
+
   def delete(conn, %{"id" => id}) do
     mentee = Transizion.get_mentee!(id)
     {:ok, _mentee} = Transizion.delete_mentee(mentee)
