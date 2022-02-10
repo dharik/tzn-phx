@@ -17,7 +17,7 @@ defmodule TznWeb.Parent.WorklogController do
         Transizion.get_mentee!(mentee_id_from_session)
       else
         hd(mentees)
-      end |> Tzn.Questionnaire.load_questionnaires()
+      end
 
     mentor = Transizion.get_mentor(mentee)
     timesheet_entries = Transizion.list_timesheet_entries(mentee)
