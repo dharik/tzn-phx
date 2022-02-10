@@ -27,6 +27,7 @@
             <% end %>
           <% end %>
           <li><%= link "Dashboard", to: Routes.parent_dashboard_path(@conn, :show), class: "" %></li>
+          <li><%= link "Work Log", to: Routes.parent_worklog_path(@conn, :show), class: "" %></li>
           <li><%= link "Timeline", to: Routes.parent_timeline_path(@conn, :show), class: "" %></li>
           <li><%= link "Refer a Friend", to: Routes.parent_referral_path(@conn, :show), class: "" %></li>
         </ul>
