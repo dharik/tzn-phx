@@ -41,7 +41,7 @@
 </div>
 <div class="space-m"></div>
 <p class="lead">
-  My To-Do list for <%= @mentee.name %>
+  Private Notes for <%= @mentee.name %>
 </p>
 <small>This is an internal field and <%= @mentee.name %> will not see this.</small>
 <div class="border border-radius padding-s">

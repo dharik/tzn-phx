@@ -1,0 +1,48 @@
+<div
+  x-data="{saveState: ''}"
+  x-init="
+    quill = new Quill($refs.rte, {
+      theme: 'snow',
+      modules: {
+        toolbar: ['bold', 'italic', 'underline', 'strike', 'link', {'list': 'bullet'}, {'list': 'ordered'}]
+      },
+      placeholder: '<%= @placeholder %>'
+    });
+
+    quill.on('text-change', function () {
+      $dispatch('todo-notes-change');
+    });
+  "
+  x-on:todo-notes-change.debounce.1200ms="
+  $data.saveState = 'saving';
+
+  try {
+    result = await fetch('<%= @url %>', {
+      method: 'PATCH',
+      body: JSON.stringify({
+        <%= @field_name %>: $refs.rte.firstChild.innerHTML,
+        _csrf_token: '<%= Phoenix.Controller.get_csrf_token() %>'
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    });
+
+
+    if(result.ok) {
+      $data.saveState = 'success';
+    } else {
+      $data.saveState = 'fail'
+    }
+
+  } catch(e) {
+    console.error(e)
+    $data.saveState = 'fail';
+  }
+
+  ">
+  <div x-ref="rte"><%= raw @initial_html %></div>
+  <span class="form-message success" x-show="saveState === 'success'">✓ Saved</span>
+  <span class="form-message" x-show="saveState === 'saving'">Saving...</span>
+  <span class="form-message error" x-show="saveState === 'fail'">Unable to save</span>
+</div>

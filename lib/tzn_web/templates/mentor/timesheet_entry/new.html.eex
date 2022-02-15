@@ -1,6 +1,52 @@
 <h1>New Timesheet Entry</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :create)) %>
+<p>This information will be shown to parents to keep them updated on their student’s progress.</p>
+
+<%= if @mentee do %>
+    <div class="border-radius box-shadow-m padding-m">
+        <h2>1. To-Do Lists for <%= @mentee.name %>, Their Parents, and You!</h2>
+
+       What should <%= @mentee.name %> be working on?
+       <%= render TznWeb.Mentor.MenteeView,
+            "_autosaving_todo_notes.html",
+            url: Routes.mentor_mentee_path(@conn, :update, @mentee.id),
+            field_name: "mentee_todo_notes",
+            initial_html: @mentee.mentee_todo_notes,
+            placeholder: "Please use bullet points to create a to-do list. :)"
+        %>
+        <div class="space-l"></div>
+
+        What can their parent be helping them get done?
+        <%= render TznWeb.Mentor.MenteeView,
+            "_autosaving_todo_notes.html",
+            url: Routes.mentor_mentee_path(@conn, :update, @mentee.id),
+            field_name: "parent_todo_notes",
+            initial_html: @mentee.parent_todo_notes,
+            placeholder: "Please use bullet points to create a to-do list. :)"
+        %>
+
+        <div class="space-l"></div>
+
+        What will you be working on for <%= @mentee.name %> outside of meeting times?
+        <%= render TznWeb.Mentor.MenteeView,
+            "_autosaving_todo_notes.html",
+            url: Routes.mentor_mentee_path(@conn, :update, @mentee.id),
+            field_name: "mentor_todo_notes",
+            initial_html: @mentee.mentor_todo_notes,
+            placeholder: "Please use bullet points to create a to-do list. :)"
+        %>
+    </div>
+
+    <div class="space-l"></div>
+<% end %>
+
+<div class="border-radius box-shadow-m padding-m">
+    <h2>2. Enter Timesheet Information</h2>
+    <%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :create)) %>
+</div>
 
 <div class="space-m"></div>
+
 <%= link "Back to my timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %>
+
+<div class="space-m"></div>
