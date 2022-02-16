@@ -130,6 +130,7 @@ defmodule TznWeb.Router do
     pipe_through [:api, :mentor]
 
     post "/answers", Mentor.AnswerController, :create_or_update
+    get "/mentees/:id", Mentor.MenteeController, :show_json
   end
 
 

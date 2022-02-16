@@ -42,6 +42,25 @@ defmodule TznWeb.Mentor.MenteeController do
     render(conn, "show.html", mentee: mentee, changeset: changeset)
   end
 
+  def show_json(conn, %{"id" => id}) do
+    mentee =
+      Transizion.get_mentee!(id)
+      |> Repo.preload([
+        :mentor,
+        :timesheet_entries,
+        :hour_counts,
+        questionnaires: [:question_set],
+        strategy_sessions: [:mentor]
+      ])
+
+    json(conn, %{
+      parent_todo_notes: mentee.parent_todo_notes,
+      mentee_todo_notes: mentee.mentee_todo_notes,
+      mentor_todo_notes: mentee.mentor_todo_notes,
+      name: mentee.name
+    })
+  end
+
   def edit(conn, %{"id" => id}) do
     mentee = Transizion.get_mentee!(id)
     changeset = Transizion.change_mentee(mentee)

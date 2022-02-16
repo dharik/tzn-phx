@@ -1,40 +1,267 @@
-<%= form_for @changeset, @action, fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="color-error">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+<script>
+  document.addEventListener('alpine:init', () => {
+      Alpine.data('mentee_timesheet_form', () => ({
+        mentee_id: <%= if @mentee do @mentee.id else "null" end %>,
+        mentee_name: null,
+        mentee_notes_savestate: '',
+        parent_notes_savestate: '',
+        mentor_notes_savestate: '',
+        mentee_loadstate: 'loading',
+        async load_mentee() {
+          if(!this.mentee_id) {
+            return;
+          }
+
+          try {
+            this.mentee_loadstate = 'loading';
+
+            result = await fetch('/mentor/api/mentees/' + this.mentee_id, {
+              method: 'GET'
+            });
+
+
+            if(result.ok) {
+              const data = await result.json();
+
+              this.mentee_loadstate = 'success';
+
+              window.setTimeout(() => {
+                this.mentee_loadstate = '';
+              }, 1500)
+              this.mentee_name = data.name;
+              this.mentee_notes_savestate = '';
+              this.parent_notes_savestate = '';
+              this.mentor_notes_savestate = '';
+
+              this.$refs.mentor_notes.firstChild.innerHTML = data.mentor_todo_notes;
+              this.$refs.parent_notes.firstChild.innerHTML = data.parent_todo_notes;
+              this.$refs.mentee_notes.firstChild.innerHTML = data.mentee_todo_notes;
+            } else {
+              this.mentee_loadstate = 'fail'
+            }
+
+          } catch(e) {
+            this.mentee_loadstate = 'fail'
+            console.error(e)
+          }
+
+        },
+        init() {
+          quill = new Quill(this.$refs.mentee_notes, {
+            theme: 'snow',
+            modules: {
+              toolbar: ['bold', 'italic', 'underline', 'strike', 'link', {'list': 'bullet'}, {'list': 'ordered'}]
+            },
+            placeholder: 'Please use bullet points to create a to-do list. :)'
+          });
+
+          quill.on('text-change', () => {
+            this.$dispatch('mentee-notes-change');
+          });
+
+          quill = new Quill(this.$refs.mentor_notes, {
+            theme: 'snow',
+            modules: {
+              toolbar: ['bold', 'italic', 'underline', 'strike', 'link', {'list': 'bullet'}, {'list': 'ordered'}]
+            },
+            placeholder: 'Please use bullet points to create a to-do list. :)'
+          });
+
+          quill.on('text-change', () => {
+            this.$dispatch('mentor-notes-change');
+          });
+
+          quill = new Quill(this.$refs.parent_notes, {
+            theme: 'snow',
+            modules: {
+              toolbar: ['bold', 'italic', 'underline', 'strike', 'link', {'list': 'bullet'}, {'list': 'ordered'}]
+            },
+            placeholder: 'Please use bullet points to create a to-do list. :)'
+          });
+
+          quill.on('text-change', () => {
+            this.$dispatch('parent-notes-change');
+          });
+
+          this.load_mentee();
+
+          this.$watch('mentee_id', () => this.load_mentee());
+        },
+        async save_mentee_notes() {
+          if(this.mentee_loadstate !== '') {
+            return;
+          }
+
+          this.mentee_notes_savestate = 'saving';
+
+          try {
+            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+              method: 'PATCH',
+              body: JSON.stringify({
+                mentee_todo_notes: this.$refs.mentee_notes.firstChild.innerHTML,
+                _csrf_token: '<%= Phoenix.Controller.get_csrf_token() %>'
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+
+            if(result.ok) {
+              this.mentee_notes_savestate = 'success';
+            } else {
+              this.mentee_notes_savestate = 'fail'
+            }
+          } catch(e) {
+            console.error(e)
+            this.mentee_notes_savestate = 'fail';
+          }
+        },
+        async save_mentor_notes() {
+          if(this.mentee_loadstate !== '') {
+            return;
+          }
+
+          this.mentor_notes_savestate = 'saving';
+
+          try {
+            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+              method: 'PATCH',
+              body: JSON.stringify({
+                mentor_todo_notes: this.$refs.mentor_notes.firstChild.innerHTML,
+                _csrf_token: '<%= Phoenix.Controller.get_csrf_token() %>'
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+
+            if(result.ok) {
+              this.mentor_notes_savestate = 'success';
+            } else {
+              this.mentor_notes_savestate = 'fail'
+            }
+          } catch(e) {
+            console.error(e)
+            this.mentor_notes_savestate = 'fail';
+          }
+        },
+        async save_parent_notes() {
+          if(this.mentee_loadstate !== '') {
+            return;
+          }
+
+          this.parent_notes_savestate = 'saving';
+
+          try {
+            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+              method: 'PATCH',
+              body: JSON.stringify({
+                parent_todo_notes: this.$refs.parent_notes.firstChild.innerHTML,
+                _csrf_token: '<%= Phoenix.Controller.get_csrf_token() %>'
+              }),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            });
+
+
+            if(result.ok) {
+              this.parent_notes_savestate = 'success';
+            } else {
+              this.parent_notes_savestate = 'fail'
+            }
+          } catch(e) {
+            console.error(e)
+            this.parent_notes_savestate = 'fail';
+          }
+        }
+      }))
+  });
+</script>
+<div
+  x-data="mentee_timesheet_form"
+  @mentee-notes-change.debounce.1200ms="save_mentee_notes"
+  @mentor-notes-change.debounce.1200ms="save_mentor_notes"
+  @parent-notes-change.debounce.1200ms="save_parent_notes"
+>
+
+
+<div class="border-radius box-shadow-m padding-m" x-show="mentee_id && (mentee_loadstate === 'success' || mentee_loadstate === '')"
+  x-transition
+  x-transition:enter.duration.800ms
+  x-transition:leave.duration.800ms>
+  <h2>1. To-Do Lists for <span x-text="mentee_name"></span>, Their Parents, and You!</h2>
+
+  What should <span x-text="mentee_name"></span> be working on?
+  <div x-ref="mentee_notes"></div>
+  <span class="form-message success" x-show="mentee_notes_savestate === 'success'">✓ Saved</span>
+  <span class="form-message" x-show="mentee_notes_savestate === 'saving'">Saving...</span>
+  <span class="form-message error" x-show="mentee_notes_savestate === 'fail'">Unable to save</span>
+
+  <div class="space-l"></div>
+
+  What can their parent be helping them get done?
+  <div x-ref="parent_notes"></div>
+  <span class="form-message success" x-show="parent_notes_savestate === 'success'">✓ Saved</span>
+  <span class="form-message" x-show="parent_notes_savestate === 'saving'">Saving...</span>
+  <span class="form-message error" x-show="parent_notes_savestate === 'fail'">Unable to save</span>
+
+  <div class="space-l"></div>
+
+  What will you be working on for <span x-text="mentee_name"></span> outside of meeting times?
+  <div x-ref="mentor_notes"></div>
+  <span class="form-message success" x-show="mentor_notes_savestate === 'success'">✓ Saved</span>
+  <span class="form-message" x-show="mentor_notes_savestate === 'saving'">Saving...</span>
+  <span class="form-message error" x-show="mentor_notes_savestate === 'fail'">Unable to save</span>
+</div>
+
+<div class="space-l" x-show="mentee_id"></div>
+
+<div class="border-radius box-shadow-m padding-m">
+  <h2 x-show="!mentee_id">Enter Timesheet Information</h2>
+  <h2 x-show="mentee_id">2. Enter Timesheet Information</h2>
+
+  <%= form_for @changeset, @action, fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="color-error">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+
+    <%= label f, :mentee_id %>
+    <%
+      mentee_options = [
+        {"No specific mentee - general / admin work", nil}
+        | Enum.map(@mentees, fn mentee ->  {mentee.name, mentee.id} end)
+      ]
+    %>
+
+    <%= select f, :mentee_id, mentee_options, "@change": "mentee_id = $event.target.value" %>
+    <%= error_tag f, :mentee_id %>
+
+    <%= label f, :started_at %>
+    <%= datetime_local_input f, :started_at %>
+    <%= error_tag f, :started_at %>
+
+    <%= label f, :ended_at %>
+    <%= datetime_local_input f, :ended_at %>
+    <%= error_tag f, :ended_at %>
+
+    <%= label f, :notes %>
+    <%= textarea f, :notes, class: "rte" %>
+    <%= error_tag f, :notes %>
+
+    <div class="space-m"></div>
+
+    <div>
+      <%= submit "Save", class: "button-primary" %>
     </div>
   <% end %>
+</div>
 
-  <%= label f, :mentee_id %>
-  <%
-    mentee_options = [
-      {"No specific mentee - general / admin work", nil}
-      | Enum.map(@mentees, fn mentee ->  {mentee.name, mentee.id} end)
-    ]
-  %>
-  <%= if @mentee do %>
-    <%= select f, :mentee_id, mentee_options, disabled: true %>
-    <%= hidden_input f, :mentee_id, value: @mentee.id %>
-  <% else %>
-    <%= select f, :mentee_id, mentee_options %>
-  <% end %>
-  <%= error_tag f, :mentee_id %>
+<div class="space-m"></div>
 
-  <%= label f, :started_at %>
-  <%= datetime_local_input f, :started_at %>
-  <%= error_tag f, :started_at %>
 
-  <%= label f, :ended_at %>
-  <%= datetime_local_input f, :ended_at %>
-  <%= error_tag f, :ended_at %>
-
-  <%= label f, :notes %>
-  <%= textarea f, :notes, class: "rte" %>
-  <%= error_tag f, :notes %>
-
-  <div class="space-m"></div>
-
-  <div>
-    <%= submit "Save", class: "button-primary" %>
-  </div>
-<% end %>
+</div>
