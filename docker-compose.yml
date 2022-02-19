@@ -1,6 +1,6 @@
 services:
   db:
-    image: postgres
+    image: postgres:12
     hostname: tzndb
     ports:
       - '5432:5432'

@@ -33,16 +33,16 @@ defmodule Tzn.MixProject do
   # Type `mix help deps` for examples and options.
   defp deps do
     [
-      {:phoenix, "~> 1.5.3"},
+      {:phoenix, "~> 1.6.0"},
       {:phoenix_ecto, "~> 4.1"},
       {:plugsnag, "~> 1.4.0"},
       {:ecto_sql, "~> 3.4"},
       {:postgrex, ">= 0.0.0"},
-      {:phoenix_html, "~> 2.11"},
+      {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
-      {:phoenix_live_dashboard, "~> 0.2.0"},
-      {:telemetry_metrics, "~> 0.4"},
-      {:telemetry_poller, "~> 0.4"},
+      {:phoenix_live_dashboard, "~> 0.5"},
+      {:telemetry_metrics, "~> 0.6"},
+      {:telemetry_poller, "~> 0.5"},
       {:timex, "~> 3.5"},
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
@@ -55,6 +55,7 @@ defmodule Tzn.MixProject do
       {:html_sanitize_ex, "~> 1.4"},
       {:shortuuid, "~> 2.0"},
       {:swoosh, "~> 1.5"},
+      {:phoenix_swoosh, "~> 1.0"},
       {:ex_aws, "~> 2.2.9"},
       {:ex_aws_s3, "~> 2.3.2"},
       {:sweet_xml, "~> 0.7.2"}
