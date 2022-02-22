@@ -1,0 +1,36 @@
+<p>
+    <%= if @parent_name do %>
+        Hi <%= @parent_name %>!
+    <% else %>
+        Hi!
+    <% end %>
+</p>
+
+<%= if @parent_todos do %>
+  <div>
+    <b><%= @mentee_name %> needs your help to get the following items done:</b>
+    <p>
+        <%= raw @parent_todos %>
+    </p>
+  </div>
+<% end %>
+
+
+<%= if @mentee_todos do %>
+  Here is what <%= @mentee_name %> is working on with <%= @mentor_name %>:
+  <p>
+        <%= raw @mentee_todos %>
+    </p>
+<% end %>
+
+
+<%= if @mentor_todos do %>
+  Here is what <%= @mentor_name %> is working on between meetings: 
+  <p>
+        <%= raw @mentor_todos %>
+    </p>
+<% end %>
+
+<p>
+  <img src="https://collegerize.com/images/tzn-logo.png" alt="Transizion Logo" />
+</p>
