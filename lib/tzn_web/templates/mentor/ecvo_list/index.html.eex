@@ -8,7 +8,7 @@
         </tr>
     </thead>
     <tbody>
-        <%= for q <- TznWeb.Mentor.CollegeListView.order_by_state(@lists) do %>
+        <%= for q <- @lists |> TznWeb.Mentor.CollegeListView.only_shown() |>  TznWeb.Mentor.CollegeListView.order_by_state() do %>
             <tr>
                 <td><%= q.mentee.name %></td>
                 <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee) %></td>
@@ -65,3 +65,11 @@
         <% end %>
     </tbody>
 </table>
+
+<div class="space-l"></div>
+<% hidden_count =  @lists |> TznWeb.Mentor.CollegeListView.only_hidden() |> Enum.count() %>
+<%= if hidden_count > 0 do %>
+    <span class="color-grey-100 font-size-s">
+        (<%= hidden_count %> hidden because they are complete or not ready for SST yet)
+    </span>
+<% end %>
