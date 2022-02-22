@@ -108,10 +108,10 @@
       <%=
       case q.state do
         "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to specialist mentor to begin research."
-        "specialist" -> "Specialist mentor is creating the college list."
+        "ready_for_specialist" -> "Submitted to research specialist to begin research."
+        "specialist" -> "Research specialist is creating the college list."
         "designer" -> "College list research is done. It's being compiled into a single document."
-        "complete" -> "College list research is done and you should have received a document from the specialist mentee."
+        "complete" -> "College list research is done and you should have received a document from the research specialist."
         _ -> "Unknown"
       end
     %>
@@ -135,10 +135,10 @@
       <%=
       case q.state do
         "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to specialist mentor to begin research."
-        "specialist" -> "Specialist mentor is creating the Extracurricular/Volunteer opportunity list."
+        "ready_for_specialist" -> "Submitted to research specialist to begin research."
+        "specialist" -> "Research specialist is creating the Extracurricular/Volunteer opportunity list."
         "designer" -> "Extracurricular/Volunteer opportunity research is done. It's being compiled into a single document."
-        "complete" -> "Extracurricular/Volunteer opportunity research is done and you should have received a document from the specialist mentee."
+        "complete" -> "Extracurricular/Volunteer opportunity research is done and you should have received a document from the research specialist."
         _ -> "Unknown"
       end
     %>
@@ -162,10 +162,10 @@
       <%=
       case q.state do
         "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to specialist mentor to begin research."
-        "specialist" -> "Specialist mentor is creating the Scholarship opportunity list."
+        "ready_for_specialist" -> "Submitted to research specialist to begin research."
+        "specialist" -> "Research specialist is creating the Scholarship opportunity list."
         "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
-        "complete" -> "Scholarship opportunity research is done and you should have received a document from the specialist mentee."
+        "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
         _ -> "Unknown"
       end
     %>
