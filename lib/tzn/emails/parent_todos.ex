@@ -32,6 +32,7 @@ defmodule Tzn.Emails.ParentTodos do
           mentee.parent1_email,
           mentee.name,
           mentor.name,
+          mentor.email,
           mentee.parent1_name,
           mentee.mentee_todo_notes,
           mentee.parent_todo_notes,
@@ -51,6 +52,7 @@ defmodule Tzn.Emails.ParentTodos do
           mentee.parent2_email,
           mentee.name,
           mentor.name,
+          mentor.email,
           mentee.parent2_name,
           mentee.mentee_todo_notes,
           mentee.parent_todo_notes,
@@ -67,6 +69,7 @@ defmodule Tzn.Emails.ParentTodos do
         to,
         mentee_name,
         mentor_name,
+        mentor_email,
         parent_name,
         mentee_todos,
         parent_todos,
@@ -75,6 +78,7 @@ defmodule Tzn.Emails.ParentTodos do
     new()
     |> from({"Transizion", "support@transizion.com"})
     |> to(to)
+    |> reply_to(mentor_email)
     |> bcc("support@transizion.com")
     |> subject("Transizion Update: #{mentee_name}")
     |> render_body("parent_todos.html", %{
@@ -83,6 +87,7 @@ defmodule Tzn.Emails.ParentTodos do
       mentor_todos: mentor_todos,
       mentee_name: mentee_name,
       mentor_name: mentor_name,
+      mentor_email: mentor_email,
       parent_name:
         if is_binary(parent_name) && String.length(parent_name) > 2 do
           parent_name
