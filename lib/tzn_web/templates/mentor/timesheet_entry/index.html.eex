@@ -1,7 +1,7 @@
 <h1>Timesheet Entries</h1>
 
 <div>
-  <%= link "New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: 'button button-primary' %>
+  <%= link "New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: "button button-primary" %>
 </div>
 
 

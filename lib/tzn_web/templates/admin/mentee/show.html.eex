@@ -91,7 +91,7 @@
 
   <div class="space-s"></div>
 
-  <%= link "Edit internal information", to: Routes.admin_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
+  <%= link "Edit internal information", to: Routes.admin_mentee_path(@conn, :edit, @mentee), class: "button button-outline button-s" %>
 </div>
 
 
@@ -166,7 +166,7 @@
 
 <p class="lead">Contract Purchases</p>
 <div class="border border-radius padding-s">
-  <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
+  <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
   <%= for contract_purchase <- @mentee.contract_purchases do %>
     <p>
       <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %>

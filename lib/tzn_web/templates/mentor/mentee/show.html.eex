@@ -37,7 +37,7 @@
     </div>
   </div>
   <div class="space-s"></div>
-  <%= link "Edit internal information", to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: 'button button-outline button-s' %>
+  <%= link "Edit internal information", to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: "button button-outline button-s" %>
 </div>
 <div class="space-m"></div>
 <p class="lead">
@@ -54,7 +54,7 @@
 <div class="space-m"></div>
 <p class="lead">Strategy Sessions</p>
 <div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">
-  <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
+  <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
   <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
     <p>
       <span class="lead-xs"><%= strategy_session.email_subject %></span>
@@ -84,7 +84,7 @@
 <div class="space-m"></div>
 <p class="lead">Timesheet Entries</p>
 <div class="overflow-y-scroll border border-radius padding-s" style="max-height: 40vh">
-  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, mentee_id: @mentee.id), class: 'button button-primary' %>
+  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
   <table>
     <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
       <tr>
