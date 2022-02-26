@@ -23,7 +23,8 @@
       {"Rising Junior", "rising junior"}, 
       {"Junior", "junior"},
       {"Rising Senior", "rising senior"}, 
-      {"Senior", "senior"}
+      {"Senior", "senior"},
+      {"College", "college"}
     ]
    %>
   <%= error_tag f, :grade %>

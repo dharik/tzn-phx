@@ -82,6 +82,7 @@ defmodule TznWeb.Mentor.TimelineView do
         "junior" -> 6
         "rising senior" -> 7
         "senior" -> 8
+        _ -> 100
       end
     end)
   end

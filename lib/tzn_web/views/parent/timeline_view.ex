@@ -12,6 +12,7 @@ defmodule TznWeb.Parent.TimelineView do
       "junior" -> "Junior"
       "rising senior" -> "Senior"
       "senior" -> "Senior"
+      "college" -> "Senior"
     end
   end
 
