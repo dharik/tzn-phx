@@ -76,10 +76,10 @@ defmodule Tzn.Emails.ParentTodos do
         mentor_todos
       ) do
     new()
-    |> from({"Transizion", "support@transizion.com"})
+    |> from({"Transizion", "mentors@transizion.com"})
     |> to(to)
     |> reply_to(mentor_email)
-    |> bcc("support@transizion.com")
+    |> bcc("mentors@transizion.com")
     |> subject("Transizion Update: #{mentee_name}")
     |> render_body("parent_todos.html", %{
       mentee_todos: mentee_todos,
