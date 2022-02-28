@@ -2,15 +2,16 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   use TznWeb, :controller
 
   alias Tzn.Transizion
+  alias Tzn.Timesheets
   alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Repo
 
   def index(conn, _params) do
     timesheet_entries =
-      Transizion.list_timesheet_entries(conn.assigns.current_mentor)
+      Timesheets.list_entries(conn.assigns.current_mentor)
       |> Repo.preload(mentee: [:mentor])
 
-    monthly_report = Transizion.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
+    monthly_report = Timesheets.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
     current_mentor = conn.assigns.current_mentor
 
     render(conn, "index.html",
@@ -31,7 +32,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
       end
 
     changeset =
-      Transizion.change_timesheet_entry(
+      Timesheets.change_timesheet_entry(
         %TimesheetEntry{
           started_at: default_started_at,
           ended_at: default_started_at |> Timex.shift(minutes: 30)
@@ -51,7 +52,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
       end
 
     # TODO: Merge params or inject mentor_id into form
-    case Transizion.create_timesheet_entry(
+    case Timesheets.create_timesheet_entry(
            timesheet_entry_params
            |> Map.put("mentor_id", conn.assigns.current_mentor.id)
          ) do
@@ -66,15 +67,15 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def edit(conn, %{"id" => id}) do
-    timesheet_entry = Transizion.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
-    changeset = Transizion.change_timesheet_entry(timesheet_entry)
+    timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
+    changeset = Timesheets.change_timesheet_entry(timesheet_entry)
     render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset, mentee: timesheet_entry.mentee)
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
-    timesheet_entry = Transizion.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
+    timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
 
-    case Transizion.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
+    case Timesheets.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, timesheet_entry} ->
         conn
         |> put_flash(:info, "Timesheet entry updated successfully.")
@@ -86,8 +87,8 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def delete(conn, %{"id" => id}) do
-    timesheet_entry = Transizion.get_timesheet_entry!(id)
-    {:ok, _timesheet_entry} = Transizion.delete_timesheet_entry(timesheet_entry)
+    timesheet_entry = Timesheets.get_timesheet_entry!(id)
+    {:ok, _timesheet_entry} = Timesheets.delete_timesheet_entry(timesheet_entry)
 
     conn
     |> put_flash(:info, "Timesheet entry deleted successfully.")

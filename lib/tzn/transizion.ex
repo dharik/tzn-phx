@@ -9,7 +9,6 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.Mentor
   alias Tzn.Transizion.MentorHourCounts
   alias Tzn.Transizion.Mentee
-  alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Transizion.StrategySession
   alias Tzn.Transizion.MentorTimelineEvent
   alias Tzn.Transizion.MentorTimelineEventMarking
@@ -266,116 +265,6 @@ defmodule Tzn.Transizion do
     StrategySession.changeset(strategy_session, attrs)
   end
 
-  def list_timesheet_entries do
-    Repo.all(TimesheetEntry)
-  end
-
-  def list_timesheet_entries(%Mentor{} = mentor) do
-    Repo.all(
-      from(e in TimesheetEntry, where: e.mentor_id == ^mentor.id, order_by: [desc: :started_at])
-    )
-  end
-
-  def list_timesheet_entries(%Mentee{} = mentee) do
-    Repo.all(
-      from(e in TimesheetEntry, where: e.mentee_id == ^mentee.id, order_by: [desc: :started_at])
-    )
-  end
-
-  @doc """
-  Gets a single timesheet_entry.
-
-  Raises `Ecto.NoResultsError` if the Timesheet entry does not exist.
-
-  ## Examples
-
-      iex> get_timesheet_entry!(123)
-      %TimesheetEntry{}
-
-      iex> get_timesheet_entry!(456)
-      ** (Ecto.NoResultsError)
-
-  """
-  def get_timesheet_entry!(id), do: Repo.get!(TimesheetEntry, id)
-
-  def create_timesheet_entry(attrs \\ %{})
-
-  def create_timesheet_entry(attrs = %{"hourly_rate" => _}) do
-    %TimesheetEntry{}
-    |> TimesheetEntry.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  def create_timesheet_entry(attrs = %{"mentor_id" => mentor_id, "mentee_id" => mentee_id}) do
-    mentor = get_mentor!(mentor_id)
-
-    mentee =
-      if !is_nil(mentee_id) && mentee_id != "" do
-        get_mentee(mentee_id)
-      else
-        nil
-      end
-
-    rate =
-      if mentee && mentee.mentor_rate do
-        mentee.mentor_rate
-      else
-        mentor.hourly_rate
-      end
-
-    %TimesheetEntry{}
-    |> Map.put(:hourly_rate, rate)
-    |> TimesheetEntry.changeset(attrs)
-    |> Repo.insert()
-  end
-
-  @doc """
-  Updates a timesheet_entry.
-
-  ## Examples
-
-      iex> update_timesheet_entry(timesheet_entry, %{field: new_value})
-      {:ok, %TimesheetEntry{}}
-
-      iex> update_timesheet_entry(timesheet_entry, %{field: bad_value})
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def update_timesheet_entry(%TimesheetEntry{} = timesheet_entry, attrs) do
-    timesheet_entry
-    |> TimesheetEntry.changeset(attrs)
-    |> Repo.update()
-  end
-
-  @doc """
-  Deletes a timesheet_entry.
-
-  ## Examples
-
-      iex> delete_timesheet_entry(timesheet_entry)
-      {:ok, %TimesheetEntry{}}
-
-      iex> delete_timesheet_entry(timesheet_entry)
-      {:error, %Ecto.Changeset{}}
-
-  """
-  def delete_timesheet_entry(%TimesheetEntry{} = timesheet_entry) do
-    Repo.delete(timesheet_entry)
-  end
-
-  @doc """
-  Returns an `%Ecto.Changeset{}` for tracking timesheet_entry changes.
-
-  ## Examples
-
-      iex> change_timesheet_entry(timesheet_entry)
-      %Ecto.Changeset{data: %TimesheetEntry{}}
-
-  """
-  def change_timesheet_entry(%TimesheetEntry{} = timesheet_entry, attrs \\ %{}) do
-    TimesheetEntry.changeset(timesheet_entry, attrs)
-  end
-
   def list_mentor_timeline_events do
     MentorTimelineEvent |> order_by(asc: :date, desc: :is_hard_deadline) |> Repo.all()
   end
@@ -441,9 +330,6 @@ defmodule Tzn.Transizion do
     Repo.one(from(m in Mentor, where: m.user_id == ^user_id))
   end
 
-  def mentor_timesheet_aggregate(mentor_id) do
-    Repo.all(from(h in MentorHourCounts, where: h.mentor_id == ^mentor_id))
-  end
 
   def change_contract_purchase(%ContractPurchase{} = contract_purchase, attrs \\ %{}) do
     ContractPurchase.changeset(contract_purchase, attrs)

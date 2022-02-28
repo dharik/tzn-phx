@@ -32,7 +32,7 @@ defmodule TznWeb.Parent.DashboardController do
       end
 
     mentor = Transizion.get_mentor(mentee)
-    timesheet_entries = Transizion.list_timesheet_entries(mentee)
+    timesheet_entries = Tzn.Timesheets.list_entries(mentee)
     hour_counts = Transizion.get_hour_counts(mentee)
     hours_used = hour_counts.hours_used |> Decimal.round(1)
 
