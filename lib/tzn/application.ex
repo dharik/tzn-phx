@@ -15,7 +15,8 @@ defmodule Tzn.Application do
       {Phoenix.PubSub, name: Tzn.PubSub},
       # Start the Endpoint (http/https)
       TznWeb.Endpoint,
-      Tzn.Scheduler
+      Tzn.Scheduler,
+      {Pow.Postgres.Store.AutoDeleteExpired, [interval: :timer.hours(1)]},
       # Start a worker by calling: Tzn.Worker.start_link(arg)
       # {Tzn.Worker, arg}
     ]

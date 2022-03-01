@@ -26,6 +26,9 @@ config :logger, :console,
 # Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
+config :pow, Pow.Postgres.Store,
+  repo: Tzn.Repo
+
 config :tzn, :pow,
   user: Tzn.Users.User,
   repo: Tzn.Repo,
@@ -33,7 +36,8 @@ config :tzn, :pow,
   controller_callbacks: Pow.Extension.Phoenix.ControllerCallbacks,
   web_module: TznWeb,
   mailer_backend: Tzn.PowMailer,
-  web_mailer_module: TznWeb
+  web_mailer_module: TznWeb,
+  cache_store_backend: Pow.Postgres.Store
 
 
 config :tzn, Tzn.Scheduler,
