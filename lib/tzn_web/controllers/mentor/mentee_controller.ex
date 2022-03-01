@@ -70,7 +70,7 @@ defmodule TznWeb.Mentor.MenteeController do
   def update(conn, %{"id" => id, "mentee" => mentee_params}) do
     mentee = Transizion.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, mentee_params) do
+    case Transizion.update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
       {:ok, mentee} ->
         conn
         |> put_flash(:info, "Mentee updated successfully.")
@@ -84,7 +84,7 @@ defmodule TznWeb.Mentor.MenteeController do
   def update(conn, %{"id" => id, "parent_todo_notes" => parent_todo_notes}) do
     mentee = Transizion.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, %{"parent_todo_notes" => parent_todo_notes}) do
+    case Transizion.update_mentee(mentee, %{"parent_todo_notes" => parent_todo_notes}, conn.assigns[:current_user]) do
       {:ok, mentee} -> json(conn, %{value: mentee.parent_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end
@@ -92,8 +92,7 @@ defmodule TznWeb.Mentor.MenteeController do
 
   def update(conn, %{"id" => id, "mentee_todo_notes" => mentee_todo_notes}) do
     mentee = Transizion.get_mentee!(id)
-
-    case Transizion.update_mentee(mentee, %{"mentee_todo_notes" => mentee_todo_notes}) do
+    case Transizion.update_mentee(mentee, %{"mentee_todo_notes" => mentee_todo_notes}, conn.assigns[:current_user]) do
       {:ok, mentee} -> json(conn, %{value: mentee.mentee_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end
@@ -102,7 +101,7 @@ defmodule TznWeb.Mentor.MenteeController do
   def update(conn, %{"id" => id, "mentor_todo_notes" => mentor_todo_notes}) do
     mentee = Transizion.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, %{"mentor_todo_notes" => mentor_todo_notes}) do
+    case Transizion.update_mentee(mentee, %{"mentor_todo_notes" => mentor_todo_notes}, conn.assigns[:current_user]) do
       {:ok, mentee} -> json(conn, %{value: mentee.mentor_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end

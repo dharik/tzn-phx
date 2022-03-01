@@ -64,7 +64,7 @@ defmodule TznWeb.Admin.MenteeController do
   def update(conn, %{"id" => id, "mentee" => mentee_params}) do
     mentee = Transizion.get_mentee!(id)
 
-    case Transizion.admin_update_mentee(mentee, mentee_params) do
+    case Transizion.admin_update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
       {:ok, mentee} ->
         conn
         |> put_flash(:info, "Mentee updated successfully.")

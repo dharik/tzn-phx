@@ -14,6 +14,7 @@ defmodule Tzn.Transizion do
   alias Tzn.Transizion.MentorTimelineEventMarking
   alias Tzn.Transizion.ContractPurchase
   alias Tzn.Users.User
+  alias Tzn.Transizion.MenteeChanges
 
   require IEx
 
@@ -28,8 +29,8 @@ defmodule Tzn.Transizion do
     u |> Ecto.assoc(:mentor_profile) |> Repo.one()
   end
 
-   # TODO: Handle already loaded association
-   def get_mentor(%Mentee{} = mentee) do
+  # TODO: Handle already loaded association
+  def get_mentor(%Mentee{} = mentee) do
     Ecto.assoc(mentee, :mentor) |> Repo.one()
   end
 
@@ -149,12 +150,6 @@ defmodule Tzn.Transizion do
     |> Repo.insert()
   end
 
-  def update_mentee(%Mentee{} = mentee, attrs) do
-    mentee
-    |> Mentee.changeset(attrs)
-    |> Repo.update()
-  end
-
   def admin_change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
     Mentee.admin_changeset(mentee, attrs)
   end
@@ -165,10 +160,39 @@ defmodule Tzn.Transizion do
     |> Repo.insert()
   end
 
-  def admin_update_mentee(%Mentee{} = mentee, attrs) do
-    mentee
-    |> Mentee.admin_changeset(attrs)
-    |> Repo.update()
+  def update_mentee(%Mentee{} = mentee, attrs, %User{} = user) do
+    mentee_changeset = Mentee.changeset(mentee, attrs)
+
+    update_and_track_mentee_changes(mentee, mentee_changeset, user)
+  end
+
+  def admin_update_mentee(%Mentee{} = mentee, attrs, %User{} = user) do
+    mentee_changeset = Mentee.admin_changeset(mentee, attrs)
+
+    update_and_track_mentee_changes(mentee, mentee_changeset, user)
+  end
+
+  def update_and_track_mentee_changes(%Mentee{} = mentee, changeset, %User{} = user) do
+    Repo.transaction(fn ->
+      mentee_result = changeset |> Repo.update!()
+
+      Map.to_list(changeset.changes)
+      |> Enum.filter(fn {field, _} ->
+        field in [:parent_todo_notes, :mentor_todo_notes, :mentee_todo_notes, :grade, :mentor_rate]
+      end)
+      |> Enum.each(fn {field, value} ->
+        Repo.insert!(
+          MenteeChanges.changeset(%MenteeChanges{}, %{
+            mentee_id: mentee.id,
+            changed_by: user.id,
+            field: Atom.to_string(field),
+            new_value: String.Chars.to_string(value)
+          })
+        )
+      end)
+
+      mentee_result
+    end)
   end
 
   @doc """
@@ -324,12 +348,9 @@ defmodule Tzn.Transizion do
     Repo.get!(MentorTimelineEventMarking, id)
   end
 
-
-
   def get_mentor_profile(user_id) do
     Repo.one(from(m in Mentor, where: m.user_id == ^user_id))
   end
-
 
   def change_contract_purchase(%ContractPurchase{} = contract_purchase, attrs \\ %{}) do
     ContractPurchase.changeset(contract_purchase, attrs)
