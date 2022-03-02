@@ -52,36 +52,6 @@
 <% end %>
 </div>
 <div class="space-m"></div>
-<p class="lead">Strategy Sessions</p>
-<div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">
-  <%= link "Create Strategy Session", to: Routes.mentor_strategy_session_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
-  <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
-    <p>
-      <span class="lead-xs"><%= strategy_session.email_subject %></span>
-      <br />
-      <span class="color-grey"><%= raw strategy_session.notes %></span>
-      <br />
-      <small class="color-grey">
-        <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
-        <%= cond do %>
-          <% strategy_session.published && strategy_session.emailed -> %>
-          <span class="color-info">email sent</span>
-          <% strategy_session.published -> %>
-          <span class="color-info">email queued to send</span>
-          <% true -> %>
-          <span></span>
-        <% end %>
-      </small>
-      <br />
-      <%= unless strategy_session.published do %>
-        <%= link "Edit",
-            to: Routes.mentor_strategy_session_path(@conn, :edit, strategy_session),
-            class: "button button-border button-xs" %>
-      <% end %>
-    </p>
-  <% end %>
-</div>
-<div class="space-m"></div>
 <p class="lead">Timesheet Entries</p>
 <div class="overflow-y-scroll border border-radius padding-s" style="max-height: 40vh">
   <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
