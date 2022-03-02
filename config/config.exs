@@ -43,6 +43,7 @@ config :tzn, :pow,
 config :tzn, Tzn.Scheduler,
 jobs: [
   {"0 */3 * * *",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
+  {"0 */1 * * *",         {Tzn.Jobs.CleanupMenteeChanges, :run, []}},
   {"0 0 */2 * *",         {Tzn.Jobs.BiweeklyUpdateEmails, :run, []}}
 ]
 
