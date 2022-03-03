@@ -44,7 +44,8 @@ config :tzn, Tzn.Scheduler,
 jobs: [
   {"0 */3 * * *",         {Tzn.Jobs.SendStrategySessionEmails, :run, []}},
   {"0 */1 * * *",         {Tzn.Jobs.CleanupMenteeChanges, :run, []}},
-  {"0 0 */2 * *",         {Tzn.Jobs.BiweeklyUpdateEmails, :run, []}}
+  {"0 0 */1 * *",         {Tzn.Jobs.ParentUpdateEmails, :todo_list_changed, []}},
+  {"0 0 */15 * *",         {Tzn.Jobs.ParentUpdateEmails, :biweekly_minimum, []}}
 ]
 
 config :bugsnag,

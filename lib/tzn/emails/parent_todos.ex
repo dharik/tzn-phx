@@ -21,7 +21,7 @@ defmodule Tzn.Emails.ParentTodos do
 
   def maybe_send_for_mentee(%Tzn.Transizion.Mentee{} = mentee) do
     with mentee <- Tzn.Repo.reload(mentee),
-        mentor <- Tzn.Transizion.get_mentor(mentee),
+         mentor <- Tzn.Transizion.get_mentor(mentee),
          true <- has_notes(mentee) do
       if should_send_to_parent(mentee.parent1_email, mentee.id) do
         Logger.info(
@@ -79,6 +79,7 @@ defmodule Tzn.Emails.ParentTodos do
     |> from({"Transizion", "mentors@transizion.com"})
     |> to(to)
     |> reply_to(mentor_email)
+    |> bcc(mentor_email)
     |> bcc("mentors@transizion.com")
     |> subject("Transizion Update: #{mentee_name}")
     |> render_body("parent_todos.html", %{
@@ -113,11 +114,14 @@ defmodule Tzn.Emails.ParentTodos do
     false
   end
 
+  @doc """
+  Never send the same type of email more than once per 3 days
+  """
   def should_send_to_parent(parent_email, mentee_id) when is_binary(parent_email) do
     last_email_at = Tzn.Emails.last_email_sent_at(parent_email, email_key(mentee_id))
 
     String.length(parent_email) > 3 &&
-      (!last_email_at || (last_email_at && !Tzn.Util.within_n_days_ago(last_email_at, 14)))
+      (!last_email_at || !Tzn.Util.within_n_days_ago(last_email_at, 3))
   end
 
   def has_notes(mentee = %Mentee{}) do
