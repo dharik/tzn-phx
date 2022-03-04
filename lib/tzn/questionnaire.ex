@@ -218,6 +218,10 @@ defmodule Tzn.Questionnaire do
     |> Repo.preload([:question_set, mentee: [:mentor]])
   end
 
+  def list_questionnaires(%Mentee{} = mentee) do
+    mentee |> Ecto.assoc(:questionnaires) |> Repo.all()
+  end
+
   @doc """
   This will modify the questionnaire
   """
@@ -311,11 +315,17 @@ defmodule Tzn.Questionnaire do
     mentee = questionnaire.mentee
     mentor = Tzn.Transizion.get_mentor(mentee)
 
-    subject = cond do
-      questionnaire.question_set_id == college_list_question_set().id -> "#{mentee.name}'s College List"
-      questionnaire.question_set_id == ecvo_list_question_set().id -> "#{mentee.name}'s Extracurricular/Volunteer Opportunity List"
-      questionnaire.question_set_id == scholarship_list_question_set().id -> "#{mentee.name}'s Scholarship List"
-    end
+    subject =
+      cond do
+        questionnaire.question_set_id == college_list_question_set().id ->
+          "#{mentee.name}'s College List"
+
+        questionnaire.question_set_id == ecvo_list_question_set().id ->
+          "#{mentee.name}'s Extracurricular/Volunteer Opportunity List"
+
+        questionnaire.question_set_id == scholarship_list_question_set().id ->
+          "#{mentee.name}'s Scholarship List"
+      end
 
     if mentee.parent1_email do
       Tzn.Emails.Questionnaire.welcome(
@@ -351,7 +361,12 @@ defmodule Tzn.Questionnaire do
 
     object_path = Ecto.UUID.generate() <> "/" <> file.filename
 
-    Tzn.Files.upload!(object_path, File.read!(file.path), [questionnaire_id: q.id], file.content_type)
+    Tzn.Files.upload!(
+      object_path,
+      File.read!(file.path),
+      [questionnaire_id: q.id],
+      file.content_type
+    )
 
     Tzn.Files.MenteeFile.upload_changeset(%Tzn.Files.MenteeFile{}, %{
       object_path: object_path,
@@ -372,7 +387,12 @@ defmodule Tzn.Questionnaire do
   def attach_file(%Questionnaire{} = q, %Plug.Upload{} = file, nil) do
     object_path = Ecto.UUID.generate() <> "/" <> file.filename
 
-    Tzn.Files.upload!(object_path, File.read!(file.path), [questionnaire_id: q.id], file.content_type)
+    Tzn.Files.upload!(
+      object_path,
+      File.read!(file.path),
+      [questionnaire_id: q.id],
+      file.content_type
+    )
 
     Tzn.Files.MenteeFile.upload_changeset(%Tzn.Files.MenteeFile{}, %{
       object_path: object_path,
