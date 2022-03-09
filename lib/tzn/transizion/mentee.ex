@@ -6,6 +6,7 @@ defmodule Tzn.Transizion.Mentee do
     field :name, :string
     field :email, :string
     field :archived, :boolean
+    field :type, :string
 
     field :internal_note, :string
 
@@ -62,6 +63,7 @@ defmodule Tzn.Transizion.Mentee do
     mentee
     |> cast(attrs, [
       :name,
+      :type,
       :internal_note,
       :parent1_email,
       :parent1_name,
@@ -74,6 +76,7 @@ defmodule Tzn.Transizion.Mentee do
       :email,
       :archived
     ])
+    |> validate_inclusion(:type, ["college_mentoring", "tutoring", "capstone"])
     |> to_lowercase(:parent1_email)
     |> to_lowercase(:parent2_email)
     |> to_lowercase(:email)

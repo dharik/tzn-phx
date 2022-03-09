@@ -2,10 +2,6 @@ defmodule Tzn.Transizion.MenteeChanges do
   use Ecto.Schema
   import Ecto.Changeset
 
-  # TODO:
-  # Period script that cleans this table up
-  # We don't need more than one todo-list-change per hour
-  # We can tackle that when the table starts to get large
   schema "mentee_changes" do
     belongs_to :mentee, Tzn.Transizion.Mentee
     belongs_to :user, Tzn.Users.User, foreign_key: :changed_by

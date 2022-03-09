@@ -20,6 +20,10 @@
   <div class="flex flex-row">
     <div class="flex-1">
       <p>
+        Profile Type: <br />
+        <%= @mentee.type |> humanize() %>
+      </p>
+      <p>
         Grade: <br />
         <span class="color-grey"><%= (@mentee.grade |> humanize) || 'Not set' %></span>
       </p>
