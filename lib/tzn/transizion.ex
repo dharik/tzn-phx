@@ -373,4 +373,18 @@ defmodule Tzn.Transizion do
   def delete_contract_purchase(%ContractPurchase{} = contract_purchase) do
     Repo.delete(contract_purchase)
   end
+
+  def most_recent_todo_list_updated_at(nil) do
+    nil
+  end
+
+  def most_recent_todo_list_updated_at(%Mentee{} = mentee) do
+    Repo.one(
+      from(mc in MenteeChanges,
+          where: mc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
+          where: mc.mentee_id == ^mentee.id,
+          select: max(mc.updated_at)
+        )
+    )
+  end
 end

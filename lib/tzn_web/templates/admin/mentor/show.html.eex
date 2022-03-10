@@ -87,7 +87,9 @@
           </td>
           <td><%= timesheet_entry.started_at |> format_date %></td>
           <td><%= timesheet_entry.ended_at |> format_date %></td>
-          <td><%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes) %></td>
+          <td>
+            <%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes || Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name) %>
+          </td>
           <td>
             <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
             <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>

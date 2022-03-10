@@ -7,8 +7,18 @@ defmodule Tzn.Util do
     Timex.Format.DateTime.Formatters.Relative.format!(date, "{relative}")
   end
 
+  def within_n_days_ago(nil, _) do
+    false
+  end
   def within_n_days_ago(date, n) do
     date |> Timex.after?(Timex.shift(Timex.now(), days: -n))
+  end
+
+  def within_n_hours_ago(nil, _) do
+    false
+  end
+  def within_n_hours_ago(date, n) do
+    date |> Timex.after?(Timex.shift(Timex.now(), hours: -n))
   end
 
   def diff_in_hours(time1, time2, places \\ 2) do

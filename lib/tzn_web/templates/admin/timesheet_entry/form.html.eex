@@ -9,6 +9,17 @@
   <%= datetime_local_input f, :started_at %>
   <%= error_tag f, :started_at %>
 
+  <%= label f, :category %>
+  <%= select f,
+      :category,
+      Tzn.Timesheets.categories()
+        |> Enum.map(fn c -> {"#{c.mentee_type} > #{c.name}", c.slug} end) %>
+  <%= error_tag f, :category %>
+
+  <%= label f, :started_at %>
+  <%= datetime_local_input f, :started_at %>
+  <%= error_tag f, :started_at %>
+
   <%= label f, :ended_at %>
   <%= datetime_local_input f, :ended_at %>
   <%= error_tag f, :ended_at %>

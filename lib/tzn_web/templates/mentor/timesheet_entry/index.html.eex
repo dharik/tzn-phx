@@ -28,7 +28,15 @@
         </td>
         <td><%= timesheet_entry.started_at |> format_date %></td>
         <td><%= timesheet_entry.ended_at |> format_date %></td>
-        <td><%= raw timesheet_entry.notes %></td>
+        <td>
+          <%=
+            if timesheet_entry.notes do
+              raw timesheet_entry.notes
+            else
+              Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name
+            end
+          %>
+        </td>
         <td>
           <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
           <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>

@@ -7,7 +7,13 @@
             <%= Tzn.Util.diff_in_hours(e.ended_at, e.started_at) %> hours
         </div>
         <div class="flex flex-1-1-auto">
-            <%= raw e.notes %>
+         <%=
+            if e.notes do
+              raw e.notes
+            else
+              Tzn.Timesheets.get_category_by_slug(e.category).name
+            end
+          %>
         </div>
     </div>
 <% end %>

@@ -82,15 +82,145 @@ defmodule Tzn.Timesheets do
     )
   end
 
-  def list_entries(%User{}) do
-    # TODO
+  defmodule Category do
+    @derive Jason.Encoder
+    defstruct [
+      :name,
+      :mentee_type,
+      :slug,
+      requires_mentee: true,
+      max_minutes: nil,
+      max_minutes_message: ""
+    ]
   end
 
-  def timesheet_categories(%User{}) do
+  def categories(%Mentor{}, nil) do
+    categories() |> Enum.filter(&(&1.requires_mentee == false))
   end
 
-  def timesheet_categories(%Mentor{}) do
+  def categories(%Mentor{}, %Mentee{type: mentee_type}) do
+    categories() |> Enum.filter(&(&1.mentee_type == mentee_type))
   end
 
-  # Category = { name, description, requires_mentee, show_todo_list_update, requires_todo_list_update, etc }
+  def categories do
+    [
+      %Category{name: "Research Specialist", slug: "research_specialist", requires_mentee: false},
+      %Category{
+        name: "Research for Parent",
+        slug: "research_for_parent",
+        requires_mentee: false,
+        max_minutes: 15,
+        max_minutes_message:
+          "Research for parents should take 15 minutes or less. If you've used more, please log it under the specific mentee. Feel free to ask your CMT if you have questions!"
+      },
+      %Category{name: "Task from CMT or Jason", slug: "cmt_or_jason", requires_mentee: false},
+      %Category{
+        name: "Responding to CMT or SST on Slack",
+        slug: "cmt_or_sst_response",
+        requires_mentee: false
+      },
+      #
+      %Category{
+        name: "Scholarship Applications",
+        slug: "scholarship_applications",
+        mentee_type: "college_mentoring"
+      },
+      %Category{
+        name: "Client Communication: emailing parents or Slacking students",
+        slug: "client_communication",
+        mentee_type: "college_mentoring"
+      },
+      %Category{
+        name: "Essay Revision during a Meeting",
+        slug: "essay_revision",
+        mentee_type: "college_mentoring"
+      },
+      %Category{
+        name: "Course Selection",
+        slug: "course_selection",
+        mentee_type: "college_mentoring"
+      },
+      %Category{
+        name: "Extracurricular Applications, including resume creation",
+        slug: "extracurriculuar_applications",
+        mentee_type: "college_mentoring"
+      },
+      %Category{
+        name: "Missed Session",
+        slug: "missed_session",
+        mentee_type: "college_mentoring",
+        max_minutes: 30,
+        max_minutes_message:
+          "Missed sessions are capped at 30 minutes. As always, you can Slack your CMT if you have questions!"
+      },
+      %Category{name: "Asynchronous Work", slug: "async_work", mentee_type: "college_mentoring"},
+      %Category{
+        name: "College Applications",
+        slug: "college_applications",
+        mentee_type: "college_mentoring"
+      },
+      %Category{name: "Interview Prep", slug: "interview_prep", mentee_type: "college_mentoring"},
+      #
+      %Category{name: "Tutoring Meeting", slug: "tutoring_meeting", mentee_type: "tutoring"},
+      %Category{
+        name: "Asynchronous: Finding Resources",
+        slug: "async_finding_resources",
+        mentee_type: "tutoring"
+      },
+      %Category{
+        name: "Asynchronous: Meeting Preparation",
+        slug: "async_meeting_prep",
+        mentee_type: "tutoring"
+      },
+      %Category{
+        name: "Client Communication: emailing parents or Slacking students",
+        slug: "client_communication",
+        mentee_type: "tutoring"
+      },
+      %Category{
+        name: "Missed Session",
+        slug: "missed_session",
+        mentee_type: "tutoring",
+        max_minutes: 30,
+        max_minutes_message:
+          "Missed sessions are capped at 30 minutes. As always, you can Slack your CMT if you have questions!"
+      },
+      #
+      %Category{name: "Brainstorming", slug: "brainstorming", mentee_type: "capstone"},
+      %Category{name: "Developing the Project", slug: "project", mentee_type: "capstone"},
+      %Category{name: "Creating a Website", slug: "website", mentee_type: "capstone"},
+      %Category{
+        name: "Working on a Submission to a Conference or Journal",
+        slug: "conference_journal_submission",
+        mentee_type: "capstone"
+      },
+      %Category{name: "Wrap-Up", mentee_type: "capstone"},
+      %Category{
+        name: "Client Communication: emailing parents or Slacking students",
+        slug: "client_communication",
+        mentee_type: "capstone"
+      },
+      %Category{
+        name: "Missed Session",
+        slug: "missed_session",
+        mentee_type: "capstone",
+        max_minutes: 30,
+        max_minutes_message:
+          "Missed sessions are capped at 30 minutes. As always, you can Slack your CMT if you have questions!"
+      }
+    ]
+  end
+
+  @spec get_category_by_slug(String.t()) :: Category
+  def get_category_by_slug("uncategorized") do
+    %Category{
+      name: "Uncategorized",
+      slug: "uncategorized",
+      requires_mentee: false
+    }
+  end
+
+  def get_category_by_slug(slug) when is_binary(slug) do
+    categories() |> Enum.find(&(&1.slug == slug))
+  end
 end

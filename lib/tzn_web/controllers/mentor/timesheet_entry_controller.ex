@@ -40,7 +40,11 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         params
       )
 
-    render(conn, "new.html", changeset: changeset, mentee: mentee)
+    render(conn, "new.html",
+      changeset: changeset,
+      mentee: mentee,
+      last_todo_updated_at: Tzn.Transizion.most_recent_todo_list_updated_at(mentee)
+    )
   end
 
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
@@ -51,38 +55,54 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         nil
       end
 
-    # TODO: Merge params or inject mentor_id into form
     case Timesheets.create_timesheet_entry(
            timesheet_entry_params
            |> Map.put("mentor_id", conn.assigns.current_mentor.id)
          ) do
-      {:ok, timesheet_entry} ->
+      {:ok, _timesheet_entry} ->
         conn
         |> put_flash(:info, "Timesheet entry created successfully.")
-        |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :edit, timesheet_entry))
+        |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset, mentee: mentee)
+        render(conn, "new.html",
+          changeset: changeset,
+          mentee: mentee,
+          last_todo_updated_at: Tzn.Transizion.most_recent_todo_list_updated_at(mentee)
+        )
     end
   end
 
   def edit(conn, %{"id" => id}) do
     timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
+    mentee = timesheet_entry.mentee
     changeset = Timesheets.change_timesheet_entry(timesheet_entry)
-    render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset, mentee: timesheet_entry.mentee)
+
+    render(conn, "edit.html",
+      timesheet_entry: timesheet_entry,
+      changeset: changeset,
+      mentee: mentee,
+      last_todo_updated_at: Tzn.Transizion.most_recent_todo_list_updated_at(mentee)
+    )
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
     timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
+    mentee = timesheet_entry.mentee
 
     case Timesheets.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, timesheet_entry} ->
         conn
         |> put_flash(:info, "Timesheet entry updated successfully.")
-        |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :edit, timesheet_entry))
+        |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset, mentee: timesheet_entry.mentee)
+        render(conn, "edit.html",
+          timesheet_entry: timesheet_entry,
+          changeset: changeset,
+          mentee: mentee,
+          last_todo_updated_at: Tzn.Transizion.most_recent_todo_list_updated_at(mentee)
+        )
     end
   end
 
