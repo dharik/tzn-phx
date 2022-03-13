@@ -9,30 +9,37 @@
     <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet">
   </head>
   <body>
-    <header class="container flex padding-m align-items-center">
-      <div class="flex-0">
-        <a href="<%= Routes.admin_mentor_path(@conn, :index) %>">
-          <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300"/>
-        </a>
-      </div>
-      <nav role="navigation" class="nav-inline flex-1 text-align-right">
-        <ul>
-          <li><%= link "Users", to: Routes.admin_user_path(@conn, :index) %></li>
-          <li><%= link "Mentees", to: Routes.admin_mentee_path(@conn, :index) %></li>
-          <li><%= link "Mentors", to: Routes.admin_mentor_path(@conn, :index) %></li>
-          <li><%= link "Mentor Timeline", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
-          <li><%= link "Matching Algorithm", to: Routes.admin_matching_algorithm_path(@conn, :show) %></li>
-          <li><%= link "Questionnaires", to: Routes.admin_question_path(@conn, :index) %></li>
-          <li><%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %></li>
-        </ul>
+    <div class="parent_layout">
+      <nav role="navigation" class="background-light-100">
+        <div class="flex flex-column align-items-center padding-vertical-xl background-light-100">
+          <a href="<%= Routes.entry_path(@conn, :launch_app) %>">
+            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
+          </a>
+          <div class="space-l"></div>
+          <div class="space-l"></div>
+          <div class="space-l"></div>
+          <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_user_path(@conn, :index), "Users", "people", @conn.request_path =~ "users") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentee_path(@conn, :index), "Mentees", "school", @conn.request_path =~ "mentees") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_path(@conn, :index), "Mentors", "work_outline", @conn.request_path =~ "mentors" || @conn.request_path =~ ~r/admin$/) %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_timeline_event_path(@conn, :index), "Mentor Timeline", "view_timeline", @conn.request_path =~ "timeline") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questionnaire") %>
+
+          </div>
+          <div class="space-xl"></div>
+          <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %>
+        </div>
       </nav>
-    </header>
-    <main role="main" class="container">
-      <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= @inner_content %>
-    </main>
+      <main role="main" class="padding-m">
+        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
+        <%= @inner_content %>
+      </main>
+    </div>
   </body>
 </html>

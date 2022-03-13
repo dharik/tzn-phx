@@ -29,7 +29,7 @@
     grid-area: nav;
 
     >div {
-      height: 100vh
+      height: 100vh;
     }
 
     a,
@@ -131,4 +131,13 @@ $border-color: lightgray;
 
 .width-80 {
   width: 80%;
+}
+
+
+.matching-result {
+  display: grid;
+  grid-template-rows: max-content max-content 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, auto));
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
 }
