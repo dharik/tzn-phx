@@ -6,10 +6,10 @@ defmodule TznWeb.LayoutView do
       raw("""
       <a
         href="#{to}"
-        class="button-block background-dark-600 color-white border-radius font-size-m padding-vertical-s padding-left-s flex align-items-center justify-content-flex-start "
+        class="button-block background-dark-600 color-white border-radius font-size-m padding-vertical-s padding-left-s flex align-items-center justify-content-flex-start hover-color-white"
       >
         <span class="material-icons-outlined">#{icon}</span>
-        <span class="margin-left-xxs">#{text}</span>
+        <span class="margin-left-xxs font-weight-bold">#{text}</span>
       </a>
       """)
     else

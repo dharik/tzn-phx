@@ -37,6 +37,10 @@
     a:active {
       text-decoration: none;
     }
+    
+    a.hover-color-white:hover {
+      color: white;
+    }
   }
 
   header {
