@@ -119,6 +119,14 @@ defmodule Tzn.Timesheets do
         slug: "cmt_or_sst_response",
         requires_mentee: false
       },
+      %Category{
+        name: "Introduction Call",
+        slug: "intro_call",
+        requires_mentee: false,
+        max_minutes: 60,
+        max_minutes_message:
+          "Initial calls with parents and students should not take longer than an hour. If you've exceeded that time, please let your CMT know so they can help  you troubleshoot!"
+      },
       #
       %Category{
         name: "Scholarship Applications",
