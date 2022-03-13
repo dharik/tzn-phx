@@ -17,7 +17,7 @@
     <div class="parent_layout">
       <nav role="navigation" class="background-light-100">
         <div class="flex flex-column align-items-center padding-vertical-xl">
-          <a href="<%= Routes.parent_dashboard_path(@conn, :show) %>">
+          <a href="<%= Routes.entry_path(@conn, :launch_app) %>">
             <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
           </a>
           <div class="space-l"></div>
