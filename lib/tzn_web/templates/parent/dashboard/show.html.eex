@@ -1,8 +1,5 @@
 <h1><%= @mentee.name %></h1>
 
-
-Hi <%= @mentee |> Tzn.Transizion.Mentee.parent_names() %>!
-
 <div class="space-m"></div>
 
 <b><%= @mentee.name %> needs your help to get the following items done:</b>

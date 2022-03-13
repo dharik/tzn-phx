@@ -9,37 +9,66 @@
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
     <link rel="stylesheet" type="text/css" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
+    <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet">
+
   </head>
   <body>
     <div class="parent_layout">
-      <nav role="navigation" class="nav padding-horizontal-xs padding-vertical-m background-light-100">
-        <center>
+      <nav role="navigation" class="background-light-100">
+        <div class="flex flex-column align-items-center padding-vertical-xl">
           <a href="<%= Routes.parent_dashboard_path(@conn, :show) %>">
-            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="300" />
-        </a>
-      </center>
-      <hr />
-      <div class="space-m"></div>
-      <div class="group group-column group-stretch group-m">
-        <ul>
-          <%= if Enum.count(@mentees) > 1 do %>
-            <%= for m <- @mentees do %>
-              <li><%= link m.name, to: Routes.parent_dashboard_path(@conn, :show, mentee: m.id), class: "" %></li>
+            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
+          </a>
+          <div class="space-l"></div>
+          <div class="space-l"></div>
+          <div class="space-l"></div>
+
+          <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
+
+            <%= if Enum.count(@mentees) > 1 do %>
+              <%= for m <- @mentees do %>
+                <%=
+                  TznWeb.LayoutView.left_nav_button(
+                    Routes.parent_dashboard_path(@conn, :show, mentee: m.id),
+                    m.name,
+                    "person",
+                    false
+                  )
+                  %>
+              <% end %>
+              <div class="space-l"></div>
             <% end %>
-          <% end %>
-          <li><%= link "Dashboard", to: Routes.parent_dashboard_path(@conn, :show), class: "" %></li>
-          <li><%= link "Work Log", to: Routes.parent_worklog_path(@conn, :show), class: "" %></li>
-          <li><%= link "Timeline", to: Routes.parent_timeline_path(@conn, :show), class: "" %></li>
-          <li><%= link "Refer a Friend", to: Routes.parent_referral_path(@conn, :show), class: "" %></li>
-        </ul>
-      </div>
+
+            <%= TznWeb.LayoutView.left_nav_button(Routes.parent_dashboard_path(@conn, :show), "Dashboard", "home", @conn.request_path =~ "dashboard") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.parent_worklog_path(@conn, :show), "Work Log", "restore", @conn.request_path =~ "work_log") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.parent_timeline_path(@conn, :show), "Timeline", "dashboard", @conn.request_path =~ "timeline") %>
+          </div>
+
+          <div class="flex-1 flex flex-column align-items-center justify-content-flex-end width-100">
+            <%= link to: Routes.parent_referral_path(@conn, :show), class: "border-radius background-white width-80 display-block padding-m" do %>
+              <span class="lead-s color-primary-400">Refer a friend</span>
+              <br />
+              <br />
+              <div class="flex justify-content-space-between align-content-center">
+                <span>Let's go</span>
+                <span class="material-icons-outlined">arrow_forward</span>
+              </div>
+            <% end %>
+          </div>
+        </div>
     </nav>
-    <main role="main" class="padding-m">
-      <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
-      <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
-      <%= render "impersonation_status.html", conn: @conn %>
-      <%= @inner_content %>
-    </main>
+      <%= if p = @conn.assigns[:parent_profile] do %>
+        <div class="top padding-m"">
+          <p class="lead-s">Hi, <%= p.name %></p>
+        </div>
+      <% end %>
+      <main role="main" class="padding-m">
+        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
+        <%= render "impersonation_status.html", conn: @conn %>
+        <%= @inner_content %>
+      </main>
   </div>
 </body>
 </html>

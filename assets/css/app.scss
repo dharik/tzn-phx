@@ -1,10 +1,10 @@
 .parent_layout {
   display: grid;
   grid-template-areas:
-    "nav . ."
+    "nav top top"
     "nav main right";
   grid-template-rows: 80px 1fr;
-  grid-template-columns: 20% 1fr 10%;
+  grid-template-columns: 23rem 1fr 10%;
   grid-row-gap: 10px;
   grid-column-gap: 10px;
   height: 100vh;
@@ -14,14 +14,29 @@
   @media all and (max-width: 575px) {
     grid-template-areas:
       "nav"
+      "top"
       "main"
       "right";
     grid-template-rows: auto;
     grid-template-columns: 1fr;
+
+    nav>div {
+      height:fit-content;
+    }
   }
 
   nav {
     grid-area: nav;
+
+    >div {
+      height: 100vh
+    }
+
+    a,
+    a:hover,
+    a:active {
+      text-decoration: none;
+    }
   }
 
   header {
@@ -34,6 +49,13 @@
 
   .right {
     grid-area: right;
+  }
+
+  .top {
+    grid-area: top;
+    display: flex;
+    flex-direction: row;
+    align-items: center;
   }
 }
 
@@ -101,4 +123,8 @@ $border-color: lightgray;
 
 .ql-container {
   font-family: inherit !important;
+}
+
+.width-80 {
+  width: 80%;
 }
