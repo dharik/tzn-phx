@@ -3,12 +3,14 @@ defmodule TznWeb.Mentor.ScholarshipListController do
   alias Tzn.Questionnaire
 
   # For the specialists
-  def index(conn, _) do
+  def index(conn, params) do
+    set_id = Tzn.Questionnaire.scholarship_list_question_set().id
+
     questionnaires =
       Questionnaire.list_questionnaires(conn.assigns.current_user)
-      |> Enum.filter(&(&1.question_set_id == Tzn.Questionnaire.scholarship_list_question_set().id))
+      |> Enum.filter(&(&1.question_set_id == set_id))
 
-    render(conn, "index.html", lists: questionnaires)
+    render(conn, "index.html", lists: questionnaires, include_hidden: !!params["include_hidden"])
   end
 
   def edit(conn, %{"id" => id}) do

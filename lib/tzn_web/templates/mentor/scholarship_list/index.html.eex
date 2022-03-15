@@ -1,3 +1,11 @@
+<%
+filtered_lists = if @include_hidden do
+   @lists |> TznWeb.Mentor.CollegeListView.only_hidden() |>  TznWeb.Mentor.CollegeListView.order_by_state()
+else
+    @lists |> TznWeb.Mentor.CollegeListView.only_shown() |>  TznWeb.Mentor.CollegeListView.order_by_state()
+end
+%>
+
 <table>
     <thead>
         <tr>
@@ -8,7 +16,7 @@
         </tr>
     </thead>
     <tbody>
-        <%= for q <- @lists |> TznWeb.Mentor.CollegeListView.only_shown() |>  TznWeb.Mentor.CollegeListView.order_by_state() do %>
+        <%= for q <- filtered_lists do %>
             <tr>
                 <td><%= q.mentee.name %></td>
                 <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee) %></td>
@@ -67,9 +75,15 @@
 </table>
 
 <div class="space-l"></div>
-<% hidden_count =  @lists |> TznWeb.Mentor.CollegeListView.only_hidden() |> Enum.count() %>
-<%= if hidden_count > 0 do %>
-    <span class="color-grey-100 font-size-s">
-        (<%= hidden_count %> hidden because they are complete or not ready for SST yet)
-    </span>
+<%= if @include_hidden do %>
+    <span class="color-grey-100 font-size-s">Showing only hidden</span>
+    <%= link "Back to normal", to: Routes.mentor_scholarship_list_path(@conn, :index) %>
+<% else %>
+    <% hidden_count =  @lists |> TznWeb.Mentor.CollegeListView.only_hidden() |> Enum.count() %>
+    <%= if hidden_count > 0 do %>
+        <span class="color-grey-100 font-size-s">
+            (<%= hidden_count %> hidden because they are complete or not ready for SST yet)
+        </span>
+        <%= link "Show hidden", to: Routes.mentor_scholarship_list_path(@conn, :index, include_hidden: true) %>
+    <% end %>
 <% end %>
