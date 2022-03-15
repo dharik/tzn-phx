@@ -21,7 +21,8 @@ defmodule Tzn.Transizion.Mentor do
     field :social_factor, :string
     field :international_experience, :boolean
 
-    field :hourly_rate, :decimal # Acts as a default hourly rate
+    # Acts as a default hourly rate
+    field :hourly_rate, :decimal
     field :experience_level, :string
 
     has_many :mentees, Tzn.Transizion.Mentee
@@ -56,7 +57,21 @@ defmodule Tzn.Transizion.Mentor do
     ])
     |> validate_inclusion(:experience_level, ["veteran", "rising", "rookie"])
     |> validate_required([:name, :email, :hourly_rate])
+    |> validate_archived()
     |> cast_assoc(:user)
+  end
+
+  def validate_archived(changeset) do
+    validate_change(changeset, :archived, fn :archived, archived ->
+      if archived &&
+           Ecto.assoc(changeset.data, :mentees)
+           |> Tzn.Repo.all()
+           |> Enum.any?(&(&1.archived == false)) do
+        [archived: "Can't archive this mentor because there are still active mentees"]
+      else
+        []
+      end
+    end)
   end
 
   def career_interest_options do
