@@ -3,4 +3,69 @@
     <%= link "Create Mentor", to: Routes.admin_mentor_path(@conn, :new), class: "button button-primary" %>
     <%= link "Mentor payments", to: Routes.admin_mentor_payments_path(@conn, :index), class: "button" %>
 </div>
-<%= react_component("Components.AdminMentorList") %>
+
+<div x-data="{
+    show_archived: false,
+    mentors: [],
+    async init() {
+        let r = await fetch('/admin/api/mentors')
+        this.mentors = await r.json()
+    },
+    get filtered_mentors() {
+        return this.mentors.filter(mentor => {
+            if (this.show_archived && mentor.archived) {
+                return true;
+            } else if (!this.show_archived && !mentor.archived) {
+                return true;
+            }
+            return false;
+        });
+    },
+    latestMonthCount(mentor) {
+        let c = mentor.counts[mentor.counts.length - 1]
+
+        if(c) {
+            return c.hours + ' in ' + c.month_name + ' ' + c.year;
+        } else {
+            return ''
+        }
+    }
+}
+"
+>
+
+<div class="flex justify-content-flex-end">
+    <label class="control checkbox">
+        <input
+        type="checkbox"
+        x-model="show_archived"
+        />
+        <span class="control-indicator"></span>
+        <span class="control-label">Show archived?</span>
+    </label>
+</div>
+
+<table>
+    <thead>
+        <tr>
+        <th width="15%">Name</th>
+        <th width="15%">Hours</th>
+        <th width="70%">Mentees</th>
+        </tr>
+    </thead>
+    <tbody>
+        <template x-for="mentor in filtered_mentors">
+            <tr>
+                <td>
+                    <a :href="mentor.admin_path" x-text="mentor.name"></a>
+                    <span x-show="mentor.experience_level === 'veteran'">⭐️</span>
+                    <span x-show="mentor.experience_level === 'rising'">🔷</span>
+                    <span x-show="mentor.experience_level === 'rookie'">🔺</span>
+                </td>
+                <td x-text="latestMonthCount(mentor)"></td>
+                <td x-text="mentor.mentee_names"></td>
+            </tr>
+        </template>
+    </tbody>
+    </table>
+</div>
