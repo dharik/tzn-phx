@@ -2,7 +2,7 @@
   display: grid;
   grid-template-areas:
     "nav top top"
-    "nav main right";
+    "nav main main";
   grid-template-rows: 80px 1fr;
   grid-template-columns: 23rem 1fr 10%;
   grid-row-gap: 10px;
@@ -15,8 +15,7 @@
     grid-template-areas:
       "nav"
       "top"
-      "main"
-      "right";
+      "main";
     grid-template-rows: auto;
     grid-template-columns: 1fr;
 
@@ -37,6 +36,11 @@
     a:active {
       text-decoration: none;
     }
+
+    a.button-block:hover {
+      background-color: #2a2e37;
+      color: white
+    }
     
     a.hover-color-white:hover {
       color: white;
@@ -49,10 +53,6 @@
 
   main {
     grid-area: main;
-  }
-
-  .right {
-    grid-area: right;
   }
 
   .top {
@@ -71,18 +71,6 @@ $border-color: lightgray;
   color: rgba(black, 0.7);
   border-left: 4px solid $border-color;
 
-  // &::before {
-  //   content: attr(date-is);
-  //   position: absolute;
-  //   left: 2em;
-  //   font-weight: bold;
-  //   top: 1em;
-  //   display: block;
-  //   font-family: "Roboto", sans-serif;
-  //   font-weight: 700;
-  //   font-size: 0.785rem;
-  // }
-
   &::after {
     width: 16px;
     height: 16px;
@@ -96,22 +84,6 @@ $border-color: lightgray;
     background: white;
   }
 
-  // &:last-child {
-  //   border-image: linear-gradient(
-  //       to bottom,
-  //       $border-color 60%,
-  //       rgba($border-color, 0)
-  //     )
-  //     1 98%;
-  // }
-  // &:first-child {
-  //   border-image: linear-gradient(
-  //       to top,
-  //       $border-color 60%,
-  //       rgba($border-color, 0)
-  //     )
-  //     1 90%;
-  // }
 }
 
 .ql-toolbar {
