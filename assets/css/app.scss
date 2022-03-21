@@ -36,10 +36,11 @@
     a:active {
       text-decoration: none;
     }
-
+    
     a.button-block:hover {
-      background-color: #2a2e37;
-      color: white
+      border-radius: .25em;
+      background-color: #2a2e37c4;
+      color: white;
     }
     
     a.hover-color-white:hover {
