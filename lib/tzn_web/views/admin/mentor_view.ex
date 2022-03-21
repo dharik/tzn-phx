@@ -44,7 +44,7 @@ defmodule TznWeb.Admin.MentorView do
   end
 
   def format_date(date) do
-    case Timex.format(date, "%b %d %l:%M %p", :strftime) do
+    case Timex.format(date, "%b %d %Y %l:%M %p", :strftime) do
       {:ok, formatted} -> formatted
       {:error, _} -> date
       _ -> "N/A"

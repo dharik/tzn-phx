@@ -1,167 +1,232 @@
-<div class="flex flex-row justify-content-space-between align-items-flex-end">
-  <h1 class="display-title">
-    Mentor: <%= @mentor.name %>
-    <%= if @mentor.archived do %>(archived)<% end %>
-  </h1>
-  <%= if @mentor.user do %>
-    <%= link "Login as #{@mentor.name}", to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button" %>
-  <% else %>
-    Can't log in as mentor because no user attached yet
-  <% end %>
-</div>
-<div class="space-m"></div>
+<div x-data="{tab: 'internal_info'}">
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'internal_info'}"
+    @click.prevent="tab = 'internal_info'">
+    Profile
+  </a>
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'strategy_sessions'}"
+    @click.prevent="tab = 'strategy_sessions'">
+    Strategy Sessions
+  </a>
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'timesheet_entries'}"
+    @click.prevent="tab = 'timesheet_entries'">
+    Timesheet Entries
+  </a>
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'hours'}"
+    @click.prevent="tab = 'hours'">
+    Hour Counts
+  </a>
 
-<div class="border border-radius padding-s flex flex-row">
-  <div class="flex-1">
-    <%= if @mentor.photo_url do %>
-      <img src="<%= @mentor.photo_url %>" width="200" height"200" />
-    <% end %>
-    <p>
-      Name:<br />
-      <span class="color-grey"><%= @mentor.name %></span>
+
+
+  <div class="flex border border-radius flex-wrap" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
+    <div class="flex flex-column justify-content-flex-start align-items-center padding-horizontal-xl padding-vertical-m">
+      <img src="<%= @mentor.photo_url %>" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" />
+
+      <div class="space-xs"></div>
+
+
+      <span class="display-title"><%= @mentor.name %></span>
+
+
+
+      <%= if @mentor.archived do %>
+        <span class="text-transform-uppercase display-title color-info">Archived</span>
+        <div class="space-xs"></div>
+      <% end %>
+
+      <div class="space-xs"></div>
       <%= case @mentor.experience_level do
-        "veteran" -> "⭐"
-        "rising" -> "🔷"
-        "rookie" -> "🔺"
+        "veteran" -> "⭐ Veteran"
+        "rising" -> "🔷 Rising"
+        "rookie" -> "🔺 Rookie"
         _ -> ""
       end %>
-    </p>
-    <p>
-      Experience Level:<br />
-      <span class="color-grey"><%= @mentor.experience_level |> humanize %></span>
-    </p>
-    <p>
-      Email address (mentee/parent facing):<br />
-      <span class="color-grey"><%= @mentor.email %></span>
-    </p>
-    <%= if @mentor.user do %>
-      <p>
-        Login details<br />
-        <span class="color-grey">
-          <%= @mentor.user.email %> (ID=<%= @mentor.user.id %>)
-        </span>
-      </p>
-    <% end %>
-    <%= link "Edit", to: Routes.admin_mentor_path(@conn, :edit, @mentor), class: "button button-outline button-s" %>
-  </div>
-  <div class="flex-1">
-    <p class="lead">Mentees</p>
-    <ol>
-      <%= for mentee <- @mentor.mentees |> Enum.sort_by(fn mentee -> if mentee.archived do 1 else 0 end end) do %>
-        <li>
-          <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
-            ★
-          <% end %>
-          <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
-          <%= if mentee.archived do %>(archived)<% end %>
-        </li>
+
+      <%= if @mentor.college_list_specialty do %>
+        <div class="space-xs"></div>
+        👩‍🔬 College Research Specialist
       <% end %>
-    </ol>
+
+      <%= if @mentor.ecvo_list_specialty do %>
+        <div class="space-xs"></div>
+       👩‍🔬  Extraccuricular Research Specialist
+      <% end %>
+
+      <%= if @mentor.scholarship_list_specialty do %>
+        <div class="space-xs"></div>
+        👩‍🔬 Scholarship Research Specialist
+      <% end %>
+
+
+      <div class="space-m"></div>
+
+      <%= link to: Routes.admin_mentor_path(@conn, :edit, @mentor), class: "button button-primary button-icon" do %>
+        <span class="material-icons-outlined">edit</span>
+        <div class="space-xxs"></div>
+        <span>Edit Profile</span>
+      <% end %>
+    </div>
+
+    <div class="flex-1 flex flex-column border-left">
+
+      <div class="padding-m">
+        <p>
+          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Email Address (Parent Facing)</span>
+          <span><%= @mentor.email %></span>
+        </p>
+        <p>
+          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">User Login</span>
+          <%= if @mentor.user do %>
+            <%= link to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button button-icon" do %>
+              <span class="material-icons-outlined margin-right-xs">login</span>
+              <span>Login as <%= @mentor.name %></span>
+            <% end %>
+          <% else %>
+            N/A
+          <% end %>
+        </p>
+      </div>
+      <div class="border-bottom"></div>
+      <div class="padding-m">
+        <span class="lead-s">Mentees</span>
+
+        <ol>
+          <%= for mentee <- @mentor.mentees |> Enum.sort_by(fn mentee -> if mentee.archived do 1 else 0 end end) do %>
+            <li>
+              <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
+                ★
+              <% end %>
+              <%= link mentee.name,
+                 to: Routes.admin_mentee_path(@conn, :show, mentee),
+                 class: if(mentee.archived, do: "color-grey-200", else: "")
+              %>
+              <%= if mentee.archived do %>
+                <span class="font-size-s color-grey-200">(archived)</span>
+              <% end %>
+            </li>
+          <% end %>
+        </ol>
+
+
+      </div>
+    </div>
   </div>
-</div>
 
-<div class="space-m"></div>
+    <div x-show="tab === 'timesheet_entries'">
+    <table>
+      <thead>
+        <tr>
+          <th>Mentee Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for timesheet_entry <- @mentor.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, NaiveDateTime}) do %>
+          <tr>
+            <td>
+              <%= if timesheet_entry.mentee do %>
+                <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+              <% else %>
+                N/A
+              <% end %>
+            </td>
+            <td><%= timesheet_entry.started_at |> format_date %></td>
+            <td><%= timesheet_entry.ended_at |> format_date %></td>
+            <td>
+              <%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes || Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name) %>
+            </td>
+            <td>
+              <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
+              <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
+            </td>
+          </tr>
 
+        <% end %>
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+  </div>
 
-<p class="lead">Timesheet Entries</p>
-<div class="overflow-y-scroll" style="max-height: 50vh">
-  <table>
+  <div x-show="tab === 'strategy_sessions'">
+    <%= for strategy_session <- @mentor.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
+      <div class="border border-radius margin-vertical-m padding-s">
+        <div class="flex justify-content-space-between">
+          <span class="lead-s"><%= strategy_session.email_subject %></span>
+          <span class="font-size-s color-grey"><%= format_date(strategy_session.date) %></span>
+        </div>
+
+        <div class="space-xs"></div>
+        <small class="color-grey">
+          <%= cond do %>
+            <% strategy_session.published && strategy_session.emailed -> %>
+              <span class="color-info">email sent</span>
+            <% strategy_session.published -> %>
+              <span class="color-info">email queued to send</span>
+            <% true -> %>
+              <span></span>
+          <% end %>
+        </small>
+
+        <div class="space-xs"></div>
+        <span class="color-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
+
+        <div class="space-xs"></div>
+        <%= unless strategy_session.published do %>
+          <%= link "Edit",
+              to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
+              class: "button button-border button-xs" %>
+        <% end %>
+      </div>
+    <% end %>
+  </div>
+
+  <table x-show="tab === 'hours'">
     <thead>
       <tr>
-        <th>Mentee Name</th>
-        <th>Start Date</th>
-        <th>End Date</th>
-        <th>Notes</th>
-        <th></th>
+        <th>Month</th>
+        <th>Hours</th>
+        <th>Estimated Pay</th>
       </tr>
     </thead>
     <tbody>
-      <%= for timesheet_entry <- @mentor.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, NaiveDateTime}) do %>
+      <%= for stat <- hour_counts_by_month(@mentor.timesheet_entries)  |> Enum.reverse() do %>
         <tr>
           <td>
-            <%= if timesheet_entry.mentee do %>
-              <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
-            <% else %>
-              N/A
-            <% end %>
-          </td>
-          <td><%= timesheet_entry.started_at |> format_date %></td>
-          <td><%= timesheet_entry.ended_at |> format_date %></td>
-          <td>
-            <%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes || Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name) %>
+            <%= stat.month_name %> <%= stat.year %>
           </td>
           <td>
-            <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
-            <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
+            <%= Float.round(stat.hours, 2) %>
+          </td>
+          <td>
+            <%= Number.Currency.number_to_currency(stat.pay) %>
           </td>
         </tr>
-
       <% end %>
-      <tr>
-      </tr>
     </tbody>
   </table>
 </div>
 
-<div class="space-m"></div>
-
-<p class="lead">Strategy Sessions</p>
-<div class="border border-radius padding-s overflow-y-scroll" style="max-height: 40vh">
-  <%= for strategy_session <- @mentor.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
-    <p>
-      <span class="lead-xs"><%= strategy_session.email_subject %></span>
-      <br />
-      <span class="color-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
-      <br />
-      <small class="color-grey">
-        <%= strategy_session.date |> format_date %>
-        <%= cond do %>
-          <% strategy_session.published && strategy_session.emailed -> %>
-            <span class="color-info">email sent</span>
-          <% strategy_session.published -> %>
-            <span class="color-info">email queued to send</span>
-          <% true -> %>
-            <span></span>
-        <% end %>
-      </small>
-      <br />
-      <%= unless strategy_session.published do %>
-        <%= link "Edit",
-            to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
-            class: "button button-border button-xs" %>
-      <% end %>
-    </p>
-  <% end %>
-</div>
-
-<div class="space-m"></div>
 
 
-<p class="lead">Hour counts by month</p>
-<table>
-  <thead>
-    <tr>
-      <th>Month, Year</th>
-      <th>Hours</th>
-      <th>Estimated Pay</th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= for stat <- hour_counts_by_month(@mentor.timesheet_entries)  |> Enum.reverse() do %>
-      <tr>
-        <td>
-          <%= stat.month_name %> <%= stat.year %>
-        </td>
-        <td>
-          <%= stat.hours %>
-        </td>
-        <td>
-          <%= stat.pay %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+
+
+
 
 
 <div class="space-l"></div>
