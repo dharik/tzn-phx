@@ -1,3 +1,21 @@
+<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css" />
+<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
+
+<div class="ct-chart ct-perfect-fourth" style="width: 40em;"></div>
+<script>
+ var data = <%= raw Jason.encode!(%{
+    labels: chart_data(@timesheet_entries) |> Map.keys(),
+    series: chart_data(@timesheet_entries) |> Map.values()
+  }) %>
+  var c = new Chartist.Pie('.ct-chart', data, {
+    labelOffset: 20,
+    chartPadding: 30,
+    labelPosition: 'outside',
+    labelDirection: 'explode'
+  });
+  </script>
+
+
 <%= for {e, idx} <- Enum.with_index(@timesheet_entries) do %>
     <div class="flex padding-s margin-vertical-s <%= if(rem(idx,2) == 0, do: "background-light-50", else: "background-white") %>">
         <div class="margin-horizontal-m flex-0-1-auto">

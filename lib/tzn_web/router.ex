@@ -105,6 +105,7 @@ defmodule TznWeb.Router do
       get "/dashboard", Parent.DashboardController, :show
       get "/work_log", Parent.WorklogController, :show
       get "/refer", Parent.ReferralController, :show
+      get "/additional_offerings", Parent.AdditionalOfferingsController, :show
       post "/refer", Parent.ReferralController, :create
       get "/timeline", Parent.TimelineController, :show
     end

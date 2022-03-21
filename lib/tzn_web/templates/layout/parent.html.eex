@@ -25,7 +25,6 @@
           <div class="space-l"></div>
 
           <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
-
             <%= if Enum.count(@mentees) > 1 do %>
               <%= for m <- @mentees do %>
                 <%=
@@ -43,15 +42,16 @@
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_dashboard_path(@conn, :show), "Dashboard", "home", @conn.request_path =~ "dashboard") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_worklog_path(@conn, :show), "Work Log", "restore", @conn.request_path =~ "work_log") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_timeline_path(@conn, :show), "Timeline", "dashboard", @conn.request_path =~ "timeline") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.parent_additional_offerings_path(@conn, :show), "Additional Offerings", "hub", @conn.request_path =~ "additional_offerings") %>
           </div>
 
           <div class="flex-1 flex flex-column align-items-center justify-content-flex-end width-100">
             <%= link to: Routes.parent_referral_path(@conn, :show), class: "border-radius background-white width-80 display-block padding-m" do %>
-              <span class="lead-s color-primary-400">Refer a friend</span>
+              <span class="lead-s color-primary-400">Earn Bonus Hours!</span>
               <br />
               <br />
               <div class="flex justify-content-space-between align-content-center">
-                <span>Let's go</span>
+                <span>Refer a friend or write a review</span>
                 <span class="material-icons-outlined">arrow_forward</span>
               </div>
             <% end %>
