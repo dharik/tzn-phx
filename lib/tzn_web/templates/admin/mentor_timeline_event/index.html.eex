@@ -1,52 +1,81 @@
-<p class="lead">Mentor Timeline</p>
-<%= link "Add new timeline event", to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-primary" %>
-
-<br /><br />
-Filter by grade:
-<div class="nav-inline">
-  <ul>
-    <li><%= link "All grades", to: Routes.admin_mentor_timeline_event_path(@conn, :index) %></li>
-    <%= for {label, value} <- [
-      {"Middle school", "middle_school"},
-      {"Rising Freshman", "rising_freshman"}, 
-      {"Freshman", "freshman"},
-      {"Rising Sophomore", "rising sophomore"},
-      {"Sophomore", "sophomore"},
-      {"Rising Junior", "rising junior"}, 
-      {"Junior", "junior"},
-      {"Rising Senior", "rising senior"}, 
-      {"Senior", "senior"}
-      ] do %>
-      <li><%= link label, to: Routes.admin_mentor_timeline_event_path(@conn, :index, grade: value) %></li>
-    <% end %>
-  </ul>
-</div>
-
-<%= for event <- @events |> Enum.sort_by(&(&1.date), {:asc, Date}) do %>
-  <div class="border border-radius box-shadow-s padding-s margin-vertical-s">
-    <strong>
-      <%= event.date |> format_date %>
-    </strong>
-
-    <%= if event.is_hard_deadline do %>
-      <span class="color-warning">(Hard deadline)</span>
-    <% end %>
-
-    <br />
-
-    <span class="color-grey">
-      <%= raw event.notes %>
-    </span>
-
-    <br />
-
-    <span class="color-grey"><%= event.grade %></span>
-    <br />
-
-    <%= link "Edit", to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) %>
-    <%= link "Delete",
-          to: Routes.admin_mentor_timeline_event_path(@conn, :delete, event),
-          method: :delete, data: [confirm: "Are you sure?"],
-          class: "button button-s button-text button-warning margin-left-m" %>
+<div class="main-grid">
+  <div class="side padding-horizontal-m">
+    <p class="lead-s">Filter by grade</p>
+    <div class="nav">
+      <ul>
+        <li>
+          <%= link "All grades", to: Routes.admin_mentor_timeline_event_path(@conn, :index), class: if(@grade == "all", do: "font-weight-bold") %>
+        </li>
+        <%= for {label, value} <- [
+          {"Middle school", "middle_school"},
+          {"Rising Freshman", "rising_freshman"},
+          {"Freshman", "freshman"},
+          {"Rising Sophomore", "rising sophomore"},
+          {"Sophomore", "sophomore"},
+          {"Rising Junior", "rising junior"},
+          {"Junior", "junior"},
+          {"Rising Senior", "rising senior"},
+          {"Senior", "senior"}
+          ] do %>
+          <li><%= link label, to: Routes.admin_mentor_timeline_event_path(@conn, :index, grade: value), class: if(@grade == value, do: "font-weight-bold", else: "") %></li>
+        <% end %>
+      </ul>
+    </div>
   </div>
-<% end %>
+
+
+  <div class="main">
+    <div class="flex flex-row justify-content-space-between padding-horizontal-m">
+      <p class="lead">Mentor Timeline</p>
+      <%= link to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-text button-icon button-primary text-transform-uppercase" do %>
+      <span class="material-icons-outlined">add</span>
+      Add new event
+      <% end %>
+    </div>
+
+
+    <%= for event <- @events |> Enum.sort_by(&(&1.date), {:asc, Date}) do %>
+      <div class="border border-radius padding-m margin-vertical-s admin-timeline-event">
+        <div class="title">
+          <strong>
+            <%= event.date |> format_date %>
+          </strong>
+        </div>
+
+        <div class="description margin-vertical-s">
+            <%= raw event.notes %>
+        </div>
+
+        <div class="tags">
+          <%= if event.is_hard_deadline do %>
+            <span class="material-icons-outlined color-warning">local_fire_department</span>
+            <span class="color-warning font-weight-bold">Hard deadline</span>
+          <% end %>
+
+          <span class="button button-pill  button-s margin-left-m button-outline" disabled>
+            <%= humanize(event.grade) %></span>
+          </span>
+        </div>
+
+        <div class="date">
+
+        </div>
+
+        <div class="modify">
+          <%= link to: Routes.admin_mentor_timeline_event_path(@conn, :edit, event) do %>
+            <span class="material-icons-outlined color-primary">edit</span>
+          <% end %>
+          <%= link to: Routes.admin_mentor_timeline_event_path(@conn, :delete, event),
+              method: :delete, data: [confirm: "Are you sure?"] do %>
+            <span class="material-icons-outlined color-error">delete</span>
+          <% end %>
+
+        </div>
+
+      </div>
+    <% end %>
+  </div>
+
+
+</div>
+<br /><br />

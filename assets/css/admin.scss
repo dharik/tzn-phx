@@ -1,0 +1,37 @@
+.admin-timeline-event {
+  display: grid;
+  grid-template-areas:
+    "title title tags"
+    "description description description"
+    "date . modify";
+
+  .title {
+    grid-area: title;
+  }
+  .tags {
+    grid-area: tags;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+  .description {
+    grid-area: description;
+  }
+  .date {
+    grid-area: date;
+  }
+  .modify {
+    grid-area: modify;
+    display: flex;
+    justify-content: flex-end;
+    align-items: center;
+  }
+}
+
+.matching-result {
+  display: grid;
+  grid-template-rows: max-content max-content 1fr;
+  grid-template-columns: repeat(auto-fit, minmax(20rem, auto));
+  grid-row-gap: 10px;
+  grid-column-gap: 10px;
+}

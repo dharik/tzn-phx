@@ -6,12 +6,12 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
 
   def index(conn, %{"grade" => grade}) do
     events = Transizion.list_mentor_timeline_events()
-    render(conn, "index.html", events: Enum.filter(events, fn e -> e.grade == grade end))
+    render(conn, "index.html", events: Enum.filter(events, fn e -> e.grade == grade end), grade: grade)
   end
 
   def index(conn, _params) do
     events = Transizion.list_mentor_timeline_events()
-    render(conn, "index.html", events: events)
+    render(conn, "index.html", events: events, grade: "all")
   end
 
   def new(conn, _params) do
@@ -21,9 +21,9 @@ defmodule TznWeb.Admin.MentorTimelineEventController do
 
   def create(conn, %{"mentor_timeline_event" => event_params}) do
     case Transizion.create_mentor_timeline_event(event_params) do
-      {:ok, _} -> 
-          conn 
-            |> put_flash(:info, "Timeline event created successfully.") 
+      {:ok, _} ->
+          conn
+            |> put_flash(:info, "Timeline event created successfully.")
             |> redirect(to: Routes.admin_mentor_timeline_event_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->
