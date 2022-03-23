@@ -1,3 +1,4 @@
+<div style="max-width: 65em;">
 <h2>Refer a Friend to Jason</h2>
 <p>
     Every time a friend enrolls, we’ll give you a $100 Amazon Gift Card or 2 free
@@ -12,3 +13,21 @@
 
     <%= submit "Send Email To Jason", class: "button-primary" %>
 <% end %>
+
+<div class="space-m"></div>
+<h2>Write a Review</h2>
+<p>
+    Leave us a 5-star review on Google or Yelp and send us a message here!
+    We’ll give you a $50 Amazon gift card or 1 free mentoring hour (worth over $130!) for each one,
+     for either your child or a friend. It’s free money!
+</p>
+
+<%= form_for @conn, Routes.parent_referral_path(@conn, :create), [as: :referral], fn f -> %>
+    <%= textarea f, :note, rows: 5, value: "Hi Jason,\n\nI left a 5-star review on Google or Yelp.\nSincerely,\n\n#{@parent_profile.name}" %>
+    <%= error_tag f, :note %>
+
+    <div class="space-s"></div>
+
+    <%= submit "Send", class: "button-primary" %>
+<% end %>
+</div>

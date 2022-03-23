@@ -349,7 +349,7 @@
   <div class="space-m"></div>
 
   <div>
-    <p class="form-message warning" x-show="todo_list_needs_update">Todo list needs to be updated</p>
+    <p class="form-message warning" x-show="todo_list_needs_update">To-do list needs to be updated</p>
     <%= submit "Save", class: "button-primary", ":disabled": "todo_list_needs_update || !is_valid_category" %>
   </div>
 

@@ -14,7 +14,7 @@
     class="lead display-inline-block margin-horizontal-m text-decoration-none"
     :class="{'color-grey-100': tab !== 'todos'}"
     @click.prevent="tab = 'todos'">
-    Todos
+    To-Dos
   </a>
   <a
     href="#"
@@ -180,15 +180,15 @@
 
 
   <div x-show="tab === 'todos'" x-transition>
-    <p class="lead-s">Mentor Todos:</p>
+    <p class="lead-s">Mentor To-Dos:</p>
     <div><%= raw @mentee.mentor_todo_notes %></div>
     <div class="space-m"></div>
 
-    <p class="lead-s">Mentee Todos:</p>
+    <p class="lead-s">Mentee To-Dos:</p>
     <div><%= raw @mentee.mentee_todo_notes %></div>
     <div class="space-m"></div>
 
-    <p class="lead-s">Parent Todos:</p>
+    <p class="lead-s">Parent To-Dos:</p>
     <div><%= raw @mentee.parent_todo_notes %></div>
     <div class="space-m"></div>
   </div>
