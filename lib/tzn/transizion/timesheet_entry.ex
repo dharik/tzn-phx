@@ -8,6 +8,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
     field :notes, :string
     field :hourly_rate, :decimal
     field :category, :string
+    field :mentee_grade, :string
     belongs_to :mentor, Tzn.Transizion.Mentor
     belongs_to :mentee, Tzn.Transizion.Mentee
 
@@ -24,15 +25,29 @@ defmodule Tzn.Transizion.TimesheetEntry do
       :mentor_id,
       :mentee_id,
       :hourly_rate,
-      :category
+      :category,
+      :mentee_grade
     ])
     |> validate_required([:started_at, :ended_at, :mentor_id, :category])
     |> notes_maybe_required()
+    |> grade_maybe_required()
     |> ended_after_started()
     |> duration_is_reasonable()
     |> duration_within_category_limit()
+
     # TODO: Check that mentor can make an entry for mentee_id
     # TODO: Check that if category requires_mentee that mentee_id is set
+  end
+
+  def grade_maybe_required(changeset) do
+    mentee_id = get_field(changeset, :mentee_id)
+    mentee_grade = get_field(changeset, :mentee_grade)
+
+    cond do
+      mentee_id && !mentee_grade -> add_error(changeset, :mentee_grade, "is required")
+      mentee_grade && !mentee_id -> put_change(changeset, :mentee_grade, nil)
+      true -> changeset
+    end
   end
 
   def notes_maybe_required(changeset) do

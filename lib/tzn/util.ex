@@ -27,4 +27,27 @@ defmodule Tzn.Util do
     |> Number.Conversion.to_decimal()
     |> Decimal.round(places)
   end
+
+  def grade_options do
+    [
+      {"Middle school", "middle_school"},
+      {"Rising Freshman", "rising_freshman"},
+      {"Freshman", "freshman"},
+      {"Rising Sophomore", "rising sophomore"},
+      {"Sophomore", "sophomore"},
+      {"Rising Junior", "rising junior"},
+      {"Junior", "junior"},
+      {"Rising Senior", "rising senior"},
+      {"Senior", "senior"},
+      {"College", "college"}
+    ]
+  end
+
+  def humanize_grade(grade_slug) do
+    # TODO
+  end
+
+  def slugify_grade(humanized_grade) do
+    # TODO
+  end
 end

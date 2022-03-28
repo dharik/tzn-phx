@@ -16,6 +16,10 @@
         |> Enum.map(fn c -> {"#{c.mentee_type} > #{c.name}", c.slug} end) %>
   <%= error_tag f, :category %>
 
+  <%= label f, :mentee_grade %>
+  <%= select f, :mentee_grade, Tzn.Util.grade_options() %>
+  <%= error_tag f, :mentee_grade %>
+
   <%= label f, :started_at %>
   <%= datetime_local_input f, :started_at %>
   <%= error_tag f, :started_at %>

@@ -55,7 +55,8 @@ defmodule TznWeb.Mentor.MenteeController do
       parent_todo_notes: mentee.parent_todo_notes,
       mentee_todo_notes: mentee.mentee_todo_notes,
       mentor_todo_notes: mentee.mentor_todo_notes,
-      name: mentee.name
+      name: mentee.name,
+      grade: mentee.grade
     })
   end
 

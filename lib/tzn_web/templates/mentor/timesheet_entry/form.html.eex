@@ -9,6 +9,7 @@
       Alpine.data('mentor_timesheet_form', () => ({
         mentee_id: null,
         mentee_name: "the mentee",
+        mentee_grade: null,
         category: null,
         categories_no_mentee:
           <%=
@@ -62,6 +63,7 @@
           if(this.mentee_id == "" || !this.mentee_id) {
             this.mentee_loadstate = '';
             this.mentee_name = "";
+            this.mentee_grade = null;
             return;
           }
 
@@ -83,6 +85,7 @@
               }, 1300);
 
               this.mentee_name = data.name;
+              this.mentee_grade = data.grade;
               this.mentee_notes_savestate = '';
               this.parent_notes_savestate = '';
               this.mentor_notes_savestate = '';
@@ -324,6 +327,14 @@
     <%= error_tag f, :category %>
 </div>
 
+<div
+  class="border-radius box-shadow-m padding-m margin-vertical-l"
+   x-show="mentee_id && mentee_loadstate === 'success'"
+  >
+  <h2>Enter Grade</h2>
+  <%= select f, :mentee_grade, Tzn.Util.grade_options(), ["x-model": "mentee_grade"] %>
+  <%= error_tag f, :mentee_grade %>
+</div>
 
 <div
   class="border-radius box-shadow-m padding-m margin-vertical-l"
