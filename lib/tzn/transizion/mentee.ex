@@ -57,6 +57,8 @@ defmodule Tzn.Transizion.Mentee do
     ])
     |> to_lowercase(:parent1_email)
     |> to_lowercase(:parent2_email)
+    |> validate_parent1()
+    |> validate_parent2()
   end
 
   def admin_changeset(mentee, attrs) do
@@ -82,6 +84,8 @@ defmodule Tzn.Transizion.Mentee do
     |> to_lowercase(:email)
     |> cast_assoc(:user)
     |> validate_required([:name])
+    |> validate_parent1()
+    |> validate_parent2()
   end
 
   def to_lowercase(changeset, fieldname) do
@@ -89,6 +93,36 @@ defmodule Tzn.Transizion.Mentee do
       {:ok, value} when is_binary(value) -> put_change(changeset, fieldname, String.downcase(value))
       {:ok, value} when is_nil(value) -> changeset
       :error -> changeset
+    end
+  end
+
+  def validate_parent1(changeset) do
+    parent1_name = get_field(changeset, :parent1_name)
+    parent1_email = get_field(changeset, :parent1_email)
+
+    name_is_set = parent1_name && parent1_name !== ""
+    email_is_set = parent1_email && parent1_email !== ""
+
+    cond do
+      name_is_set && email_is_set -> changeset
+      name_is_set && !email_is_set -> add_error(changeset, :parent1_email, "required")
+      !name_is_set && email_is_set -> add_error(changeset, :parent1_name, "required")
+      !name_is_set && !email_is_set -> changeset
+    end
+  end
+
+  def validate_parent2(changeset) do
+    parent2_name = get_field(changeset, :parent2_name)
+    parent2_email = get_field(changeset, :parent2_email)
+
+    name_is_set = parent2_name && parent2_name !== ""
+    email_is_set = parent2_email && parent2_email !== ""
+
+    cond do
+      name_is_set && email_is_set -> changeset
+      name_is_set && !email_is_set -> add_error(changeset, :parent2_email, "required")
+      !name_is_set && email_is_set -> add_error(changeset, :parent2_name, "required")
+      !name_is_set && !email_is_set -> changeset
     end
   end
 

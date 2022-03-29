@@ -163,13 +163,21 @@ defmodule Tzn.Transizion do
   def update_mentee(%Mentee{} = mentee, attrs, %User{} = user) do
     mentee_changeset = Mentee.changeset(mentee, attrs)
 
-    update_and_track_mentee_changes(mentee, mentee_changeset, user)
+    if mentee_changeset.valid? do
+      update_and_track_mentee_changes(mentee, mentee_changeset, user)
+    else
+      Ecto.Changeset.apply_action(mentee_changeset, :update)
+    end
   end
 
   def admin_update_mentee(%Mentee{} = mentee, attrs, %User{} = user) do
     mentee_changeset = Mentee.admin_changeset(mentee, attrs)
 
-    update_and_track_mentee_changes(mentee, mentee_changeset, user)
+    if mentee_changeset.valid? do
+      update_and_track_mentee_changes(mentee, mentee_changeset, user)
+    else
+      Ecto.Changeset.apply_action(mentee_changeset, :update)
+    end
   end
 
   def update_and_track_mentee_changes(%Mentee{} = mentee, changeset, %User{} = user) do
@@ -194,6 +202,7 @@ defmodule Tzn.Transizion do
       mentee_result
     end)
   end
+
 
   @doc """
   Returns the list of strategy_sessions.

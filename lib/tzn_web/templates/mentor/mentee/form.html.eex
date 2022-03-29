@@ -17,6 +17,7 @@
   <%= label f, :parent1_name %>
   <%= text_input f, :parent1_name %>
   <%= error_tag f, :parent1_name %>
+
   <%= label f, :parent1_email %>
   <%= email_input f, :parent1_email %>
   <%= error_tag f, :parent1_email %>
@@ -26,6 +27,7 @@
   <%= label f, :parent2_name %>
   <%= text_input f, :parent2_name %>
   <%= error_tag f, :parent2_name %>
+
   <%= label f, :parent2_email %>
   <%= email_input f, :parent2_email %>
   <%= error_tag f, :parent2_email %>
