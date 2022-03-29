@@ -31,13 +31,9 @@ defmodule Tzn.Util do
   def grade_options do
     [
       {"Middle school", "middle_school"},
-      {"Rising Freshman", "rising_freshman"},
       {"Freshman", "freshman"},
-      {"Rising Sophomore", "rising sophomore"},
       {"Sophomore", "sophomore"},
-      {"Rising Junior", "rising junior"},
       {"Junior", "junior"},
-      {"Rising Senior", "rising senior"},
       {"Senior", "senior"},
       {"College", "college"}
     ]

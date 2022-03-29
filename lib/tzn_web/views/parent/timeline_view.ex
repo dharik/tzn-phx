@@ -4,13 +4,9 @@ defmodule TznWeb.Parent.TimelineView do
   def default_timeline(%Tzn.Transizion.Mentee{} = mentee) do
     case mentee.grade do
       "middle_school" -> "Middle School Topics"
-      "rising_freshman"  -> "Freshman"
       "freshman" -> "Freshman"
-      "rising sophomore" -> "Sophomore"
       "sophomore" -> "Sophomore"
-      "rising junior" -> "Junior"
       "junior" -> "Junior"
-      "rising senior" -> "Senior"
       "senior" -> "Senior"
       "college" -> "Senior"
     end

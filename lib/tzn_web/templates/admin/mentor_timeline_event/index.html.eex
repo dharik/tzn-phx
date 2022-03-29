@@ -8,13 +8,9 @@
         </li>
         <%= for {label, value} <- [
           {"Middle school", "middle_school"},
-          {"Rising Freshman", "rising_freshman"},
           {"Freshman", "freshman"},
-          {"Rising Sophomore", "rising sophomore"},
           {"Sophomore", "sophomore"},
-          {"Rising Junior", "rising junior"},
           {"Junior", "junior"},
-          {"Rising Senior", "rising senior"},
           {"Senior", "senior"}
           ] do %>
           <li><%= link label, to: Routes.admin_mentor_timeline_event_path(@conn, :index, grade: value), class: if(@grade == value, do: "font-weight-bold", else: "") %></li>

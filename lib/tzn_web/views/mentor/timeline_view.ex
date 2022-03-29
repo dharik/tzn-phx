@@ -74,13 +74,9 @@ defmodule TznWeb.Mentor.TimelineView do
     Enum.sort_by(mentees, fn m ->
       case m.grade do
         "middle_school" -> 0
-        "rising_freshman" -> 1
         "freshman" -> 2
-        "rising sophomore" -> 3
         "sophomore" -> 4
-        "rising junior" -> 5
         "junior" -> 6
-        "rising senior" -> 7
         "senior" -> 8
         _ -> 100
       end
