@@ -5,11 +5,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
 <h2>
     <%= @questionnaire.question_set.name %> Questionnaire for
     <%=
-        if @is_my_mentee do
-            link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
-        else
-            @mentee.name
-        end
+        link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
     %>
 </h2>
 
@@ -137,7 +133,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
             <%= file_input f, :attachment %>
             <%= submit "Upload File", class: "button button-secondary button-s"%>
         <% end %>
-        
+
         <ul>
             <%= for file <- @questionnaire.files do %>
                 <li>
@@ -145,7 +141,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                 </li>
             <% end %>
         </ul>
-    </div>    
+    </div>
 
     <%= for q <- @questions do %>
         <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>

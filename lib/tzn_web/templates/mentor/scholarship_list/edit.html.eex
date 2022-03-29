@@ -4,13 +4,7 @@ public_url = Routes.scholarship_list_url(@conn, :edit, @questionnaire.access_key
 
 <h2>
     <%= @questionnaire.question_set.name %> Questionnaire for
-    <%=
-        if @is_my_mentee do
-            link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
-        else
-            @mentee.name
-        end
-    %>
+    <%= link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee) %>
 </h2>
 
 <%= if @conn.assigns.current_mentor.scholarship_list_specialty do %>
