@@ -202,7 +202,7 @@ defmodule Tzn.Timesheets do
         slug: "conference_journal_submission",
         mentee_type: "capstone"
       },
-      %Category{name: "Wrap-Up", mentee_type: "capstone"},
+      %Category{name: "Wrap-Up", mentee_type: "capstone", slug: "wrap_up"},
       %Category{
         name: "Client Communication: emailing parents or Slacking students",
         slug: "client_communication",
