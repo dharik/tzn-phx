@@ -12,7 +12,7 @@
   <%= label f, :category %>
   <%= select f,
       :category,
-      Tzn.Timesheets.categories()
+      Tzn.Timesheets.categories() ++ [Tzn.Timesheets.get_category_by_slug("uncategorized")]
         |> Enum.map(fn c -> {"#{c.mentee_type} > #{c.name}", c.slug} end) %>
   <%= error_tag f, :category %>
 
