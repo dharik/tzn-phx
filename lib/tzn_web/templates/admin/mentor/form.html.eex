@@ -5,9 +5,29 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
+  <%= label f, :name, "Full Name (used in formal contexts)" %>
   <%= text_input f, :name %>
   <%= error_tag f, :name %>
+
+  <%= label f, :nick_name, "Nick Name (used in most contexts)" %>
+  <%= text_input f, :nick_name %>
+  <%= error_tag f, :nick_name %>
+
+  <%= label f, :pronouns %>
+  <%= text_input f, :pronouns %>
+  <%= error_tag f, :pronouns %>
+
+  <%= label f, :desired_mentee_count %>
+  <%= number_input f, :desired_mentee_count %>
+  <%= error_tag f, :desired_mentee_count %>
+
+  <%= label f, :max_mentee_count %>
+  <%= number_input f, :max_mentee_count %>
+  <%= error_tag f, :max_mentee_count %>
+
+  <%= label f, :timezone_offset %>
+  <%= select f, :timezone_offset, Tzn.Util.timezone_options() %>
+  <%= error_tag f, :timezone_offset %>
 
   <%= label f, :email %>
   <%= email_input f, :email %>
@@ -59,6 +79,14 @@
     <%= checkbox f, :archived %> Archived?
   <% end %>
   <%= error_tag f, :archived %>
+
+  <%= label f, :archived_reason  %>
+  <%= select f, :archived_reason, [
+    {"-- Reason for Archiving --", nil},
+    {"Unknown", "unknown"},
+    {"Test Account", "test_account"}
+  ] %>
+  <%= error_tag f, :archived_reason %>
 
   <div class="space-l"></div>
   <p class="lead">Matching Algorithm Data</p>

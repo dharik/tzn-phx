@@ -4,13 +4,19 @@ defmodule Tzn.Transizion.Mentor do
 
   schema "mentors" do
     field :name, :string
+    field :nick_name, :string
+    field :pronouns, :string
     field :email, :string
     field :photo_url, :string
     field :archived, :boolean
+    field :archived_reason, :string
+    field :timezone_offset, :integer
 
     field :college_list_specialty, :boolean
     field :ecvo_list_specialty, :boolean
     field :scholarship_list_specialty, :boolean
+    field :desired_mentee_count, :integer
+    field :max_mentee_count, :integer
 
     # Matching algorithm
     field :career_interests, {:array, :string}
@@ -38,6 +44,9 @@ defmodule Tzn.Transizion.Mentor do
     mentor
     |> cast(attrs, [
       :name,
+      :nick_name,
+      :pronouns,
+      :timezone_offset,
       :user_id,
       :email,
       :photo_url,
@@ -50,14 +59,18 @@ defmodule Tzn.Transizion.Mentor do
       :international_experience,
       :hourly_rate,
       :archived,
+      :archived_reason,
       :experience_level,
       :college_list_specialty,
       :ecvo_list_specialty,
-      :scholarship_list_specialty
+      :scholarship_list_specialty,
+      :desired_mentee_count,
+      :max_mentee_count
     ])
     |> validate_inclusion(:experience_level, ["veteran", "rising", "rookie"])
-    |> validate_required([:name, :email, :hourly_rate])
+    |> validate_required([:name, :nick_name, :email, :hourly_rate])
     |> validate_archived()
+    |> validate_archived_reason()
     |> cast_assoc(:user)
   end
 
@@ -72,6 +85,14 @@ defmodule Tzn.Transizion.Mentor do
         []
       end
     end)
+  end
+
+  def validate_archived_reason(changeset) do
+    if get_field(changeset, :archived) == true do
+      validate_required(changeset, :archived_reason)
+    else
+      put_change(changeset, :archived_reason, nil)
+    end
   end
 
   def career_interest_options do

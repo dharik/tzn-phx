@@ -4,8 +4,13 @@ defmodule Tzn.Transizion.Mentee do
 
   schema "mentees" do
     field :name, :string
+    field :nick_name, :string
+    field :pronouns, :string
+    field :timezone_offset, :integer
+
     field :email, :string
     field :archived, :boolean
+    field :archived_reason, :string
     field :type, :string
 
     field :internal_note, :string
@@ -45,6 +50,9 @@ defmodule Tzn.Transizion.Mentee do
   def changeset(mentee, attrs) do
     mentee
     |> cast(attrs, [
+      :nick_name,
+      :pronouns,
+      :timezone_offset,
       :internal_note,
       :parent1_email,
       :parent1_name,
@@ -65,6 +73,9 @@ defmodule Tzn.Transizion.Mentee do
     mentee
     |> cast(attrs, [
       :name,
+      :nick_name,
+      :pronouns,
+      :timezone_offset,
       :type,
       :internal_note,
       :parent1_email,
@@ -76,7 +87,8 @@ defmodule Tzn.Transizion.Mentee do
       :user_id,
       :grade,
       :email,
-      :archived
+      :archived,
+      :archived_reason
     ])
     |> validate_inclusion(:type, ["college_mentoring", "tutoring", "capstone"])
     |> to_lowercase(:parent1_email)
@@ -86,6 +98,7 @@ defmodule Tzn.Transizion.Mentee do
     |> validate_required([:name])
     |> validate_parent1()
     |> validate_parent2()
+    |> validate_archived_reason()
   end
 
   def to_lowercase(changeset, fieldname) do
@@ -93,6 +106,14 @@ defmodule Tzn.Transizion.Mentee do
       {:ok, value} when is_binary(value) -> put_change(changeset, fieldname, String.downcase(value))
       {:ok, value} when is_nil(value) -> changeset
       :error -> changeset
+    end
+  end
+
+  def validate_archived_reason(changeset) do
+    if get_field(changeset, :archived) == true do
+      validate_required(changeset, :archived_reason)
+    else
+      put_change(changeset, :archived_reason, nil)
     end
   end
 

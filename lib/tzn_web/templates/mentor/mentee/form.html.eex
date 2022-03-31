@@ -8,6 +8,18 @@
   <%= label f, :name %>
   <%= text_input f, :name, disabled: true %>
 
+  <%= label f, :nick_name %>
+  <%= text_input f, :nick_name %>
+  <%= error_tag f, :nick_name %>
+
+  <%= label f, :pronouns %>
+  <%= text_input f, :pronouns %>
+  <%= error_tag f, :pronouns %>
+
+  <%= label f, :timezone_offset, "Time Zone" %>
+  <%= select f, :timezone_offset, Tzn.Util.timezone_options() %>
+  <%= error_tag f, :timezone_offset %>
+
   <%= label f, :grade %>
   <%= select f, :grade, Tzn.Util.grade_options() %>
   <%= error_tag f, :grade %>

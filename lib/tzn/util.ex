@@ -10,6 +10,7 @@ defmodule Tzn.Util do
   def within_n_days_ago(nil, _) do
     false
   end
+
   def within_n_days_ago(date, n) do
     date |> Timex.after?(Timex.shift(Timex.now(), days: -n))
   end
@@ -17,6 +18,7 @@ defmodule Tzn.Util do
   def within_n_hours_ago(nil, _) do
     false
   end
+
   def within_n_hours_ago(date, n) do
     date |> Timex.after?(Timex.shift(Timex.now(), hours: -n))
   end
@@ -37,6 +39,29 @@ defmodule Tzn.Util do
       {"Senior", "senior"},
       {"College", "college"}
     ]
+  end
+
+  def timezone_options do
+    [
+      {"Other/Unknown", nil},
+      {"New York", -4},
+      {"Chicago", -5},
+      {"Salt Lake City", -6},
+      {"Los Angeles", -7},
+      {"Alaska/USA", -8},
+      {"Honolulu", -10},
+      {"American Samoa", -11},
+      {"Baker Island", -12}
+    ]
+  end
+
+  def offset_to_timezone_city(offset) do
+    {label, _} =
+      Enum.find(timezone_options(), {"Unknown", nil}, fn {_label, offset_value} ->
+        offset == offset_value
+      end)
+
+    label
   end
 
   def humanize_grade(grade_slug) do

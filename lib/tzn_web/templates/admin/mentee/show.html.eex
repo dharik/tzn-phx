@@ -48,7 +48,10 @@
 
       <div class="space-xs"></div>
 
-      <span class="display-title"><%= @mentee.name %></span>
+      <p class="display-title"><%= @mentee.name %></p>
+      <%= if @mentee.pronouns do %>
+        <small><%= @mentee.pronouns %></small>
+      <% end %>
 
       <%= if @mentee.archived do %>
         <span class="text-transform-uppercase display-title color-info">Archived</span>
@@ -67,6 +70,8 @@
     <div class="flex-1 flex flex-column border-left">
       <div class="padding-m">
         <%= for {key, value} <- [
+          {"Nick Name", @mentee.nick_name || "Not set"},
+          {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
           {"Profile Type", humanize(@mentee.type)},
           {"Email Address", @mentee.email},
           {"User Login", if(@mentee.user, do: @mentee.user.email, else: "N/A") },

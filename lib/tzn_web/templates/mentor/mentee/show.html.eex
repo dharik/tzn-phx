@@ -11,6 +11,18 @@
   <div class="flex flex-row">
     <div class="flex-1">
       <p>
+        Nick Name:<br />
+        <%= @mentee.nick_name || "Not set" %>
+      </p>
+      <p>
+        Preferred Pronouns:<br />
+        <%= @mentee.pronouns || "Not set" %>
+      </p>
+      <p>
+        Time Zone:<br />
+        <%= Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset) %>
+      </p>
+      <p>
         Parents: <br />
         <%= if @mentee.parent1_email do %>
           <span class="color-grey">
