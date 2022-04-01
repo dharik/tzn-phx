@@ -12,7 +12,8 @@ defmodule TznWeb.Admin.TimesheetEntryController do
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
-    timesheet_entry = Timesheets.get_timesheet_entry!(id)
+    timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload([:mentee, :mentor])
+    mentees = Tzn.Transizion.list_mentees(%{mentor: timesheet_entry.mentor})
 
     case Timesheets.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, timesheet_entry} ->
@@ -21,7 +22,7 @@ defmodule TznWeb.Admin.TimesheetEntryController do
         |> redirect(to: Routes.admin_timesheet_entry_path(conn, :edit, timesheet_entry))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset)
+        render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset, mentees: mentees)
     end
   end
 
