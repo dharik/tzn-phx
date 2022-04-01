@@ -6,8 +6,9 @@ defmodule TznWeb.Admin.TimesheetEntryController do
 
   def edit(conn, %{"id" => id}) do
     timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload([:mentee, :mentor])
+    mentees = Tzn.Transizion.list_mentees(%{mentor: timesheet_entry.mentor})
     changeset = Timesheets.change_timesheet_entry(timesheet_entry)
-    render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset)
+    render(conn, "edit.html", timesheet_entry: timesheet_entry, changeset: changeset, mentees: mentees)
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do

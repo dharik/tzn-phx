@@ -9,6 +9,13 @@
   <%= datetime_local_input f, :started_at %>
   <%= error_tag f, :started_at %>
 
+  <%= label f, :mentee_id %>
+  <%= select f, :mentee_id, [
+        {"No specific mentee - general / admin work", nil}
+        | Enum.map(@mentees, fn mentee ->  {mentee.name, mentee.id} end)
+      ] %>
+  <%= error_tag f, :mentee_id %>
+
   <%= label f, :category %>
   <%= select f,
       :category,
@@ -17,7 +24,7 @@
   <%= error_tag f, :category %>
 
   <%= label f, :mentee_grade %>
-  <%= select f, :mentee_grade, Tzn.Util.grade_options() %>
+  <%= select f, :mentee_grade, [{"-- Not set --", nil}] ++ Tzn.Util.grade_options() %>
   <%= error_tag f, :mentee_grade %>
 
   <%= label f, :started_at %>
