@@ -1,12 +1,11 @@
 @import "./admin.scss";
 
-
 .parent_layout {
   display: grid;
   grid-template-areas:
-    "nav top top"
+    "nav main main"
     "nav main main";
-  grid-template-rows: 80px 1fr;
+  grid-template-rows: auto;
   grid-template-columns: 23rem 1fr 10%;
   grid-row-gap: 10px;
   grid-column-gap: 10px;
@@ -17,7 +16,6 @@
   @media all and (max-width: 575px) {
     grid-template-areas:
       "nav"
-      "top"
       "main";
     grid-template-rows: auto;
     grid-template-columns: 1fr;
@@ -49,10 +47,6 @@
     a.hover-color-white:hover {
       color: white;
     }
-  }
-
-  header {
-    grid-area: header;
   }
 
   main {
@@ -127,5 +121,11 @@ $border-color: lightgray;
   }
   .side {
     grid-area: side;
+  }
+}
+
+.hover-text-decoration-none {
+  &:hover, &:active {
+    text-decoration: none;
   }
 }

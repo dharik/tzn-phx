@@ -11,16 +11,15 @@
   });
 </script>
 <div x-data="parentTimeline">
-  <div class="button-group">
     <template x-for="grade in timelineOrder">
-      <button
-        :disabled="selectedTimeline === grade"
-        :class="selectedTimeline === grade ? 'button-primary' : ''"
-        @click="selectTimeline(grade)"
-        x-text="grade"
-      ></button>
+      <a
+        href="#"
+        class="lead display-inline-block margin-horizontal-m text-decoration-none font-weight-500 hover-text-decoration-none"
+        :class="{'color-grey-100': selectedTimeline !== grade}"
+        @click.prevent="selectTimeline(grade)"
+        x-text="grade">
+      </a>
     </template>
-  </div>
   <div class="space-m"></div>
   <template x-for="monthData in timelines[selectedTimeline]">
     <div class="timeline-item">

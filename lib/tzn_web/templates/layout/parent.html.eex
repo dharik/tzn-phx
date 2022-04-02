@@ -52,8 +52,35 @@
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_dashboard_path(@conn, :show), "Dashboard", "home", @conn.request_path =~ "dashboard") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_worklog_path(@conn, :show), "Work Log", "restore", @conn.request_path =~ "work_log") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.parent_timeline_path(@conn, :show), "Timeline", "dashboard", @conn.request_path =~ "timeline") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.parent_additional_offerings_path(@conn, :show), "Additional Services", "hub", @conn.request_path =~ "additional_offerings") %>
+
+            <div x-data="{open: true}">
+              <a
+                href="#"
+                @click.prevent="open = !open"
+                class="button-block font-size-m padding-vertical-s padding-left-s flex align-items-center justify-content-flex-start"
+              >
+                <span class="material-icons-outlined">hub</span>
+                <span class="margin-left-xxs font-weight-bold">Additional Services</span>
+                <span class="material-icons-outlined align-self-flex-end" x-text="open ? 'expand_less' : 'expand_more'">expand_more</span>
+              </a>
+              <div class="padding-left-xl" x-show="open" x-transition>
+                <div class="space-xxs"></div>
+                <ul class="align-content-flex-start" >
+                  <li><%= link "Passion Project", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#passion_project" %></li>
+                  <li><%= link "SAT/ACT Tutoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#act_sat" %></li>
+                  <li><%= link "Academic Tutoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#academic_tutoring" %></li>
+                  <li><%= link "College Mentoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#college_mentoring" %></li>
+                  <li><%= link "Financial Aid Advising", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#financial_aid" %></li>
+                  <li><%= link "Life-Skills Workshops", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#life_skills" %></li>
+                  <li><%= link "Talk to an Alumni", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#alumni" %></li>
+                </ul>
+              </div>
+            </div>
+
           </div>
+
+          <div class="space-xl"></div>
+          <div class="space-xl"></div>
 
           <div class="flex-1 flex flex-column align-items-center justify-content-flex-end width-100">
             <%= link to: Routes.parent_referral_path(@conn, :show), class: "border-radius background-white width-80 display-block padding-m" do %>
@@ -68,11 +95,6 @@
           </div>
         </div>
     </nav>
-      <%= if p = @conn.assigns[:parent_profile] do %>
-        <div class="top padding-m"">
-          <p class="lead-s">Hi, <%= p.name %></p>
-        </div>
-      <% end %>
       <main role="main" class="padding-m">
         <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>

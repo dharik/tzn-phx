@@ -1,4 +1,4 @@
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="passion_project">
   <p class="lead">Passion Project</p>
   <p>
  It’s hard to find internships as a high school student! We recognize this difficulty, which is why we offer the opportunity for your child to spend 20 hours working with a specialized mentor who will help them create an independent project focused on their specific interests and strengths.
@@ -15,7 +15,7 @@
 </div>
 
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="act_sat">
   <p class="lead">SAT/ACT Tutoring</p>
   <p>
 Despite the increase of test-optional universities, many top schools still consider SAT and ACT scores as a critical component when evaluating applications. As such, it remains essential for your child to take and do well on the SAT or ACT if they are targeting top institutions.
@@ -25,13 +25,13 @@ We have several mentors who specialize in SAT and ACT tutoring and offer multipl
   </p>
 </div>
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="academic_tutoring">
   <p class="lead">Academic Tutoring</p>
   <p>We understand that high school can be academically challenging and that each student has their own strengths and weaknesses. To help your child maintain or improve their GPA, we have several mentors who offer academic tutoring, from AP classes to writing. We offer multiple packages to facilitate your child’s study.
 </p>
 </div>
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="college_mentoring">
   <p class="lead">College Mentoring</p>
   <p>
     Did you know that having a mentor in college can be even more important than in high school?
@@ -45,7 +45,7 @@ We have several mentors who specialize in SAT and ACT tutoring and offer multipl
   </p>
 </div>
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="financial_aid">
   <p class="lead">Financial Aid Advising</p>
   <p>
     It’s commonly presumed that financial aid for college should begin with scholarship
@@ -62,7 +62,7 @@ We have several mentors who specialize in SAT and ACT tutoring and offer multipl
 </div>
 
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="life_skills">
   <p class="lead">Life-Skills Workshops</p>
   <p>
     There is a lot more to being an adult than getting into college! Whether you
@@ -89,7 +89,7 @@ We have several mentors who specialize in SAT and ACT tutoring and offer multipl
 </div>
 
 
-<div style="max-width: 60em" class="margin-vertical-l">
+<div style="max-width: 60em" class="margin-vertical-l" id="alumni">
   <p class="lead">Talk to an Alumni</p>
   <p>
    When you’re looking at colleges, it can be hard to truly get to know campus culture from the outside, no matter how many tours you take. Give you and your child the benefit of an insider’s knowledge, whether you’re trying to decide on a college list or make a final decision about what school to attend by talking to a Transizion alum who is currently going to that school!
