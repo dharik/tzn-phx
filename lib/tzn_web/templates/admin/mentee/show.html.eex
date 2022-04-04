@@ -124,7 +124,7 @@
                 _ -> ""
               end %>
             <% else %>
-              <span class="color-error">No mentor assigned yet</span>
+              <span class="color-error">No mentor assigned</span>
             <% end %>
           </span>
         </p>
@@ -133,7 +133,13 @@
             Hourly Rate
           </span>
           <span>
-            <%= @mentee.mentor_rate || @mentee.mentor.hourly_rate %>
+            <%=
+              cond do
+                @mentee.mentor_rate -> @mentee.mentor_rate
+                @mentee.mentor -> @mentee.mentor.hourly_rate
+                true -> "N/A"
+              end
+             %>
           </span>
         </p>
       </div>
