@@ -1,67 +1,132 @@
-<h1 class="display-title"><%= @mentee.name %> (<%= @mentee.grade |> humanize %>)</h1>
-<div class="space-m"></div>
-<%= if low_hours_warning?(@mentee.hour_counts.hours_used |> Decimal.to_float, @mentee.hour_counts.hours_purchased |> Decimal.to_float) do %>
-  <div class="background-warning-200 padding-xxs border-radius text-align-center">
-    This student's contract hours are running low. Please inform Jason to reload hours.
-  </div>
-  <div class="space-m"></div>
-<% end %>
-<p class="lead">Internal Information</p>
-<div class="border border-radius padding-s">
-  <div class="flex flex-row">
-    <div class="flex-1">
-      <p>
-        Nick Name:<br />
-        <%= @mentee.nick_name || "Not set" %>
-      </p>
-      <p>
-        Preferred Pronouns:<br />
-        <%= @mentee.pronouns || "Not set" %>
-      </p>
-      <p>
-        Time Zone:<br />
-        <%= Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset) %>
-      </p>
-      <p>
-        Parents: <br />
-        <%= if @mentee.parent1_email do %>
-          <span class="color-grey">
-            <%= "#{@mentee.parent1_name} <#{@mentee.parent1_email}>" %>
-          </span>
-        <% end %>
-        <br />
-        <%= if @mentee.parent2_email do %>
-          <span class="color-grey">
-            <%= "#{@mentee.parent2_name} <#{@mentee.parent2_email}>" %>
-          </span>
-        <% end %>
-      </p>
-    </div>
-    <div class="flex-1">
-      <p>
-        Hours used: <br />
-        <span class="color-grey"><%= @mentee.hour_counts.hours_used |> Decimal.round(1) %></span>
-      </p>
-      <p>
-        Hours purchased:<br />
-        <span class="color-grey"><%= @mentee.hour_counts.hours_purchased |> Decimal.round(1) %></span>
-      </p>
+<h1 class="display-title"><%= @mentee.name %></h1>
+
+<div class="main-grid">
+  <div class="side padding-horizontal-m">
+
+    <p class="lead">
+      Private Notes
+    </p>
+    <div>
+    <small>This is an internal field and <%= @mentee.name %> will not see this.</small>
+      <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
+      <%= textarea f, :internal_note, class: "rte" %>
+      <%= error_tag f, :internal_note %>
+      <%= submit "Save" %>
+    <% end %>
     </div>
   </div>
-  <div class="space-s"></div>
-  <%= link "Edit internal information", to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: "button button-outline button-s" %>
+
+<div class="main">
+
+  <p class="lead">Internal Information</p>
+
+  <div class="flex border border-radius flex-wrap" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
+      <div class="flex flex-column justify-content-flex-start align-items-center padding-horizontal-xl padding-vertical-m">
+        <div class="background-light-50 flex justify-content-center align-items-center border" style="width: 90px; height: 90px; border-radius: 50%">
+          <span class="material-icons-outlined">school</span>
+        </div>
+
+        <div class="space-xs"></div>
+
+        <p class="display-title"><%= @mentee.name %></p>
+        <%= if @mentee.pronouns do %>
+          <small><%= @mentee.pronouns %></small>
+        <% end %>
+
+        <%= if @mentee.archived do %>
+          <span class="text-transform-uppercase display-title color-info">Archived</span>
+        <% end %>
+
+
+        <div class="space-m"></div>
+
+        <%= link to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: "button button-primary button-icon" do %>
+          <span class="material-icons-outlined">edit</span>
+          <div class="space-xxs"></div>
+          <span>Edit Profile</span>
+        <% end %>
+      </div>
+
+      <div class="flex-1 flex flex-column border-left">
+        <div class="padding-m">
+          <%= for {key, value} <- [
+            {"Nick Name", @mentee.nick_name || "Not set"},
+            {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
+            {"Email Address", @mentee.email},
+            {"Grade", humanize(@mentee.grade) || 'Not set'},
+          ] do %>
+          <p>
+            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;"><%= key %></span>
+            <span><%= value %></span>
+          </p>
+          <% end %>
+          <p class="vertical-align-middle">
+            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
+              Hours Used
+            </span>
+            <progress
+              class="display-inline-block no-margin" style="width: 15rem;"
+              value="<%= @mentee.hour_counts.hours_used %>"
+              max="<%= @mentee.hour_counts.hours_purchased %>">
+            </progress>
+            <span class="color-grey-600 font-size-xs">
+              <%= Decimal.round(@mentee.hour_counts.hours_used, 1) %> / <%= Decimal.round(@mentee.hour_counts.hours_purchased, 1) %>
+            <span>
+            <%= if low_hours_warning?(Decimal.to_float(@mentee.hour_counts.hours_used), Decimal.to_float(@mentee.hour_counts.hours_purchased)) do %>
+              <p class="color-warning text-align-center font-size-s">
+                This student's contract hours are running low. Please inform Jason to reload hours.
+              </p>
+            <% end %>
+          </p>
+        </div>
+
+        <div class="border-bottom"></div>
+        <div class="padding-m">
+          <span class="lead-s">Parents</span>
+
+          <%= if @mentee.parent1_email do %>
+            <p>
+              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
+                Name
+              </span>
+              <span>
+                <%= @mentee.parent1_name %>
+              </span>
+            </p>
+            <p>
+              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
+                Email
+              </span>
+              <span>
+                <%= @mentee.parent1_email %>
+              </span>
+            </p>
+          <% end %>
+          <%= if @mentee.parent2_email do %>
+            <p>
+              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
+                Name
+              </span>
+              <span>
+                <%= @mentee.parent2_name %>
+              </span>
+            </p>
+            <p>
+              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
+                Email
+              </span>
+              <span>
+                <%= @mentee.parent2_email %>
+              </span>
+            </p>
+          <% end %>
+        </div>
+      </div>
+  </div>
+
+
 </div>
-<div class="space-m"></div>
-<p class="lead">
-  Private Notes for <%= @mentee.name %>
-</p>
-<small>This is an internal field and <%= @mentee.name %> will not see this.</small>
-<div class="border border-radius padding-s">
-  <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
-  <%= textarea f, :internal_note, class: "rte" %>
-  <%= error_tag f, :internal_note %>
-  <%= submit "Save" %>
-<% end %>
+
 </div>
 <div class="space-m"></div>
 <p class="lead">Timesheet Entries</p>
@@ -72,7 +137,9 @@
       <tr>
         <td><%= timesheet_entry.started_at |> format_date %></td>
         <td><span><%= raw timesheet_entry.notes || humanize(timesheet_entry.category) %></span></td>
-        <td><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-border button-xs" %></td>
+        <td><%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "color-primary text-decoration-none" do%>
+        <span class="material-icons-outlined">edit</span> Edit
+        <% end %></td>
       </tr>
     <% end %>
   </table>
