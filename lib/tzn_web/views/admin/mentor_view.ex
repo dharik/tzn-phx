@@ -6,17 +6,26 @@ defmodule TznWeb.Admin.MentorView do
     mentors
     |> Enum.map(fn mentor ->
       active_mentees = mentor.mentees |> Enum.reject(fn m -> m.archived end)
-      can_show_capacity = mentor.max_mentee_count || mentor.desired_mentee_count
 
       %{
         name: mentor.name,
         archived: mentor.archived,
         experience_level: mentor.experience_level,
-        capacity: if can_show_capacity do
-          min(mentor.max_mentee_count || 0, mentor.desired_mentee_count || 0) - Enum.count(active_mentees)
-        else
-          nil
-        end,
+        capacity:
+          cond do
+            mentor.max_mentee_count && mentor.desired_mentee_count ->
+              min(mentor.max_mentee_count, mentor.desired_mentee_count) -
+                Enum.count(active_mentees)
+
+            mentor.max_mentee_count ->
+              mentor.max_mentee_count - Enum.count(active_mentees)
+
+            mentor.desired_mentee_count ->
+              mentor.desired_mentee_count - Enum.count(active_mentees)
+
+            true ->
+              nil
+          end,
         mentee_names:
           active_mentees
           |> Enum.map(fn m -> m.name end)
@@ -82,7 +91,7 @@ defmodule TznWeb.Admin.MentorView do
         |> Enum.map(fn entry ->
           seconds = NaiveDateTime.diff(entry.ended_at, entry.started_at)
 
-           seconds / 3600.0 * Decimal.to_float(entry.hourly_rate)
+          seconds / 3600.0 * Decimal.to_float(entry.hourly_rate)
         end)
         |> Enum.sum()
 
