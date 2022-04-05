@@ -50,7 +50,8 @@
         <tr>
         <th width="15%">Name</th>
         <th width="15%">Hours</th>
-        <th width="70%">Mentees</th>
+        <th width="65%">Mentees</th>
+        <th width="5%">Capacity</th>
         </tr>
     </thead>
     <tbody>
@@ -64,6 +65,7 @@
                 </td>
                 <td x-text="latestMonthCount(mentor)"></td>
                 <td x-text="mentor.mentee_names"></td>
+                <td x-text="mentor.capacity"></td>
             </tr>
         </template>
     </tbody>

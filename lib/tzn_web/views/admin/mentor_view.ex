@@ -5,13 +5,20 @@ defmodule TznWeb.Admin.MentorView do
   def render("index.json", %{mentors: mentors, conn: conn}) do
     mentors
     |> Enum.map(fn mentor ->
+      active_mentees = mentor.mentees |> Enum.reject(fn m -> m.archived end)
+      can_show_capacity = mentor.max_mentee_count || mentor.desired_mentee_count
+
       %{
         name: mentor.name,
         archived: mentor.archived,
         experience_level: mentor.experience_level,
+        capacity: if can_show_capacity do
+          min(mentor.max_mentee_count || 0, mentor.desired_mentee_count || 0) - Enum.count(active_mentees)
+        else
+          nil
+        end,
         mentee_names:
-          mentor.mentees
-          |> Enum.reject(fn m -> m.archived end)
+          active_mentees
           |> Enum.map(fn m -> m.name end)
           |> Enum.join(", "),
         counts:
