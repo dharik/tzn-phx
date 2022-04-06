@@ -289,7 +289,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= for c <- @mentee.changes do %>
+        <%= for c <- Enum.sort_by(@mentee.changes, &(&1.inserted_at), :desc) do %>
           <tr>
             <td><%= c.field %></td>
             <td><%= c.new_value %></td>
