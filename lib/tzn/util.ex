@@ -44,6 +44,7 @@ defmodule Tzn.Util do
   def timezone_options do
     [
       {"Other/Unknown", nil},
+      {"Brasilia", -3},
       {"New York", -4},
       {"Chicago", -5},
       {"Salt Lake City", -6},
