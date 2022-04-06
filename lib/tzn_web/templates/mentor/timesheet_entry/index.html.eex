@@ -1,77 +1,100 @@
-<h1>Timesheet Entries</h1>
 
-<div>
-  <%= link "New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: "button button-primary" %>
+<div x-data="{tab: 'timesheet'}">
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'timesheet'}"
+    @click.prevent="tab = 'timesheet'">
+    Timesheet Entries
+  </a>
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'hours'}"
+    @click.prevent="tab = 'hours'">
+    Hours by month
+  </a>
+
+  <div x-show="tab === 'timesheet'" x-transition>
+    <div>
+      <%= link "New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: "button button-primary" %>
+    </div>
+
+    <table>
+      <thead>
+        <tr>
+          <th>Mentee Name</th>
+          <th>Start Date</th>
+          <th>End Date</th>
+          <th>Notes</th>
+          <th></th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for timesheet_entry <- @timesheet_entries do %>
+          <tr>
+            <td>
+              <%= if timesheet_entry.mentee do %>
+                <%= link timesheet_entry.mentee.name, to: Routes.mentor_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+              <% else %>
+                N/A
+              <% end %>
+            </td>
+            <td><%= timesheet_entry.started_at |> format_date %></td>
+            <td><%= timesheet_entry.ended_at |> format_date %></td>
+            <td>
+              <%=
+                if timesheet_entry.notes do
+                  raw timesheet_entry.notes
+                else
+                  Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name
+                end
+              %>
+            </td>
+            <td>
+              <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
+                <span class="material-icons-outlined">edit</span>
+              <% end %>
+              <%= link to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry),
+                  method: :delete, data: [confirm: "Are you sure?"] do %>
+                <span class="material-icons-outlined color-error">delete</span>
+              <% end %>
+            </td>
+          </tr>
+
+        <% end %>
+        <tr>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <div style="max-width: 80rem;" x-show="tab === 'hours'" x-transition>
+    <small>All payments sent on 1st Wednesday of every month</small>
+    <table>
+      <thead>
+        <tr>
+          <th>Month</th>
+          <th>Total hours</th>
+          <th>Estimated Pay</th>
+        </tr>
+      </thead>
+      <%= for stat <- TznWeb.Admin.MentorView.hour_counts_by_month(@timesheet_entries)  |> Enum.reverse() do %>
+          <tr>
+            <td>
+              <%= stat.month_name %> <%= stat.year %>
+            </td>
+            <td>
+              <%= Number.Conversion.to_decimal(stat.hours) |> Decimal.round(2) %>
+            </td>
+            <td>
+              <%= Number.Currency.number_to_currency(stat.pay) %>
+            </td>
+          </tr>
+        <% end %>
+      </tbody>
+    </table>
+  </div>
 </div>
 
-
-<div class="overflow-y-scroll" style="max-height: 60vh">
-<table>
-  <thead>
-    <tr>
-      <th>Mentee Name</th>
-      <th>Start Date</th>
-      <th>End Date</th>
-      <th>Notes</th>
-      <th></th>
-    </tr>
-  </thead>
-  <tbody>
-    <%= for timesheet_entry <- @timesheet_entries do %>
-      <tr>
-        <td>
-          <%= if timesheet_entry.mentee do %>
-            <%= link timesheet_entry.mentee.name, to: Routes.mentor_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
-          <% else %>
-            N/A
-          <% end %>
-        </td>
-        <td><%= timesheet_entry.started_at |> format_date %></td>
-        <td><%= timesheet_entry.ended_at |> format_date %></td>
-        <td>
-          <%=
-            if timesheet_entry.notes do
-              raw timesheet_entry.notes
-            else
-              Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name
-            end
-          %>
-        </td>
-        <td>
-          <span><%= link "Edit", to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
-          <span><%= link "Delete", to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
-        </td>
-      </tr>
-
-    <% end %>
-    <tr>
-    </tr>
-  </tbody>
-</table>
-</div>
-
-<h2>Hours by month</h2>
-<small>All payments sent on 1st Wednesday of every month</small>
-<table>
-  <thead>
-    <tr>
-      <th>Month</th>
-      <th>Total hours</th>
-      <th>Estimated Pay</th>
-    </tr>
-  </thead>
-  <%= for stat <- TznWeb.Admin.MentorView.hour_counts_by_month(@timesheet_entries)  |> Enum.reverse() do %>
-      <tr>
-        <td>
-          <%= stat.month_name %> <%= stat.year %>
-        </td>
-        <td>
-          <%= stat.hours %>
-        </td>
-        <td>
-          <%= stat.pay %>
-        </td>
-      </tr>
-    <% end %>
-  </tbody>
-</table>
+<div class="space-l"></div>
