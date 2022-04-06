@@ -4,6 +4,7 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
+    <%= csrf_meta_tag() %>
     <title>Admin - Transizion</title>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
     <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
@@ -29,7 +30,7 @@
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_path(@conn, :index), "Mentors", "work_outline", @conn.request_path =~ "mentors" || @conn.request_path =~ ~r/admin$/) %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_timeline_event_path(@conn, :index), "Mentor Timeline", "view_timeline", @conn.request_path =~ "timeline") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questionnaire") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
 
           </div>
           <div class="space-xl"></div>

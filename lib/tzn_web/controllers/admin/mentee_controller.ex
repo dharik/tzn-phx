@@ -49,7 +49,8 @@ defmodule TznWeb.Admin.MenteeController do
         :hour_counts,
         :contract_purchases,
         :user,
-        strategy_sessions: [:mentor]
+        strategy_sessions: [:mentor],
+        changes: [:user]
       ])
 
     render(conn, "show.html", mentee: mentee)

@@ -37,6 +37,14 @@
     @click.prevent="tab = 'contract_purchases'">
     Contract Purchases
   </a>
+  <a
+    href="#"
+    class="lead display-inline-block margin-horizontal-m text-decoration-none"
+    :class="{'color-grey-100': tab !== 'changes'}"
+    @click.prevent="tab = 'changes'">
+    Change History
+  </a>
+
 
   <div class="space-m"></div>
 
@@ -270,6 +278,26 @@
     <% end %>
   </div>
 
+  <div x-show="tab === 'changes'">
+    <table>
+      <thead>
+        <tr>
+          <th>Field name</th>
+          <th>Field value</th>
+          <th>Changed By</th>
+          <th>Timestamp</th>
+        </tr>
+      </thead>
+      <tbody>
+        <%= for c <- @mentee.changes do %>
+          <tr>
+            <td><%= c.field %></td>
+            <td><%= c.new_value %></td>
+            <td><%= c.user.email %></td>
+            <td><%= c.inserted_at %></td>
+          </tr>
+        <% end %>
+  </div>
 
 </div>
 

@@ -126,6 +126,10 @@ defmodule Tzn.Transizion do
     Mentee |> order_by(asc: :archived, asc: :name) |> Repo.all()
   end
 
+  def list_mentees(%Mentor{} = mentor) do
+    list_mentees(%{mentor: mentor})
+  end
+
   def list_mentees(%{mentor: mentor}) do
     Repo.all(
       from(m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [asc: m.archived, desc: m.id])
@@ -186,7 +190,13 @@ defmodule Tzn.Transizion do
 
       Map.to_list(changeset.changes)
       |> Enum.filter(fn {field, _} ->
-        field in [:parent_todo_notes, :mentor_todo_notes, :mentee_todo_notes, :grade, :mentor_rate]
+        field in [
+          :parent_todo_notes,
+          :mentor_todo_notes,
+          :mentee_todo_notes,
+          :grade,
+          :mentor_rate
+        ]
       end)
       |> Enum.each(fn {field, value} ->
         Repo.insert!(
@@ -202,7 +212,6 @@ defmodule Tzn.Transizion do
       mentee_result
     end)
   end
-
 
   @doc """
   Returns the list of strategy_sessions.
@@ -390,10 +399,10 @@ defmodule Tzn.Transizion do
   def most_recent_todo_list_updated_at(%Mentee{} = mentee) do
     Repo.one(
       from(mc in MenteeChanges,
-          where: mc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
-          where: mc.mentee_id == ^mentee.id,
-          select: max(mc.updated_at)
-        )
+        where: mc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
+        where: mc.mentee_id == ^mentee.id,
+        select: max(mc.updated_at)
+      )
     )
   end
 end

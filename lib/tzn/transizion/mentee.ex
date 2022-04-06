@@ -42,6 +42,7 @@ defmodule Tzn.Transizion.Mentee do
     has_many :questionnaires, Tzn.Questionnaire.Questionnaire
     has_many :answers, Tzn.Questionnaire.Answer
     has_many :parents, Tzn.Transizion.Parent
+    has_many :changes, Tzn.Transizion.MenteeChanges
 
     timestamps()
   end
