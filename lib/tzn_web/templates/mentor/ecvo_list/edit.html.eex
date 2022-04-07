@@ -163,7 +163,7 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
             </thead>
             <tr>
                 <td width="33%">
-                    <em class="color-grey-200"><%= answer.from_parent %></em>
+                    <em class="color-grey-200 white-space-pre-wrap"><%= answer.from_parent %></em>
                 </td>
                 <td width="33%">
                     <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
@@ -173,7 +173,7 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
                             value: Map.get(answer, :from_pod)
                         }) %>
                     <% else %>
-                        <%= Map.get(answer, :from_pod) %>
+                        <p class="white-space-pre-wrap"><%= Map.get(answer, :from_pod) %></p>
                     <% end %>
 
                 </td>
