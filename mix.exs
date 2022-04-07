@@ -41,6 +41,7 @@ defmodule Tzn.MixProject do
       {:phoenix_html, "~> 3.0"},
       {:phoenix_live_reload, "~> 1.2", only: :dev},
       {:phoenix_live_dashboard, "~> 0.5"},
+      {:phoenix_live_view, "~> 0.17.6"},
       {:telemetry_metrics, "~> 0.6"},
       {:telemetry_poller, "~> 0.5"},
       {:timex, "~> 3.5"},

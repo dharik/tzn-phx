@@ -4,10 +4,12 @@
 import '../css/app.scss';
 
 import 'phoenix_html';
+import {Socket} from "phoenix"
+import {LiveSocket} from "phoenix_live_view"
+
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
 import { h, render } from 'preact';
-import MatchingApp from './matching';
 
 import MentorAnswerPodInput from './mentor/answer_pod_input';
 import MentorAnswerInternalInput from './mentor/answer_internal_input';
@@ -45,8 +47,7 @@ window.Components = {
   MentorAnswerPodInput,
   MentorAnswerInternalInput,
   ParentAnswerInput,
-  AdminAnswerInput,
-  MatchingApp,
+  AdminAnswerInput
 };
 
 for (const element of document.getElementsByClassName('rte')) {
@@ -70,3 +71,15 @@ for (const el of document.getElementsByClassName('rtem')) {
       // console.error( error );
     });
 }
+
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
+let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
+liveSocket.connect()
+
+// Expose liveSocket on window for web console debug logs and latency simulation:
+// >> liveSocket.enableDebug()
+// >> liveSocket.enableLatencySim(1000)
+// The latency simulator is enabled for the duration of the browser session.
+// Call disableLatencySim() to disable:
+// >> liveSocket.disableLatencySim()
+// window.liveSocket = liveSocket

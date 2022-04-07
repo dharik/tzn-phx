@@ -1,0 +1,240 @@
+<div class="main-grid">
+  <div class="main">
+    <%= if @show_scoring do %>
+      <table>
+        <tr>
+          <th>Name</th>
+          <th>Major</th>
+          <th>Schools Tier</th>
+          <th>Gender</th>
+          <th>Learning Disability</th>
+          <th>Social Factor</th>
+          <th>Hobbies</th>
+          <th>Total</th>
+        </tr>
+        <%= for m <- @scored_mentors do %>
+          <tr>
+            <td><%= m.name %></td>
+            <td><%= m.score_breakdown.career %></td>
+            <td><%= m.score_breakdown.school_tier %></td>
+            <td><%= m.score_breakdown.gender %></td>
+            <td><%= m.score_breakdown.learning_disability %></td>
+            <td><%= m.score_breakdown.social_factor %></td>
+            <td><%= m.score_breakdown.hobby %></td>
+            <td><%= m.score %></td>
+          </tr>
+        <% end %>
+      </table>
+    <% else %>
+      <div class="flex-1 matching-result">
+        <%= for m <- Enum.take(@scored_mentors, 5) do %>
+          <div class="border border-radius margin-vertical-s padding-s transition-fast flex flex-column align-items-center text-align-center">
+            <div>
+              <%= if m.photo_url do %>
+                <img
+                  src={m.photo_url}
+                  style="height: 200px; width: 200px; border-radius: 50%; object-fit: cover;"
+                />
+              <% else %>
+                <svg
+                  style="border-radius: 50%;"
+                  class="background-light-50 fill-dark-50"
+                  viewBox="0 0 24 24"
+                  width="200"
+                  height="200"
+                  xmlns="http://www.w3.org/2000/svg"
+                >
+                  <path d="M12 12c2.21 0 4-1.79 4-4s-1.79-4-4-4-4 1.79-4 4 1.79 4 4 4zm0 2c-2.67 0-8 1.34-8 4v2h16v-2c0-2.66-5.33-4-8-4z" />
+                </svg>
+              <% end %>
+            </div>
+
+            <p class="lead-xs"><%= m.name %></p>
+            <a
+              href={"/admin/mentors/#{m.id}"}
+              class="text-decoration-none color-primary-500 font-weight-medium"
+            >
+              View profile
+            </a>
+          </div>
+        <% end %>
+      </div>
+    <% end %>
+
+    <button class="button button-primary button-text button-xs" phx-click="toggle_scoring">Toggle Score Breakdown</button>
+  </div>
+
+  <div class="side padding-horizontal-m">
+    <div class="background-light-100 padding-s">
+      <strong>Prospective Major</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <%= for {label, value} <- Tzn.Transizion.Mentor.career_interest_options()  do%>
+        <label class="control checkbox">
+          <input
+            type="checkbox"
+            checked={MapSet.member?(@careers, value)}
+            phx-click="set_career"
+            phx-value-career={value}
+          />
+          <span class="control-indicator"></span>
+          <span class="control-label"><%= label %></span>
+        </label>
+      <% end %>
+    </div>
+    <div class="space-m"></div>
+
+    <div class="background-light-100 padding-s">
+      <strong>Schools Tier</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <%= for {label, value} <- Tzn.Transizion.Mentor.school_tier_options()  do%>
+          <label class="control checkbox">
+            <input
+              type="checkbox"
+              checked={MapSet.member?(@school_tiers, value)}
+              phx-click="set_school_tier"
+              phx-value-school_tier={value}
+            />
+            <span class="control-indicator"></span>
+            <span class="control-label"><%= label %></span>
+          </label>
+      <% end %>
+    </div>
+    <div class="space-m"></div>
+
+    <div class="background-light-100 padding-s">
+      <strong>Gender preference</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <label class="control radio">
+        <input type="radio"
+              checked={@gender == "male"}
+              phx-click="set_gender_male"/>
+        <span class="control-indicator"></span>
+        <span class="control-label">Male</span>
+      </label>
+      <label class="control radio">
+        <input type="radio"
+              checked={@gender == "female"}
+              phx-click="set_gender_female"/>
+        <span class="control-indicator"></span>
+        <span class="control-label">Female</span>
+      </label>
+      <label class="control radio">
+        <input type="radio"
+              checked={@gender == "non_binary"}
+              phx-click="set_gender_non_binary"/>
+        <span class="control-indicator"></span>
+        <span class="control-label">Non-binary</span>
+      </label>
+      <label class="control radio">
+        <input type="radio"
+              checked={@gender == "no_preference"}
+              phx-click="set_gender_no_preference"/>
+        <span class="control-indicator"></span>
+        <span class="control-label">No preference</span>
+      </label>
+    </div>
+    <div class="space-m"></div>
+
+    <div class="background-light-100 padding-s">
+      <strong>Learning Disability</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <label class="control radio">
+        <input type="radio" checked={@learning_disability} phx-click="toggle_learning_disability" />
+        <span class="control-indicator"></span>
+        <span class="control-label">Yes</span>
+      </label>
+      <label class="control radio">
+        <input type="radio" checked={!@learning_disability} phx-click="toggle_learning_disability" />
+        <span class="control-indicator"></span>
+        <span class="control-label">No</span>
+      </label>
+    </div>
+    <div class="space-m"></div>
+
+    <div class="background-light-100 padding-s">
+      <strong>Social Factor</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <label class="control radio">
+        <input type="radio" checked={@social_factor == "1"} phx-click="set_social_factor" phx-value-social_factor="1" />
+        <span class="control-indicator"></span>
+        <span class="control-label">1</span>
+      </label>
+      <label class="control radio">
+        <input type="radio" checked={@social_factor == "2"} phx-click="set_social_factor" phx-value-social_factor="2" />
+        <span class="control-indicator"></span>
+        <span class="control-label">2</span>
+      </label>
+      <label class="control radio">
+        <input type="radio" checked={@social_factor == "3"} phx-click="set_social_factor" phx-value-social_factor="3" />
+        <span class="control-indicator"></span>
+        <span class="control-label">3</span>
+      </label>
+      <label class="control radio">
+        <input type="radio" checked={@social_factor == "4"} phx-click="set_social_factor" phx-value-social_factor="4" />
+        <span class="control-indicator"></span>
+        <span class="control-label">4</span>
+      </label>
+      <label class="control radio">
+        <input type="radio" checked={@social_factor == "5"} phx-click="set_social_factor" phx-value-social_factor="5" />
+        <span class="control-indicator"></span>
+        <span class="control-label">5</span>
+      </label>
+    </div>
+    <div class="space-m"></div>
+
+    <div class="background-light-100 padding-s">
+      <strong>Hobbies</strong>
+    </div>
+    <div class="margin-vertical-s padding-horizontal-m">
+      <%= for {label, value} <- Tzn.Transizion.Mentor.hobby_options()  do%>
+        <label class="control checkbox">
+          <input
+            type="checkbox"
+            checked={MapSet.member?(@hobbies, value)}
+            phx-click="set_hobby"
+            phx-value-hobby={value}
+          />
+          <span class="control-indicator"></span>
+          <span class="control-label"><%= label %></span>
+        </label>
+      <% end %>
+    </div>
+  </div>
+</div>
+
+<!--
+  {mentor.careerScore > 0 && (
+              <p>
+                <span class="text-transform-uppercase color-grey font-size-s">Similar career interests</span>
+                <br />
+                {mentor.career_interests
+                  .filter((career) => careers.has(career))
+                  .map((career) => slugToLabel[career] || career)
+                  .join(', ')}
+              </p>
+            )}
+
+            {mentor.hobbiesScore > 0 && (
+              <p>
+                <span class="text-transform-uppercase color-grey font-size-s">Similar hobbies:</span>
+                <br />
+                {mentor.hobbies
+                  .filter((hobby) => hobbies.has(hobby))
+                  .map((hobby) => slugToLabel[hobby] || hobby)
+                  .join(', ')}
+              </p>
+            )}
+            {mentor.disabilityScore > 0 && (
+              <p class="text-transform-uppercase color-grey font-size-s">Experience with learning disabilities</p>
+            )}
+            {mentor.tierScore > 0 && (
+              <p class="text-transform-uppercase color-grey font-size-s">
+                Experience with {mentor.school_tiers.map((tier) => slugToLabel[tier]).join(', ')} schools
+              </p>
+            )}
+-->

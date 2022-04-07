@@ -1,2 +1,2 @@
-<%= react_component("Components.MatchingApp", data()) %>
+<%= live_render(@conn, TznWeb.MatchingAlgorithm) %>
 <div class="space-xl"></div>
