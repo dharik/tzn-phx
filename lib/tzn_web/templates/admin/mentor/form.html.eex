@@ -65,7 +65,7 @@
   <%= error_tag f, :scholarship_list_specialty %>
 
   <%= label f, :hourly_rate %>
-  <%= number_input f, :hourly_rate, step: 0.01 %>
+  <%= number_input f, :hourly_rate, step: 1.0 %>
   <%= error_tag f, :hourly_rate %>
 
   <%= label f, :user_id  %>

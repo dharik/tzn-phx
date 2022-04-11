@@ -71,6 +71,7 @@ defmodule Tzn.Transizion.Mentor do
     |> validate_required([:name, :nick_name, :email, :hourly_rate])
     |> validate_archived()
     |> validate_archived_reason()
+    |> validate_number(:hourly_rate, greater_than: 0)
     |> cast_assoc(:user)
   end
 

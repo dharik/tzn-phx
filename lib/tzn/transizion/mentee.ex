@@ -100,6 +100,7 @@ defmodule Tzn.Transizion.Mentee do
     |> validate_parent1()
     |> validate_parent2()
     |> validate_archived_reason()
+    |> validate_number(:mentor_rate, greater_than: 0)
   end
 
   def to_lowercase(changeset, fieldname) do

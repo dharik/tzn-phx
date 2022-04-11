@@ -64,7 +64,7 @@
   <%= error_tag f, :mentor_id %>
 
   <%= label f, :mentor_rate %>
-  <%= number_input f, :mentor_rate, step: 0.1 %>
+  <%= number_input f, :mentor_rate, step: 1.0 %>
   <%= error_tag f, :mentor_rate %>
 
   <%= label f, :user_id  %>
