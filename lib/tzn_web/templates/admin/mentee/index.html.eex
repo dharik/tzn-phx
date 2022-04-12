@@ -40,7 +40,7 @@
           <%
             hours_left = mentee.hour_counts.hours_purchased |> Decimal.sub(mentee.hour_counts.hours_used) |> Decimal.round(1)
           %>
-          <%= if hours_left |> Decimal.lt?(5) do %>
+          <%= if Tzn.HourTracking.low_hours?(mentee) do %>
             <span class="color-error"><%= hours_left %></span>
           <% else %>
             <%= hours_left %>

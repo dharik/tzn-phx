@@ -50,7 +50,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
     mentee =
       if timesheet_entry_params["mentee_id"] && timesheet_entry_params["mentee_id"] !== "" do
-        Transizion.get_mentee!(timesheet_entry_params["mentee_id"])
+        Transizion.get_mentee!(timesheet_entry_params["mentee_id"]) |> Repo.preload(:hour_counts)
       else
         nil
       end
@@ -61,7 +61,16 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
          ) do
       {:ok, _timesheet_entry} ->
         conn
-        |> put_flash(:info, "Timesheet entry created successfully.")
+        |> then(fn conn ->
+          mentee = Repo.reload(mentee)
+          remaining = Tzn.HourTracking.hours_remaining(mentee) |> Kernel.round()
+
+          if Tzn.HourTracking.low_hours?(mentee) do
+            put_flash(conn, :error, "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{mentee.name}. As appropriate, please let the student know that you’ll be unable to meet with them again unless their parent purchases more hours. ")
+          else
+            put_flash(conn, :info, "Timesheet entry created successfully.")
+          end
+        end)
         |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
       {:error, %Ecto.Changeset{} = changeset} ->

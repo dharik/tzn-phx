@@ -72,7 +72,7 @@
             <span class="color-grey-600 font-size-xs">
               <%= Decimal.round(@mentee.hour_counts.hours_used, 1) %> / <%= Decimal.round(@mentee.hour_counts.hours_purchased, 1) %>
             <span>
-            <%= if low_hours_warning?(Decimal.to_float(@mentee.hour_counts.hours_used), Decimal.to_float(@mentee.hour_counts.hours_purchased)) do %>
+            <%= if Tzn.HourTracking.low_hours?(@mentee) do %>
               <p class="color-warning text-align-center font-size-s">
                 This student's contract hours are running low. Please inform Jason to reload hours.
               </p>

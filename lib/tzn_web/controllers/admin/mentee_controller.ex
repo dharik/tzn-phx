@@ -53,7 +53,7 @@ defmodule TznWeb.Admin.MenteeController do
         changes: [:user]
       ])
 
-    render(conn, "show.html", mentee: mentee)
+    render(conn, "show.html", mentee: mentee, low_hours_warning: Tzn.HourTracking.low_hours?(mentee))
   end
 
   def edit(conn, %{"id" => id}) do
