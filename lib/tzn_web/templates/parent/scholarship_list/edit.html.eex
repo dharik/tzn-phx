@@ -11,7 +11,7 @@
     </p>
 
     <%= form_for @conn, Routes.questionnaire_path(@conn, :upload, @access_key), [multipart: true, method: :put], fn f -> %>
-        <%= file_input f, :attachment %>
+        <%= file_input f, :attachment, required: true %>
         <%= submit "Upload File", class: "button button-secondary button-s"%>
     <% end %>
 

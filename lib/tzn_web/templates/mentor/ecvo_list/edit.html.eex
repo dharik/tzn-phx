@@ -131,7 +131,7 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
         </p>
 
         <%= form_for @conn, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), [multipart: true, method: :put], fn f -> %>
-            <%= file_input f, :attachment %>
+            <%= file_input f, :attachment, required: true %>
             <%= submit "Upload File", class: "button button-secondary button-s"%>
         <% end %>
 
