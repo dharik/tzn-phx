@@ -62,11 +62,15 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
       {:ok, _timesheet_entry} ->
         conn
         |> then(fn conn ->
-          mentee = Repo.reload(mentee)
-          remaining = Tzn.HourTracking.hours_remaining(mentee) |> Kernel.round()
+          if mentee do
+            mentee = Repo.reload(mentee)
+            remaining = Tzn.HourTracking.hours_remaining(mentee) |> Kernel.round()
 
-          if Tzn.HourTracking.low_hours?(mentee) do
-            put_flash(conn, :error, "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{mentee.name}.” Encourage your student to have a conversation with their parents about adding more hours if they want to work on more items with you.")
+            if Tzn.HourTracking.low_hours?(mentee) do
+              put_flash(conn, :error, "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{mentee.name}.” Encourage your student to have a conversation with their parents about adding more hours if they want to work on more items with you.")
+            else
+              put_flash(conn, :info, "Timesheet entry created successfully.")
+            end
           else
             put_flash(conn, :info, "Timesheet entry created successfully.")
           end
