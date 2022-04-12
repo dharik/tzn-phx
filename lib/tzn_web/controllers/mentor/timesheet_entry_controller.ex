@@ -69,10 +69,10 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
             if Tzn.HourTracking.low_hours?(mentee) do
               put_flash(conn, :error, "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{mentee.name}.” Encourage your student to have a conversation with their parents about adding more hours if they want to work on more items with you.")
             else
-              put_flash(conn, :info, "Timesheet entry created successfully.")
+              conn
             end
           else
-            put_flash(conn, :info, "Timesheet entry created successfully.")
+            conn
           end
         end)
         |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
@@ -124,7 +124,6 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
     {:ok, _timesheet_entry} = Timesheets.delete_timesheet_entry(timesheet_entry)
 
     conn
-    |> put_flash(:info, "Timesheet entry deleted successfully.")
     |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
   end
 end
