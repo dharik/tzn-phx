@@ -5,6 +5,7 @@ defmodule Tzn.Mentee do
 
   import Ecto.Query
 
+  def get_mentee(nil), do: nil
   def get_mentee!(id), do: Repo.get!(Mentee, id)
   def get_mentee(id), do: Repo.get(Mentee, id)
   def get_mentee_by_email(email), do: Repo.get_by(Mentee, email: email)

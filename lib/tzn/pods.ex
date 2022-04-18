@@ -52,6 +52,10 @@ defmodule Tzn.Pod do
     # hour_counts, mentor, parents, mentee
   end
 
+  def get_pod(nil) do
+    nil
+  end
+
   def get_pod!(id) do
     pod =
       Repo.get!(__MODULE__, id)
