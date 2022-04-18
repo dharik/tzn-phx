@@ -27,6 +27,10 @@ defmodule Tzn.Transizion.Mentee do
 
     field :grade, :string
 
+    field :college_list_access, :boolean
+    field :ecvo_list_access, :boolean
+    field :scholarship_list_access, :boolean
+
     belongs_to :mentor, Tzn.Transizion.Mentor
 
     # Rates can change and this allows for overriding the mentor's rate
@@ -89,7 +93,10 @@ defmodule Tzn.Transizion.Mentee do
       :grade,
       :email,
       :archived,
-      :archived_reason
+      :archived_reason,
+      :college_list_access,
+      :ecvo_list_access,
+      :scholarship_list_access
     ])
     |> validate_inclusion(:type, ["college_mentoring", "tutoring", "capstone"])
     |> to_lowercase(:parent1_email)
@@ -105,9 +112,14 @@ defmodule Tzn.Transizion.Mentee do
 
   def to_lowercase(changeset, fieldname) do
     case fetch_change(changeset, fieldname) do
-      {:ok, value} when is_binary(value) -> put_change(changeset, fieldname, String.downcase(value))
-      {:ok, value} when is_nil(value) -> changeset
-      :error -> changeset
+      {:ok, value} when is_binary(value) ->
+        put_change(changeset, fieldname, String.downcase(value))
+
+      {:ok, value} when is_nil(value) ->
+        changeset
+
+      :error ->
+        changeset
     end
   end
 
