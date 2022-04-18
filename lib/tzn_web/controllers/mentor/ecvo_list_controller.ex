@@ -63,7 +63,7 @@ defmodule TznWeb.Mentor.ECVOListController do
   end
 
   def create(conn, %{"mentee_id" => mentee_id}) do
-    mentee = Tzn.Transizion.get_mentee!(mentee_id)
+    mentee = Tzn.Mentee.get_mentee!(mentee_id)
 
     case Questionnaire.create_questionnaire(
            %{

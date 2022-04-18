@@ -99,13 +99,13 @@ defmodule Tzn.TransizionTest do
 
     test "update_mentee/2 with valid data updates the mentee" do
       mentee = mentee_fixture()
-      assert {:ok, %Mentee{} = mentee} = Transizion.update_mentee(mentee, @update_attrs)
+      assert {:ok, %Mentee{} = mentee} = Mentee.update_mentee(mentee, @update_attrs)
       assert mentee.name == "some updated name"
     end
 
     test "update_mentee/2 with invalid data returns error changeset" do
       mentee = mentee_fixture()
-      assert {:error, %Ecto.Changeset{}} = Transizion.update_mentee(mentee, @invalid_attrs)
+      assert {:error, %Ecto.Changeset{}} = Mentee.update_mentee(mentee, @invalid_attrs)
       assert mentee == Transizion.get_mentee!(mentee.id)
     end
 

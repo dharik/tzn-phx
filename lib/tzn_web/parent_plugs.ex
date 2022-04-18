@@ -22,7 +22,7 @@ defmodule TznWeb.ParentPlugs do
 
   def load_mentee_from_params(conn) do
     if conn.params["mentee"] do
-      mentee = Tzn.Transizion.get_mentee!(conn.params["mentee"])
+      mentee = Tzn.Mentee.get_mentee!(conn.params["mentee"])
 
       unless mentee in conn.assigns.mentees do
         raise Tzn.Policy.UnauthorizedError
@@ -42,7 +42,7 @@ defmodule TznWeb.ParentPlugs do
 
     mentee =
       if mentee_id_from_session && mentee_id_from_session in Enum.map(mentees, & &1.id) do
-        Tzn.Transizion.get_mentee!(mentee_id_from_session)
+        Tzn.Mentee.get_mentee!(mentee_id_from_session)
       else
         hd(mentees)
       end

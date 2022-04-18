@@ -22,7 +22,7 @@ defmodule TznWeb.MentorPlugs do
   # These should all be one method if they have dependencies on each other
   def load_my_mentees(conn, _) do
     mentees =
-      Transizion.list_mentees(%{mentor: conn.assigns.current_mentor})
+      Tzn.Mentee.list_mentees(conn.assigns.current_mentor)
       |> Repo.preload(:hour_counts)
       |> Enum.reject(fn m -> m.archived end)
 

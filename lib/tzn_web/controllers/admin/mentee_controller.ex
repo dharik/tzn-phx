@@ -19,20 +19,19 @@ defmodule TznWeb.Admin.MenteeController do
   end
 
   def index(conn, _params) do
-    mentees = Tzn.Transizion.list_mentees() |> Repo.preload([:mentor, :hour_counts])
+    mentees = Tzn.Mentee.list_mentees() |> Repo.preload([:mentor, :hour_counts])
     render(conn, "index.html", mentees: mentees)
   end
 
   def new(conn, _params) do
-    changeset = Transizion.admin_change_mentee(%Mentee{})
+    changeset = Tzn.Mentee.admin_change_mentee(%Mentee{})
     render(conn, "new.html", changeset: changeset)
   end
 
   def create(conn, %{"mentee" => mentee_params}) do
-    case Transizion.admin_create_mentee(mentee_params) do
+    case Tzn.Mentee.admin_create_mentee(mentee_params) do
       {:ok, mentee} ->
         conn
-        |> put_flash(:info, "Mentee created successfully.")
         |> redirect(to: Routes.admin_mentee_path(conn, :show, mentee))
 
       {:error, %Ecto.Changeset{} = changeset} ->
@@ -42,7 +41,7 @@ defmodule TznWeb.Admin.MenteeController do
 
   def show(conn, %{"id" => id}) do
     mentee =
-      Transizion.get_mentee!(id)
+      Tzn.Mentee.get_mentee!(id)
       |> Repo.preload([
         :mentor,
         :timesheet_entries,
@@ -53,22 +52,24 @@ defmodule TznWeb.Admin.MenteeController do
         changes: [:user]
       ])
 
-    render(conn, "show.html", mentee: mentee, low_hours_warning: Tzn.HourTracking.low_hours?(mentee))
+    render(conn, "show.html",
+      mentee: mentee,
+      low_hours_warning: Tzn.HourTracking.low_hours?(mentee)
+    )
   end
 
   def edit(conn, %{"id" => id}) do
-    mentee = Transizion.get_mentee!(id)
-    changeset = Transizion.admin_change_mentee(mentee)
+    mentee = Tzn.Mentee.get_mentee!(id)
+    changeset = Tzn.Mentee.admin_change_mentee(mentee)
     render(conn, "edit.html", mentee: mentee, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "mentee" => mentee_params}) do
-    mentee = Transizion.get_mentee!(id)
+    mentee = Tzn.Mentee.get_mentee!(id)
 
-    case Transizion.admin_update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
+    case Tzn.Mentee.admin_update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
       {:ok, mentee} ->
         conn
-        |> put_flash(:info, "Mentee updated successfully.")
         |> redirect(to: Routes.admin_mentee_path(conn, :show, mentee))
 
       {:error, %Ecto.Changeset{} = changeset} ->

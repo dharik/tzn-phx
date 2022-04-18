@@ -12,13 +12,13 @@ defmodule TznWeb.Mentor.TimelineEventMarkingController do
         mentee_id: mentee_id
       })
 
-    mentee = Transizion.get_mentee!(mentee_id)
+    mentee = Tzn.Mentee.get_mentee!(mentee_id)
     event = Transizion.get_mentor_timeline_event!(event_id)
     render(conn, "new.html", changeset: changeset, mentee: mentee, event: event)
   end
 
   def create(conn, %{"mentor_timeline_event_marking" => marking_params}) do
-    mentee = Transizion.get_mentee!(marking_params |> Map.get("mentee_id"))
+    mentee = Tzn.Mentee.get_mentee!(marking_params |> Map.get("mentee_id"))
 
     event =
       Transizion.get_mentor_timeline_event!(marking_params |> Map.get("mentor_timeline_event_id"))

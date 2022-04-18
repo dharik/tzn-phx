@@ -65,11 +65,11 @@ defmodule Tzn.Util do
     label
   end
 
-  def humanize_grade(grade_slug) do
+  def humanize_grade(_grade_slug) do
     # TODO
   end
 
-  def slugify_grade(humanized_grade) do
+  def slugify_grade(_humanized_grade) do
     # TODO
   end
 end

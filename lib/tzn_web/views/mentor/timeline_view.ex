@@ -49,7 +49,7 @@ defmodule TznWeb.Mentor.TimelineView do
   def has_status(%{ marking: nil}, "incomplete") do
     true
   end
-  def has_status(event, status) do
+  def has_status(_event, _status) do
     false
   end
 

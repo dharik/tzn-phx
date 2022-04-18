@@ -3,7 +3,6 @@ defmodule Tzn.Timesheets do
 
   alias Tzn.Repo
   alias Tzn.Transizion.{TimesheetEntry, Mentee, Mentor, MentorHourCounts}
-  alias Tzn.Users.User
 
   @spec get_timesheet_entry!(number()) :: struct()
   def get_timesheet_entry!(id), do: Repo.get!(TimesheetEntry, id)
@@ -22,7 +21,7 @@ defmodule Tzn.Timesheets do
 
     mentee =
       if !is_nil(mentee_id) && mentee_id != "" do
-        Tzn.Transizion.get_mentee(mentee_id)
+        Tzn.Mentee.get_mentee(mentee_id)
       else
         nil
       end

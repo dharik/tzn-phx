@@ -2,7 +2,7 @@ defmodule TznWeb.MatchingAlgorithm do
   use Phoenix.LiveView
   use Phoenix.HTML
 
-  def mount(_params, session, socket) do
+  def mount(_params, _session, socket) do
     # todo: add timezone, capacity
     {:ok,
      socket

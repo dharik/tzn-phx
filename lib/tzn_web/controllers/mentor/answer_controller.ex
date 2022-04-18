@@ -7,7 +7,7 @@ defmodule TznWeb.Mentor.AnswerController do
         "from_pod" => from_pod
       }) do
     question = Tzn.Questionnaire.get_question(question_id)
-    mentee = Tzn.Transizion.get_mentee(mentee_id)
+    mentee = Tzn.Mentee.get_mentee(mentee_id)
 
     case Tzn.Questionnaire.set_pod_answer(
            question,
@@ -26,7 +26,7 @@ defmodule TznWeb.Mentor.AnswerController do
         "internal" => internal_response
       }) do
     question = Tzn.Questionnaire.get_question(question_id)
-    mentee = Tzn.Transizion.get_mentee(mentee_id)
+    mentee = Tzn.Mentee.get_mentee(mentee_id)
 
     case Tzn.Questionnaire.set_internal_note(
            question,

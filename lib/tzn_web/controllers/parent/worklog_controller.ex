@@ -9,7 +9,6 @@ defmodule TznWeb.Parent.WorklogController do
   alias Tzn.Transizion
 
   def show(conn, _params) do
-    mentees = conn.assigns.mentees
     mentee = conn.assigns.mentee
     mentor = Transizion.get_mentor(mentee)
     timesheet_entries = Tzn.Timesheets.list_entries(mentee)
@@ -18,7 +17,6 @@ defmodule TznWeb.Parent.WorklogController do
 
     conn
     |> render("show.html",
-      mentee: mentee,
       hours_used: hours_used,
       timesheet_entries: timesheet_entries,
       mentor: mentor

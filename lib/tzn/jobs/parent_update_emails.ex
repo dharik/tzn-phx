@@ -50,7 +50,7 @@ defmodule Tzn.Jobs.ParentUpdateEmails do
         )
     )
     |> Enum.map(fn mentee_id ->
-      Tzn.Transizion.get_mentee(mentee_id) |> Repo.preload(:hour_counts)
+      Tzn.Mentee.get_mentee(mentee_id) |> Repo.preload(:hour_counts)
     end)
     |> Enum.reject(fn m -> m.archived end)
     |> Enum.reject(fn m -> m.grade == "college" end)

@@ -1,7 +1,7 @@
 defmodule Tzn.Emails.Questionnaire do
   import Swoosh.Email
 
-  def welcome(subject, body, mentee_name, parent_email, mentor_name, mentor_email) do
+  def welcome(subject, body, _mentee_name, parent_email, mentor_name, mentor_email) do
     new()
     |> from({"Transizion", "mentors@transizion.com"})
     |> to(parent_email)

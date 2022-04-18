@@ -2,7 +2,6 @@ defmodule Tzn.Scripts.RemoveRisingGrades do
   import Ecto.Query
   alias Tzn.Transizion.Mentee
   alias Tzn.Transizion.MentorTimelineEvent
-  alias Tzn.Transizion.TimesheetEntry
   alias Tzn.Repo
   require Logger
 

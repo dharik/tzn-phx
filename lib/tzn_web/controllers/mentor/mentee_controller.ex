@@ -1,8 +1,7 @@
 defmodule TznWeb.Mentor.MenteeController do
   use TznWeb, :controller
 
-  alias Tzn.Transizion
-  alias Tzn.Transizion.Mentee
+  alias Tzn.Mentee
   alias Tzn.Repo
 
   def index(conn, _params) do
@@ -11,7 +10,7 @@ defmodule TznWeb.Mentor.MenteeController do
 
   def show(conn, %{"id" => id}) do
     mentee =
-      Transizion.get_mentee!(id)
+      Mentee.get_mentee!(id)
       |> Repo.preload([
         :mentor,
         :timesheet_entries,
@@ -19,14 +18,17 @@ defmodule TznWeb.Mentor.MenteeController do
         questionnaires: [:question_set]
       ])
 
-    changeset = Transizion.change_mentee(mentee)
+    changeset = Mentee.change_mentee(mentee)
+
+    # should load a pod (which has mentee info)
+    # then display it all at once
 
     render(conn, "show.html", mentee: mentee, changeset: changeset)
   end
 
   def show_json(conn, %{"id" => id}) do
     mentee =
-      Transizion.get_mentee!(id)
+      Mentee.get_mentee!(id)
       |> Repo.preload([
         :mentor,
         :timesheet_entries,
@@ -44,15 +46,15 @@ defmodule TznWeb.Mentor.MenteeController do
   end
 
   def edit(conn, %{"id" => id}) do
-    mentee = Transizion.get_mentee!(id)
-    changeset = Transizion.change_mentee(mentee)
+    mentee = Mentee.get_mentee!(id)
+    changeset = Mentee.change_mentee(mentee)
     render(conn, "edit.html", mentee: mentee, changeset: changeset)
   end
 
   def update(conn, %{"id" => id, "mentee" => mentee_params}) do
-    mentee = Transizion.get_mentee!(id)
+    mentee = Mentee.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
+    case Mentee.update_mentee(mentee, mentee_params, conn.assigns[:current_user]) do
       {:ok, mentee} ->
         conn
         |> redirect(to: Routes.mentor_mentee_path(conn, :show, mentee))
@@ -63,26 +65,39 @@ defmodule TznWeb.Mentor.MenteeController do
   end
 
   def update(conn, %{"id" => id, "parent_todo_notes" => parent_todo_notes}) do
-    mentee = Transizion.get_mentee!(id)
+    mentee = Mentee.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, %{"parent_todo_notes" => parent_todo_notes}, conn.assigns[:current_user]) do
+    case Mentee.update_mentee(
+           mentee,
+           %{"parent_todo_notes" => parent_todo_notes},
+           conn.assigns[:current_user]
+         ) do
       {:ok, mentee} -> json(conn, %{value: mentee.parent_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end
   end
 
   def update(conn, %{"id" => id, "mentee_todo_notes" => mentee_todo_notes}) do
-    mentee = Transizion.get_mentee!(id)
-    case Transizion.update_mentee(mentee, %{"mentee_todo_notes" => mentee_todo_notes}, conn.assigns[:current_user]) do
+    mentee = Mentee.get_mentee!(id)
+
+    case Mentee.update_mentee(
+           mentee,
+           %{"mentee_todo_notes" => mentee_todo_notes},
+           conn.assigns[:current_user]
+         ) do
       {:ok, mentee} -> json(conn, %{value: mentee.mentee_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end
   end
 
   def update(conn, %{"id" => id, "mentor_todo_notes" => mentor_todo_notes}) do
-    mentee = Transizion.get_mentee!(id)
+    mentee = Mentee.get_mentee!(id)
 
-    case Transizion.update_mentee(mentee, %{"mentor_todo_notes" => mentor_todo_notes}, conn.assigns[:current_user]) do
+    case Mentee.update_mentee(
+           mentee,
+           %{"mentor_todo_notes" => mentor_todo_notes},
+           conn.assigns[:current_user]
+         ) do
       {:ok, mentee} -> json(conn, %{value: mentee.mentor_todo_notes})
       {:error, changeset} -> conn |> send_resp(403, "Error" <> changeset.errors)
     end

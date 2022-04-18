@@ -8,7 +8,7 @@ defmodule TznWeb.Admin.ContractPurchaseController do
   plug :load_mentee_list
 
   def load_mentee_list(conn, _) do
-    mentees = Transizion.list_mentees()
+    mentees = Tzn.Mentee.list_mentees()
     conn |> assign(:mentees, mentees)
   end
 

@@ -18,7 +18,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
 
     mentee =
       if mentee_id do
-        Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
+        Tzn.Mentee.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
       else
         nil
       end
@@ -27,7 +27,7 @@ defmodule TznWeb.Mentor.StrategySessionController do
   end
 
   def create(conn, %{"strategy_session" => strategy_session_params = %{"mentee_id" => mentee_id}}) do
-    mentee = Transizion.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
+    mentee = Tzn.Mentee.get_mentee!(mentee_id) |> Repo.preload(:hour_counts)
 
     case Transizion.create_strategy_session(
            strategy_session_params
