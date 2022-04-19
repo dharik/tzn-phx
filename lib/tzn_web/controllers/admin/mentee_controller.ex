@@ -26,9 +26,9 @@ defmodule TznWeb.Admin.MenteeController do
   def new(conn, _params) do
     changeset =
       Tzn.Mentee.admin_change_mentee(%Mentee{
-        college_list_access: true,
-        scholarship_list_access: true,
-        ecvo_list_access: true
+        college_list_access: false,
+        scholarship_list_access: false,
+        ecvo_list_access: false
       })
 
     render(conn, "new.html", changeset: changeset)

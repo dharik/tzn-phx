@@ -152,82 +152,94 @@
 <div class="space-m"></div>
 <p class="lead">College List</p>
 <div class="border border-radius padding-s">
-  <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
-    <em>
-      <%=
-      case q.state do
-        "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to research specialist to begin research."
-        "specialist" -> "Research specialist is creating the college list."
-        "designer" -> "College list research is done. It's being compiled into a single document."
-        "complete" -> "College list research is done and you should have received a document from the research specialist."
-        _ -> "Unknown"
-      end
+  <%= if @mentee.college_list_access do %>
+    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
+      <em>
+        <%=
+        case q.state do
+          "needs_info" -> "Needs info from you or parent(s)."
+          "ready_for_specialist" -> "Submitted to research specialist to begin research."
+          "specialist" -> "Research specialist is creating the college list."
+          "designer" -> "College list research is done. It's being compiled into a single document."
+          "complete" -> "College list research is done and you should have received a document from the research specialist."
+          _ -> "Unknown"
+        end
+      %>
+      </em>
+      <div class="space-m"></div>
+      <%= link "Open #{@mentee.name}'s College List Research Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+    <% else %>
+      Not started
+      <div class="space-m"></div>
+      <%= link "Start #{@mentee.name}'s college list research request",
+        to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id),
+        class: "button button-primary", method: :post
     %>
-    </em>
-    <div class="space-m"></div>
-    <%= link "Open #{@mentee.name}'s College List Research Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+    <% end %>
   <% else %>
-    Not started
-    <div class="space-m"></div>
-    <%= link "Start #{@mentee.name}'s college list research request",
-      to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id),
-      class: "button button-primary", method: :post
-  %>
+    <%= @mentee.name %>’s package does not cover a college list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-m"></div>
 <p class="lead">Extracurricular / Volunteer Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
-    <em>
-      <%=
-      case q.state do
-        "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to research specialist to begin research."
-        "specialist" -> "Research specialist is creating the Extracurricular/Volunteer opportunity list."
-        "designer" -> "Extracurricular/Volunteer opportunity research is done. It's being compiled into a single document."
-        "complete" -> "Extracurricular/Volunteer opportunity research is done and you should have received a document from the research specialist."
-        _ -> "Unknown"
-      end
+  <%= if @mentee.ecvo_list_access do %>
+    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
+      <em>
+        <%=
+        case q.state do
+          "needs_info" -> "Needs info from you or parent(s)."
+          "ready_for_specialist" -> "Submitted to research specialist to begin research."
+          "specialist" -> "Research specialist is creating the Extracurricular/Volunteer opportunity list."
+          "designer" -> "Extracurricular/Volunteer opportunity research is done. It's being compiled into a single document."
+          "complete" -> "Extracurricular/Volunteer opportunity research is done and you should have received a document from the research specialist."
+          _ -> "Unknown"
+        end
+      %>
+      </em>
+      <div class="space-m"></div>
+      <%= link "Open #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "button" %>
+    <% else %>
+      Not started
+      <div class="space-m"></div>
+      <%= link "Start #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request",
+        to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
+        class: "button button-primary", method: :post
     %>
-    </em>
-    <div class="space-m"></div>
-    <%= link "Open #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "button" %>
+    <% end %>
   <% else %>
-    Not started
-    <div class="space-m"></div>
-    <%= link "Start #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request",
-      to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
-      class: "button button-primary", method: :post
-  %>
+    <%= @mentee.name %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-m"></div>
 <p class="lead">Scholarship Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
-    <em>
-      <%=
-      case q.state do
-        "needs_info" -> "Needs info from you or parent(s)."
-        "ready_for_specialist" -> "Submitted to research specialist to begin research."
-        "specialist" -> "Research specialist is creating the Scholarship opportunity list."
-        "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
-        "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
-        _ -> "Unknown"
-      end
+  <%= if @mentee.scholarship_list_access do %>
+    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
+      <em>
+        <%=
+        case q.state do
+          "needs_info" -> "Needs info from you or parent(s)."
+          "ready_for_specialist" -> "Submitted to research specialist to begin research."
+          "specialist" -> "Research specialist is creating the Scholarship opportunity list."
+          "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
+          "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
+          _ -> "Unknown"
+        end
+      %>
+      </em>
+      <div class="space-m"></div>
+      <%= link "Open #{@mentee.name}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
+    <% else %>
+      Not started
+      <div class="space-m"></div>
+      <%= link "Start #{@mentee.name}'s Scholarship Opportunity List Research Request",
+        to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
+        class: "button button-primary", method: :post
     %>
-    </em>
-    <div class="space-m"></div>
-    <%= link "Open #{@mentee.name}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
+    <% end %>
   <% else %>
-    Not started
-    <div class="space-m"></div>
-    <%= link "Start #{@mentee.name}'s Scholarship Opportunity List Research Request",
-      to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
-      class: "button button-primary", method: :post
-  %>
+    <%= @mentee.name %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-l"></div>

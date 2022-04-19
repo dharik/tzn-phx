@@ -34,9 +34,9 @@ defmodule Tzn.Pod do
     field :mentee_todo_notes, :string
 
     # features
-    field :college_list_access, :boolean
-    field :ecvo_list_access, :boolean
-    field :scholarship_list_access, :boolean
+    field :college_list_access, :boolean, default: false
+    field :ecvo_list_access, :boolean, default: false
+    field :scholarship_list_access, :boolean, default: false
 
     # hour breakdown by grade
 

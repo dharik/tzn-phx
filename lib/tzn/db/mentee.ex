@@ -27,9 +27,9 @@ defmodule Tzn.Transizion.Mentee do
 
     field :grade, :string
 
-    field :college_list_access, :boolean
-    field :ecvo_list_access, :boolean
-    field :scholarship_list_access, :boolean
+    field :college_list_access, :boolean, default: false
+    field :ecvo_list_access, :boolean, default: false
+    field :scholarship_list_access, :boolean, default: false
 
     belongs_to :mentor, Tzn.Transizion.Mentor
 
