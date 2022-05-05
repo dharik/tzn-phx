@@ -119,24 +119,25 @@
       </div>
       <div class="border-bottom"></div>
       <div class="padding-m">
-        <span class="lead-s">Mentees</span>
-
-        <ol>
-          <%= for mentee <- @mentor.mentees |> Enum.sort_by(fn mentee -> if mentee.archived do 1 else 0 end end) do %>
-            <li>
-              <%= if mentee.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
-                ★
-              <% end %>
-              <%= link mentee.name,
-                 to: Routes.admin_mentee_path(@conn, :show, mentee),
-                 class: if(mentee.archived, do: "color-grey-200", else: "")
-              %>
-              <%= if mentee.archived do %>
-                <span class="font-size-s color-grey-200">(archived)</span>
-              <% end %>
-            </li>
-          <% end %>
-        </ol>
+        <%= for {pod_type, pods} <- Enum.group_by(@pods, & &1.type) |> Map.to_list() do %>
+          <p class="lead-s"><%= humanize(pod_type) %> Pods</p>
+          <ol>
+            <%= for pod <- pods |> Enum.sort_by(fn pod -> if pod.active do 0 else 1 end end) do %>
+              <li>
+                <%= if pod.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
+                  ★
+                <% end %>
+                <%= link pod.mentee.name,
+                  to: Routes.admin_pod_path(@conn, :show, pod),
+                  class: if(!pod.active, do: "color-grey-200", else: "")
+                %>
+                <%= if !pod.active do %>
+                  <span class="font-size-s color-grey-200">(archived)</span>
+                <% end %>
+              </li>
+            <% end %>
+          </ol>
+        <% end %>
 
 
       </div>
@@ -158,8 +159,8 @@
         <%= for timesheet_entry <- @mentor.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, NaiveDateTime}) do %>
           <tr>
             <td>
-              <%= if timesheet_entry.mentee do %>
-                <%= link timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+              <%= if timesheet_entry.pod && timesheet_entry.pod.mentee do %>
+                <%= link timesheet_entry.pod.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.pod.mentee) %>
               <% else %>
                 N/A
               <% end %>
@@ -204,13 +205,6 @@
 
         <div class="space-xs"></div>
         <span class="color-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
-
-        <div class="space-xs"></div>
-        <%= unless strategy_session.published do %>
-          <%= link "Edit",
-              to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
-              class: "button button-border button-xs" %>
-        <% end %>
       </div>
     <% end %>
   </div>

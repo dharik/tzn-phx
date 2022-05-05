@@ -1,6 +1,5 @@
 defmodule TznWeb.Mentor.CollegeListView do
   use TznWeb, :view
-  alias Tzn.Transizion.Mentee
   alias Tzn.Questionnaire.Questionnaire
 
   @doc """
@@ -30,13 +29,12 @@ defmodule TznWeb.Mentor.CollegeListView do
     end)
   end
 
-
-  def mentor_name(%Mentee{} = m) do
-    if m.mentor do
-      m.mentor.name
-    else
-      ""
-    end
+  def mentor_name(pods) do
+    pods
+    |> Enum.map(& &1.mentor)
+    |> Enum.reject(&is_nil/1)
+    |> Enum.map(& &1.name)
+    |> Enum.join(", ")
   end
 
   @doc """

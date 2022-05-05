@@ -22,7 +22,7 @@ defmodule TznWeb.Router do
     plug :put_layout, {TznWeb.LayoutView, :mentor}
     plug :load_mentor_profile
     plug :ensure_mentor_profile
-    plug :load_my_mentees
+    plug :load_pods
   end
 
   pipeline :browser do
@@ -64,10 +64,10 @@ defmodule TznWeb.Router do
     scope "/mentor", as: :mentor do
       pipe_through [:mentor]
 
-      get "/", Mentor.MenteeController, :index
+      get "/", Mentor.PodController, :index
+      resources "/pods", Mentor.PodController
       resources "/mentees", Mentor.MenteeController
       resources "/timesheet_entries", Mentor.TimesheetEntryController, except: [:show]
-      resources "/strategy_sessions", Mentor.StrategySessionController, except: [:show, :index]
       get "/timeline", Mentor.TimelineController, :index
       get "/timeline/:mentee_id", Mentor.TimelineController, :index
 
@@ -88,6 +88,7 @@ defmodule TznWeb.Router do
       get "/impersonation/start", Admin.ImpersonationController, :start
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
+      resources "/pods", Admin.PodController, except: [:index]
       resources "/mentors", Admin.MentorController
       get "/mentor_payments", Admin.MentorPaymentsController, :index
       resources "/strategy_sessions", Admin.StrategySessionController
@@ -132,7 +133,7 @@ defmodule TznWeb.Router do
     pipe_through [:api, :mentor]
 
     post "/answers", Mentor.AnswerController, :create_or_update
-    get "/mentees/:id", Mentor.MenteeController, :show_json
+    get "/pods/:id", Mentor.PodController, :show_json
   end
 
 

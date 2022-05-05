@@ -34,8 +34,8 @@
         <%= for timesheet_entry <- @timesheet_entries do %>
           <tr>
             <td>
-              <%= if timesheet_entry.mentee do %>
-                <%= link timesheet_entry.mentee.name, to: Routes.mentor_mentee_path(@conn, :show, timesheet_entry.mentee_id) %>
+              <%= if timesheet_entry.pod && timesheet_entry.pod.mentee do %>
+                <%= link timesheet_entry.pod.mentee.name, to: Routes.mentor_pod_path(@conn, :show, timesheet_entry.pod) %>
               <% else %>
                 N/A
               <% end %>

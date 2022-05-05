@@ -8,9 +8,9 @@
   <% end %>
 
 
-  <%= label f, :mentee_id  %>
-  <%= select f, :mentee_id, Enum.map(@mentees, fn mentee ->  {"#{mentee.name}", mentee.id} end) %>
-  <%= error_tag f, :mentee_id %>
+  <%= label f, :pod_id  %>
+  <%= select f, :pod_id, [{"#{@pod.mentee.name} - #{humanize(@pod.type)}", @pod.id}] %>
+  <%= error_tag f, :pod_id %>
 
   <%= label f, :notes %>
   <%= textarea f, :notes %>
@@ -20,7 +20,7 @@
   <%= number_input f, :hours, step: 0.1 %>
   <%= error_tag f, :hours %>
 
-  
+
   <%= label f, :date %>
   <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>

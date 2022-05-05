@@ -17,7 +17,11 @@ defmodule TznWeb.Mentor.ECVOListController do
     questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
     answers = Questionnaire.list_answers(questionnaire)
-    is_my_mentee = questionnaire.mentee.mentor_id == conn.assigns.current_mentor.id
+
+    is_my_mentee =
+      Tzn.Pods.list_pods(conn.assigns.current_mentor)
+      |> Enum.filter(fn p -> p.mentee_id == questionnaire.mentee_id end)
+      |> Enum.any?()
 
     render(conn, "edit.html",
       mentee: questionnaire.mentee,
@@ -46,7 +50,7 @@ defmodule TznWeb.Mentor.ECVOListController do
   def update(conn, %{"id" => id, "body" => body}) do
     questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
 
-    Tzn.Questionnaire.send_parent_email(questionnaire, body)
+    Tzn.Questionnaire.send_parent_email(questionnaire, body, conn.assigns.current_mentor)
 
     conn
     |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
@@ -58,7 +62,6 @@ defmodule TznWeb.Mentor.ECVOListController do
     Questionnaire.attach_file(questionnaire, file, conn.assigns.current_user)
 
     conn
-    |> put_flash(:info, "File Uploaded Successfully")
     |> redirect(to: Routes.mentor_ecvo_list_path(conn, :edit, questionnaire))
   end
 

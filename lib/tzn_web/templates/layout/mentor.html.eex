@@ -28,7 +28,7 @@
           <div class="space-l"></div>
           <div class="space-l"></div>
           <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
-            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_mentee_path(@conn, :index), "My Mentees", "people", @conn.request_path =~ ~r/\/mentor$/ || @conn.request_path =~ "mentees") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_pod_path(@conn, :index), "My Mentees", "people", @conn.request_path =~ ~r/\/mentor$/ || @conn.request_path =~ ~r/mentees|pods/) %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_timeline_path(@conn, :index), "Mentee Timelines", "view_timeline", @conn.request_path =~ "timeline") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_timesheet_entry_path(@conn, :index), "My Timesheet", "work_outline", @conn.request_path =~ "timesheet") %>
 

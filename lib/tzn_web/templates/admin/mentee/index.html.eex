@@ -1,10 +1,12 @@
-<h1>Listing Mentees</h1>
-<%= link "Create Mentee Profile", to: Routes.admin_mentee_path(@conn, :new), class: "button button-primary" %>
+<h1>Listing Pods</h1>
+<%= link "Create Mentee", to: Routes.admin_mentee_path(@conn, :new), class: "button button-primary" %>
+<%= link "Create Pod", to: Routes.admin_pod_path(@conn, :new), class: "button button-primary" %>
 
 <table>
   <thead>
     <tr>
       <th>Name</th>
+      <th>Pod Type</th>
       <th>Mentor</th>
       <th>Parent(s)</th>
       <th>Grade</th>
@@ -15,43 +17,63 @@
   </thead>
   <tbody>
     <%= for mentee <- @mentees do %>
-      <tr>
-        <td>
-          <%= link mentee.name, to: Routes.admin_mentee_path(@conn, :show, mentee) %>
-          <%= if mentee.archived do %>(archived)<% end %>
-        </td>
-        <td>
-          <%= if mentee.mentor do %>
-            <%= mentee.mentor.name %>
-          <% else %>
-            <span class="color-error">No mentor</span>
-          <% end %>
-        </td>
-        <td>
-          <%= Tzn.Transizion.Mentee.parent_names(mentee) %>
-        </td>
-        <td>
-          <%= mentee.grade |> humanize %>
-        </td>
-        <td>
-          <%= mentee.hour_counts.hours_used |> Decimal.round(1) %> / <%= mentee.hour_counts.hours_purchased %>
-        </td>
-        <td>
-          <%
-            hours_left = mentee.hour_counts.hours_purchased |> Decimal.sub(mentee.hour_counts.hours_used) |> Decimal.round(1)
-          %>
-          <%= if Tzn.HourTracking.low_hours?(mentee) do %>
-            <span class="color-error"><%= hours_left %></span>
-          <% else %>
-            <%= hours_left %>
-          <% end %>
-        </td>
-        <td>
-          <%= if mentee.mentor_rate do %>
-            <%= mentee.mentor_rate |> Decimal.round(1) %>
-          <% end %>
-        </td>
-      </tr>
+      <%= if Enum.count(mentee.pods) > 0 do %>
+        <%= for pod <- mentee.pods do %>
+          <tr>
+            <td>
+              <%= link mentee.name, to: Routes.admin_pod_path(@conn, :show, pod) %>
+              <%= if !pod.active do %>
+                (archived)
+              <% end %>
+            </td>
+            <td>
+              <%= humanize(pod.type) %>
+            </td>
+            <td>
+              <%= if pod.mentor do %>
+                <%= pod.mentor.name %>
+              <% else %>
+                <span class="color-error">No mentor</span>
+              <% end %>
+            </td>
+            <td>
+              <%= Tzn.Transizion.Mentee.parent_names(mentee) %>
+            </td>
+            <td>
+              <%= humanize(mentee.grade) %>
+            </td>
+            <td>
+              <%= pod.hour_counts.hours_used |> Decimal.round(1) %> / <%= pod.hour_counts.hours_purchased %>
+            </td>
+            <td>
+              <%
+                hours_left = Tzn.HourTracking.hours_remaining(pod) |> Float.round(1)
+              %>
+              <%= if Tzn.HourTracking.low_hours?(pod) do %>
+                <span class="color-error"><%= hours_left %></span>
+              <% else %>
+                <%= hours_left %>
+              <% end %>
+            </td>
+            <td>
+              <%= if pod.mentor_rate do %>
+                <%= pod.mentor_rate |> Decimal.round(1) %>
+              <% end %>
+            </td>
+          </tr>
+        <% end %>
+      <% else %>
+        <tr>
+          <td><%= mentee.name %></td>
+          <td></td>
+          <td></td>
+          <td><%= Tzn.Transizion.Mentee.parent_names(mentee) %></td>
+          <td><%= humanize(mentee.grade) %></td>
+          <td></td>
+          <td></td>
+          <td></td>
+        </tr>
+      <% end %>
     <% end %>
   </tbody>
 </table>

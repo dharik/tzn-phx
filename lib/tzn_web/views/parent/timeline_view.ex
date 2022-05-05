@@ -341,7 +341,7 @@ defmodule TznWeb.Parent.TimelineView do
           content: ~S"""
           <ul>
             <li>Continue working with your child to complete the personal essay, activities list, and personal information on Common App</li>
-            <li>If your child is applying to schools in Texas, work on the Apply Texas applicaiton, as some open in July</li>
+            <li>If your child is applying to schools in Texas, work on the Apply Texas application, as some open in July</li>
             <li>Consider meeting with Transizion's financial expert to learn about your child's options for paying for college</li>
             <li>Help your child finish any independent capstone projects</li>
           </ul>

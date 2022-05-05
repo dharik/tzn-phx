@@ -8,7 +8,7 @@
     </p>
     <div>
     <small>This is an internal field and <%= @mentee.name %> will not see this.</small>
-      <%= form_for @changeset, Routes.mentor_mentee_path(@conn, :update, @mentee), fn f -> %>
+      <%= form_for @changeset, Routes.mentor_pod_path(@conn, :update, @pod), fn f -> %>
       <%= textarea f, :internal_note, class: "rte" %>
       <%= error_tag f, :internal_note %>
       <%= submit "Save" %>
@@ -66,13 +66,13 @@
             </span>
             <progress
               class="display-inline-block no-margin" style="width: 15rem;"
-              value="<%= @mentee.hour_counts.hours_used %>"
-              max="<%= @mentee.hour_counts.hours_purchased %>">
+              value="<%= @pod.hour_counts.hours_used %>"
+              max="<%= @pod.hour_counts.hours_purchased %>">
             </progress>
             <span class="color-grey-600 font-size-xs">
-              <%= Decimal.round(@mentee.hour_counts.hours_used, 1) %> / <%= Decimal.round(@mentee.hour_counts.hours_purchased, 1) %>
+              <%= Decimal.round(@pod.hour_counts.hours_used, 1) %> / <%= Decimal.round(@pod.hour_counts.hours_purchased, 1) %>
             <span>
-            <%= if Tzn.HourTracking.low_hours?(@mentee) do %>
+            <%= if Tzn.HourTracking.low_hours?(@pod) do %>
               <p class="color-warning text-align-center font-size-s">
                 This student's contract hours are running low. Please inform Jason to reload hours.
               </p>
@@ -131,15 +131,19 @@
 <div class="space-m"></div>
 <p class="lead">Timesheet Entries</p>
 <div class="overflow-y-scroll border border-radius padding-s" style="max-height: 40vh">
-  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
+  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, pod_id: @pod.id), class: "button button-primary" %>
   <table>
-    <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
+    <%= for timesheet_entry <- @pod.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
       <tr>
         <td><%= timesheet_entry.started_at |> format_date %></td>
         <td><span><%= raw timesheet_entry.notes || humanize(timesheet_entry.category) %></span></td>
-        <td><%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "color-primary text-decoration-none" do%>
-        <span class="material-icons-outlined">edit</span> Edit
-        <% end %></td>
+        <td>
+          <%= if @current_mentor.id == timesheet_entry.mentor_id do %>
+            <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "color-primary text-decoration-none" do%>
+              <span class="material-icons-outlined">edit</span> Edit
+            <% end %>
+          <% end %>
+        </td>
       </tr>
     <% end %>
   </table>
@@ -152,8 +156,8 @@
 <div class="space-m"></div>
 <p class="lead">College List</p>
 <div class="border border-radius padding-s">
-  <%= if @mentee.college_list_access do %>
-    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "college_list")) do %>
+  <%= if @pod.college_list_access do %>
+    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "college_list")) do %>
       <em>
         <%=
         case q.state do
@@ -183,8 +187,8 @@
 <div class="space-m"></div>
 <p class="lead">Extracurricular / Volunteer Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if @mentee.ecvo_list_access do %>
-    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
+  <%= if @pod.ecvo_list_access do %>
+    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
       <em>
         <%=
         case q.state do
@@ -214,8 +218,8 @@
 <div class="space-m"></div>
 <p class="lead">Scholarship Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if @mentee.scholarship_list_access do %>
-    <%= if q = Enum.find(@mentee.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
+  <%= if @pod.scholarship_list_access do %>
+    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
       <em>
         <%=
         case q.state do

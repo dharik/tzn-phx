@@ -1,0 +1,33 @@
+<h1>My Mentees</h1>
+<table>
+  <thead>
+    <tr>
+      <th>Name</th>
+      <th>Type</th>
+      <th>Hours used / hours purchased</th>
+      <th>Hours left</th>
+    </tr>
+  </thead>
+  <tbody>
+    <%= for pod <- @pods do %>
+      <tr>
+        <td>
+          <%= link pod.mentee.name, to: Routes.mentor_pod_path(@conn, :show, pod) %>
+        </td>
+        <td>
+          <%= humanize(pod.type) %>
+        </td>
+        <td>
+          <%= pod.hour_counts.hours_used |> Decimal.round(1) %> / <%= pod.hour_counts.hours_purchased |> Decimal.round(1) %>
+        </td>
+        <td>
+          <%= if Tzn.HourTracking.low_hours?(pod) do %>
+            <span class="color-error"><%= Decimal.round(pod.hour_counts.hours_remaining, 1) %></span>
+          <% else %>
+            <%= Decimal.round(pod.hour_counts.hours_remaining, 1) %>
+          <% end %>
+        </td>
+      </tr>
+    <% end %>
+  </tbody>
+</table>

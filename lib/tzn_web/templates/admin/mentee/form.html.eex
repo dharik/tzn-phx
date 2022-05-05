@@ -17,40 +17,6 @@
   <%= text_input f, :pronouns %>
   <%= error_tag f, :pronouns %>
 
-  <%= label f, :type %>
-  <%= select f, :type, [
-    {"College Mentoring", "college_mentoring"},
-    {"Tutoring", "tutoring"},
-    {"Capstone", "capstone"}
-  ] %>
-  <%= error_tag f, :type %>
-
-
-  <%= label f, :college_list_access, class: "control switch" do %>
-    <%= checkbox f, :college_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">College List Access</span>
-  <% end %>
-  <%= error_tag f, :college_list_access %>
-
-  <%= label f, :ecvo_list_access, class: "control switch" do %>
-    <%= checkbox f, :ecvo_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">EC/VO List Access</span>
-  <% end %>
-  <%= error_tag f, :ecvo_list_access %>
-
-  <%= label f, :scholarship_list_access, class: "control switch" do %>
-    <%= checkbox f, :scholarship_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Scholarship List Access</span>
-  <% end %>
-  <%= error_tag f, :scholarship_list_access %>
-
-  <%= label f, :email %>
-  <%= email_input f, :email %>
-  <%= error_tag f, :email %>
-
   <%= label f, :grade %>
   <%= select f, :grade, Tzn.Util.grade_options() %>
   <%= error_tag f, :grade %>
@@ -59,42 +25,30 @@
   <%= select f, :timezone_offset, Tzn.Util.timezone_options() %>
   <%= error_tag f, :timezone_offset %>
 
-  <%= label f, :internal_note %>
-  <%= textarea f, :internal_note, class: "rte" %>
-  <%= error_tag f, :internal_note %>
+  <div class="space-l"></div>
 
-  <%= label f, :archived do %>
-    <%= checkbox f, :archived %> Archived?
-  <% end %>
-  <%= error_tag f, :archived %>
-
-  <%= label f, :archived_reason  %>
-  <%= select f, :archived_reason, [
-    {"-- Reason for Archiving --", nil},
-    {"Fake/Test Account", "fake_or_test"},
-    {"Contract Completed", "contract_completed"},
-    {"User Churned", "churn"},
-    {"Other", "other"},
-  ] %>
-  <%= error_tag f, :archived_reason %>
-
-  <%= label f, :mentor_id  %>
-  <%= select f, :mentor_id, [
-    {'None', nil} |
-    Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
-  ] %>
-  <%= error_tag f, :mentor_id %>
-
-  <%= label f, :mentor_rate %>
-  <%= number_input f, :mentor_rate, step: 1.0 %>
-  <%= error_tag f, :mentor_rate %>
+  <%= label f, :email %>
+  <%= email_input f, :email %>
+  <%= error_tag f, :email %>
 
   <%= label f, :user_id  %>
   <%= select f, :user_id, [
     {'None', nil} |
-    @users |> Enum.sort_by(fn user -> user.id end ) |> Enum.reverse |> Enum.map(fn user -> {"#{user.email}", user.id} end)
+    @users |> Enum.sort_by(fn user -> user.email end ) |> Enum.map(fn user -> {"#{user.email}", user.id} end)
   ] %>
   <%= error_tag f, :user_id %>
+
+  <div class="space-l"></div>
+
+
+
+  <%= label f, :internal_note %>
+  <%= textarea f, :internal_note, class: "rte" %>
+  <%= error_tag f, :internal_note %>
+
+
+
+
 
   <div class="space-m"></div>
 
@@ -116,7 +70,24 @@
   <%= text_input f, :parent2_name %>
   <%= error_tag f, :parent2_name %>
 
-  <div class="space-m"> </div>
+  <div class="space-l"> </div>
+
+    <%= label f, :archived do %>
+    <%= checkbox f, :archived %> Archived?
+  <% end %>
+  <%= error_tag f, :archived %>
+
+  <%= label f, :archived_reason  %>
+  <%= select f, :archived_reason, [
+    {"-- Reason for Archiving --", nil},
+    {"Fake/Test Account", "fake_or_test"},
+    {"Contract Completed", "contract_completed"},
+    {"User Churned", "churn"},
+    {"Other", "other"},
+  ] %>
+  <%= error_tag f, :archived_reason %>
+
+  <div class="space-l"></div>
 
   <div>
     <%= submit "Save" %>

@@ -4,6 +4,6 @@
 
 <div class="space-m"></div>
 
-<%= if @timesheet_entry.mentee do %>
-  <%= link "Back to mentee", to: Routes.mentor_mentee_path(@conn, :show, @timesheet_entry.mentee) %>
+<%= if @pod do %>
+  <%= link "Back to mentee", to: Routes.mentor_pod_path(@conn, :show, @pod) %>
 <% end %>

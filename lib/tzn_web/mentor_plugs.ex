@@ -1,6 +1,5 @@
 defmodule TznWeb.MentorPlugs do
   import Plug.Conn
-  alias Tzn.Repo
   alias Tzn.Transizion
   require Logger
 
@@ -19,13 +18,11 @@ defmodule TznWeb.MentorPlugs do
     end
   end
 
-  # These should all be one method if they have dependencies on each other
-  def load_my_mentees(conn, _) do
-    mentees =
-      Tzn.Mentee.list_mentees(conn.assigns.current_mentor)
-      |> Repo.preload(:hour_counts)
-      |> Enum.reject(fn m -> m.archived end)
-
-    conn |> assign(:mentees, mentees)
+  def load_pods(conn, _) do
+    assign(
+      conn,
+      :pods,
+      Tzn.Pods.list_pods(conn.assigns.current_mentor) |> Enum.filter(& &1.active)
+    )
   end
 end

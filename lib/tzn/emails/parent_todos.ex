@@ -1,6 +1,6 @@
 defmodule Tzn.Emails.ParentTodos do
   @moduledoc """
-  I've appended mentee_id to the email key for when a parent has multiple children.
+  I've appended pod_id to the email key for when a parent has multiple children.
   Without it, we'd only send a parent one email with notes about only one of their
   children. Eventually this should be a single email with contents of multiple
   mentees but that's a nice-to-have right now.
@@ -9,58 +9,54 @@ defmodule Tzn.Emails.ParentTodos do
   inputs went into the email. The string key seems simple enough.
 
 
-  Tzn.Emails.ParentTodos.maybe_send_for_mentee(Tzn.Transizion.get_mentee())
-
   """
 
   import Swoosh.Email
   use Phoenix.Swoosh, view: TznWeb.EmailView, layout: {TznWeb.LayoutView, :email}
-
+  alias Tzn.DB.Pod
   require Logger
-  alias Tzn.Transizion.Mentee
 
-  def maybe_send_for_mentee(%Tzn.Transizion.Mentee{} = mentee) do
-    with mentee <- Tzn.Repo.reload(mentee),
-         mentor <- Tzn.Transizion.get_mentor(mentee),
-         true <- has_notes(mentee) do
-      if should_send_to_parent(mentee.parent1_email, mentee.id) do
+  def maybe_send_for_pod(%Pod{} = pod) do
+    pod = Tzn.Pods.get_pod!(pod.id) # Reload with many of the associations
+    if has_notes(pod) do
+      if should_send_to_parent(pod.mentee.parent1_email, pod.id) do
         Logger.info(
-          "Sending parent(1) update to #{mentee.parent1_email} for mentee id:#{mentee.id}"
+          "Sending parent(1) update to #{pod.mentee.parent1_email} for pod id:#{pod.mentee.id}"
         )
 
         generate(
-          mentee.parent1_email,
-          mentee.name,
-          mentor.name,
-          mentor.email,
-          mentee.parent1_name,
-          mentee.mentee_todo_notes,
-          mentee.parent_todo_notes,
-          mentee.mentor_todo_notes
+          pod.mentee.parent1_email,
+          pod.mentee.name,
+          pod.mentor.name,
+          pod.mentor.email,
+          pod.mentee.parent1_name,
+          pod.mentee_todo_notes,
+          pod.parent_todo_notes,
+          pod.mentor_todo_notes
         )
         |> Tzn.Mailer.deliver!()
 
-        Tzn.Emails.append_email_history(mentee.parent1_email, email_key(mentee.id))
+        Tzn.Emails.append_email_history(pod.mentee.parent1_email, email_key(pod.id))
       end
 
-      if should_send_to_parent(mentee.parent2_email, mentee.id) do
+      if should_send_to_parent(pod.mentee.parent2_email, pod.id) do
         Logger.info(
-          "Sending parent(2) update to #{mentee.parent2_email} for mentee id:#{mentee.id}"
+          "Sending parent(2) update to #{pod.mentee.parent2_email} for pod id:#{pod.id}"
         )
 
         generate(
-          mentee.parent2_email,
-          mentee.name,
-          mentor.name,
-          mentor.email,
-          mentee.parent2_name,
-          mentee.mentee_todo_notes,
-          mentee.parent_todo_notes,
-          mentee.mentor_todo_notes
+          pod.mentee.parent2_email,
+          pod.mentee.name,
+          pod.mentor.name,
+          pod.mentor.email,
+          pod.mentee.parent2_name,
+          pod.mentee_todo_notes,
+          pod.parent_todo_notes,
+          pod.mentor_todo_notes
         )
         |> Tzn.Mailer.deliver!()
 
-        Tzn.Emails.append_email_history(mentee.parent2_email, email_key(mentee.id))
+        Tzn.Emails.append_email_history(pod.mentee.parent2_email, email_key(pod.id))
       end
     end
   end
@@ -98,12 +94,12 @@ defmodule Tzn.Emails.ParentTodos do
     })
   end
 
-  def email_key(mentee_id) when is_integer(mentee_id) do
-    email_key(Integer.to_string(mentee_id))
+  def email_key(pod_id) when is_integer(pod_id) do
+    email_key(Integer.to_string(pod_id))
   end
 
-  def email_key(mentee_id) when is_binary(mentee_id) do
-    "parent_biweekly_update_with_todos/mentee:" <> mentee_id
+  def email_key(pod_id) when is_binary(pod_id) do
+    "parent_biweekly_update_with_todos/pod:" <> pod_id
   end
 
   def should_send_to_parent(nil, _) do
@@ -117,15 +113,15 @@ defmodule Tzn.Emails.ParentTodos do
   @doc """
   Never send the same type of email more than once per 3 days
   """
-  def should_send_to_parent(parent_email, mentee_id) when is_binary(parent_email) do
-    last_email_at = Tzn.Emails.last_email_sent_at(parent_email, email_key(mentee_id))
+  def should_send_to_parent(parent_email, pod_id) when is_binary(parent_email) do
+    last_email_at = Tzn.Emails.last_email_sent_at(parent_email, email_key(pod_id))
 
     String.length(parent_email) > 3 &&
       (!last_email_at || !Tzn.Util.within_n_days_ago(last_email_at, 3))
   end
 
-  def has_notes(mentee = %Mentee{}) do
-    is_binary(mentee.mentor_todo_notes) || is_binary(mentee.mentee_todo_notes) ||
-      is_binary(mentee.parent_todo_notes)
+  def has_notes(pod = %Pod{}) do
+    is_binary(pod.mentor_todo_notes) || is_binary(pod.mentee_todo_notes) ||
+      is_binary(pod.parent_todo_notes)
   end
 end

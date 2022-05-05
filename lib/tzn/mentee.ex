@@ -6,8 +6,8 @@ defmodule Tzn.Mentee do
   import Ecto.Query
 
   def get_mentee(nil), do: nil
-  def get_mentee!(id), do: Repo.get!(Mentee, id)
   def get_mentee(id), do: Repo.get(Mentee, id)
+  def get_mentee!(id), do: Repo.get!(Mentee, id)
   def get_mentee_by_email(email), do: Repo.get_by(Mentee, email: email)
 
   def delete_mentee(%Mentee{} = mentee) do
@@ -16,12 +16,6 @@ defmodule Tzn.Mentee do
 
   def change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
     Mentee.changeset(mentee, attrs)
-  end
-
-  def create_mentee(attrs \\ %{}) do
-    %Mentee{}
-    |> Mentee.changeset(attrs)
-    |> Repo.insert()
   end
 
   def admin_change_mentee(%Mentee{} = mentee, attrs \\ %{}) do
@@ -59,15 +53,6 @@ defmodule Tzn.Mentee do
       mentee_result = changeset |> Repo.update!()
 
       Map.to_list(changeset.changes)
-      |> Enum.filter(fn {field, _} ->
-        field in [
-          :parent_todo_notes,
-          :mentor_todo_notes,
-          :mentee_todo_notes,
-          :grade,
-          :mentor_rate
-        ]
-      end)
       |> Enum.each(fn {field, value} ->
         Repo.insert!(
           MenteeChanges.changeset(%MenteeChanges{}, %{
@@ -87,14 +72,14 @@ defmodule Tzn.Mentee do
     Mentee |> order_by(asc: :archived, asc: :name) |> Repo.all()
   end
 
+  def list_mentees(:admin) do
+    list_mentees() |> Repo.preload([pods: [:mentor, :hour_counts]])
+  end
+
   def list_mentees(%Mentor{} = mentor) do
     Repo.all(
       from(m in Mentee, where: m.mentor_id == ^mentor.id, order_by: [asc: m.archived, desc: m.id])
     )
-  end
-
-  def list_pods(%Mentee{} = mentee) do
-    Repo.all(from(p in Tzn.Pod, where: p.id == ^mentee.id))
   end
 
   def name(%{}, :informal) do

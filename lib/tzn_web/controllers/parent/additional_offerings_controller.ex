@@ -3,7 +3,6 @@ defmodule TznWeb.Parent.AdditionalOfferingsController do
   import TznWeb.ParentPlugs
 
   plug :ensure_parent_profile_and_mentees
-  plug :load_mentee
   plug :put_layout, "parent.html"
 
   def show(conn, _params) do

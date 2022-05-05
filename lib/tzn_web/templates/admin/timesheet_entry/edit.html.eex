@@ -2,15 +2,8 @@
 
 <p>
   Mentor:<br />
-  <%= link @timesheet_entry.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @timesheet_entry.mentor) %>
+  <%= link @mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentor) %>
 </p>
-
-<%= if @timesheet_entry.mentee do %>
-  <p>
-    For Mentee:<br />
-  <%= link @timesheet_entry.mentee.name, to: Routes.admin_mentee_path(@conn, :show, @timesheet_entry.mentee) %>
-  </p>
-<% end %>
 
 <div class="space-m"></div>
 

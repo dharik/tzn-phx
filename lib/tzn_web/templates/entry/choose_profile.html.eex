@@ -10,7 +10,7 @@
 
 <%= if @current_mentor do %>
   <p>
-    <%= link "Continue as mentor", to: Routes.mentor_mentee_path(@conn, :index) %>
+    <%= link "Continue as mentor", to: Routes.mentor_pod_path(@conn, :index) %>
   </p>
 <% end %>
 
@@ -19,4 +19,3 @@
     <%= link "Continue as parent", to: Routes.parent_dashboard_path(@conn, :show) %>
   </p>
 <% end %>
-

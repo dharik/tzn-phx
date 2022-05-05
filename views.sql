@@ -1,14 +1,4 @@
- SELECT mentees.id AS mentee_id,
-    ( SELECT COALESCE(sum((date_part('epoch'::text, timesheet_entries.ended_at) - date_part('epoch'::text, timesheet_entries.started_at)) / 3600::double precision), 0::numeric::double precision) AS "coalesce"
-           FROM timesheet_entries
-          WHERE timesheet_entries.mentee_id = mentees.id) AS hours_used,
-    ( SELECT COALESCE(sum(contract_purchases.hours)::double precision, 0::numeric::double precision) AS "coalesce"
-           FROM contract_purchases
-          WHERE contract_purchases.mentee_id = mentees.id) AS hours_purchased
-   FROM mentees;
-
-
-create or replace view mentor_hour_counts as
+reate or replace view mentor_hour_counts as
 with mentor_monthly_hours as 
 	(select 
 		mentor_id,

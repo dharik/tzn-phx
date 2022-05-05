@@ -1,129 +1,144 @@
-defmodule Tzn.Pod do
-  use Ecto.Schema
+defmodule Tzn.Pods do
   import Ecto.Query
-  import Ecto.Changeset
-  alias Tzn.Transizion.MenteeChanges
+
+  alias Tzn.Transizion.{Mentee, Mentor}
   alias Tzn.Repo
+  alias Tzn.DB.Pod
+  alias Tzn.DB.PodChanges
+  alias Tzn.Users.User
 
-  # Todo: eventually have its own table
-  schema "mentees" do
-    # belongs_to :mentee, Tzn.Transizion.Mentee
-    field :mentee, :any, virtual: true
-    belongs_to :mentor, Tzn.Transizion.Mentor
-
-    has_many :contract_purchases, Tzn.Transizion.ContractPurchase, foreign_key: :mentee_id
-    has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry, foreign_key: :mentee_id
-    has_many :strategy_sessions, Tzn.Transizion.StrategySession, foreign_key: :mentee_id
-    has_many :questionnaires, Tzn.Questionnaire.Questionnaire, foreign_key: :mentee_id
-    has_many :answers, Tzn.Questionnaire.Answer, foreign_key: :mentee_id
-
-    has_one :hour_counts, Tzn.Transizion.MenteeHourCounts, foreign_key: :mentee_id
-
-    has_many :parents, Tzn.Transizion.Parent, foreign_key: :mentee_id
-
-    # field :archive_status, :string
-    field :archived, :boolean
-    field :archived_reason, :string
-
-    field :type, :string
-    field :internal_note, :string
-    field :mentor_rate, :decimal
-
-    field :mentor_todo_notes, :string
-    field :parent_todo_notes, :string
-    field :mentee_todo_notes, :string
-
-    # features
-    field :college_list_access, :boolean, default: false
-    field :ecvo_list_access, :boolean, default: false
-    field :scholarship_list_access, :boolean, default: false
-
-    # hour breakdown by grade
-
-    timestamps()
-  end
-
-  # This is usually for admin so we're not going to load everything
-  def list_pods(:mentor) do
-    # hour_counts, mentor, parents, mentee
+  def list_pods(nil) do
+    []
   end
 
   def list_pods(:admin) do
-    # hour_counts, mentor, parents, mentee
+    Repo.all(Pod) |> Repo.preload([:hour_counts, :mentor, :mentee])
+  end
+
+  def list_pods(%Mentee{} = m) do
+    if Ecto.assoc_loaded?(m.pods) do
+      m.pods
+    else
+      Ecto.assoc(m, :pods)
+      |> Repo.all()
+      |> Repo.preload([
+        :timesheet_entries,
+        :contract_purchases,
+        :hour_counts,
+        :mentor,
+        :mentee,
+        questionnaires: [:question_set]
+      ])
+    end
+  end
+
+  def list_pods(%Mentor{} = m) do
+    if Ecto.assoc_loaded?(m.pods) do
+      m.pods
+    else
+      Ecto.assoc(m, :pods)
+      |> Repo.all()
+      |> Repo.preload([
+        :hour_counts,
+        :mentee
+      ])
+    end
   end
 
   def get_pod(nil) do
     nil
   end
 
-  def get_pod!(id) do
-    pod =
-      Repo.get!(__MODULE__, id)
-      |> Repo.preload([
-        :timesheet_entries,
-        :contract_purchases,
-        :questionnaires,
-        :strategy_sessions,
-        :hour_counts,
-        :mentor,
-        :parents
-      ])
-
-    # Inject the mentee since there isn't a pods table yet
-    # pod id = mentee id
-    mentee = Tzn.Mentee.get_mentee(pod.id)
-    pod |> Map.put(:mentee, mentee)
+  # TODO: Deprecate. But for now we can assume one pod per mentee
+  def get_pod(%Mentee{} = m) do
+    list_pods(m) |> List.first()
   end
 
   def get_pod(id) do
-    pod =
-      Repo.get(__MODULE__, id)
-      |> Repo.preload([
-        :timesheet_entries,
-        :contract_purchases,
-        :questionnaires,
-        :strategy_sessions,
-        :hour_counts,
-        :mentor,
-        :parents
-      ])
-
-    # Inject the mentee since there isn't a pods table yet
-    # pod id = mentee id
-    mentee = Tzn.Mentee.get_mentee(pod.id)
-    pod |> Map.put(:mentee, mentee)
-  end
-
-  def change_pod(%__MODULE__{} = pod, attrs \\ %{}) do
-    pod
-    |> cast(attrs, [
+    Repo.get(Pod, id)
+    |> Repo.preload([
       :timesheet_entries,
       :contract_purchases,
-      :questionnaires,
-      :strategy_sessions,
+      :hour_counts,
       :mentor,
-      :mentor_rate,
-      # :archived, :archived_reason # this needs to be moved from mentee
-      # :internal_note,
-      :mentor_todo_notes,
-      :parent_todo_notes,
-      :mentee_todo_notes,
-      :college_list_access,
-      :ecvo_list_access,
-      :scholarship_list_access
+      :mentee,
+      questionnaires: [:question_set]
     ])
+    |> with_strategy_sessions()
+  end
+
+  def get_pod!(id) do
+    Repo.get!(Pod, id)
+    |> Repo.preload([
+      :timesheet_entries,
+      :contract_purchases,
+      :hour_counts,
+      :mentor,
+      :mentee,
+      questionnaires: [:question_set]
+    ])
+    |> with_strategy_sessions()
+  end
+
+  def with_changes(%Pod{} = pod) do
+    pod |> Repo.preload([changes: :user])
+  end
+
+  def with_strategy_sessions(%Pod{} = pod) do
+    pod |> Repo.preload([strategy_sessions: [:mentor]])
+  end
+
+  def change_pod(pod \\ %Pod{}, attrs \\ %{}) do
+    Tzn.DB.Pod.changeset(pod, attrs)
+  end
+
+  def create_pod(attrs \\ %{}) do
+    %Pod{}
+    |> Tzn.DB.Pod.changeset(attrs)
+    |> Repo.insert()
+  end
+
+  def update_pod(pod, attrs, %User{} = user) do
+    pod_changeset = Tzn.DB.Pod.changeset(pod, attrs)
+
+    if pod_changeset.valid? do
+      update_and_track_pod_changes(pod, pod_changeset, user)
+    else
+      Ecto.Changeset.apply_action(pod_changeset, :update)
+    end
+  end
+
+  def update_and_track_pod_changes(%Pod{} = pod, changeset, %User{} = user) do
+    Repo.transaction(fn ->
+      pod_result = changeset |> Repo.update!()
+
+      Map.to_list(changeset.changes)
+      |> Enum.each(fn {field, value} ->
+        Repo.insert!(
+          PodChanges.changeset(%PodChanges{}, %{
+            pod_id: pod.id,
+            changed_by: user.id,
+            field: Atom.to_string(field),
+            old_value: Map.get(changeset.data, field) |> String.Chars.to_string(),
+            new_value: String.Chars.to_string(value)
+          })
+        )
+      end)
+
+      pod_result
+    end)
   end
 
   def most_recent_todo_list_updated_at(nil) do
     nil
   end
 
-  def most_recent_todo_list_updated_at(%__MODULE__{} = mentee) do
+  def most_recent_todo_list_updated_at(%Pod{} = pod) do
     Repo.one(
-      from(mc in MenteeChanges,
-        where: mc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
-        where: mc.mentee_id == ^mentee.id,
-        select: max(mc.updated_at)
+      from(pc in PodChanges,
+        where: pc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
+        where: pc.id == ^pod.id,
+        select: max(pc.updated_at)
       )
     )
   end

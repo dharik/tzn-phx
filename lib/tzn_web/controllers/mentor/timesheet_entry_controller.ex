@@ -8,7 +8,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   def index(conn, _params) do
     timesheet_entries =
       Timesheets.list_entries(conn.assigns.current_mentor)
-      |> Repo.preload(mentee: [:mentor])
+      |> Repo.preload(pod: [:mentee, :mentor])
 
     monthly_report = Timesheets.mentor_timesheet_aggregate(conn.assigns.current_mentor.id)
 
@@ -21,8 +21,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   def new(conn, params) do
     default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime()
 
-    pod = Tzn.Pod.get_pod(params["mentee_id"])
-    mentee = Tzn.Mentee.get_mentee(params["mentee_id"])
+    pod = Tzn.Pods.get_pod(params["pod_id"])
 
     changeset =
       Timesheets.change_timesheet_entry(
@@ -30,20 +29,20 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
           started_at: default_started_at,
           ended_at: default_started_at |> Timex.shift(minutes: 30)
         },
-        params # add in the mentee id
+        # add in the pod id
+        params
       )
 
     render(conn, "new.html",
       changeset: changeset,
-      last_todo_updated_at: Tzn.Pod.most_recent_todo_list_updated_at(pod),
-      mentee: mentee
+      last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod),
+      pod: pod
     )
   end
 
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
-    if timesheet_entry_params["mentee_id"] && timesheet_entry_params["mentee_id"] !== "" do
-      mentee =
-        Tzn.Mentee.get_mentee!(timesheet_entry_params["mentee_id"]) |> Repo.preload(:hour_counts)
+    if timesheet_entry_params["pod_id"] && timesheet_entry_params["pod_id"] !== "" do
+      pod = Tzn.Pods.get_pod!(timesheet_entry_params["pod_id"])
 
       case Timesheets.create_timesheet_entry(
              timesheet_entry_params
@@ -52,14 +51,14 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         {:ok, _timesheet_entry} ->
           conn
           |> then(fn conn ->
-            pod = Tzn.Pod.get_pod!(mentee.id)
+            pod = Tzn.Pods.get_pod!(pod.id)
             remaining = Tzn.HourTracking.hours_remaining(pod) |> Kernel.round()
 
             if Tzn.HourTracking.low_hours?(pod) do
               put_flash(
                 conn,
                 :error,
-                "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{mentee.name}. Encourage your student to have a conversation with their parents about adding more hours if they want to work on more items with you."
+                "Timesheet entry was saved successfully. You have #{remaining} hours remaining with #{pod.mentee.name}. Encourage your student to have a conversation with their parents about adding more hours if they want to work on more items with you."
               )
             else
               conn
@@ -68,12 +67,12 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
           |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
         {:error, %Ecto.Changeset{} = changeset} ->
-          pod = Tzn.Pod.get_pod!(mentee.id)
+          pod = Tzn.Pods.get_pod!(pod.id)
 
           render(conn, "new.html",
             changeset: changeset,
-            mentee: mentee,
-            last_todo_updated_at: Tzn.Pod.most_recent_todo_list_updated_at(pod)
+            pod: pod,
+            last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
           )
       end
     else
@@ -88,7 +87,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         {:error, %Ecto.Changeset{} = changeset} ->
           render(conn, "new.html",
             changeset: changeset,
-            mentee: nil,
+            pod: nil,
             last_todo_updated_at: nil
           )
       end
@@ -96,23 +95,36 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def edit(conn, %{"id" => id}) do
-    timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
-    mentee = timesheet_entry.mentee
-    pod = Tzn.Pod.get_pod(mentee.id)
-    changeset = Timesheets.change_timesheet_entry(timesheet_entry)
+    timesheet_entry = Timesheets.get_timesheet_entry!(id)
+    if timesheet_entry.mentor_id != conn.assigns.current_mentor.id do
+      raise "You don't have access to this one"
+    end
 
-    render(conn, "edit.html",
-      timesheet_entry: timesheet_entry,
-      changeset: changeset,
-      mentee: mentee,
-      last_todo_updated_at: Tzn.Pod.most_recent_todo_list_updated_at(pod)
-    )
+    if timesheet_entry.pod_id do
+      pod = Tzn.Pods.get_pod!(timesheet_entry.pod_id)
+      changeset = Timesheets.change_timesheet_entry(timesheet_entry)
+
+      render(conn, "edit.html",
+        timesheet_entry: timesheet_entry,
+        changeset: changeset,
+        pod: pod,
+        last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
+      )
+    else
+      changeset = Timesheets.change_timesheet_entry(timesheet_entry)
+
+      render(conn, "edit.html",
+        timesheet_entry: timesheet_entry,
+        changeset: changeset,
+        pod: nil,
+        last_todo_updated_at: nil
+      )
+    end
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
-    timesheet_entry = Timesheets.get_timesheet_entry!(id) |> Repo.preload(mentee: [:mentor])
-    mentee = timesheet_entry.mentee
-    pod = Tzn.Pod.get_pod(mentee.id)
+    timesheet_entry = Timesheets.get_timesheet_entry!(id)
+    pod = Tzn.Pods.get_pod(timesheet_entry.pod_id)
 
     case Timesheets.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, _timesheet_entry} ->
@@ -123,8 +135,8 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         render(conn, "edit.html",
           timesheet_entry: timesheet_entry,
           changeset: changeset,
-          mentee: mentee,
-          last_todo_updated_at: Tzn.Pod.most_recent_todo_list_updated_at(pod)
+          pod: pod,
+          last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
         )
     end
   end

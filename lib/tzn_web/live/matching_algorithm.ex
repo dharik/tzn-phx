@@ -90,7 +90,7 @@ defmodule TznWeb.MatchingAlgorithm do
             gender: selected_gender,
             social_factor: selected_social_factor,
             learning_disability: selected_learning_disability,
-            timezone_offset: selected_timezone_offset
+            timezone_offset: _selected_timezone_offset
           }
         } = socket
       ) do

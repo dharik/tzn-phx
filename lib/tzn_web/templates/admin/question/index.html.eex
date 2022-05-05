@@ -47,7 +47,7 @@
     <thead>
         <tr>
             <th>Mentee</th>
-            <th>Mentor</th>
+            <th>Mentor(s)</th>
             <th>List type</th>
             <th>List Status</th>
             <th>View / Edit</th>
@@ -57,7 +57,7 @@
         <%= for q <- TznWeb.Mentor.CollegeListView.order_by_state(@questionnaires) do %>
             <tr>
                 <td><%= q.mentee.name %></td>
-                <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee) %></td>
+                <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee.pods) %></td>
                 <td><%= q.question_set.name %></td>
                 <td><%= q.state %></td>
                 <td><%= link "See Request", to: Routes.admin_questionnaire_path(@conn, :edit, q), class: "button button-xs" %>

@@ -1,0 +1,5 @@
+<h1>New Pod</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_pod_path(@conn, :create)) %>
+
+<span><%= link "Back", to: Routes.admin_mentee_path(@conn, :index) %></span>

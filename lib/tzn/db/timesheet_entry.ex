@@ -10,7 +10,8 @@ defmodule Tzn.Transizion.TimesheetEntry do
     field :category, :string
     field :mentee_grade, :string
     belongs_to :mentor, Tzn.Transizion.Mentor
-    belongs_to :mentee, Tzn.Transizion.Mentee
+    belongs_to :mentee, Tzn.Transizion.Mentee # TODO: Remove since we'll move to pod
+    belongs_to :pod, Tzn.DB.Pod
 
     timestamps()
   end
@@ -23,10 +24,10 @@ defmodule Tzn.Transizion.TimesheetEntry do
       :ended_at,
       :notes,
       :mentor_id,
-      :mentee_id,
       :hourly_rate,
       :category,
-      :mentee_grade
+      :mentee_grade,
+      :pod_id
     ])
     |> validate_required([:started_at, :ended_at, :mentor_id, :category])
     |> notes_maybe_required()
@@ -35,17 +36,17 @@ defmodule Tzn.Transizion.TimesheetEntry do
     |> duration_is_reasonable()
     |> duration_within_category_limit()
 
-    # TODO: Check that mentor can make an entry for mentee_id
-    # TODO: Check that if category requires_mentee that mentee_id is set
+    # TODO: Check that mentor can make an entry for pod_id
+    # TODO: Check that if category requires_pod that pod_id is set
   end
 
   def grade_maybe_required(changeset) do
-    mentee_id = get_field(changeset, :mentee_id)
+    pod_id = get_field(changeset, :pod_id)
     mentee_grade = get_field(changeset, :mentee_grade)
 
     cond do
-      mentee_id && !mentee_grade -> add_error(changeset, :mentee_grade, "is required")
-      mentee_grade && !mentee_id -> put_change(changeset, :mentee_grade, nil)
+      pod_id && !mentee_grade -> add_error(changeset, :mentee_grade, "is required")
+      mentee_grade && !pod_id -> put_change(changeset, :mentee_grade, nil)
       true -> changeset
     end
   end
@@ -55,7 +56,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
       category = Tzn.Timesheets.get_category_by_slug(category_slug)
       notes = get_field(changeset, :notes)
 
-      if category.requires_mentee == false && (!notes || String.length(notes) < 2) do
+      if category.requires_pod == false && (!notes || String.length(notes) < 2) do
         [notes: "required"]
       else
         []

@@ -10,12 +10,10 @@ defmodule TznWeb.Parent.ECVOListController do
 
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
     answers = Questionnaire.list_answers(questionnaire)
-    mentor = Tzn.Transizion.get_mentor(questionnaire.mentee)
 
     render(conn, "edit.html",
       questions: questions,
       answers: answers,
-      mentor: mentor,
       mentee: questionnaire.mentee,
       access_key: ShortUUID.encode!(questionnaire.access_key),
       files: questionnaire.files

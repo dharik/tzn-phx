@@ -19,7 +19,7 @@ end
         <%= for q <- filtered_lists do %>
             <tr>
                 <td><%= q.mentee.name %></td>
-                <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee) %></td>
+                <td><%= TznWeb.Mentor.CollegeListView.mentor_name(q.mentee.pods) %></td>
                 <td>
                     <%= if q.state == "needs_info" do %>
                         Pod needs to provide data

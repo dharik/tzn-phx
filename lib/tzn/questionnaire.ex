@@ -6,6 +6,7 @@ defmodule Tzn.Questionnaire do
   alias Tzn.Questionnaire.Questionnaire
   alias Tzn.Questionnaire.Answer
   alias Tzn.Transizion.Mentee
+  alias Tzn.Transizion.Mentor
 
   alias Tzn.Users.User
   import Tzn.Policy
@@ -215,7 +216,7 @@ defmodule Tzn.Questionnaire do
     Questionnaire
     |> order_by(desc: :inserted_at)
     |> Repo.all()
-    |> Repo.preload([:question_set, mentee: [:mentor]])
+    |> Repo.preload([:question_set, mentee: [pods: :mentor]])
   end
 
   def list_questionnaires(%Mentee{} = mentee) do
@@ -310,10 +311,9 @@ defmodule Tzn.Questionnaire do
     create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{internal: note})
   end
 
-  def send_parent_email(%Questionnaire{} = questionnaire, email_body)
+  def send_parent_email(%Questionnaire{} = questionnaire, email_body, %Mentor{} = mentor)
       when is_binary(email_body) do
     mentee = questionnaire.mentee
-    mentor = Tzn.Transizion.get_mentor(mentee)
 
     subject =
       cond do

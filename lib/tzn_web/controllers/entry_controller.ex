@@ -20,7 +20,7 @@ defmodule TznWeb.EntryController do
       conn.assigns.current_admin ->
         conn |> redirect(to: Routes.admin_mentor_path(conn, :index))
       conn.assigns.current_mentor ->
-        conn |> redirect(to: Routes.mentor_mentee_path(conn, :index))
+        conn |> redirect(to: Routes.mentor_pod_path(conn, :index))
       Tzn.Profiles.parent?(conn.assigns.current_user) ->
         conn |> redirect(to: Routes.parent_dashboard_path(conn, :show))
       true ->

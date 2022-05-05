@@ -1,0 +1,92 @@
+<%= form_for @changeset, @action, fn f -> %>
+  <%= if @changeset.action do %>
+    <div class="alert alert-danger">
+      <p>Oops, something went wrong! Please check the errors below.</p>
+    </div>
+  <% end %>
+
+  <%= label f, :mentee_id  %>
+  <%= select f, :mentee_id, [
+    {'None', nil} |
+    @mentees |> Enum.sort_by(& &1.name ) |> Enum.map(fn m -> {"#{m.name}", m.id} end)
+  ] %>
+  <%= error_tag f, :mentee_id %>
+
+  <div class="space-l"></div>
+
+  <%= label f, :mentor_id  %>
+  <%= select f, :mentor_id, [
+    {'None', nil} |
+    Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
+  ] %>
+  <%= error_tag f, :mentor_id %>
+
+  <%= label f, :mentor_rate, "Mentor hourly rate for this pod"%>
+  <%= text_input f, :mentor_rate %>
+  <%= error_tag f, :mentor_rate %>
+
+  <div class="space-l"></div>
+
+
+  <%= label f, :type %>
+  <%= select f, :type, [
+    {"College Mentoring", "college_mentoring"},
+    {"Tutoring", "tutoring"},
+    {"Capstone", "capstone"}
+  ] %>
+  <%= error_tag f, :type %>
+
+
+  <%= label f, :college_list_access, class: "control switch" do %>
+    <%= checkbox f, :college_list_access %>
+    <span class="control-indicator"></span>
+    <span class="control-label">College List Access</span>
+  <% end %>
+  <%= error_tag f, :college_list_access %>
+
+  <%= label f, :ecvo_list_access, class: "control switch" do %>
+    <%= checkbox f, :ecvo_list_access %>
+    <span class="control-indicator"></span>
+    <span class="control-label">EC/VO List Access</span>
+  <% end %>
+  <%= error_tag f, :ecvo_list_access %>
+
+  <%= label f, :scholarship_list_access, class: "control switch" do %>
+    <%= checkbox f, :scholarship_list_access %>
+    <span class="control-indicator"></span>
+    <span class="control-label">Scholarship List Access</span>
+  <% end %>
+  <%= error_tag f, :scholarship_list_access %>
+
+  <%= label f, :active, class: "control switch" do %>
+    <%= checkbox f, :active %>
+    <span class="control-indicator"></span>
+    <span class="control-label">Active?</span>
+  <% end %>
+  <%= error_tag f, :active %>
+
+
+  <div class="space-l"> </div>
+  <%= label f, :internal_note %>
+  <%= textarea f, :internal_note, class: "rte" %>
+  <%= error_tag f, :internal_note %>
+
+  <%= label f, :parent_todo_notes %>
+  <%= textarea f, :parent_todo_notes, class: "rte" %>
+  <%= error_tag f, :parent_todo_notes %>
+
+  <%= label f, :mentee_todo_notes %>
+  <%= textarea f, :mentee_todo_notes, class: "rte" %>
+  <%= error_tag f, :mentee_todo_notes %>
+
+  <%= label f, :mentor_todo_notes %>
+  <%= textarea f, :mentor_todo_notes, class: "rte" %>
+  <%= error_tag f, :mentor_todo_notes %>
+
+
+  <div class="space-m"> </div>
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+<% end %>

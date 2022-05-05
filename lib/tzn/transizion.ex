@@ -27,11 +27,7 @@ defmodule Tzn.Transizion do
     u |> Ecto.assoc(:mentor_profile) |> Repo.one()
   end
 
-  # TODO: Handle already loaded association
-  def get_mentor(%Mentee{} = mentee) do
-    Ecto.assoc(mentee, :mentor) |> Repo.one()
-  end
-
+  def get_mentor(id), do: Repo.get(Mentor, id)
   def get_mentor!(id), do: Repo.get!(Mentor, id)
 
   def mentor?(%User{mentor_profile: nil}), do: false

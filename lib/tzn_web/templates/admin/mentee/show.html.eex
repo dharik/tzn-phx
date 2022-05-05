@@ -12,34 +12,6 @@
   <a
     href="#"
     class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'todos'}"
-    @click.prevent="tab = 'todos'">
-    To-Dos
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'strategy_sessions'}"
-    @click.prevent="tab = 'strategy_sessions'">
-    Strategy Sessions
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'timesheet_entries'}"
-    @click.prevent="tab = 'timesheet_entries'">
-    Timesheet Entries
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'contract_purchases'}"
-    @click.prevent="tab = 'contract_purchases'">
-    Contract Purchases
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
     :class="{'color-grey-100': tab !== 'changes'}"
     @click.prevent="tab = 'changes'">
     Change History
@@ -80,10 +52,6 @@
         <%= for {key, value} <- [
           {"Nick Name", @mentee.nick_name || "Not set"},
           {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
-          {"Profile Type", humanize(@mentee.type)},
-          {"College List Access", if(@mentee.college_list_access, do: "Yes", else: "No")},
-          {"EC/VO List Access", if(@mentee.ecvo_list_access, do: "Yes", else: "No")},
-          {"Scholarship List Access", if(@mentee.scholarship_list_access, do: "Yes", else: "No")},
           {"Email Address", @mentee.email},
           {"User Login", if(@mentee.user, do: @mentee.user.email, else: "N/A") },
           {"Grade", humanize(@mentee.grade) || 'Not set'},
@@ -93,65 +61,9 @@
           <span><%= value %></span>
         </p>
         <% end %>
-        <p class="vertical-align-middle">
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-            Hours Used
-          </span>
-          <progress
-            class="display-inline-block no-margin" style="width: 15rem;"
-            value="<%= @mentee.hour_counts.hours_used %>"
-            max="<%= @mentee.hour_counts.hours_purchased %>">
-          </progress>
-          <span class="color-grey-600 font-size-xs">
-            <%= Decimal.round(@mentee.hour_counts.hours_used, 1) %> / <%= Decimal.round(@mentee.hour_counts.hours_purchased, 1) %>
-          <span>
-          <%= if @low_hours_warning do %>
-            <p class="color-warning text-align-center font-size-s">
-              This student's contract hours are running low.
-            </p>
-          <% end %>
-        </p>
         <p>
           <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">Internal Notes</span>
           <span><%= raw @mentee.internal_note || 'N/A' %></span>
-        </p>
-      </div>
-      <div class="border-bottom"></div>
-      <div class="padding-m">
-        <span class="lead-s">Mentor</span>
-
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">Mentor</span>
-          <span>
-            <%= if @mentee.mentor do %>
-              <%= if @mentee.mentor.photo_url do %>
-                <img src="<%= @mentee.mentor.photo_url %>" class="icon" style="border-radius: 50%; width: 24px; height: 24px;" />
-              <% end %>
-              <%= link @mentee.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentee.mentor) %>
-              <%= case @mentee.mentor.experience_level do
-                "veteran" -> "⭐"
-                "rising" -> "🔷"
-                "rookie" -> "🔺"
-                _ -> ""
-              end %>
-            <% else %>
-              <span class="color-error">No mentor assigned</span>
-            <% end %>
-          </span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-            Hourly Rate
-          </span>
-          <span>
-            <%=
-              cond do
-                @mentee.mentor_rate -> @mentee.mentor_rate
-                @mentee.mentor -> @mentee.mentor.hourly_rate
-                true -> "N/A"
-              end
-             %>
-          </span>
         </p>
       </div>
       <div class="border-bottom"></div>
@@ -195,91 +107,37 @@
           </p>
         <% end %>
       </div>
+      <div class="border-bottom"></div>
+      <div class="padding-m">
+        <span class="lead-s">Pods</span>
+        <%= for pod <- @pods do %>
+          <p>
+            <%= link to: Routes.admin_pod_path(@conn, :show, pod), class: "text-decoration-none" do %>
+              <%= humanize(pod.type) %>
+              with
+              <span>
+                <%= if pod.mentor do %>
+                  <%= pod.mentor.name %>
+                <% else %>
+                  <span class="color-error">No mentor assigned</span>
+                <% end %>
+              </span>
+            <% end %>
+            <%= if !pod.active do %>
+              <span class="color-grey font-size-s">(archived)</span>
+            <% end %>
+          </p>
+        <% end %>
+        <br />
+        <%= link to:  Routes.admin_pod_path(@conn, :new, %{mentee_id: @mentee.id}), class: "button button-icon button-s" do %>
+          <span class="material-icons-outlined">add</span>
+          <span>Add Pod</span>
+        <% end %>
+      </div>
     </div>
 </div>
 
 
-
-
-  <div x-show="tab === 'todos'" x-transition>
-    <p class="lead-s">Mentor To-Dos:</p>
-    <div><%= raw @mentee.mentor_todo_notes %></div>
-    <div class="space-m"></div>
-
-    <p class="lead-s">Mentee To-Dos:</p>
-    <div><%= raw @mentee.mentee_todo_notes %></div>
-    <div class="space-m"></div>
-
-    <p class="lead-s">Parent To-Dos:</p>
-    <div><%= raw @mentee.parent_todo_notes %></div>
-    <div class="space-m"></div>
-  </div>
-
-  <div x-show="tab === 'strategy_sessions'" x-transition>
-    <%= for strategy_session <- @mentee.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
-      <p>
-        <span class="lead-xs"><%= strategy_session.email_subject %></span><br />
-        <span class="color-grey"><%= raw strategy_session.notes %></span><br />
-        <small class="color-grey">
-          <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
-        <%= cond do %>
-          <% strategy_session.published && strategy_session.emailed -> %>
-            <span class="color-info">email sent</span>
-          <% strategy_session.published -> %>
-            <span class="color-info">email queued to send</span>
-          <% true -> %>
-            <span></span>
-        <% end %>
-        </small>
-        <br />
-        <%= link "Edit",
-            to: Routes.admin_strategy_session_path(@conn, :edit, strategy_session),
-            class: "button button-border button-xs margin-right-xs" %>
-        <%= link "Delete",
-            to: Routes.admin_strategy_session_path(@conn, :delete, strategy_session),
-            method: :delete, data: [confirm: "Are you sure?"],
-            class: "button button-s button-text button-warning" %>
-      </p>
-    <% end %>
-  </div>
-
-  <table x-show="tab === 'timesheet_entries'" x-transition>
-    <thead>
-      <tr>
-        <th>Start</th>
-        <th>End</th>
-        <th>Hours</th>
-        <th>Notes</th>
-        <th>&nbsp;</th>
-      </tr>
-    </thead>
-    <%= for timesheet_entry <- @mentee.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
-      <tr>
-        <td><%= timesheet_entry.started_at |> format_date %></td>
-        <td><%= timesheet_entry.ended_at |> format_date %></td>
-        <td><%= Tzn.Util.diff_in_hours(timesheet_entry.ended_at, timesheet_entry.started_at) %></td>
-        <td><span><%= if timesheet_entry.notes, do: raw(timesheet_entry.notes), else: humanize(timesheet_entry.category) %></span></td>
-        <td>
-          <%= link to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
-            <span class="material-icons-outlined">edit</span> Edit
-          <% end %>
-        </td>
-      </tr>
-    <% end %>
-  </table>
-
-  <div x-show="tab === 'contract_purchases'" x-transition>
-    <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, mentee_id: @mentee.id), class: "button button-primary" %>
-    <%= for contract_purchase <- @mentee.contract_purchases do %>
-      <p>
-        <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %>
-        <br />
-        <span class="color-grey"><%= contract_purchase.notes %></span>
-        <br />
-        <%= link "Delete", to: Routes.admin_contract_purchase_path(@conn, :delete, contract_purchase), method: :delete, data: [confirm: "Are you sure?"] %>
-      </p>
-    <% end %>
-  </div>
 
   <div x-show="tab === 'changes'">
     <table>
@@ -292,7 +150,7 @@
         </tr>
       </thead>
       <tbody>
-        <%= for c <- Enum.sort_by(@mentee.changes, &(&1.inserted_at), :desc) do %>
+        <%= for c <- Enum.sort_by(@mentee.changes, &(&1.inserted_at), {:desc, NaiveDateTime}) do %>
           <tr>
             <td><%= c.field %></td>
             <td><%= c.new_value %></td>

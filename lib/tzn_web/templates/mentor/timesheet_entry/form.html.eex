@@ -7,31 +7,31 @@
 <script>
   document.addEventListener('alpine:init', () => {
       Alpine.data('mentor_timesheet_form', () => ({
-        mentee_id: null,
+        pod_id: null,
         mentee_name: "the mentee",
         mentee_grade: null,
         category: null,
-        categories_no_mentee:
+        categories_no_pod:
           <%=
             Tzn.Timesheets.categories(@conn.assigns.current_mentor, nil)
             |> Jason.encode!()
             |> raw()
           %>,
-        categories_by_mentee:
+        categories_by_pod:
         <%=
           Enum.reduce(
-            @mentees,
+            @pods,
             Map.new(),
-            fn (m, a) -> Map.put(a, m.id, Tzn.Timesheets.categories(@conn.assigns.current_mentor, m)) end
+            fn (p, a) -> Map.put(a, p.id, Tzn.Timesheets.categories(@conn.assigns.current_mentor, p)) end
           )
           |> Jason.encode!()
           |> raw()
         %>,
         get categories() {
-          if(this.mentee_id) {
-            return this.categories_by_mentee[this.mentee_id]
+          if(this.pod_id) {
+            return this.categories_by_pod[this.pod_id]
           } else {
-            return this.categories_no_mentee
+            return this.categories_no_pod
           }
         },
         get is_valid_category() {
@@ -41,10 +41,10 @@
           return true;
         },
         get loading() {
-          return this.mentee_loadstate == 'loading'
+          return this.pod_loadstate == 'loading'
         },
         get todo_list_needs_update() {
-          if(!this.mentee_id) {
+          if(!this.pod_id) {
             return false;
           }
 
@@ -58,19 +58,19 @@
         parent_notes_savestate: '',
         mentor_notes_savestate: '',
         any_notes_touched: false,
-        mentee_loadstate: '',
-        async load_mentee() {
-          if(this.mentee_id == "" || !this.mentee_id) {
-            this.mentee_loadstate = '';
+        pod_loadstate: '',
+        async load_pod() {
+          if(this.pod_id == "" || !this.pod_id) {
+            this.pod_loadstate = '';
             this.mentee_name = "";
             this.mentee_grade = null;
             return;
           }
 
           try {
-            this.mentee_loadstate = 'loading';
+            this.pod_loadstate = 'loading';
 
-            result = await fetch('/mentor/api/mentees/' + this.mentee_id, {
+            result = await fetch('/mentor/api/pods/' + this.pod_id, {
               method: 'GET'
             });
 
@@ -81,7 +81,7 @@
               // Hack to prevent autosave from triggering after loading a different mentee
               setTimeout(() => {
                 this.any_notes_touched = false;
-                this.mentee_loadstate = 'success';
+                this.pod_loadstate = 'success';
               }, 1300);
 
               this.mentee_name = data.name;
@@ -94,19 +94,19 @@
               this.$refs.parent_notes.firstChild.innerHTML = data.parent_todo_notes;
               this.$refs.mentee_notes.firstChild.innerHTML = data.mentee_todo_notes;
             } else {
-              this.mentee_loadstate = 'fail'
+              this.pod_loadstate = 'fail'
             }
 
           } catch(e) {
-            this.mentee_loadstate = 'fail'
+            this.pod_loadstate = 'fail'
             console.error(e)
           }
 
         },
         init() {
           <%=
-          if @mentee do
-            "this.mentee_id = #{@mentee.id};"
+          if @pod do
+            "this.pod_id = #{@pod.id};"
           end
           %>
           <%=
@@ -153,19 +153,19 @@
             this.$dispatch('parent-notes-change');
           });
 
-          this.load_mentee();
+          this.load_pod();
 
-          this.$watch('mentee_id', () => this.load_mentee());
+          this.$watch('pod_id', () => this.load_pod());
         },
         async save_mentee_notes() {
-          if(this.mentee_loadstate !== 'success') {
+          if(this.pod_loadstate !== 'success') {
             return;
           }
 
           this.mentee_notes_savestate = 'saving';
 
           try {
-            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+            result = await fetch('/mentor/pods/' + this.pod_id, {
               method: 'PATCH',
               body: JSON.stringify({
                 mentee_todo_notes: this.$refs.mentee_notes.firstChild.innerHTML,
@@ -189,14 +189,14 @@
           }
         },
         async save_mentor_notes() {
-          if(this.mentee_loadstate !== 'success') {
+          if(this.pod_loadstate !== 'success') {
             return;
           }
 
           this.mentor_notes_savestate = 'saving';
 
           try {
-            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+            result = await fetch('/mentor/pods/' + this.pod_id, {
               method: 'PATCH',
               body: JSON.stringify({
                 mentor_todo_notes: this.$refs.mentor_notes.firstChild.innerHTML,
@@ -220,14 +220,14 @@
           }
         },
         async save_parent_notes() {
-          if(this.mentee_loadstate !== 'success') {
+          if(this.pod_loadstate !== 'success') {
             return;
           }
 
           this.parent_notes_savestate = 'saving';
 
           try {
-            result = await fetch('/mentor/mentees/' + this.mentee_id, {
+            result = await fetch('/mentor/pods/' + this.pod_id, {
               method: 'PATCH',
               body: JSON.stringify({
                 parent_todo_notes: this.$refs.parent_notes.firstChild.innerHTML,
@@ -266,12 +266,12 @@
     <%
       mentee_options = [
         {"No specific mentee - general / admin work", nil}
-        | Enum.map(@mentees, fn mentee ->  {mentee.name, mentee.id} end)
+        | Enum.map(@pods, fn pod ->  {pod.mentee.name, pod.id} end)
       ]
     %>
 
-    <%= select f, :mentee_id, mentee_options, "x-model.number": "mentee_id", ":disabled": "loading" %>
-    <%= error_tag f, :mentee_id %>
+    <%= select f, :pod_id, mentee_options, "x-model.number": "pod_id", ":disabled": "loading" %>
+    <%= error_tag f, :pod_id %>
 
 </div>
 
@@ -281,7 +281,7 @@
 
 
 <div
-  x-show="mentee_id && mentee_loadstate == 'success'"
+  x-show="pod_id && pod_loadstate == 'success'"
   class="border-radius box-shadow-m padding-m margin-vertical-l"
   >
   <h2>To-Do Lists for <span x-text="mentee_name"></span>, Their Parents, and You!</h2>
@@ -329,7 +329,7 @@
 
 <div
   class="border-radius box-shadow-m padding-m margin-vertical-l"
-   x-show="mentee_id && mentee_loadstate === 'success'"
+   x-show="pod_id && pod_loadstate === 'success'"
   >
   <h2>Enter Grade</h2>
   <%= select f, :mentee_grade, Tzn.Util.grade_options(), ["x-model": "mentee_grade"] %>
@@ -350,7 +350,7 @@
   <%= datetime_local_input f, :ended_at %>
   <%= error_tag f, :ended_at %>
 
-  <div x-show="!mentee_id">
+  <div x-show="!pod_id">
     <div class="space-m"></div>
     <%= label f, :notes %>
     <%= textarea f, :notes, class: "rte"%>

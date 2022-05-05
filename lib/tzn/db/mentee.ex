@@ -15,6 +15,7 @@ defmodule Tzn.Transizion.Mentee do
 
     field :internal_note, :string
 
+    # TODO: remove these because they go with the pod now
     field :mentor_todo_notes, :string
     field :parent_todo_notes, :string
     field :mentee_todo_notes, :string
@@ -27,26 +28,29 @@ defmodule Tzn.Transizion.Mentee do
 
     field :grade, :string
 
+    # TODO: Remove these since they go with the Pod now
     field :college_list_access, :boolean, default: false
     field :ecvo_list_access, :boolean, default: false
     field :scholarship_list_access, :boolean, default: false
 
+    # TODO: Remove since it goes iwth the pod
     belongs_to :mentor, Tzn.Transizion.Mentor
 
-    # Rates can change and this allows for overriding the mentor's rate
+    # TODO: Remove since it goes with the Pod
     field :mentor_rate, :decimal
 
     belongs_to :user, Tzn.Users.User
 
+    # TODO: Remove these 3
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
     has_many :strategy_sessions, Tzn.Transizion.StrategySession
     has_many :contract_purchases, Tzn.Transizion.ContractPurchase
-    has_one :hour_counts, Tzn.Transizion.MenteeHourCounts
 
     has_many :questionnaires, Tzn.Questionnaire.Questionnaire
     has_many :answers, Tzn.Questionnaire.Answer
     has_many :parents, Tzn.Transizion.Parent
     has_many :changes, Tzn.Transizion.MenteeChanges
+    has_many :pods, Tzn.DB.Pod
 
     timestamps()
   end
@@ -63,10 +67,7 @@ defmodule Tzn.Transizion.Mentee do
       :parent1_name,
       :parent2_email,
       :parent2_name,
-      :grade,
-      :mentor_todo_notes,
-      :parent_todo_notes,
-      :mentee_todo_notes
+      :grade
     ])
     |> to_lowercase(:parent1_email)
     |> to_lowercase(:parent2_email)
@@ -81,24 +82,17 @@ defmodule Tzn.Transizion.Mentee do
       :nick_name,
       :pronouns,
       :timezone_offset,
-      :type,
       :internal_note,
       :parent1_email,
       :parent1_name,
       :parent2_email,
       :parent2_name,
-      :mentor_id,
-      :mentor_rate,
       :user_id,
       :grade,
       :email,
       :archived,
       :archived_reason,
-      :college_list_access,
-      :ecvo_list_access,
-      :scholarship_list_access
     ])
-    |> validate_inclusion(:type, ["college_mentoring", "tutoring", "capstone"])
     |> to_lowercase(:parent1_email)
     |> to_lowercase(:parent2_email)
     |> to_lowercase(:email)
@@ -107,7 +101,6 @@ defmodule Tzn.Transizion.Mentee do
     |> validate_parent1()
     |> validate_parent2()
     |> validate_archived_reason()
-    |> validate_number(:mentor_rate, greater_than: 0)
   end
 
   def to_lowercase(changeset, fieldname) do

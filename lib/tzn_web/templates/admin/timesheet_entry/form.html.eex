@@ -5,22 +5,24 @@
     </div>
   <% end %>
 
-  <%= label f, :started_at %>
-  <%= datetime_local_input f, :started_at %>
-  <%= error_tag f, :started_at %>
-
-  <%= label f, :mentee_id %>
-  <%= select f, :mentee_id, [
+  <%= label f, :pod_id %>
+  <%= select f, :pod_id, [
         {"No specific mentee - general / admin work", nil}
-        | Enum.map(@mentees, fn mentee ->  {mentee.name, mentee.id} end)
+        | Enum.map(@pods, fn pod ->  {pod.mentee.name <> " (" <> humanize(pod.type) <> ")", pod.id} end)
       ] %>
-  <%= error_tag f, :mentee_id %>
+  <%= error_tag f, :pod_id %>
 
   <%= label f, :category %>
   <%= select f,
       :category,
       Tzn.Timesheets.categories() ++ [Tzn.Timesheets.get_category_by_slug("uncategorized")]
-        |> Enum.map(fn c -> {"#{c.mentee_type} > #{c.name}", c.slug} end) %>
+        |> Enum.map(fn c ->
+          if c.pod_type do
+          {"#{humanize(c.pod_type)} > #{c.name}", c.slug}
+          else
+          {c.name, c.slug}
+          end
+        end) %>
   <%= error_tag f, :category %>
 
   <%= label f, :mentee_grade %>
@@ -36,7 +38,7 @@
   <%= error_tag f, :ended_at %>
 
   <%= label f, :hourly_rate %>
-  <%= number_input f, :hourly_rate, step: 0.01 %>
+  <%= text_input f, :hourly_rate %>
   <%= error_tag f, :hourly_rate %>
 
   <%= label f, :notes %>
