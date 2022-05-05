@@ -12,7 +12,7 @@ defmodule TznWeb.Admin.MenteeController do
   end
 
   def index(conn, _params) do
-    mentees = Tzn.Mentee.list_mentees(:admin) |> Enum.sort_by(& &1.name)
+    mentees = Tzn.Mentee.list_mentees(:admin)
     render(conn, "index.html", mentees: mentees)
   end
 
