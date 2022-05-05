@@ -82,11 +82,4 @@ defmodule Tzn.Mentee do
     )
   end
 
-  def name(%{}, :informal) do
-    # nick name || full name
-  end
-
-  def name(%{}, :formal) do
-    # full name
-  end
 end

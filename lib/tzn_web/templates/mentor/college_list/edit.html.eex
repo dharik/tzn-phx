@@ -79,14 +79,14 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                         <strong>To:</strong> <%= [@mentee.parent1_email, @mentee.parent2_email] |> Enum.join(";") %>
                     </p>
                     <p>
-                        <strong>Subject:</strong> <%= @mentee.name %>'s College List
+                        <strong>Subject:</strong> <%= Tzn.Util.informal_name(@mentee) %>'s College List
                     </p>
                     <textarea class="rte" rows="8" name="body">
                         <p>
                             Hi <%= Tzn.Transizion.Mentee.parent_names(@mentee) %>,
                         </p>
                         <p>
-                            Please fill out some info for <%= @mentee.name %>'s college list by
+                            Please fill out some info for <%= Tzn.Util.informal_name(@mentee) %>'s college list by
                             <b><%= Timex.today() |> Timex.shift(days: +3) |> Timex.format!("%B %d", :strftime) %></b>.
                             You can access the form <a href="<%= public_url %>">here</a> or with the URL below.
 
@@ -96,7 +96,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                         </p>
                         <p>
                             Thanks,<br />
-                            <%= @current_mentor.name %>
+                            <%= Tzn.Util.informal_name(@current_mentor) %>
                         </p>
                     </textarea>
                     <div class="space-s"></div>

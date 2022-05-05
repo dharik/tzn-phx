@@ -14,7 +14,7 @@
         </tr>
         <%= for m <- @scored_mentors do %>
           <tr>
-            <td><%= m.name %></td>
+            <td><%= Tzn.Util.informal_name(m) %></td>
             <td><%= m.score_breakdown.career %></td>
             <td><%= m.score_breakdown.school_tier %></td>
             <td><%= m.score_breakdown.gender %></td>

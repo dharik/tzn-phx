@@ -1,5 +1,5 @@
 <h2>
-  <%= @mentee.name %>'s College List
+  <%= Tzn.Util.informal_name(@mentee) %>'s College List
 </h2>
 <p class="margin-bottom-l">
   Hi there! Please add your preferences and answers for your child's list of colleges. Your responses will be auto-saved!

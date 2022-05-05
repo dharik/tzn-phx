@@ -37,7 +37,7 @@
       <div class="space-xs"></div>
 
 
-      <p class="display-title"><%= @mentor.name %></p>
+      <p class="display-title"><%= Tzn.Util.informal_name(@mentor) %></p>
       <%= if @mentor.pronouns do %>
         <small><%= @mentor.pronouns %></small>
       <% end %>
@@ -90,8 +90,8 @@
           <span><%= @mentor.email %></span>
         </p>
         <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Nick Name</span>
-          <span><%= @mentor.nick_name %></span>
+          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Full Name</span>
+          <span><%= @mentor.name %></span>
         </p>
         <p>
           <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Time Zone</span>

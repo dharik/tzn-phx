@@ -1,5 +1,5 @@
 <h2>
-  <%= @mentee.name %>'s Extracurricular/Volunteer Opportunity List
+  <%= Tzn.Util.informal_name(@mentee) %>'s Extracurricular/Volunteer Opportunity List
 </h2>
 <p >
   Hi there! Please add your preferences and answers for your child's list of extracurriculars. Your responses will be auto-saved!

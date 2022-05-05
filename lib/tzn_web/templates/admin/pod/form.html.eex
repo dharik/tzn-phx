@@ -5,6 +5,15 @@
     </div>
   <% end %>
 
+  <%= label f, :active, class: "control switch" do %>
+    <%= checkbox f, :active %>
+    <span class="control-indicator"></span>
+    <span class="control-label">Active?</span>
+  <% end %>
+  <%= error_tag f, :active %>
+
+  <div class="space-m"></div>
+
   <%= label f, :mentee_id  %>
   <%= select f, :mentee_id, [
     {'None', nil} |
@@ -58,12 +67,7 @@
   <% end %>
   <%= error_tag f, :scholarship_list_access %>
 
-  <%= label f, :active, class: "control switch" do %>
-    <%= checkbox f, :active %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Active?</span>
-  <% end %>
-  <%= error_tag f, :active %>
+
 
 
   <div class="space-l"> </div>

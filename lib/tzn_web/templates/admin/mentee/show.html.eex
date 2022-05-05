@@ -28,7 +28,7 @@
 
       <div class="space-xs"></div>
 
-      <p class="display-title"><%= @mentee.name %></p>
+      <p class="display-title"><%= Tzn.Util.informal_name(@mentee) %></p>
       <%= if @mentee.pronouns do %>
         <small><%= @mentee.pronouns %></small>
       <% end %>
@@ -50,7 +50,7 @@
     <div class="flex-1 flex flex-column border-left">
       <div class="padding-m">
         <%= for {key, value} <- [
-          {"Nick Name", @mentee.nick_name || "Not set"},
+          {"Full Name", @mentee.name},
           {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
           {"Email Address", @mentee.email},
           {"User Login", if(@mentee.user, do: @mentee.user.email, else: "N/A") },

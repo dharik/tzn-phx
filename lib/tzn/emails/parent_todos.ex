@@ -26,8 +26,8 @@ defmodule Tzn.Emails.ParentTodos do
 
         generate(
           pod.mentee.parent1_email,
-          pod.mentee.name,
-          pod.mentor.name,
+          Tzn.Util.informal_name(pod.mentee),
+          Tzn.Util.informal_name(pod.mentor),
           pod.mentor.email,
           pod.mentee.parent1_name,
           pod.mentee_todo_notes,
@@ -46,8 +46,8 @@ defmodule Tzn.Emails.ParentTodos do
 
         generate(
           pod.mentee.parent2_email,
-          pod.mentee.name,
-          pod.mentor.name,
+          Tzn.Util.informal_name(pod.mentee),
+          Tzn.Util.informal_name(pod.mentor),
           pod.mentor.email,
           pod.mentee.parent2_name,
           pod.mentee_todo_notes,

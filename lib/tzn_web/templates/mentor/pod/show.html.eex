@@ -1,5 +1,3 @@
-<h1 class="display-title"><%= @mentee.name %></h1>
-
 <div class="main-grid">
   <div class="side padding-horizontal-m">
 
@@ -7,7 +5,7 @@
       Private Notes
     </p>
     <div>
-    <small>This is an internal field and <%= @mentee.name %> will not see this.</small>
+    <small>This is an internal field and <%= Tzn.Util.informal_name(@mentee) %> will not see this.</small>
       <%= form_for @changeset, Routes.mentor_pod_path(@conn, :update, @pod), fn f -> %>
       <%= textarea f, :internal_note, class: "rte" %>
       <%= error_tag f, :internal_note %>
@@ -28,7 +26,7 @@
 
         <div class="space-xs"></div>
 
-        <p class="display-title"><%= @mentee.name %></p>
+        <p class="display-title"><%= Tzn.Util.informal_name(@mentee) %></p>
         <%= if @mentee.pronouns do %>
           <small><%= @mentee.pronouns %></small>
         <% end %>
@@ -50,7 +48,7 @@
       <div class="flex-1 flex flex-column border-left">
         <div class="padding-m">
           <%= for {key, value} <- [
-            {"Nick Name", @mentee.nick_name || "Not set"},
+            {"Full Name", @mentee.name},
             {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
             {"Email Address", @mentee.email},
             {"Grade", humanize(@mentee.grade) || 'Not set'},
@@ -151,7 +149,7 @@
 <div class="space-m"></div>
 <p class="lead">Timeline</p>
 <div class="border border-radius padding-s">
-  <%= link "Open #{@mentee.name}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, mentee_id: @mentee.id), class: "button button-primary" %>
+  <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, mentee_id: @mentee.id), class: "button button-primary" %>
 </div>
 <div class="space-m"></div>
 <p class="lead">College List</p>
@@ -171,17 +169,17 @@
       %>
       </em>
       <div class="space-m"></div>
-      <%= link "Open #{@mentee.name}'s College List Research Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s College List Research Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
     <% else %>
       Not started
       <div class="space-m"></div>
-      <%= link "Start #{@mentee.name}'s college list research request",
+      <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s college list research request",
         to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id),
         class: "button button-primary", method: :post
     %>
     <% end %>
   <% else %>
-    <%= @mentee.name %>’s package does not cover a college list. Please reach out to your CMT if you have questions.
+    <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a college list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-m"></div>
@@ -202,17 +200,17 @@
       %>
       </em>
       <div class="space-m"></div>
-      <%= link "Open #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "button" %>
+      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Extracurricular/Volunteer Opportunity List Research Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "button" %>
     <% else %>
       Not started
       <div class="space-m"></div>
-      <%= link "Start #{@mentee.name}'s Extracurricular/Volunteer Opportunity List Research Request",
+      <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s Extracurricular/Volunteer Opportunity List Research Request",
         to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
         class: "button button-primary", method: :post
     %>
     <% end %>
   <% else %>
-    <%= @mentee.name %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
+    <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-m"></div>
@@ -233,17 +231,17 @@
       %>
       </em>
       <div class="space-m"></div>
-      <%= link "Open #{@mentee.name}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
+      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
     <% else %>
       Not started
       <div class="space-m"></div>
-      <%= link "Start #{@mentee.name}'s Scholarship Opportunity List Research Request",
+      <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s Scholarship Opportunity List Research Request",
         to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
         class: "button button-primary", method: :post
     %>
     <% end %>
   <% else %>
-    <%= @mentee.name %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
+    <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
   <% end %>
 </div>
 <div class="space-l"></div>

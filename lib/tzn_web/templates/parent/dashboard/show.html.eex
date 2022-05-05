@@ -1,8 +1,8 @@
-<h1><%= @pod.mentee.name %></h1>
+<h1><%= Tzn.Util.informal_name(@pod.mentee) %></h1>
 
 <div class="space-m"></div>
 
-<b><%= @pod.mentee.name %> needs your help to get the following items done:</b>
+<b><%= Tzn.Util.informal_name(@pod.mentee) %> needs your help to get the following items done:</b>
 <p>
   <%= raw @pod.parent_todo_notes %>
 </p>
@@ -11,7 +11,7 @@
 <div class="space-s"></div>
 
 
-Here is what <%= @pod.mentee.name %> is working on with <%= @pod.mentor.name %>:
+Here is what <%= Tzn.Util.informal_name(@pod.mentee) %> is working on with <%= Tzn.Util.informal_name(@pod.mentor) %>:
 <p>
   <%= raw @pod.mentee_todo_notes %>
 </p>
@@ -20,7 +20,7 @@ Here is what <%= @pod.mentee.name %> is working on with <%= @pod.mentor.name %>:
 <div class="space-s"></div>
 
 
-Here is what <%= @pod.mentor.name %> is working on between meetings:
+Here is what <%= Tzn.Util.informal_name(@pod.mentor) %> is working on between meetings:
 <p class="padding-left-s">
   <%= raw @pod.mentor_todo_notes %>
 </p>

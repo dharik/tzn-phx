@@ -318,22 +318,22 @@ defmodule Tzn.Questionnaire do
     subject =
       cond do
         questionnaire.question_set_id == college_list_question_set().id ->
-          "#{mentee.name}'s College List"
+          "#{Tzn.Util.informal_name(mentee)}'s College List"
 
         questionnaire.question_set_id == ecvo_list_question_set().id ->
-          "#{mentee.name}'s Extracurricular/Volunteer Opportunity List"
+          "#{Tzn.Util.informal_name(mentee)}'s Extracurricular/Volunteer Opportunity List"
 
         questionnaire.question_set_id == scholarship_list_question_set().id ->
-          "#{mentee.name}'s Scholarship List"
+          "#{Tzn.Util.informal_name(mentee)}'s Scholarship List"
       end
 
     if mentee.parent1_email do
       Tzn.Emails.Questionnaire.welcome(
         subject,
         email_body,
-        mentee.name,
+        Tzn.Util.informal_name(mentee),
         mentee.parent1_email,
-        mentor.name,
+        Tzn.Util.informal_name(mentor),
         mentor.email
       )
       |> Tzn.Mailer.deliver!()
@@ -343,9 +343,9 @@ defmodule Tzn.Questionnaire do
       Tzn.Emails.Questionnaire.welcome(
         subject,
         email_body,
-        mentee.name,
+        Tzn.Util.informal_name(mentee),
         mentee.parent2_email,
-        mentor.name,
+        Tzn.Util.informal_name(mentor),
         mentor.email
       )
       |> Tzn.Mailer.deliver!()

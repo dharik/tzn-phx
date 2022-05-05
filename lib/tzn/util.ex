@@ -1,4 +1,6 @@
 defmodule Tzn.Util do
+  alias Tzn.Transizion.{Mentee, Mentor}
+
   def map_ids(e) do
     e |> Enum.map(& &1[:id])
   end
@@ -71,5 +73,21 @@ defmodule Tzn.Util do
 
   def slugify_grade(_humanized_grade) do
     # TODO
+  end
+
+  def informal_name(%Mentee{} = m) do
+    if is_binary(m.nick_name) do
+      m.nick_name
+    else
+      m.name
+    end
+  end
+
+  def informal_name(%Mentor{} = m) do
+    if is_binary(m.nick_name) do
+      m.nick_name
+    else
+      m.name
+    end
   end
 end
