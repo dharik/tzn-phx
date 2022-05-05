@@ -15,11 +15,6 @@ defmodule Tzn.Transizion.Mentee do
 
     field :internal_note, :string
 
-    # TODO: remove these because they go with the pod now
-    field :mentor_todo_notes, :string
-    field :parent_todo_notes, :string
-    field :mentee_todo_notes, :string
-
     field :parent1_email, :string
     field :parent1_name, :string
 
@@ -28,23 +23,7 @@ defmodule Tzn.Transizion.Mentee do
 
     field :grade, :string
 
-    # TODO: Remove these since they go with the Pod now
-    field :college_list_access, :boolean, default: false
-    field :ecvo_list_access, :boolean, default: false
-    field :scholarship_list_access, :boolean, default: false
-
-    # TODO: Remove since it goes iwth the pod
-    belongs_to :mentor, Tzn.Transizion.Mentor
-
-    # TODO: Remove since it goes with the Pod
-    field :mentor_rate, :decimal
-
     belongs_to :user, Tzn.Users.User
-
-    # TODO: Remove these 3
-    has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
-    has_many :strategy_sessions, Tzn.Transizion.StrategySession
-    has_many :contract_purchases, Tzn.Transizion.ContractPurchase
 
     has_many :questionnaires, Tzn.Questionnaire.Questionnaire
     has_many :answers, Tzn.Questionnaire.Answer

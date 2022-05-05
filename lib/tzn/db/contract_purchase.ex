@@ -3,7 +3,6 @@ defmodule Tzn.Transizion.ContractPurchase do
   import Ecto.Changeset
 
   schema "contract_purchases" do
-    belongs_to :mentee, Tzn.Transizion.Mentee # TODO: Remove since we'll move to pod
     belongs_to :pod, Tzn.DB.Pod
     field :hours, :decimal
     field :date, :naive_datetime

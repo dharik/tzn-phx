@@ -49,11 +49,6 @@ defmodule Tzn.Pods do
     nil
   end
 
-  # TODO: Deprecate. But for now we can assume one pod per mentee
-  def get_pod(%Mentee{} = m) do
-    list_pods(m) |> List.first()
-  end
-
   def get_pod(id) do
     Repo.get(Pod, id)
     |> Repo.preload([

@@ -10,7 +10,6 @@ defmodule Tzn.Transizion.StrategySession do
     field :email_subject, :string
     belongs_to :mentor, Tzn.Transizion.Mentor
     belongs_to :pod, Tzn.DB.Pod
-    belongs_to :mentee, Tzn.Transizion.Mentee # TODO: Remove since we'll move to pod
 
     field :cc_mentee, :boolean, default: true
 

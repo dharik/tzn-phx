@@ -10,7 +10,6 @@ defmodule Tzn.Transizion.TimesheetEntry do
     field :category, :string
     field :mentee_grade, :string
     belongs_to :mentor, Tzn.Transizion.Mentor
-    belongs_to :mentee, Tzn.Transizion.Mentee # TODO: Remove since we'll move to pod
     belongs_to :pod, Tzn.DB.Pod
 
     timestamps()
