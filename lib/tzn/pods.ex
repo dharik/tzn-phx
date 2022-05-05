@@ -48,6 +48,9 @@ defmodule Tzn.Pods do
   def get_pod(nil) do
     nil
   end
+  def get_pod("") do
+    nil
+  end
 
   def get_pod(id) do
     Repo.get(Pod, id)
