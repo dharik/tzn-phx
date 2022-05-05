@@ -31,7 +31,6 @@ defmodule Tzn.Transizion.Mentor do
     field :hourly_rate, :decimal
     field :experience_level, :string
 
-    has_many :mentees, Tzn.Transizion.Mentee
     has_many :pods, Tzn.DB.Pod
     has_many :timesheet_entries, Tzn.Transizion.TimesheetEntry
     has_many :strategy_sessions, Tzn.Transizion.StrategySession

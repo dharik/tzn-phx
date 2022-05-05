@@ -22,13 +22,15 @@ defmodule TznWeb.Admin.ContractPurchaseController do
   end
 
   def create(conn, %{"contract_purchase" => contract_purchase_params}) do
+    pod = Tzn.Pods.get_pod!(contract_purchase_params["pod_id"])
+
     case Transizion.create_contract_purchase(contract_purchase_params) do
       {:ok, contract_purchase} ->
         conn
         |> redirect(to: Routes.admin_pod_path(conn, :show, contract_purchase.pod_id))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, pod: pod)
     end
   end
 

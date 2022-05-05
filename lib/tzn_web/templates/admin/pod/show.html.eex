@@ -275,7 +275,7 @@
     <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, pod_id: @pod.id), class: "button button-primary" %>
     <%= for contract_purchase <- Enum.sort_by(@pod.contract_purchases, &(&1.date), {:desc, NaiveDateTime}) do %>
       <p>
-        <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %>
+        <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %> with expected revenue of <%= Number.Currency.number_to_currency(contract_purchase.expected_revenue) || "N/A" %>
         <br />
         <span class="color-grey"><%= contract_purchase.notes || "No notes about this contract purchases were recorded" %></span>
         <br />
