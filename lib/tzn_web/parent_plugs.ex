@@ -31,7 +31,6 @@ defmodule TznWeb.ParentPlugs do
 
     pod = Enum.find(conn.assigns.pods, List.first(conn.assigns.pods), &(&1.id == pod_id))
 
-    IO.inspect(pod)
     conn |> assign(:pod, pod) |> put_session("selected_pod_id", pod.id)
   end
 
