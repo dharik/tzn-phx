@@ -68,10 +68,16 @@
               <div class="padding-left-xl" x-show="open" x-transition>
                 <div class="space-xxs"></div>
                 <ul class="align-content-flex-start" >
-                  <li><%= link "Passion Project", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#passion_project" %></li>
-                  <li><%= link "SAT/ACT Tutoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#act_sat" %></li>
+                  <%= unless @pod && @pod.type == "capstone" do %>
+                    <li><%= link "Passion Project", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#passion_project" %></li>
+                  <% end %>
+                  <%= unless @pod && @pod.type == "tutoring" do %>
+                    <li><%= link "SAT/ACT Tutoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#act_sat" %></li>
+                  <% end %>
                   <li><%= link "Academic Tutoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#academic_tutoring" %></li>
-                  <li><%= link "College Mentoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#college_mentoring" %></li>
+                  <%= unless @pod && @pod.type == "college_mentoring" do %>
+                    <li><%= link "College Mentoring", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#college_mentoring" %></li>
+                  <% end %>
                   <li><%= link "Financial Aid Advising", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#financial_aid" %></li>
                   <li><%= link "Life-Skills Workshops", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#life_skills" %></li>
                   <li><%= link "Talk to an Alumni", to: Routes.parent_additional_offerings_path(@conn, :show) <> "#alumni" %></li>
