@@ -44,7 +44,8 @@ defmodule TznWeb.Admin.MentorView do
             }
           end)
           |> Enum.sort_by(fn m -> m.time_sort_key end),
-        admin_path: Routes.admin_mentor_path(conn, :show, mentor)
+        admin_path: Routes.admin_mentor_path(conn, :show, mentor),
+        timezone_city: Tzn.Util.offset_to_timezone_city(mentor.timezone_offset)
       }
     end)
     |> Enum.sort_by(
