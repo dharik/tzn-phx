@@ -1,37 +1,52 @@
-<link rel="stylesheet" href="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.css" />
-<script src="//cdn.jsdelivr.net/chartist.js/latest/chartist.min.js"></script>
 
-<div class="ct-chart ct-perfect-fourth" style="width: 40em;"></div>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.7.1/chart.min.js" integrity="sha512-QSkVNOCYLtj73J4hbmVoOV6KVZuMluZlioC+trLpewV8qMjsWqlIQvkn1KGX2StWvPMdWGBqim1xlC8krl1EKQ==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+
+<div style="width: 50%;">
+  <canvas id="hours_chart" width="400" height="400"></canvas>
+</div>
 <script>
  var data = <%= raw Jason.encode!(%{
     labels: chart_data(@timesheet_entries) |> Map.keys(),
     series: chart_data(@timesheet_entries) |> Map.values()
   }) %>
-  var c = new Chartist.Pie('.ct-chart', data, {
-    labelOffset: 20,
-    chartPadding: 30,
-    labelPosition: 'outside',
-    labelDirection: 'explode'
-  });
+const ctx = document.getElementById('hours_chart');
+Chart.defaults.font.size = 16;
+const myChart = new Chart(ctx, {
+    type: 'pie',
+    options: {
+      responsive: true,
+      aspectRatio: 2,
+      plugins: {
+        legend: {
+          position: 'right',
+        },
+      },
+    },
+    data: {
+      labels: data.labels,
+      datasets: [{
+          data: data.series,
+          backgroundColor: ["#66c2a5","#fc8d62","#8da0cb","#e78ac3","#a6d854","#ffd92f","#e5c494","#b3b3b3"]
+      }]
+    }
+});
+
+
   </script>
 
-
-<%= for {e, idx} <- Enum.with_index(@timesheet_entries) do %>
-    <div class="flex padding-s margin-vertical-s <%= if(rem(idx,2) == 0, do: "background-light-50", else: "background-white") %>">
-        <div class="margin-horizontal-m flex-0-1-auto">
-            <%= e.started_at |> format_date() %>
-        </div>
-        <div class="flex-0-1-auto margin-horizontal-m">
-            <%= Tzn.Util.diff_in_hours(e.ended_at, e.started_at) %> hours
-        </div>
-        <div class="flex flex-1-1-auto">
-         <%=
+<table>
+<%= for {e, idx} <- @timesheet_entries |> Enum.sort_by(& &1.started_at, {:desc, NaiveDateTime}) |> Enum.with_index() do %>
+  <tr class="padding-m <%= if(rem(idx,2) == 0, do: "background-light-50", else: "background-white") %>">
+    <td><%= e.started_at |> format_date() %></td>
+    <td><%= Tzn.Util.diff_in_hours(e.ended_at, e.started_at) %> hours</td>
+    <td> <%=
             if e.notes do
               raw e.notes
             else
               Tzn.Timesheets.get_category_by_slug(e.category).name
             end
           %>
-        </div>
-    </div>
+        </td>
+  </tr>
 <% end %>
+</table>
