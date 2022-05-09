@@ -33,6 +33,14 @@ defmodule Tzn.DB.Pod do
     field :scholarship_list_access, :boolean, default: false
 
     # hour breakdown by grade
+    field :hours_recommended_freshman, :decimal
+    field :hours_recommended_sophomore, :decimal
+    field :hours_recommended_junior, :decimal
+    field :hours_recommended_senior, :decimal
+    field :hours_cap_freshman, :decimal
+    field :hours_cap_sophomore, :decimal
+    field :hours_cap_junior, :decimal
+    field :hours_cap_senior, :decimal
 
     timestamps()
   end
@@ -51,9 +59,27 @@ defmodule Tzn.DB.Pod do
       :ecvo_list_access,
       :scholarship_list_access,
       :mentee_id,
-      :mentor_id
+      :mentor_id,
+      :hours_recommended_freshman,
+      :hours_recommended_sophomore,
+      :hours_recommended_junior,
+      :hours_recommended_senior,
+      :hours_cap_freshman,
+      :hours_cap_sophomore,
+      :hours_cap_junior,
+      :hours_cap_senior
     ])
     |> foreign_key_constraint(:mentee_id)
     |> foreign_key_constraint(:mentor_id)
+    |> validate_number(:hours_recommended_freshman, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_recommended_sophomore, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_recommended_junior, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_recommended_senior, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_cap_freshman, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_cap_sophomore, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_cap_junior, greater_than_or_equal_to: 0)
+    |> validate_number(:hours_cap_senior, greater_than_or_equal_to: 0)
   end
+
+  # TODO: Recommended hours/year cannot exceed the capped hours
 end

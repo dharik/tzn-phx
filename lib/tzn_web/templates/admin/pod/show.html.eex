@@ -305,9 +305,13 @@
             <td><%= c.inserted_at %></td>
           </tr>
         <% end %>
+      </tbody>
+    </table>
   </div>
 
+  <div x-show="tab === 'contract_purchases' || tab === 'internal_info'">
+    <%= live_render(@conn, TznWeb.AdminPodHours, session: %{"pod_id" => @pod.id, "current_user_id" => @current_user.id}) %>
+  </div>
 </div>
-
 
 <div class="space-xl"></div>

@@ -17,6 +17,18 @@ defmodule TznWeb.ErrorHelpers do
     end)
   end
 
+  def has_error(form, field) do
+    Keyword.get_values(form.errors, field) |> Enum.any?()
+  end
+
+  def error_class(form, field) do
+    if has_error(form, field) do
+      "error"
+    else
+      ""
+    end
+  end
+
   @doc """
   Translates an error message using gettext.
   """
