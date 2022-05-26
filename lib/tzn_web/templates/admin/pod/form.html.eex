@@ -75,6 +75,9 @@
   <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
 
+  <hr />
+
+  <span class="color-warning font-size-s">Warning: Below are todos from the old format</span>
   <%= label f, :parent_todo_notes %>
   <%= textarea f, :parent_todo_notes, class: "rte" %>
   <%= error_tag f, :parent_todo_notes %>

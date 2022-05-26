@@ -2,8 +2,16 @@
 
 <p>This information will be shown to parents to keep them updated on their student’s progress.</p>
 
-
-<%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :create)) %>
+<%=
+  live_render(
+    @conn,
+    TznWeb.MentorTimesheetEntry,
+    session: %{
+      "pod_id" => @pod && @pod.id,
+      "mentor_id" => @current_mentor.id,
+      "timesheet_entry_id" => nil}
+  )
+%>
 
 <%= link "Back to my timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %>
 

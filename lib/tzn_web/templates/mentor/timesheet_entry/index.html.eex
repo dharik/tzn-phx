@@ -52,12 +52,14 @@
               %>
             </td>
             <td>
-              <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
-                <span class="material-icons-outlined">edit</span>
-              <% end %>
-              <%= link to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry),
-                  method: :delete, data: [confirm: "Are you sure?"] do %>
-                <span class="material-icons-outlined color-error">delete</span>
+              <%= unless timesheet_entry.pod && !timesheet_entry.pod.active do %>
+                <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
+                  <span class="material-icons-outlined">edit</span>
+                <% end %>
+                <%= link to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry),
+                    method: :delete, data: [confirm: "Are you sure?"] do %>
+                  <span class="material-icons-outlined color-error">delete</span>
+                <% end %>
               <% end %>
             </td>
           </tr>

@@ -12,6 +12,7 @@ defmodule Tzn.DB.Pod do
     has_many :questionnaires, through: [:mentee, :questionnaires]
     has_many :answers, through: [:mentee, :answers]
     has_many :changes, Tzn.DB.PodChanges
+    has_many :todos, Tzn.DB.PodTodo
 
     has_one :hour_counts, Tzn.Transizion.PodHourCounts
 
@@ -23,9 +24,9 @@ defmodule Tzn.DB.Pod do
     field :internal_note, :string
     field :mentor_rate, :decimal
 
-    field :mentor_todo_notes, :string
-    field :parent_todo_notes, :string
-    field :mentee_todo_notes, :string
+    field :mentor_todo_notes, :string # Deprecated
+    field :parent_todo_notes, :string # Deprecatedg
+    field :mentee_todo_notes, :string # Deprecated
 
     # features
     field :college_list_access, :boolean, default: false

@@ -206,15 +206,28 @@
 
   <div x-show="tab === 'todos'" x-transition>
     <p class="lead-s">Mentor To-Dos:</p>
-    <div><%= raw @pod.mentor_todo_notes %></div>
+    <ol>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") do %>
+         <%= render "_todo.html", todo: todo %>
+      <% end %>
+    </ol>
+
     <div class="space-m"></div>
 
     <p class="lead-s">Mentee To-Dos:</p>
-    <div><%= raw @pod.mentee_todo_notes %></div>
+    <ol>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") do %>
+        <%= render "_todo.html", todo: todo %>
+      <% end %>
+    </ol>
     <div class="space-m"></div>
 
     <p class="lead-s">Parent To-Dos:</p>
-    <div><%= raw @pod.parent_todo_notes %></div>
+    <ol>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") do %>
+        <%= render "_todo.html", todo: todo %>
+      <% end %>
+    </ol>
     <div class="space-m"></div>
   </div>
 

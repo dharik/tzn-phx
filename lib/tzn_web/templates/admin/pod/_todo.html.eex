@@ -1,0 +1,14 @@
+<%= if @todo.completed do %>
+    <li>
+        <strike><%= @todo.todo_text %></strike>
+    </li>
+
+<% else %>
+    <li>
+        <%= @todo.todo_text %>
+        <%= if @todo.due_date do %>
+            <br />
+            <span class="font-size-s color-grey">Due <%= @todo.due_date %></span>
+        <% end %>
+    </li>
+<% end %>

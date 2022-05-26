@@ -9,6 +9,8 @@ defmodule Tzn.Users.User do
     has_one :admin_profile, Tzn.Users.Admin
     has_one :mentor_profile, Tzn.Transizion.Mentor
     has_one :mentee_profile, Tzn.Transizion.Mentee
+    has_one :parent_profile, Tzn.Transizion.Parent
+
     timestamps()
     pow_user_fields()
   end

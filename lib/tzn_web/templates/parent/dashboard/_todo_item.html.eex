@@ -1,0 +1,47 @@
+<div class="margin-vertical-xs" x-data="
+
+{
+    can_toggle: <%= @can_toggle %>,
+    completed: <%= @item.completed %>,
+    hover: false,
+    get check_classes() {
+        if(this.completed && this.can_toggle && this.hover) {
+            return 'material-icons-outlined cursor-pointer color-light'
+        } else if(this.completed) {
+            return 'material-icons-outlined color-success'
+        } else if(!this.completed && this.can_toggle && this.hover) {
+            return 'material-icons-outlined cursor-pointer color-success'
+        } else if(!this.completed) {
+            return 'material-icons-outlined color-light'
+        }
+    },
+    on_check() {
+        if(this.can_toggle) {
+            this.completed = !this.completed;
+            window.location.href = '<%= Routes.parent_todo_path(@conn, :update, id: @item.id) %>';
+        }
+    }
+}
+
+">
+    <div class="border border-radius padding-xs inline-flex align-items-center">
+
+        <span :class="check_classes" @mouseover="hover=true" @mouseleave="hover=false" @click="on_check">check_circle</span>
+
+        <div style="width: 40rem" class="margin-horizontal-xs flex flex-column">
+            <%= if @item.completed do %>
+                <strike><%= @item.todo_text %></strike>
+            <% else %>
+                <%= raw Tzn.Util.make_hyperlinks(@item.todo_text) %>
+            <% end %>
+
+            <%= if @item.due_date do %>
+                <%= if Timex.after?(Timex.now(), @item.due_date) && !@item.completed do %>
+                    <span class="font-size-xs color-error"><%= @item.due_date %></span>
+                <% else %>
+                    <span class="font-size-xs color-grey-200"><%= @item.due_date %></span>
+                <% end %>
+            <% end %>
+        </div>
+    </div>
+</div>

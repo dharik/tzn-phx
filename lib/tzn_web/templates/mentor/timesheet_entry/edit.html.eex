@@ -1,9 +1,18 @@
 <h1>Edit Timesheet entry</h1>
 
-<%= render "form.html", Map.put(assigns, :action, Routes.mentor_timesheet_entry_path(@conn, :update, @timesheet_entry)) %>
+<%=
+  live_render(
+    @conn,
+    TznWeb.MentorTimesheetEntry,
+    session: %{
+      "pod_id" => @timesheet_entry.pod_id,
+      "mentor_id" => @current_mentor.id,
+      "timesheet_entry_id" => @timesheet_entry.id}
+  )
+%>
 
 <div class="space-m"></div>
 
-<%= if @pod do %>
-  <%= link "Back to mentee", to: Routes.mentor_pod_path(@conn, :show, @pod) %>
+<%= if @timesheet_entry.pod_id do %>
+  <%= link "Back to mentee", to: Routes.mentor_pod_path(@conn, :show, @timesheet_entry.pod_id) %>
 <% end %>

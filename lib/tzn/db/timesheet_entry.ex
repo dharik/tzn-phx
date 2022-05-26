@@ -29,6 +29,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
       :pod_id
     ])
     |> validate_required([:started_at, :ended_at, :mentor_id, :category])
+    |> validate_length(:category, min: 2, message: "is required")
     |> notes_maybe_required()
     |> grade_maybe_required()
     |> ended_after_started()

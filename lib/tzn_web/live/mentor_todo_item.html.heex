@@ -1,0 +1,54 @@
+<div class="margin-vertical-xs" style="width: 60rem">
+    <div class="border border-radius padding-xs align-items-center flex flex-row" >
+            <%= unless @item.deleted_at do %>
+                <%= if @item.completed do %>
+                    <a href="#" phx-click="mark_incomplete" phx-target={@myself}><span class="material-icons-outlined color-success">check_circle</span></a>
+                <% else %>
+                    <a href="#" phx-click="mark_complete" phx-target={@myself}><span class="material-icons-outlined color-light">radio_button_unchecked </span></a>
+                <% end %>
+            <% end %>
+            <div class="flex flex-1 margin-horizontal-xs flex-column">
+                <%= if @changeset do %>
+                    <.form for={@changeset} let={f} phx-change="validate" phx-debounce="1200" phx-target={@myself} phx-click-away="close">
+                        <%= label f, :todo_text %>
+                        <%= text_input f, :todo_text %>
+                        <%= error_tag f, :todo_text %>
+
+                        <%= label f, :due_date %>
+                        <%= date_input f, :due_date %>
+                        <%= error_tag f, :due_date %>
+                    </.form>
+                <% else %>
+                    <%= if @item.deleted_at do %>
+                        Deleted <a href="#" phx-target={@myself} phx-click="undo_delete">(undo)</a>
+                    <% else %>
+                        <%= if @item.completed do %>
+                            <strike><%= @item.todo_text %></strike>
+                        <% else %>
+                            <%= @item.todo_text %>
+                        <% end %>
+
+                        <%= if @item.due_date do %>
+                            <%= if Timex.after?(Timex.now(), @item.due_date) && !@item.completed do %>
+                                <span class="font-size-xs color-error"><%= @item.due_date %></span>
+                            <% else %>
+                                <span class="font-size-xs color-grey-200"><%= @item.due_date %></span>
+                            <% end %>
+                        <% end %>
+                    <% end %>
+                <% end %>
+            </div>
+            <%= unless @item.deleted_at do %>
+                    <div>
+                        <%= unless @item.completed do %>
+                            <a href="#" phx-click="edit" phx-target={@myself}>
+                                <span class="material-icons-outlined color-primary-300">edit</span>
+                            </a>
+                        <% end %>
+                    </div>
+                <div>
+                    <a href="#" phx-click="delete" phx-target={@myself}><span class="material-icons-outlined color-error-300">delete</span></a>
+                </div>
+            <% end %>
+    </div>
+</div>

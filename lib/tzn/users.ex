@@ -12,7 +12,7 @@ defmodule Tzn.Users do
     User
     |> order_by(desc: :id)
     |> Repo.all()
-    |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile])
+    |> Repo.preload([:admin_profile, :mentor_profile, :mentee_profile, :parent_profile])
   end
 
   def get_user!(id), do: Repo.get!(User, id)

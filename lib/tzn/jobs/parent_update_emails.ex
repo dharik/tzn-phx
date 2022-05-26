@@ -1,7 +1,7 @@
 defmodule Tzn.Jobs.ParentUpdateEmails do
   import Ecto.Query, warn: false
   alias Tzn.Repo
-  alias Tzn.DB.{Pod, PodChanges}
+  alias Tzn.DB.{Pod, PodTodo}
   require Logger
 
   # This should only run at most every 2 weeks
@@ -29,7 +29,7 @@ defmodule Tzn.Jobs.ParentUpdateEmails do
   end
 
   @doc """
-  Look for mentees whose todo lists were updated recently and
+  Look for pod todo lists that were updated recently and
   # maybe send out parent emails
   """
   def todo_list_changed do
@@ -41,12 +41,11 @@ defmodule Tzn.Jobs.ParentUpdateEmails do
     updated_before = Timex.now() |> Timex.shift(hours: -3)
 
     Repo.all(
-      from(pc in PodChanges,
-        where: pc.field in ["parent_todo_notes", "mentee_todo_notes", "mentor_todo_notes"],
-        where: pc.updated_at > ^updated_after,
-        where: pc.updated_at < ^updated_before,
-        distinct: pc.pod_id,
-        select: pc.pod_id
+      from(todo in PodTodo,
+        where: todo.updated_at > ^updated_after,
+        where: todo.updated_at < ^updated_before,
+        distinct: todo.pod_id,
+        select: todo.pod_id
       )
     )
     |> Enum.map(fn pod_id ->

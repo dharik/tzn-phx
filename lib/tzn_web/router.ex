@@ -105,6 +105,7 @@ defmodule TznWeb.Router do
 
     scope "/", as: :parent do
       get "/dashboard", Parent.DashboardController, :show
+      get "/todo", Parent.TodoController, :update # Not following REST
       get "/work_log", Parent.WorklogController, :show
       get "/refer", Parent.ReferralController, :show
       get "/additional_offerings", Parent.AdditionalOfferingsController, :show
@@ -133,7 +134,6 @@ defmodule TznWeb.Router do
     pipe_through [:api, :mentor]
 
     post "/answers", Mentor.AnswerController, :create_or_update
-    get "/pods/:id", Mentor.PodController, :show_json
   end
 
 

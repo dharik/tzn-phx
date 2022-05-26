@@ -19,25 +19,9 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
   end
 
   def new(conn, params) do
-    default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime()
-
     pod = Tzn.Pods.get_pod(params["pod_id"])
 
-    changeset =
-      Timesheets.change_timesheet_entry(
-        %TimesheetEntry{
-          started_at: default_started_at,
-          ended_at: default_started_at |> Timex.shift(minutes: 30)
-        },
-        # add in the pod id
-        params
-      )
-
-    render(conn, "new.html",
-      changeset: changeset,
-      last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod),
-      pod: pod
-    )
+    render(conn, "new.html", pod: pod)
   end
 
   def create(conn, %{"timesheet_entry" => timesheet_entry_params}) do
@@ -69,11 +53,7 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
         {:error, %Ecto.Changeset{} = changeset} ->
           pod = Tzn.Pods.get_pod!(pod.id)
 
-          render(conn, "new.html",
-            changeset: changeset,
-            pod: pod,
-            last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
-          )
+          render(conn, "new.html", pod: pod)
       end
     else
       case Timesheets.create_timesheet_entry(
@@ -84,60 +64,32 @@ defmodule TznWeb.Mentor.TimesheetEntryController do
           conn
           |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
-        {:error, %Ecto.Changeset{} = changeset} ->
-          render(conn, "new.html",
-            changeset: changeset,
-            pod: nil,
-            last_todo_updated_at: nil
-          )
+        {:error, %Ecto.Changeset{} = _changeset} ->
+          render(conn, "new.html")
       end
     end
   end
 
   def edit(conn, %{"id" => id}) do
     timesheet_entry = Timesheets.get_timesheet_entry!(id)
+
     if timesheet_entry.mentor_id != conn.assigns.current_mentor.id do
       raise "You don't have access to this one"
     end
 
-    if timesheet_entry.pod_id do
-      pod = Tzn.Pods.get_pod!(timesheet_entry.pod_id)
-      changeset = Timesheets.change_timesheet_entry(timesheet_entry)
-
-      render(conn, "edit.html",
-        timesheet_entry: timesheet_entry,
-        changeset: changeset,
-        pod: pod,
-        last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
-      )
-    else
-      changeset = Timesheets.change_timesheet_entry(timesheet_entry)
-
-      render(conn, "edit.html",
-        timesheet_entry: timesheet_entry,
-        changeset: changeset,
-        pod: nil,
-        last_todo_updated_at: nil
-      )
-    end
+    render(conn, "edit.html", timesheet_entry: timesheet_entry)
   end
 
   def update(conn, %{"id" => id, "timesheet_entry" => timesheet_entry_params}) do
     timesheet_entry = Timesheets.get_timesheet_entry!(id)
-    pod = Tzn.Pods.get_pod(timesheet_entry.pod_id)
 
     case Timesheets.update_timesheet_entry(timesheet_entry, timesheet_entry_params) do
       {:ok, _timesheet_entry} ->
         conn
         |> redirect(to: Routes.mentor_timesheet_entry_path(conn, :index))
 
-      {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "edit.html",
-          timesheet_entry: timesheet_entry,
-          changeset: changeset,
-          pod: pod,
-          last_todo_updated_at: Tzn.Pods.most_recent_todo_list_updated_at(pod)
-        )
+      {:error, %Ecto.Changeset{} = _changeset} ->
+        render(conn, "edit.html", timesheet_entry: timesheet_entry)
     end
   end
 

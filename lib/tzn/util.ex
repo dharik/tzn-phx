@@ -90,4 +90,8 @@ defmodule Tzn.Util do
       m.name
     end
   end
+
+  def make_hyperlinks(text) do
+    Regex.replace(~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/, text, "<a href=\"\\0\">\\0</a>")
+  end
 end

@@ -60,7 +60,8 @@ defmodule Tzn.MixProject do
       {:phoenix_swoosh, "~> 1.0"},
       {:ex_aws, "~> 2.2.9"},
       {:ex_aws_s3, "~> 2.3.2"},
-      {:sweet_xml, "~> 0.7.2"}
+      {:sweet_xml, "~> 0.7.2"},
+      {:floki, "~> 0.32.1"}
     ]
   end
 

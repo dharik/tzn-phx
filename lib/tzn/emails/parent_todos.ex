@@ -17,8 +17,10 @@ defmodule Tzn.Emails.ParentTodos do
   require Logger
 
   def maybe_send_for_pod(%Pod{} = pod) do
-    pod = Tzn.Pods.get_pod!(pod.id) # Reload with many of the associations
-    if has_notes(pod) do
+    # Reload with many of the associations
+    pod = Tzn.Pods.get_pod!(pod.id)
+
+    if Enum.any?(pod.todos) do
       if should_send_to_parent(pod.mentee.parent1_email, pod.id) do
         Logger.info(
           "Sending parent(1) update to #{pod.mentee.parent1_email} for pod id:#{pod.mentee.id}"
@@ -30,9 +32,7 @@ defmodule Tzn.Emails.ParentTodos do
           Tzn.Util.informal_name(pod.mentor),
           pod.mentor.email,
           pod.mentee.parent1_name,
-          pod.mentee_todo_notes,
-          pod.parent_todo_notes,
-          pod.mentor_todo_notes
+          Enum.reject(pod.todos, & &1.deleted_at)
         )
         |> Tzn.Mailer.deliver!()
 
@@ -50,9 +50,7 @@ defmodule Tzn.Emails.ParentTodos do
           Tzn.Util.informal_name(pod.mentor),
           pod.mentor.email,
           pod.mentee.parent2_name,
-          pod.mentee_todo_notes,
-          pod.parent_todo_notes,
-          pod.mentor_todo_notes
+          Enum.reject(pod.todos, & &1.deleted_at)
         )
         |> Tzn.Mailer.deliver!()
 
@@ -67,9 +65,7 @@ defmodule Tzn.Emails.ParentTodos do
         mentor_name,
         mentor_email,
         parent_name,
-        mentee_todos,
-        parent_todos,
-        mentor_todos
+        todos
       ) do
     new()
     |> from({"Transizion", "mentors@transizion.com"})
@@ -79,9 +75,26 @@ defmodule Tzn.Emails.ParentTodos do
     |> bcc("mentors@transizion.com")
     |> subject("Transizion Update: #{mentee_name}")
     |> render_body("parent_todos.html", %{
-      mentee_todos: mentee_todos,
-      parent_todos: parent_todos,
-      mentor_todos: mentor_todos,
+      mentee_todos:
+        todos
+        |> Enum.filter(&(&1.assignee_type == "mentee"))
+        |> Enum.reject(& &1.completed)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}),
+      parent_todos:
+        todos
+        |> Enum.filter(&(&1.assignee_type == "parent"))
+        |> Enum.reject(& &1.completed)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}),
+      mentor_todos:
+        todos
+        |> Enum.filter(&(&1.assignee_type == "mentor"))
+        |> Enum.reject(& &1.completed)
+        |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}),
+      completed_todos:
+        todos
+        |> Enum.filter(& &1.completed)
+        |> Enum.sort_by(& &1.completed_changed_at, {:desc, NaiveDateTime})
+        |> Enum.take(5),
       mentee_name: mentee_name,
       mentor_name: mentor_name,
       mentor_email: mentor_email,
@@ -118,10 +131,5 @@ defmodule Tzn.Emails.ParentTodos do
 
     String.length(parent_email) > 3 &&
       (!last_email_at || !Tzn.Util.within_n_days_ago(last_email_at, 3))
-  end
-
-  def has_notes(pod = %Pod{}) do
-    is_binary(pod.mentor_todo_notes) || is_binary(pod.mentee_todo_notes) ||
-      is_binary(pod.parent_todo_notes)
   end
 end

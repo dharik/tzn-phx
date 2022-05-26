@@ -8,6 +8,7 @@
       <th>Admin?</th>
       <th>Mentor Profile</th>
       <th>Mentee Profile</th>
+      <th>Parent?</th>
       <th>Impersonate</th>
     </tr>
   </thead>
@@ -42,6 +43,11 @@
         <td>
           <%= if user.mentee_profile do %>
             <%= link user.mentee_profile.name, to: Routes.admin_mentee_path(@conn, :show, user.mentee_profile) %>
+          <% end %>
+        </td>
+        <td>
+          <%= if user.parent_profile do %>
+            Yes
           <% end %>
         </td>
         <td>
