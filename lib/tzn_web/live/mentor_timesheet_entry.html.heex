@@ -83,7 +83,7 @@
         <%= unless @pod do %>
             <div class="space-m"></div>
             <%= label f, :notes %>
-            <%= textarea f, :notes, class: "rte", "phx-debounce": 800 %>
+            <%= textarea f, :notes, "phx-debounce": 800 %>
             <%= error_tag f, :notes %>
         <% end %>
 
