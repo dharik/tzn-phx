@@ -18,7 +18,7 @@
 <p class="lead-s">Here is what <%= Tzn.Util.informal_name(@pod.mentee) %> is working on with <%= Tzn.Util.informal_name(@pod.mentor) %>:</p>
 <%= if Enum.any?(@mentee_todos) do %>
   <%= for todo <- @mentee_todos do %>
-    <%= render "_todo_item.html", item: todo, conn: @conn, can_toggle: true %>
+    <%= render "_todo_item.html", item: todo, conn: @conn, can_toggle: false %>
   <% end %>
 <% else %>
   Congratulations! Your child doesn't have any tasks to complete right now. Thanks for checking!
@@ -30,7 +30,7 @@
 <%= if Enum.any?(@mentor_todos) do %>
   <p class="lead-s">Here is what <%= Tzn.Util.informal_name(@pod.mentor) %> is working on between meetings:</p>
   <%= for todo <- @mentor_todos do %>
-    <%= render "_todo_item.html", item: todo, conn: @conn, can_toggle: true %>
+    <%= render "_todo_item.html", item: todo, conn: @conn, can_toggle: false %>
   <% end %>
 <% else %>
   If you have a question for your mentor, reach out over Slack to schedule a meeting. They’d be delighted to help you.
