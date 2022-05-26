@@ -2,7 +2,7 @@
 
 <div class="space-m"></div>
 
-<p class="lead-s"><%= Tzn.Util.informal_name(@pod.mentee) %> needs your help to get the following items done:</b>
+<p class="lead-s"><%= Tzn.Util.informal_name(@pod.mentee) %> needs your help to get the following items done:</p>
 <%= if Enum.any?(@parent_todos) do %>
   <%= for todo <- @parent_todos do %>
     <%= render "_todo_item.html", item: todo, conn: @conn, can_toggle: true %>
