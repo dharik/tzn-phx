@@ -177,7 +177,7 @@ defmodule Tzn.Pods do
          pod.todos
          |> Enum.reject(& &1.deleted_at)
          |> Enum.reject(& &1.completed)
-         |> Enum.filter(& &1.todo_text == "Change me")
+         |> Enum.filter(&(&1.todo_text == "Change me"))
          |> Enum.any?() do
       {:error, "There is a todo item that needs to be edited"}
     else
@@ -245,10 +245,10 @@ defmodule Tzn.Pods do
          |> Enum.filter(fn todo ->
            Tzn.Util.within_n_days_ago(todo.updated_at, 30)
          end)
-         |> Enum.any?() do
-      {:ok, pod}
-    else
+         |> Enum.empty?() do
       {:error, "Mentee or Mentor todo list needs to be updated"}
+    else
+      {:ok, pod}
     end
   end
 end
