@@ -36,7 +36,8 @@ config :tzn, TznWeb.Endpoint,
     transport_options: [socket_opts: [:inet6]]
   ],
   secret_key_base: secret_key_base,
-  live_view: [signing_salt: secret_live_view_signing_salt]
+  live_view: [signing_salt: secret_live_view_signing_salt],
+  check_origin: :conn
 
 # ## Using releases (Elixir v1.9+)
 #
