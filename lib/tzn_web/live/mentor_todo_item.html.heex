@@ -9,7 +9,7 @@
             <% end %>
             <div class="flex flex-1 margin-horizontal-xs flex-column">
                 <%= if @changeset do %>
-                    <.form for={@changeset} let={f} phx-change="validate" phx-debounce="1200" phx-target={@myself} phx-click-away="close">
+                    <.form for={@changeset} let={f} phx-change="validate" phx-debounce="1200" phx-target={@myself} phx-click-away="close" onsubmit="return false;">
                         <%= label f, :todo_text %>
                         <%= text_input f, :todo_text %>
                         <%= error_tag f, :todo_text %>
