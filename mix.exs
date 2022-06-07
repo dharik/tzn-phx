@@ -61,7 +61,8 @@ defmodule Tzn.MixProject do
       {:ex_aws, "~> 2.2.9"},
       {:ex_aws_s3, "~> 2.3.2"},
       {:sweet_xml, "~> 0.7.2"},
-      {:floki, "~> 0.32.1"}
+      {:floki, "~> 0.32.1"},
+      {:joken, "~> 2.4"}
     ]
   end
 

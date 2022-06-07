@@ -86,6 +86,7 @@ defmodule TznWeb.Router do
       get "/", Admin.MentorController, :index
       get "/matching", Admin.MatchingAlgorithmController, :show
       get "/impersonation/start", Admin.ImpersonationController, :start
+      get "/cmt_dashboard", Admin.CmtDashboardController, :show
       resources "/users", Admin.UserController
       resources "/mentees", Admin.MenteeController
       resources "/pods", Admin.PodController, except: [:index]
@@ -111,6 +112,7 @@ defmodule TznWeb.Router do
       get "/additional_offerings", Parent.AdditionalOfferingsController, :show
       post "/refer", Parent.ReferralController, :create
       get "/timeline", Parent.TimelineController, :show
+      get "/resources", Parent.LibraryController, :show
     end
   end
 

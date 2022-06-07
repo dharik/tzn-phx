@@ -94,4 +94,7 @@ config :tzn, s3_bucket: "collegerize-dev"
 
 config :tzn, allow_impersonating_admins: true
 
+config :tzn, metabase_secret: "dev secret"
+
+
 import_config "dev.secret.exs"
