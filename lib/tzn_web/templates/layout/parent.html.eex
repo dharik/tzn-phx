@@ -21,7 +21,13 @@
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
-      gtag('config', 'G-8BENH6CVF6');
+      gtag('config', 'G-8BENH6CVF6', {
+        'user_id': '<%= @current_user.id %>'
+      });
+
+      gtag('set', 'user_properties', {
+        'cz_user_id': '<%= @current_user.id %>'
+      });
     </script>
 
   </head>
