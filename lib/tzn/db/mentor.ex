@@ -78,10 +78,10 @@ defmodule Tzn.Transizion.Mentor do
   def validate_archived(changeset) do
     validate_change(changeset, :archived, fn :archived, archived ->
       if archived &&
-           Ecto.assoc(changeset.data, :mentees)
+           Ecto.assoc(changeset.data, :pods)
            |> Tzn.Repo.all()
-           |> Enum.any?(&(&1.archived == false)) do
-        [archived: "Can't archive this mentor because there are still active mentees"]
+           |> Enum.any?(&(&1.active)) do
+        [archived: "Can't archive this mentor because there are still active pods"]
       else
         []
       end
