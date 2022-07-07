@@ -20,7 +20,37 @@ defmodule Tzn.Emails.ParentTodos do
     # Reload with many of the associations
     pod = Tzn.Pods.get_pod!(pod.id)
 
-    if Enum.any?(pod.todos) do
+    last_email_at = Tzn.Emails.last_email_by_key(email_key(pod.id))
+
+    last_timesheet_entry_at =
+      pod.timesheet_entries
+      |> Enum.map(& &1.ended_at)
+      |> Enum.max(NaiveDateTime, fn -> nil end)
+
+
+    should_send =
+      cond do
+        !last_timesheet_entry_at ->
+          false
+
+        Enum.empty?(pod.todos) ->
+          false
+
+        !last_email_at ->
+          true
+
+        Timex.after?(last_timesheet_entry_at, last_email_at) &&
+            !Tzn.Util.within_n_hours_ago(last_timesheet_entry_at, 3) ->
+          true
+
+        !Tzn.Util.within_n_days_ago(last_email_at, 20) ->
+          true
+
+        true ->
+          false
+      end
+
+    if should_send do
       if should_send_to_parent(pod.mentee.parent1_email, pod.id) do
         Logger.info(
           "Sending parent(1) update to #{pod.mentee.parent1_email} for pod id:#{pod.mentee.id}"

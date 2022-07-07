@@ -23,6 +23,16 @@ defmodule Tzn.Emails do
     )
   end
 
+  def last_email_by_key(key) do
+    Repo.one(
+      from(e in EmailHistory,
+        where: e.key == ^key,
+        limit: 1,
+        select: max(e.sent_at)
+      )
+    )
+  end
+
   def append_email_history(email_address, key) do
     %EmailHistory{}
     |> EmailHistory.changeset(%{
