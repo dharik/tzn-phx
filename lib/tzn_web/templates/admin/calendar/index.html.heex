@@ -1,0 +1,29 @@
+<div class="main-grid">
+    <div class="main">
+
+        <div class="flex flex-row justify-content-space-between">
+            <h2>OrganiZeU Calendars (<%= Enum.count(@calendars) %>)</h2>
+            <%= link to: Routes.admin_calendar_path(@conn, :new), class: "button button-primary button-text button-icon text-transform-uppercase" do %>
+                <span class="material-icons-outlined">add</span> Create Calendar
+            <% end %>
+        </div>
+
+        <%= for c <- @calendars do %>
+            <div class="flex flex-row margin-vertical-s border border-radius padding-m justify-content-space-between">
+                    <div class="flex-1">
+                        <%= c.name %>
+                        <br />
+                        <%= link Tzn.Util.pluralize(Enum.count(c.events), "deadline"), to: Routes.admin_calendar_path(@conn, :show, c) %>
+                    </div>
+                    <div>
+                        <span class="button button-pill button-s margin-left-s button-outline" disabled>
+                            <%= humanize(c.type) %>
+                        </span>
+                        <%= link to: Routes.admin_calendar_path(@conn, :edit, c) do %>
+                            <span class="material-icons-outlined color-primary">edit</span>
+                        <% end %>
+                    </div>
+                </div>
+        <% end %>
+    </div>
+</div>

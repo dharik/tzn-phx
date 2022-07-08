@@ -1,0 +1,19 @@
+Hi,
+
+<p>
+Use this link to access your timeline and modify the calendars you've subscribed to
+<br />
+<%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @access_key) %>
+</p>
+
+<p>
+Use this link to share your calendar with others. They will not be able to modify the calendars you've subscribed to
+<br />
+<%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @readonly_access_key) %>
+</p>
+
+<p>
+Sincerely,
+<br />
+The Transizion Team
+</p>

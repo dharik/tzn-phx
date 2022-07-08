@@ -32,6 +32,15 @@ defmodule Tzn.Util do
     |> Decimal.round(places)
   end
 
+  def grade_options(:high_school) do
+    [
+      {"Freshman", "freshman"},
+      {"Sophomore", "sophomore"},
+      {"Junior", "junior"},
+      {"Senior", "senior"},
+    ]
+  end
+
   def grade_options do
     [
       {"Middle school", "middle_school"},
@@ -93,5 +102,18 @@ defmodule Tzn.Util do
 
   def make_hyperlinks(text) do
     Regex.replace(~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/, text, "<a href=\"\\0\">\\0</a>")
+  end
+
+  def pluralize(num, unit, unit_plural \\ nil) do
+    unit_plural =
+      if is_nil(unit_plural) do
+        unit <> "s"
+      end
+
+    if num == 1 do
+      "#{num} #{unit}"
+    else
+      "#{num} #{unit_plural}"
+    end
   end
 end

@@ -1,0 +1,129 @@
+<link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
+      rel="stylesheet">
+      
+<div class="flex">
+   
+
+    <div class="flex-1">
+        <%= if @readonly do %>
+            Graduation year: <%= @timeline.graduation_year %>
+        <% else %>
+            What is your graduation year?
+            <form phx-change="set_grad_year">
+                <select name="grad_year">
+                    <% grad_year_start_option = 
+                        if Timex.now().month > 7 do
+                            Timex.now().year + 1
+                        else
+                            Timex.now().year
+                        end 
+                    %>
+                    <%= for value <-  
+                        grad_year_start_option..(grad_year_start_option + 7) do %>
+                        <option value={value} selected={@grad_year == value}><%= value %></option>
+                    <% end %>
+                </select>
+            </form>
+        <% end %>
+        <br />
+        <br />
+        <%= for e <- @events do %>
+            <b><%= e.month %> / <%= e.day %> / <%= e.year %></b>
+            <br />
+            <b><%= e.name %> (<%= Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end) |> Map.get(:name) %>)</b>
+            <br />
+            <%= e.description %>
+
+            <br />
+            <hr />
+            <br />
+        <% end %>
+
+       
+    </div>
+
+    <div class="flex-0" style="width: 30%">
+        <div class="border padding-m">
+             <b>Calendars:</b>
+             <br />
+            <%= for c <- @calendars do %>
+                <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
+                    <div><%= c.name %></div>
+                    <%= unless @readonly do %>
+                        <div>
+                            <span class="material-icons-outlined cursor-pointer" phx-click="toggle_calendar" phx-value-id={c.id}>
+                                <%= if MapSet.member?(@hidden_ids, c.id) do %>
+                                    visibility_off
+                                <% else %>
+                                    visibility
+                                <% end %>
+                            </span>
+                            
+                            
+                            <span class="material-icons-outlined cursor-pointer" phx-click="remove_calendar" phx-value-id={c.id}>
+                                delete
+                            </span>
+                        </div>
+                    <% end %>
+                </div>
+            <% end %>
+
+            <%= unless @readonly do %>
+                <hr />
+                <br />
+
+                <div class="">
+                    <b>Search to add another</b>
+                    <br /><br />
+        
+                    
+                    <form phx-change="search">
+                        <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} />
+                    </form>
+                    <ul>
+                        <%= for c <- @search_results do %>
+                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                        <% end %>
+                    </ul>
+                </div>
+            <% end %>
+        </div>
+
+        <%= unless @readonly do %>
+            <div class="border padding-m margin-vertical-l">
+                <span class="material-icons-outlined">
+                    share
+                </span>
+                <b>Save/Share my timeline (anonymous)</b>
+                <p>Export your timeline to your calendar or something</p>
+                
+                <%= if @export_complete do %>
+                    <%= if @timeline.emailed_at do %>
+                        Sent to <%= @timeline.email %> <%= Tzn.Util.format_date_relative(@timeline.emailed_at) %>
+                    <% else %>
+                        Will be sent to <%= @timeline.email %>
+                    <% end %>
+
+                    Link here
+                <% else %>
+                    <.form for={@export_changeset} let={f} phx-submit="export">
+                        <%= label f, "Which of these best describes you?" do %>
+                            <%= select f, :user_type, [{"Parent", "parent"}, {"Student", "student"}], value: Ecto.Changeset.get_field(@export_changeset, :user_type) %>
+                            <%= error_tag f, :user_type %>
+                        <% end %>
+                    
+                        <%= label f, "What is your email address?" do %>
+                            <%= email_input f, :email %>
+                            <%= error_tag f, :email %>
+                        <% end %>
+                        <%= submit "Save", class: "button-primary", disabled: Enum.any?(@export_changeset.errors) %>
+                    </.form>
+                <% end %>
+            </div>
+        <% end %>
+    </div>
+
+
+
+</div>
+

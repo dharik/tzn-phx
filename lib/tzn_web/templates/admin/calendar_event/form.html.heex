@@ -1,0 +1,51 @@
+
+<%= form_for @changeset, @action, fn f -> %>
+    <%= label f, :calendar_id %>
+    <%= hidden_input f, :calendar_id, value: @calendar.id %>
+    <%= link @calendar.name, to: Routes.admin_calendar_path(@conn, :show, @calendar) %>
+    <br />
+
+  <%= label f, :title  %>
+  <%= text_input f, :name %>
+  <%= error_tag f, :name %>
+
+  <%= label f, :description  %>
+  <%= textarea f, :description, class: "rte" %>
+  <%= error_tag f, :description %>
+
+
+  
+
+  <%= label f, :month  %>
+  <%= select f, :month, [
+    {"January", "1"},
+    {"February", "2"},
+    {"March", "3"},
+    {"April", "4"},
+    {"May", "5"},
+    {"June", "6"},
+    {"July", "7"},
+    {"August", "8"},
+    {"September", "9"},
+    {"October", "10"},
+    {"November", "11"},
+    {"December", "12"}
+    ] %>
+  <%= error_tag f, :month %>
+
+  <%= label f, :day  %>
+  <%= select f, :day, 1..31 %>
+  <%= error_tag f, :day %>
+
+
+
+  <%= label f, :grade %>
+  <%= select f, :grade, Tzn.Util.grade_options(:high_school) %>
+  <%= error_tag f, :grade %>
+
+  <div class="space-m"></div>
+
+  <div>
+    <%= submit "Save" %>
+  </div>
+<% end %>

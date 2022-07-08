@@ -32,6 +32,7 @@
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
             <%= TznWeb.LayoutView.left_nav_button(Routes.admin_cmt_dashboard_path(@conn, :show), "Mentor Oversight", "supervised_user_circle", @conn.request_path =~ "cmt_dashboard") %>
+            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_calendar_path(@conn, :index), "Calendars", "calendar_month", @conn.request_path =~ "calendar") %>
 
           </div>
           <div class="space-xl"></div>

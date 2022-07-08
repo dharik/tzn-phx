@@ -19,7 +19,6 @@ defmodule TznWeb.AdminPodHours do
     updated_changeset =
       Tzn.Pods.change_pod(socket.assigns.pod, pod_params) |> Map.put(:action, :update)
 
-    IO.inspect(updated_changeset)
     {:noreply, socket |> assign(:changeset, updated_changeset)}
   end
 
