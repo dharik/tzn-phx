@@ -40,7 +40,6 @@ defmodule TznWeb.Router do
     plug :fetch_session
     plug :fetch_flash
     plug :put_secure_browser_headers
-    plug :protect_from_forgery
   end
 
   pipeline :api do
@@ -128,10 +127,17 @@ defmodule TznWeb.Router do
     post "/research_list/:access_key_short", Parent.QuestionnaireController, :create_or_update_answer
     put "/research_list/:access_key_short", Parent.QuestionnaireController, :upload
 
-    get "/organizeu/:access_key", TimelinesController, :show
-    get "/organizeu", TimelinesController, :show
+
 
   end
+
+  scope "/", TznWeb do
+    pipe_through [:browser_anonymous, :protect_from_forgery]
+
+    get "/organizeu/:access_key", TimelinesController, :show
+    get "/organizeu", TimelinesController, :show
+  end
+
 
   scope "/admin/api", TznWeb do
     pipe_through [:admin]

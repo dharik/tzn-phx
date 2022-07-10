@@ -50,7 +50,7 @@
                 <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
                     <div><%= c.name %></div>
                     <%= unless @readonly do %>
-                        <div>
+                        <div class="flex">
                             <span class="material-icons-outlined cursor-pointer" phx-click="toggle_calendar" phx-value-id={c.id}>
                                 <%= if MapSet.member?(@hidden_ids, c.id) do %>
                                     visibility_off
@@ -77,7 +77,7 @@
                     <br /><br />
         
                     
-                    <form phx-change="search">
+                    <form phx-change="search" phx-submit="search">
                         <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} />
                     </form>
                     <ul>
