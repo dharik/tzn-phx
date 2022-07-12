@@ -55,7 +55,7 @@
                     <div class="flex-1 margin-left-s">
                         <b><%= e.name %> (<%= calendar.name %>)</b>
                         <br />
-                        <%= e.description %>
+                        <%= raw Regex.replace(~r/^<p>(.*)<\/p>$/, e.description, "\\1") %>
                     </div>
                 </div>
             <% end %>

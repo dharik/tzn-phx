@@ -112,12 +112,12 @@ defmodule TznWeb.Timeline do
     current_ids = MapSet.to_list(socket.assigns.calendars) |> Enum.map(& &1.id) |> MapSet.new()
 
     r =
-      socket.assigns.all_calendars
-      |> Enum.reject(fn c ->
-        MapSet.member?(current_ids, c.id)
-      end)
-      |> Enum.sort_by(fn c ->
-        if String.length(socket.assigns.search_query) > 0 do
+      if String.length(socket.assigns.search_query) > 0 do
+        socket.assigns.all_calendars
+        |> Enum.reject(fn c ->
+          MapSet.member?(current_ids, c.id)
+        end)
+        |> Enum.sort_by(fn c ->
           similarity_score =
             TheFuzz.Similarity.Overlap.compare(
               String.downcase(socket.assigns.search_query),
@@ -126,11 +126,11 @@ defmodule TznWeb.Timeline do
             )
 
           1.0 - (similarity_score || 0.0)
-        else
-          c.name
-        end
-      end)
-      |> Enum.take(3)
+        end)
+        |> Enum.take(3)
+      else
+        []
+      end
 
     socket |> assign(:search_results, r)
   end
