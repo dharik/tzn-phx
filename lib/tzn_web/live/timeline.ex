@@ -103,7 +103,8 @@ defmodule TznWeb.Timeline do
       Tzn.Timelines.aggregate_calendar_events(
         socket.assigns.calendars
         |> Enum.reject(fn c -> MapSet.member?(socket.assigns.hidden_ids, c.id) end),
-        socket.assigns.grad_year
+        socket.assigns.grad_year,
+        false
       )
     )
   end
@@ -127,7 +128,7 @@ defmodule TznWeb.Timeline do
 
           1.0 - (similarity_score || 0.0)
         end)
-        |> Enum.take(3)
+        |> Enum.take(5)
       else
         []
       end

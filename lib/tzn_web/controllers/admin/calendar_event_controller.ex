@@ -15,7 +15,7 @@ defmodule TznWeb.Admin.CalendarEventController do
         redirect(conn, to: Routes.admin_calendar_path(conn, :show, calendar))
 
       {:error, %Ecto.Changeset{} = changeset} ->
-        render(conn, "new.html", changeset: changeset)
+        render(conn, "new.html", changeset: changeset, calendar: calendar)
     end
   end
 

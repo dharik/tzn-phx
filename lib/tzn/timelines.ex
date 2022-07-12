@@ -66,7 +66,7 @@ defmodule Tzn.Timelines do
     Repo.delete(e)
   end
 
-  def aggregate_calendar_events(calendars, grad_year) do
+  def aggregate_calendar_events(calendars, grad_year, include_past \\ true) do
     calendars
     |> Enum.flat_map(& &1.events)
     |> Enum.map(fn event ->
@@ -78,6 +78,13 @@ defmodule Tzn.Timelines do
       end,
       {:asc, Date}
     )
+    |> Enum.filter(fn e ->
+      if include_past do
+        true
+      else
+        Timex.now().year <= e.year && Timex.now().month <= e.month
+      end
+    end)
   end
 
   def calculate_event_year(event, grad_year) do

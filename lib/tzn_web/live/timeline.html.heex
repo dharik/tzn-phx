@@ -42,7 +42,7 @@
                     <% 
                         calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)
                         color_class = case calendar.type do
-                            "general_cyclic" -> "background-secondary-100"
+                            "general_cyclic" -> "background-light-100"
                             "college_cyclic" -> "background-primary-100"
                             _ -> "background-light-100"
                         end
@@ -53,7 +53,7 @@
                         <span class="font-size-xxl font-weight-bold"><%= e.day %></span>
                     </div>
                     <div class="flex-1 margin-left-s">
-                        <b><%= e.name %> (<%= calendar.name %>)</b>
+                        <b><%= e.name %><%= if calendar.type == "college_cyclic" do " (#{calendar.name})" end %></b>
                         <br />
                         <%= raw Regex.replace(~r/^<p>(.*)<\/p>$/, e.description, "\\1") %>
                     </div>
@@ -64,7 +64,24 @@
     </div>
 
     <div class="flex-0 " style="width: 30%">
-        <div class="border padding-m">
+        <%= unless @readonly do %>
+            <div class="hide-print">
+                <b>Search to add a school:</b>
+                <br /><br />
+    
+                
+                <form phx-change="search" phx-submit="search">
+                    <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
+                </form>
+                <ul>
+                    <%= for c <- @search_results do %>
+                        <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+
+        <div class="border padding-m margin-vertical-m">
              <b>Calendars:</b>
              <br />
             <%= for c <- @calendars do %>
@@ -80,34 +97,21 @@
                                 <% end %>
                             </span>
                             
-                            
-                            <span class="material-icons-outlined cursor-pointer" phx-click="remove_calendar" phx-value-id={c.id}>
-                                delete
-                            </span>
+                            <%= if c.type == "college_cyclic" do %>
+                                <span class="material-icons-outlined cursor-pointer" phx-click="remove_calendar" phx-value-id={c.id}>
+                                    delete
+                                </span>
+                            <% else %>
+                                <span class="material-icons-outlined hidden">
+                                    delete
+                                </span>
+                            <% end %>
                         </div>
                     <% end %>
                 </div>
             <% end %>
 
-            <%= unless @readonly do %>
-                <hr />
-                <br />
-
-                <div class="hide-print">
-                    <b>Search to add a school:</b>
-                    <br /><br />
-        
-                    
-                    <form phx-change="search" phx-submit="search">
-                        <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
-                    </form>
-                    <ul>
-                        <%= for c <- @search_results do %>
-                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
-                        <% end %>
-                    </ul>
-                </div>
-            <% end %>
+           
         </div>
 
         <%= unless @readonly do %>
