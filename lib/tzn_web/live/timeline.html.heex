@@ -42,15 +42,15 @@
                     <% 
                         calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)
                         color_class = case calendar.type do
-                            "general_cyclic" -> "background-light-100"
+                            "general_cyclic" -> "background-white border"
                             "college_cyclic" -> "background-primary-100"
-                            _ -> "background-light-100"
+                            _ -> "background-white border"
                         end
                     %>
                     <div class={"border-radius text-align-center padding-s box-shadow  " <> color_class} style="width: 6em; height: 6em;">
-                        <span class=" font-size-l"><%= Timex.month_shortname(e.month) %></span>
+                        <span class=" font-size-l font-weight-light"><%= Timex.month_shortname(e.month) %></span>
                         <br />
-                        <span class="font-size-xxl font-weight-bold"><%= e.day %></span>
+                        <span class="font-size-xxl font-weight-regular"><%= e.day %></span>
                     </div>
                     <div class="flex-1 margin-left-s">
                         <b><%= e.name %><%= if calendar.type == "college_cyclic" do " (#{calendar.name})" end %></b>

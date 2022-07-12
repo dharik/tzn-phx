@@ -120,10 +120,9 @@ defmodule TznWeb.Timeline do
         end)
         |> Enum.sort_by(fn c ->
           similarity_score =
-            TheFuzz.Similarity.Overlap.compare(
+            TheFuzz.Similarity.Tversky.compare(
               String.downcase(socket.assigns.search_query),
-              String.downcase(c.name),
-              max(3, String.length(socket.assigns.search_query))
+              String.downcase(c.name) <> String.downcase(c.searchable_name || "")
             )
 
           1.0 - (similarity_score || 0.0)
