@@ -53,7 +53,7 @@ defmodule Tzn.Emails.ParentTodos do
     if should_send do
       if should_send_to_parent(pod.mentee.parent1_email, pod.id) do
         Logger.info(
-          "Sending parent(1) update to #{pod.mentee.parent1_email} for pod id:#{pod.mentee.id}"
+          "Sending parent(1) update to #{pod.mentee.parent1_email} for pod id:#{pod.id}"
         )
 
         generate(

@@ -12,13 +12,36 @@ defmodule Tzn.DB.Timeline do
 
     field :emailed_at, :naive_datetime
 
-    many_to_many :calendars, Tzn.DB.Calendar, join_through: Tzn.DB.TimelineCalendar, on_replace: :delete
+    many_to_many :calendars, Tzn.DB.Calendar,
+      join_through: Tzn.DB.TimelineCalendar,
+      on_replace: :delete
+
     timestamps()
   end
 
   def changeset(c, attrs) do
     c
-    |> cast(attrs, [:access_key, :readonly_access_key, :graduation_year, :user_type, :email, :emailed_at])
+    |> cast(attrs, [
+      :access_key,
+      :readonly_access_key,
+      :graduation_year,
+      :user_type,
+      :email,
+      :emailed_at,
+      :updated_at
+    ])
     |> validate_required([:graduation_year])
+    |> maybe_validate_email_and_user_type()
+  end
+
+  def maybe_validate_email_and_user_type(c) do
+    email = get_field(c, :email)
+    user_type = get_field(c, :user_type)
+
+    if email || user_type do
+      c |> validate_required([:email, :user_type])
+    else
+      c
+    end
   end
 end

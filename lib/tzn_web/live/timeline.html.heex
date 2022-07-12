@@ -1,48 +1,69 @@
 <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
       rel="stylesheet">
-      
+
+
 <div class="flex">
    
 
-    <div class="flex-1">
-        <%= if @readonly do %>
-            Graduation year: <%= @timeline.graduation_year %>
-        <% else %>
-            What is your graduation year?
-            <form phx-change="set_grad_year">
-                <select name="grad_year">
-                    <% grad_year_start_option = 
-                        if Timex.now().month > 7 do
-                            Timex.now().year + 1
-                        else
-                            Timex.now().year
-                        end 
+    <div class="flex-1 padding-right-m">
+        <%= unless @readonly do %>
+            <%
+                overlay_class = if @grad_year_touched do
+                    ""
+                else
+                    "background-light-50"
+                end
+            %>
+            <div class={"margin-horizontal-m margin-bottom-m padding-m border border-radius flex-0 " <> overlay_class}>
+                <p>What year will you graduate high school?</p>
+                <p>We'll use this to set up your timeline with the right dates</p>
+                <form phx-change="set_grad_year">
+                    <select name="grad_year" class="select-xl">
+                        <% grad_year_start_option = 
+                            if Timex.now().month > 7 do
+                                Timex.now().year + 1
+                            else
+                                Timex.now().year
+                            end 
+                        %>
+                        <%= for value <-  
+                            grad_year_start_option..(grad_year_start_option + 7) do %>
+                            <option value={value} selected={@grad_year == value}><%= value %></option>
+                        <% end %>
+                    </select>
+                </form>
+            </div>
+        <% end %>
+        
+        <%= for {year, events} <- @events |> Enum.group_by(& &1.year) |> Map.to_list() do %>
+            <h1><%= year %></h1>
+            <%= for e <- events do %>
+                <div class="flex flex-row justify-content-flex-start margin-vertical-s align-items-center">
+                    <% 
+                        calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)
+                        color_class = case calendar.type do
+                            "general_cyclic" -> "background-secondary-100"
+                            "college_cyclic" -> "background-primary-100"
+                            _ -> "background-light-100"
+                        end
                     %>
-                    <%= for value <-  
-                        grad_year_start_option..(grad_year_start_option + 7) do %>
-                        <option value={value} selected={@grad_year == value}><%= value %></option>
-                    <% end %>
-                </select>
-            </form>
+                    <div class={"border-radius text-align-center padding-s box-shadow  " <> color_class} style="width: 6em; height: 6em;">
+                        <span class=" font-size-l"><%= Timex.month_shortname(e.month) %></span>
+                        <br />
+                        <span class="font-size-xxl font-weight-bold"><%= e.day %></span>
+                    </div>
+                    <div class="flex-1 margin-left-s">
+                        <b><%= e.name %> (<%= calendar.name %>)</b>
+                        <br />
+                        <%= e.description %>
+                    </div>
+                </div>
+            <% end %>
         <% end %>
-        <br />
-        <br />
-        <%= for e <- @events do %>
-            <b><%= e.month %> / <%= e.day %> / <%= e.year %></b>
-            <br />
-            <b><%= e.name %> (<%= Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end) |> Map.get(:name) %>)</b>
-            <br />
-            <%= e.description %>
-
-            <br />
-            <hr />
-            <br />
-        <% end %>
-
        
     </div>
 
-    <div class="flex-0" style="width: 30%">
+    <div class="flex-0 " style="width: 30%">
         <div class="border padding-m">
              <b>Calendars:</b>
              <br />
@@ -50,7 +71,7 @@
                 <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
                     <div><%= c.name %></div>
                     <%= unless @readonly do %>
-                        <div class="flex">
+                        <div class="flex hide-print">
                             <span class="material-icons-outlined cursor-pointer" phx-click="toggle_calendar" phx-value-id={c.id}>
                                 <%= if MapSet.member?(@hidden_ids, c.id) do %>
                                     visibility_off
@@ -72,13 +93,13 @@
                 <hr />
                 <br />
 
-                <div class="">
-                    <b>Search to add another</b>
+                <div class="hide-print">
+                    <b>Search to add a school:</b>
                     <br /><br />
         
                     
                     <form phx-change="search" phx-submit="search">
-                        <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} />
+                        <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
                     </form>
                     <ul>
                         <%= for c <- @search_results do %>
@@ -90,12 +111,12 @@
         </div>
 
         <%= unless @readonly do %>
-            <div class="border padding-m margin-vertical-l">
+            <div class="border padding-m margin-vertical-l background-light-100 hide-print">
                 <span class="material-icons-outlined">
                     share
                 </span>
                 <b>Save/Share my timeline (anonymous)</b>
-                <p>Export your timeline to your calendar or something</p>
+                <p>Export this timeline to your google or apple calendar</p>
                 
                 <%= if @export_complete do %>
                     <%= if @timeline.emailed_at do %>
@@ -108,16 +129,24 @@
                 <% else %>
                     <.form for={@export_changeset} let={f} phx-submit="export">
                         <%= label f, "Which of these best describes you?" do %>
-                            <%= select f, :user_type, [{"Parent", "parent"}, {"Student", "student"}], value: Ecto.Changeset.get_field(@export_changeset, :user_type) %>
+                            <%= select f, :user_type, [
+                                {"-- Select one --", nil}, 
+                                {"Parent", "parent"}, 
+                                {"Student", "student"}
+                                ], 
+                                value: Ecto.Changeset.get_field(@export_changeset, :user_type), 
+                                required: true,
+                                class: "select-l"
+                            %>
                             <%= error_tag f, :user_type %>
                         <% end %>
                     
-                        <%= label f, "What is your email address?" do %>
-                            <%= email_input f, :email %>
-                            <%= error_tag f, :email %>
-                        <% end %>
-                        <%= submit "Save", class: "button-primary", disabled: Enum.any?(@export_changeset.errors) %>
+                        <%= email_input f, :email, placeholder: "Email Address", required: true, class: "input-l" %>
+                        <%= error_tag f, :email %>
+                        <%= submit "Save", class: "button-primary button-block", disabled: Enum.any?(@export_changeset.errors) %>
                     </.form>
+
+                    <p class="text-align-center font-size-s">or <a href="javascript: window.print()">print</a> a copy</p>
                 <% end %>
             </div>
         <% end %>

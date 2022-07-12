@@ -16,6 +16,7 @@ defmodule TznWeb.Timeline do
      |> assign(:hidden_ids, MapSet.new())
      |> assign(:search_query, "")
      |> assign(:grad_year, timeline.graduation_year)
+     |> assign(:grad_year_touched, is_binary(timeline.email))
      |> assign(:all_calendars, all_calendars)
      |> assign_search_results()
      |> assign_events()
@@ -90,6 +91,7 @@ defmodule TznWeb.Timeline do
     {:noreply,
      socket
      |> assign(:grad_year, String.to_integer(year))
+     |> assign(:grad_year_touched, true)
      |> assign_events()
      |> assign(:timeline, timeline)}
   end

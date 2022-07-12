@@ -127,7 +127,9 @@ defmodule Tzn.Timelines do
   end
 
   def set_calendars_for_timeline(calendars, timeline) do
-    change_timeline(timeline)
+    change_timeline(timeline, %{
+      updated_at: Timex.now()
+    })
     |> Ecto.Changeset.put_assoc(:calendars, calendars)
     |> Repo.update()
   end
