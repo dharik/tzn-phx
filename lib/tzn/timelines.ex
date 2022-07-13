@@ -4,13 +4,13 @@ defmodule Tzn.Timelines do
   alias Tzn.DB.{Calendar, CalendarEvent, Timeline}
 
   def list_calendars(:admin) do
-    Repo.all(Calendar) |> Repo.preload(:events) |> Enum.sort_by(& {&1.type, &1.name})
+    Repo.all(Calendar) |> Repo.preload(:events) |> Enum.sort_by(&{&1.type, &1.name})
   end
 
   def list_calendars(:public) do
     Repo.all(Calendar)
     |> Repo.preload(:events)
-    |> Enum.filter(& &1.searchable || &1.subscribed_by_default)
+    |> Enum.filter(&(&1.searchable || &1.subscribed_by_default))
     |> Enum.sort_by(& &1.name)
   end
 
@@ -82,7 +82,7 @@ defmodule Tzn.Timelines do
       if include_past do
         true
       else
-        Timex.now().year <= e.year && Timex.now().month <= e.month
+        Timex.after?(Timex.Date.new!(e.year, e.month, e.day), Timex.now())
       end
     end)
   end
@@ -121,15 +121,17 @@ defmodule Tzn.Timelines do
     end
   end
 
-
   def create_timeline() do
     %Timeline{}
     |> Timeline.changeset(%{
       access_key: Ecto.UUID.generate(),
       readonly_access_key: Ecto.UUID.generate(),
-      graduation_year:  Timex.now().year + 1
+      graduation_year: Timex.now().year + 1
     })
-    |> Ecto.Changeset.put_assoc(:calendars,  Enum.filter(list_calendars(:public), & &1.subscribed_by_default))
+    |> Ecto.Changeset.put_assoc(
+      :calendars,
+      Enum.filter(list_calendars(:public), & &1.subscribed_by_default)
+    )
     |> Repo.insert()
   end
 

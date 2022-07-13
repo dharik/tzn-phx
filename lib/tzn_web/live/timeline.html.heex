@@ -67,8 +67,8 @@
         <%= unless @readonly do %>
             <div class="hide-print">
                 <b>Search to add a school:</b>
-                <br /><br />
-    
+                <br />
+                <br />
                 
                 <form phx-change="search" phx-submit="search">
                     <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
@@ -154,9 +154,21 @@
                 <% end %>
             </div>
         <% end %>
+
+        <div class="border padding-m margin-vertical-m hide-print">
+            <b>Need help with college prep?</b>
+
+            <p> We offer a complimentary consultation to any interested 
+            student or parent. A typical call lasts approximately 30-45 minutes.</p>
+
+            <a href="https://www.transizion.com/free-consultation/" class="button button-block" target="_blank">Contact us</a>
+        </div>
     </div>
 
 
 
 </div>
 
+<%= if @grad_year_touched do %>
+    <div phx-update="ignore" data-tf-hidden={"email=#{@timeline.email}"} data-tf-widget="PDJvzbBI" data-tf-iframe-props="title=OrganiZeU Request Feature" data-tf-medium="snippet" style="width:100%;height:400px;"></div><script src="//embed.typeform.com/next/embed.js"></script>
+<% end %>
