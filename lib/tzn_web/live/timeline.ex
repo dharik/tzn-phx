@@ -119,14 +119,30 @@ defmodule TznWeb.Timeline do
           MapSet.member?(current_ids, c.id)
         end)
         |> Enum.sort_by(fn c ->
+          q = String.downcase(socket.assigns.search_query)
+          n = String.downcase(c.name) <> String.downcase(c.searchable_name || "")
+
+          subset_score =
+            if String.contains?(n, q) do
+              if String.starts_with?(n, q) do
+                2.0
+              else
+                1.0
+              end
+            else
+              0.0
+            end
+
           similarity_score =
             TheFuzz.Similarity.Tversky.compare(
-              String.downcase(socket.assigns.search_query),
-              String.downcase(c.name) <> String.downcase(c.searchable_name || "")
-            )
+              q,
+              n,
+              %{n_gram_size: 2, alpha: 2, beta: 1}
+            ) || 0.0
 
-          1.0 - (similarity_score || 0.0)
+          subset_score + similarity_score
         end)
+        |> Enum.reverse()
         |> Enum.take(5)
       else
         []
