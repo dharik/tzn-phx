@@ -120,7 +120,8 @@ defmodule TznWeb.TimelinesController do
         vevent: events,
         prodid: "-//Transizion//OrganiZeU",
         last_modified: Timex.now(),
-        name: "College Prep Calendar from OrganiZeU"
+        name: "College Prep Calendar from OrganiZeU",
+        "X-WR-CALNAME": "College Prep Calendar from OrganiZeU"
       )
 
     send_download(conn, {:binary, Calibex.encode(root)},
