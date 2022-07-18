@@ -18,6 +18,10 @@ config :tzn, TznWeb.Endpoint,
   pubsub_server: Tzn.PubSub,
   live_view: [signing_salt: "PBGPtlmC"]
 
+config :mime, :types, %{
+  "text/calendar" => ["ical"]
+}
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

@@ -1,5 +1,6 @@
 %{
   "bugsnag": {:hex, :bugsnag, "2.1.1", "7a065c75210518fbe1fc1e4df86df99ee4b1a2b6c497388c7addae52edc5b86e", [:mix], [{:httpoison, "~> 0.13 or ~> 1.0", [hex: :httpoison, repo: "hexpm", optional: false]}, {:jason, "~> 1.0", [hex: :jason, repo: "hexpm", optional: true]}, {:poison, ">= 1.5.0", [hex: :poison, repo: "hexpm", optional: true]}], "hexpm", "27c5f65483ec7bbd130dc92a84dae0f4bc1b676475044c94d489faf9b7a96f64"},
+  "calibex": {:hex, :calibex, "0.1.0", "a9c18e8f431bf26c39ffeb83d04c3cdb71cb1f72600e2c41b7417f56e11adf91", [:mix], [{:timex, "~> 3.1", [hex: :timex, repo: "hexpm", optional: false]}], "hexpm", "0a166e5666b102f462957a9f37a3714c01d07844ba66611f100dff3f832f5252"},
   "certifi": {:hex, :certifi, "2.8.0", "d4fb0a6bb20b7c9c3643e22507e42f356ac090a1dcea9ab99e27e0376d695eba", [:rebar3], [], "hexpm", "6ac7efc1c6f8600b08d625292d4bbf584e14847ce1b6b5c44d983d273e1097ea"},
   "combine": {:hex, :combine, "0.10.0", "eff8224eeb56498a2af13011d142c5e7997a80c8f5b97c499f84c841032e429f", [:mix], [], "hexpm", "1b1dbc1790073076580d0d1d64e42eae2366583e7aecd455d1215b0d16f2451b"},
   "connection": {:hex, :connection, "1.1.0", "ff2a49c4b75b6fb3e674bfc5536451607270aac754ffd1bdfe175abe4a6d7a68", [:mix], [], "hexpm", "722c1eb0a418fbe91ba7bd59a47e28008a189d47e37e0e7bb85585a016b2869c"},

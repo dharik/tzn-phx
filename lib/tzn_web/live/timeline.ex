@@ -2,6 +2,7 @@ defmodule TznWeb.Timeline do
   use Phoenix.LiveView
   use Phoenix.HTML
   import TznWeb.ErrorHelpers
+  alias Phoenix.LiveView.JS
 
   def mount(_params, _session = %{"access_key" => ak}, socket) do
     all_calendars = Tzn.Timelines.list_calendars(:public)
@@ -45,20 +46,10 @@ defmodule TznWeb.Timeline do
   def handle_event("add_calendar", %{"id" => calendar_id}, socket) do
     calendar_id = String.to_integer(calendar_id)
     calendar = Tzn.Timelines.get_calendar(calendar_id)
-    new_calendars = MapSet.put(socket.assigns.calendars, calendar)
-
-    {:ok, timeline} =
-      Tzn.Timelines.set_calendars_for_timeline(
-        MapSet.to_list(new_calendars),
-        socket.assigns.timeline
-      )
 
     {:noreply,
      socket
-     |> assign(:calendars, new_calendars)
-     |> assign(:timeline, timeline)
-     |> assign_search_results()
-     |> assign_events()}
+     |> add_calendar_to_socket(calendar)}
   end
 
   def handle_event("remove_calendar", %{"id" => calendar_id}, socket) do
@@ -80,8 +71,41 @@ defmodule TznWeb.Timeline do
      |> assign_events()}
   end
 
+  def add_calendar_to_socket(socket, calendar) do
+    new_calendars = MapSet.put(socket.assigns.calendars, calendar)
+
+    {:ok, timeline} =
+      Tzn.Timelines.set_calendars_for_timeline(
+        MapSet.to_list(new_calendars),
+        socket.assigns.timeline
+      )
+
+    socket
+    |> assign(:calendars, new_calendars)
+    |> assign(:timeline, timeline)
+    |> assign_search_results()
+    |> assign_events()
+  end
+
   def handle_event("search", %{"q" => q}, socket) do
     {:noreply, socket |> assign(:search_query, q) |> assign_search_results()}
+  end
+
+  def handle_event("search_submit", %{"q" => q}, socket) do
+    top_result = socket.assigns.search_results |> List.first()
+
+    if top_result do
+      {:noreply,
+       socket
+       |> assign(:search_query, q)
+       |> add_calendar_to_socket(top_result)
+       |> assign_search_results()}
+    else
+      {:noreply,
+       socket
+       |> assign(:search_query, q)
+       |> assign_search_results()}
+    end
   end
 
   def handle_event("set_grad_year", %{"grad_year" => year}, socket) do
@@ -115,9 +139,6 @@ defmodule TznWeb.Timeline do
     r =
       if String.length(socket.assigns.search_query) > 0 do
         socket.assigns.all_calendars
-        |> Enum.reject(fn c ->
-          MapSet.member?(current_ids, c.id)
-        end)
         |> Enum.sort_by(fn c ->
           q = String.downcase(socket.assigns.search_query)
           n = String.downcase(c.name) <> String.downcase(c.searchable_name || "")
@@ -143,7 +164,18 @@ defmodule TznWeb.Timeline do
           subset_score + similarity_score
         end)
         |> Enum.reverse()
-        |> Enum.take(5)
+        |> Enum.reduce_while([], fn cal, acc ->
+          non_subscribed_count =
+            Enum.count(acc, fn c ->
+              !MapSet.member?(current_ids, c.id)
+            end)
+
+          if non_subscribed_count <= 5 do
+            {:cont, acc ++ [cal]}
+          else
+            {:halt, acc}
+          end
+        end)
       else
         []
       end

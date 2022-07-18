@@ -48,7 +48,7 @@
                         end
                     %>
                     <div class={"border-radius text-align-center padding-s box-shadow  " <> color_class} style="width: 6em; height: 6em;">
-                        <span class=" font-size-l font-weight-light"><%= Timex.month_shortname(e.month) %></span>
+                        <span class=" font-size-l font-weight-light color-grey-500"><%= Timex.month_shortname(e.month) |> String.upcase() %></span>
                         <br />
                         <span class="font-size-xxl font-weight-regular"><%= e.day %></span>
                     </div>
@@ -70,12 +70,16 @@
                 <br />
                 <br />
                 
-                <form phx-change="search" phx-submit="search">
+                <form phx-change="search" phx-submit="search_submit">
                     <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
                 </form>
                 <ul>
                     <%= for c <- @search_results do %>
-                        <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                        <%= if MapSet.member?(@calendars, c) do %>
+                            <li><%= c.name %> ✓</li>
+                        <% else %>
+                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                        <% end %>
                     <% end %>
                 </ul>
             </div>
@@ -120,7 +124,6 @@
                     share
                 </span>
                 <b>Save/Share my timeline (anonymous)</b>
-                <p>Export this timeline to your google or apple calendar</p>
                 
                 <%= if @export_complete do %>
                     <%= if @timeline.emailed_at do %>
@@ -128,15 +131,50 @@
                     <% else %>
                         Will be sent to <%= @timeline.email %>
                     <% end %>
+                    
+                    <br />
+                    <br />
 
-                    Link here
+                    <div id="add_calendar_button">
+                        <button class="button-primary x button-block"  phx-click={JS.hide(to: "#add_calendar_button") |> JS.show(to: "#add_calendar")}>
+           
+                            Subscribe to Calendar
+                        </button>
+
+                        <div class="text-align-center margin-top-s">
+                            Works with: &nbsp;&nbsp;
+                            <img src={TznWeb.Router.Helpers.static_path(@socket, "/images/apple-icon.svg")} width="16" height="16" />
+                            <img src={TznWeb.Router.Helpers.static_path(@socket, "/images/google-icon.svg")} width="16" height="16" /> 
+                        </div>
+                    </div>
+
+                    <div id="add_calendar" class="display-none">
+                        <a href={"https://calendar.google.com/calendar/r?cid=" <> TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, @timeline.access_key)}
+                         class="button  button-block margin-vertical-xs"
+                         target="_blank">
+                            Add to Google Calendar
+                        </a>
+                        <a href={TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, @timeline.access_key) |> String.replace(["https://", "http://"], "webcal://")  } class="button  button-block margin-vertical-xs">
+                            Add to Apple Calendar
+                        </a>
+                    </div>
+
+                    <p><small>
+                        Get the events in this calendar → on your own calendar.
+                        When you subscribe to this calendar, all of the events in the calendar will appear on your own calendar.
+                    </small></p>
+
+                    
                 <% else %>
                     <.form for={@export_changeset} let={f} phx-submit="export">
                         <%= label f, "Which of these best describes you?" do %>
                             <%= select f, :user_type, [
                                 {"-- Select one --", nil}, 
                                 {"Parent", "parent"}, 
-                                {"Student", "student"}
+                                {"Student", "student"},
+                                {"Teacher", "teacher"},
+                                {"College Counselor", "college_counselor"},
+                                {"Other", "other"}
                                 ], 
                                 value: Ecto.Changeset.get_field(@export_changeset, :user_type), 
                                 required: true,

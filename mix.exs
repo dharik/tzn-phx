@@ -63,7 +63,8 @@ defmodule Tzn.MixProject do
       {:sweet_xml, "~> 0.7.2"},
       {:floki, "~> 0.32.1"},
       {:joken, "~> 2.4"},
-      {:the_fuzz, "~> 0.5.0"}
+      {:the_fuzz, "~> 0.5.0"},
+      {:calibex, "~> 0.1.0"}
     ]
   end
 

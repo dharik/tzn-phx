@@ -138,6 +138,10 @@ defmodule TznWeb.Router do
     get "/organizeu", TimelinesController, :show
   end
 
+  scope "/", TznWeb do
+    get "/organizeu/ical/:access_key", TimelinesController, :ical
+  end
+
 
   scope "/admin/api", TznWeb do
     pipe_through [:admin]
