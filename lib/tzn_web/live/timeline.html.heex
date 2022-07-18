@@ -149,7 +149,7 @@
                     </div>
 
                     <div id="add_calendar" class="display-none">
-                        <a href={"https://calendar.google.com/calendar/r?cid=" <> TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, @timeline.access_key)}
+                        <a href={"https://calendar.google.com/calendar/r?cid=" <> TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, @timeline.access_key) |> String.replace("https://", "http://")}
                          class="button  button-block margin-vertical-xs"
                          target="_blank">
                             Add to Google Calendar
