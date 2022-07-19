@@ -38,7 +38,7 @@
         <%= for {year, events} <- @events |> Enum.group_by(& &1.year) |> Map.to_list() do %>
             <h1><%= year %></h1>
             <%= for e <- events do %>
-                <div class="flex flex-row justify-content-flex-start margin-vertical-s align-items-center">
+                <div class="flex flex-row justify-content-flex-start margin-vertical-m align-items-center">
                     <% 
                         calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)
                         color_class = case calendar.type do
@@ -77,6 +77,9 @@
             <% end %>
         <% end %>
        
+       <%= if @grad_year_touched do %>
+            <div phx-update="ignore" data-tf-hidden={"email=#{@timeline.email}"} data-tf-widget="PDJvzbBI" data-tf-iframe-props="title=OrganiZeU Request Feature" data-tf-medium="snippet" style="width:100%;height:400px;"></div><script src="//embed.typeform.com/next/embed.js"></script>
+        <% end %>
     </div>
 
     <div class="flex-0 " style="width: 30%">
@@ -223,6 +226,4 @@
 
 </div>
 
-<%= if @grad_year_touched do %>
-    <div phx-update="ignore" data-tf-hidden={"email=#{@timeline.email}"} data-tf-widget="PDJvzbBI" data-tf-iframe-props="title=OrganiZeU Request Feature" data-tf-medium="snippet" style="width:100%;height:400px;"></div><script src="//embed.typeform.com/next/embed.js"></script>
-<% end %>
+
