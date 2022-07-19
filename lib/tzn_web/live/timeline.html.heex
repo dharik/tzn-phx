@@ -55,9 +55,25 @@
                     <div class="flex-1 margin-left-s">
                         <b><%= e.name %><%= if calendar.type == "college_cyclic" do " (#{calendar.name})" end %></b>
                         <br />
-                        <%= raw Regex.replace(~r/^<p>(.*)<\/p>$/, e.description, "\\1") %>
+                        <%= raw (Regex.replace(~r/^<p>(.*)<\/p>$/, e.description, "\\1") |> String.replace("[cta1]", "")) %>
                     </div>
                 </div>
+                <%= if String.contains?(e.description, "[cta1]") do %>
+                        <div class="background-light-50 flex justify-content-space-around border-radius box-shadow-l margin-vertical-s margin-horizontal-s">
+                            <div class="padding-m">
+                                <b>Need help with college prep? This is [cta1]</b>
+
+                                <p> We offer a complimentary consultation to any interested 
+                                student or parent. A typical call lasts approximately 30-45 minutes.</p>
+
+                                <a href="https://www.transizion.com/free-consultation/" class="button button-block button-primary" target="_blank">Contact us</a>
+                            </div>
+                            <div>
+                                <img src="https://www.transizion.com/wp-content/uploads/2018/10/sharon-mccutcheon-677063-unsplash-e1540772881954.jpeg" style="border-radius: 50%; width: 200px; height: 200px; object-fill: cover;" />
+                            </div>
+                            
+                        </div>
+                    <% end %>
             <% end %>
         <% end %>
        
@@ -85,7 +101,7 @@
             </div>
         <% end %>
 
-        <div class="border padding-m margin-vertical-m">
+        <div class="border padding-m margin-vertical-m background-light-100">
              <b>Calendars:</b>
              <br />
             <%= for c <- @calendars do %>
@@ -119,7 +135,7 @@
         </div>
 
         <%= unless @readonly do %>
-            <div class="border padding-m margin-vertical-l background-light-100 hide-print">
+            <div class="border padding-m margin-vertical-l hide-print">
                 <span class="material-icons-outlined">
                     share
                 </span>
@@ -188,18 +204,18 @@
                         <%= submit "Save", class: "button-primary button-block", disabled: Enum.any?(@export_changeset.errors) %>
                     </.form>
 
-                    <p class="text-align-center font-size-s">or <a href="javascript: window.print()">print</a> a copy</p>
+                    <p class="text-align-center font-size-s">or <a href="javascript: window.print(); gtag('event', 'print_timeline');">print</a> a copy</p>
                 <% end %>
             </div>
         <% end %>
 
-        <div class="border padding-m margin-vertical-m hide-print">
+        <div class="border padding-m margin-vertical-m hide-print background-light-100">
             <b>Need help with college prep?</b>
 
             <p> We offer a complimentary consultation to any interested 
             student or parent. A typical call lasts approximately 30-45 minutes.</p>
 
-            <a href="https://www.transizion.com/free-consultation/" class="button button-block" target="_blank">Contact us</a>
+            <a href="https://www.transizion.com/free-consultation/" class="button button-block button-primary" target="_blank">Contact us</a>
         </div>
     </div>
 
