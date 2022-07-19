@@ -173,10 +173,4 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
     {:ok, date} = Timex.parse(str, "{ISO:Extended}")
     date
   end
-
-  def set_lookup_names do
-    Tzn.Timelines.list_calendars(:admin) |> Enum.each(fn c ->
-      Tzn.Timelines.update_calendar(c, %{lookup_name: c.name})
-    end)
-  end
 end
