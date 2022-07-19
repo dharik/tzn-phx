@@ -4,6 +4,7 @@ defmodule Tzn.DB.Calendar do
 
   schema "calendars" do
     field(:name, :string)
+    field(:lookup_name, :string) # for auto update script
     field(:subscribed_by_default, :boolean, default: false)
     field(:searchable, :boolean)
     field(:searchable_name, :string)
@@ -16,7 +17,8 @@ defmodule Tzn.DB.Calendar do
 
   def changeset(c, attrs) do
     c
-    |> cast(attrs, [:name, :searchable_name, :searchable, :type, :subscribed_by_default])
-    |> validate_required([:name, :searchable, :type, :subscribed_by_default])
+    |> cast(attrs, [:name, :lookup_name, :searchable_name, :searchable, :type, :subscribed_by_default])
+    |> validate_required([:name, :lookup_name, :searchable, :type, :subscribed_by_default])
+    |> unique_constraint(:lookup_name)
   end
 end

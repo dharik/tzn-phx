@@ -149,6 +149,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
       {:ok, calendar} =
         Tzn.Timelines.create_calendar(%{
           name: name,
+          lookup_name: name,
           searchable: true,
           type: "college_cyclic",
           subscribed_by_default: false
@@ -171,5 +172,11 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
   def parse_date(str) do
     {:ok, date} = Timex.parse(str, "{ISO:Extended}")
     date
+  end
+
+  def set_lookup_names do
+    Tzn.Timelines.list_calendars(:admin) |> Enum.each(fn c ->
+      Tzn.Timelines.update_calendar(c, %{lookup_name: c.name})
+    end)
   end
 end

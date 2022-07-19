@@ -19,7 +19,8 @@ defmodule Tzn.Timelines do
   end
 
   def get_calendar_by_name(name) do
-    Repo.get_by(Calendar, name: name) |> Repo.preload(:events)
+    (Repo.get_by(Calendar, lookup_name: name) || Repo.get_by(Calendar, name: name))
+    |> Repo.preload(:events)
   end
 
   def change_calendar(%Calendar{} = calendar, attrs \\ %{}) do
