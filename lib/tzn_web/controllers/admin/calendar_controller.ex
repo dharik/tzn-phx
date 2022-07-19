@@ -45,9 +45,10 @@ defmodule TznWeb.Admin.CalendarController do
     render(conn, "edit.html", changeset: changeset, calendar: calendar)
   end
 
-  # TODO: Implement
-  # def delete(conn, _params) do
-  #   calendars = Tzn.Timelines.list_calendars(:admin)
-  #   render(conn, "index.html", calendars: calendars)
-  # end
+  def delete(conn, %{"id" => id}) do
+    calendar = Tzn.Timelines.get_calendar(id)
+    {:ok, _calendar} = Tzn.Timelines.delete_calendar(calendar)
+
+    redirect(conn, to: Routes.admin_calendar_path(conn, :index))
+  end
 end

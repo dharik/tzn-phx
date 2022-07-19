@@ -22,6 +22,9 @@
                         <%= link to: Routes.admin_calendar_path(@conn, :edit, c) do %>
                             <span class="material-icons-outlined color-primary">edit</span>
                         <% end %>
+                        <%= link to: Routes.admin_calendar_path(@conn, :delete, c), method: :delete, data: [confirm: "Are you sure?"] do %>
+                            <span class="material-icons-outlined color-error">delete</span>
+                        <% end %>
                     </div>
                 </div>
         <% end %>
