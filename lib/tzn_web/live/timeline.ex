@@ -17,7 +17,10 @@ defmodule TznWeb.Timeline do
      |> assign(:hidden_ids, MapSet.new())
      |> assign(:search_query, "")
      |> assign(:grad_year, timeline.graduation_year)
-     |> assign(:grad_year_touched, is_binary(timeline.email))
+     |> assign(
+       :grad_year_touched,
+       is_binary(timeline.email) || !Tzn.Util.within_n_hours_ago(timeline.inserted_at, 1)
+     )
      |> assign(:all_calendars, all_calendars)
      |> assign_search_results()
      |> assign_events()

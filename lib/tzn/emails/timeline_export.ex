@@ -5,10 +5,10 @@ defmodule Tzn.Emails.TimelineExport do
 
   def send_timeline(timeline = %Timeline{}) do
     new()
-    |> from({"OrganiZeU by Transizion", "organizeu@transizion.com"})
+    |> from({"OrganizeU by Transizion", "organizeu@transizion.com"})
     |> to(timeline.email)
     |> bcc("organizeu@transizion.com")
-    |> subject("College Timeline from OrganiZeU (TODO)")
+    |> subject("College Application Timeline from OrganizeU")
     |> render_body("timeline_export.html", %{
       access_key: ShortUUID.encode!(timeline.access_key),
       readonly_access_key: ShortUUID.encode!(timeline.readonly_access_key)

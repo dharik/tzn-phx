@@ -118,10 +118,11 @@ defmodule TznWeb.TimelinesController do
     root =
       Calibex.new_root(
         vevent: events,
-        prodid: "-//Transizion//OrganiZeU",
+        prodid: "-//Transizion//OrganizeU",
         last_modified: Timex.now(),
-        name: "College Prep Calendar from OrganiZeU",
-        "X-WR-CALNAME": "College Prep Calendar from OrganiZeU"
+        name: "College Application Timeline from OrganizeU",
+        "X-WR-CALNAME": "College Application Timeline from OrganizeU",
+        "REFRESH-INTERVAL": [VALUE: "DURATION", value: "PT24H"]
       )
 
     send_download(conn, {:binary, Calibex.encode(root)},

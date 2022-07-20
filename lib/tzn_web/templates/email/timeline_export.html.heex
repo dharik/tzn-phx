@@ -1,19 +1,31 @@
-Hi,
-
 <p>
-Use this link to access your timeline and modify the calendars you've subscribed to
-<br />
-<%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @access_key) %>
+    Hi there!
 </p>
 
 <p>
-Use this link to share your calendar with others. They will not be able to modify the calendars you've subscribed to
-<br />
-<%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @readonly_access_key) %>
+    We’re so glad you found OrganizeU helpful! You can use the link below to access your timeline and modify the schools on your College List:
 </p>
 
 <p>
-Sincerely,
-<br />
-The Transizion Team
+    <%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @access_key) %>
+</p>
+
+<p>
+    If you’d like to share your timeline with someone but don’t want them to be able to edit your schools, you can send them this link:
+</p>
+
+<p>
+    <%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :show, @readonly_access_key) %>
+</p>
+
+<p>
+    All the best,
+    <br />
+    The Transizion Team
+</p>
+
+<p>
+    PS - For more information about the college application progress, 
+    <a href="http://www.transizion.com/blog">check out our blog</a> and 
+    <a href="https://www.youtube.com/channel/UCdOQ31H7cO70a4dWYpjTGmA">YouTube channel</a>!
 </p>

@@ -2,7 +2,7 @@
     <div class="main">
 
         <div class="flex flex-row justify-content-space-between">
-            <h2>OrganiZeU Calendars (<%= Enum.count(@calendars) %>)</h2>
+            <h2>OrganizeU Calendars (<%= Enum.count(@calendars) %>)</h2>
             <%= link to: Routes.admin_calendar_path(@conn, :new), class: "button button-primary button-text button-icon text-transform-uppercase" do %>
                 <span class="material-icons-outlined">add</span> Create Calendar
             <% end %>

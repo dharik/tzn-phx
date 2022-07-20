@@ -19,7 +19,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
         calendar,
         early_decision,
         "Early Decision",
-        "Early Decision Description",
+        "<p>If you choose this application deadline, you are committing to attend this school if they admit you. Consider visiting the school or talking to an alumnus (or both!) before you apply!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
         c
       )
 
@@ -28,8 +28,8 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
       get_or_create_deadline(
         calendar,
         early_decision2,
-        "Early Decision 2",
-        "Early Decision 2 Description",
+        "Early Decision II",
+        "<p>If you choose this application deadline, you are committing to attend this school if they admit you. Consider visiting the school or talking to an alumnus (or both!) before you apply!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
         c
       )
 
@@ -39,7 +39,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
         calendar,
         early_action,
         "Early Action",
-        "Early Action",
+        "<p>We strongly encourage you to submit your application by this deadline, as it increases your chances of getting accepted in many cases. It’s also non-binding, which means you don’t have to attend if you’re accepted!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
         c
       )
 
@@ -48,8 +48,8 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
       get_or_create_deadline(
         calendar,
         early_action2,
-        "Early Action 2",
-        "Early Action 2 Description",
+        "Early Action II",
+        "<p>We strongly encourage you to submit your application by this deadline, as it increases your chances of getting accepted in many cases. It’s also non-binding, which means you don’t have to attend if you’re accepted!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
         c
       )
 
@@ -59,7 +59,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
         calendar,
         restricted_early_action,
         "Restricted Early Action",
-        "Restricted Early Action Description",
+        "TODO",
         c
       )
 
@@ -69,32 +69,32 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
         get_or_create_deadline(
           calendar,
           rolling_or_regular,
-          "Rolling Deadline",
-          "Rolling Deadline Description",
+          "Rolling Admission Deadline",
+          "<p>This is the last day for you to submit your application to this school. However, the earlier you submit an application, the higher your chances of getting accepted, so we recommend applying as soon as possible!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
           c
         )
 
         get_or_create_deadline(
           calendar,
           nil,
-          "Regular Deadline",
-          "Regular Deadline Description",
+          "Regular Decision",
+          "no-op",
           c
         )
       else
         get_or_create_deadline(
           calendar,
           rolling_or_regular,
-          "Regular Deadline",
-          "Regular Deadline Description",
+          "Regular Decision",
+          "<p>This is the last deadline to apply to this school. Make sure you get your application in on time!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
           c
         )
 
         get_or_create_deadline(
           calendar,
           nil,
-          "Rolling Deadline",
-          "Rolling Deadline Description",
+          "Rolling Admission Deadline",
+          "no-op",
           c
         )
       end
@@ -146,6 +146,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
     calendar = Tzn.Timelines.get_calendar_by_name(name)
 
     if is_nil(calendar) do
+      Logger.info("Creating new calendar for #{name}")
       {:ok, calendar} =
         Tzn.Timelines.create_calendar(%{
           name: name,

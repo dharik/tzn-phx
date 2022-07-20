@@ -15,8 +15,34 @@
                 end
             %>
             <div class={"margin-horizontal-m margin-bottom-m padding-m border border-radius flex-0 " <> overlay_class}>
-                <p>What year will you graduate high school?</p>
-                <p>We'll use this to set up your timeline with the right dates</p>
+                <%= unless @grad_year_touched do %>
+                    <p>Welcome to OrganizeU!</p>
+
+                    <p>This tool is designed to give you an idealized college timeline. If you’re starting high school, 
+                    OrganizeU encourages you to think about tasks early, so there is plenty of time to complete them 
+                    without rushing. Of course, situations are different for each student, but in our combined 20+ years 
+                    of college mentoring experience, we’ve found that following this college planning timeline makes
+                    applying to college much easier!. 
+                    </p>
+
+                    <p>For juniors and seniors, this timeline incorporates application deadlines
+                    for over 1000 universities, including over 50 schools outside of the US. <b>In 
+                    the right-hand bar, you can add colleges, save your progress, and export your 
+                    timeline to either iCal or Google Calendar so you never miss an application deadline.</b> 
+                    If you choose to anonymously save your calendar, we’ll send you an email with a link 
+                    so you can share it with others and come back and edit it yourself if your college 
+                    list changes. </p>
+
+                    <p><b>To get started, tell us what year you’ll graduate from high school, and then 
+                    we’ll take it from there!</b></p>
+
+                    <p>
+                        All the best,
+                        The Transizion Team
+                    </p>
+                <% end %>
+
+
                 <form phx-change="set_grad_year">
                     <select name="grad_year" class="select-xl">
                         <% grad_year_start_option = 
@@ -78,19 +104,19 @@
         <% end %>
        
        <%= if @grad_year_touched do %>
-            <div phx-update="ignore" data-tf-hidden={"email=#{@timeline.email}"} data-tf-widget="PDJvzbBI" data-tf-iframe-props="title=OrganiZeU Request Feature" data-tf-medium="snippet" style="width:100%;height:400px;"></div><script src="//embed.typeform.com/next/embed.js"></script>
+            <div id="typeform-container" phx-update="ignore" data-tf-hidden={"email=#{@timeline.email}"} data-tf-widget="PDJvzbBI" data-tf-iframe-props="title=OrganiZeU Request Feature" data-tf-medium="snippet" style="width:100%;height:400px;"></div><script src="//embed.typeform.com/next/embed.js"></script>
         <% end %>
     </div>
 
     <div class="flex-0 " style="width: 30%">
         <%= unless @readonly do %>
             <div class="hide-print">
-                <b>Search to add a school:</b>
+                <b>Add a school:</b>
                 <br />
                 <br />
                 
                 <form phx-change="search" phx-submit="search_submit">
-                    <input type="search" value={@search_query} placeholder="Search..." name="q" phx-debounce={400} class="input-l"/>
+                    <input type="search" value={@search_query} placeholder="Search" name="q" phx-debounce={400} class="input-l"/>
                 </form>
                 <ul>
                     <%= for c <- @search_results do %>
@@ -105,7 +131,7 @@
         <% end %>
 
         <div class="border padding-m margin-vertical-m background-light-100">
-             <b>Calendars:</b>
+             <b>My College List:</b>
              <br />
             <%= for c <- @calendars do %>
                 <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
@@ -138,33 +164,29 @@
         </div>
 
         <%= unless @readonly do %>
-            <div class="border padding-m margin-vertical-l hide-print">
-                <span class="material-icons-outlined">
-                    share
-                </span>
-                <b>Save/Share my timeline (anonymous)</b>
-                
+            <div class="border padding-m margin-vertical-l hide-print">              
                 <%= if @export_complete do %>
-                    <%= if @timeline.emailed_at do %>
-                        Sent to <%= @timeline.email %> <%= Tzn.Util.format_date_relative(@timeline.emailed_at) %>
-                    <% else %>
-                        Will be sent to <%= @timeline.email %>
-                    <% end %>
+                    <b>Export My Timeline:</b>
+                    <p>
+                    Sent to <%= @timeline.email %>
+                    </p>
                     
-                    <br />
-                    <br />
-
                     <div id="add_calendar_button">
                         <button class="button-primary x button-block"  phx-click={JS.hide(to: "#add_calendar_button") |> JS.show(to: "#add_calendar")}>
            
-                            Subscribe to Calendar
+                            Sync My Calendar
                         </button>
 
                         <div class="text-align-center margin-top-s">
-                            Works with: &nbsp;&nbsp;
+                            Works With: &nbsp;&nbsp;
                             <img src={TznWeb.Router.Helpers.static_path(@socket, "/images/apple-icon.svg")} width="16" height="16" />
                             <img src={TznWeb.Router.Helpers.static_path(@socket, "/images/google-icon.svg")} width="16" height="16" /> 
                         </div>
+
+                        <p><small>
+                            When you sync this timeline to your calendar, all the events 
+                            on this timeline will appear on your iCal or Google Calendar. 
+                        </small></p>
                     </div>
 
                     <div id="add_calendar" class="display-none">
@@ -174,21 +196,19 @@
                             Add to Google Calendar
                         </a>
                         <a href={TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, @timeline.access_key) |> String.replace(["https://", "http://"], "webcal://")  } class="button  button-block margin-vertical-xs">
-                            Add to Apple Calendar
+                            Add to iCal
                         </a>
+
+                        <p><small>
+                            Click the appropriate button to open a new tab and sync your calendar with this timeline.
+                        </small></p>
                     </div>
-
-                    <p><small>
-                        Get the events in this calendar → on your own calendar.
-                        When you subscribe to this calendar, all of the events in the calendar will appear on your own calendar.
-                    </small></p>
-
-                    
                 <% else %>
+                    <b>Save My Timeline:</b>
                     <.form for={@export_changeset} let={f} phx-submit="export">
                         <%= label f, "Which of these best describes you?" do %>
                             <%= select f, :user_type, [
-                                {"-- Select one --", nil}, 
+                                {"– Select One -", nil}, 
                                 {"Parent", "parent"}, 
                                 {"Student", "student"},
                                 {"Teacher", "teacher"},
@@ -207,18 +227,21 @@
                         <%= submit "Save", class: "button-primary button-block", disabled: Enum.any?(@export_changeset.errors) %>
                     </.form>
 
-                    <p class="text-align-center font-size-s">or <a href="javascript: window.print(); gtag('event', 'print_timeline');">print</a> a copy</p>
+                    <p class="text-align-center font-size-s"><a href="javascript: window.print(); gtag('event', 'print_timeline');">Print a Copy</a></p>
                 <% end %>
             </div>
         <% end %>
 
         <div class="border padding-m margin-vertical-m hide-print background-light-100">
-            <b>Need help with college prep?</b>
+            <b>Looking for personalized help with college applications?</b>
 
-            <p> We offer a complimentary consultation to any interested 
-            student or parent. A typical call lasts approximately 30-45 minutes.</p>
+            <p>
+                We offer a free 30-minute consultation to any student or parent 
+                interested in hearing more about our mentoring program. We’d be 
+                delighted to answer your questions!
+            </p>
 
-            <a href="https://www.transizion.com/free-consultation/" class="button button-block button-primary" target="_blank">Contact us</a>
+            <a href="https://www.transizion.com/free-consultation/" class="button button-block button-primary" target="_blank">Contact Us</a>
         </div>
     </div>
 
