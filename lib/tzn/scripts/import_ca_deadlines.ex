@@ -59,7 +59,7 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
         calendar,
         restricted_early_action,
         "Restricted Early Action",
-        "TODO",
+        "<p>If you choose to apply under this admission deadline, you cannot submit an early application, either early action or early decision, to many other universities. Use it cautiously!</p><p><a href=\"https://appsupport.commonapp.org/applicantsupport/s/writing-requirements\">https://appsupport.commonapp.org/applicantsupport/s/writing-requirements</a></p>",
         c
       )
 

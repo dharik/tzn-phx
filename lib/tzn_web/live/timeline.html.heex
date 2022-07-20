@@ -38,6 +38,7 @@
 
                     <p>
                         All the best,
+                        <br />
                         The Transizion Team
                     </p>
                 <% end %>
@@ -168,7 +169,7 @@
                 <%= if @export_complete do %>
                     <b>Export My Timeline:</b>
                     <p>
-                    Sent to <%= @timeline.email %>
+                        Sent to <%= @timeline.email %>
                     </p>
                     
                     <div id="add_calendar_button">
@@ -217,7 +218,7 @@
                                 ], 
                                 value: Ecto.Changeset.get_field(@export_changeset, :user_type), 
                                 required: true,
-                                class: "select-l"
+                                class: "select-l text-align-center"
                             %>
                             <%= error_tag f, :user_type %>
                         <% end %>
