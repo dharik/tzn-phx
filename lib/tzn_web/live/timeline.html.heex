@@ -22,7 +22,7 @@
                     OrganizeU encourages you to think about tasks early, so there is plenty of time to complete them 
                     without rushing. Of course, situations are different for each student, but in our combined 20+ years 
                     of college mentoring experience, we’ve found that following this college planning timeline makes
-                    applying to college much easier!. 
+                    applying to college much easier. 
                     </p>
 
                     <p>For juniors and seniors, this timeline incorporates application deadlines
@@ -47,15 +47,23 @@
                 <form phx-change="set_grad_year">
                     <select name="grad_year" class="select-xl">
                         <% grad_year_start_option = 
-                            if Timex.now().month > 7 do
+                            if Timex.now().month >= 9 do
                                 Timex.now().year + 1
                             else
                                 Timex.now().year
                             end 
                         %>
-                        <%= for value <-  
-                            grad_year_start_option..(grad_year_start_option + 7) do %>
-                            <option value={value} selected={@grad_year == value}><%= value %></option>
+                        <%= if @grad_year_touched do %>
+                            <%= for value <-  
+                                grad_year_start_option..(grad_year_start_option + 7) do %>
+                                <option value={value} selected={@grad_year == value}><%= value %></option>
+                            <% end %>
+                        <% else %>
+                            <option value={@grad_year} selected={true} disabled>- Select One -</option>
+                            <%= for value <-  
+                                grad_year_start_option..(grad_year_start_option + 7) do %>
+                                <option value={value} selected={false}><%= value %></option>
+                            <% end %>
                         <% end %>
                     </select>
                 </form>
@@ -112,30 +120,32 @@
     </div>
 
     <div class="flex-0 " style="width: 30%">
-        <%= unless @readonly do %>
-            <div class="hide-print">
-                <b>Add a school:</b>
-                <br />
-                <br />
-                
-                <form phx-change="search" phx-submit="search_submit">
-                    <input type="search" value={@search_query} placeholder="Search" name="q" phx-debounce={400} class="input-l"/>
-                </form>
-                <ul>
-                    <%= for c <- @search_results do %>
-                        <%= if MapSet.member?(@calendars, c) do %>
-                            <li><%= c.name %> ✓</li>
-                        <% else %>
-                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
-                        <% end %>
-                    <% end %>
-                </ul>
-            </div>
-        <% end %>
-
         <div class="border padding-m margin-vertical-m background-light-100">
-             <b>My College List:</b>
-             <br />
+            <%= unless @readonly do %>
+                <div class="hide-print ">
+                    <b>Add a School:</b>
+                    <br />
+                    <br />
+                    
+                    <form phx-change="search" phx-submit="search_submit">
+                        <input type="search" value={@search_query} placeholder="Search" name="q" phx-debounce={400} class="input-l"/>
+                    </form>
+                    <ul>
+                        <%= for c <- @search_results do %>
+                            <%= if MapSet.member?(@calendars, c) do %>
+                                <li><%= c.name %> ✓</li>
+                            <% else %>
+                                <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                            <% end %>
+                        <% end %>
+                    </ul>
+                    <br />
+                </div>
+            <% end %>
+
+        
+            <b>My College List:</b>
+            <br />
             <%= for c <- @calendars do %>
                 <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
                     <div><%= c.name %></div>

@@ -19,7 +19,7 @@ defmodule TznWeb.Timeline do
      |> assign(:grad_year, timeline.graduation_year)
      |> assign(
        :grad_year_touched,
-       is_binary(timeline.email) || !Tzn.Util.within_n_hours_ago(timeline.inserted_at, 1)
+       is_binary(timeline.email) || Timex.after?(timeline.updated_at, timeline.inserted_at)
      )
      |> assign(:all_calendars, all_calendars)
      |> assign_search_results()
