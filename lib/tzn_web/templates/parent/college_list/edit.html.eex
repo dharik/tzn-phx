@@ -1,8 +1,23 @@
 <h2>
   <%= Tzn.Util.informal_name(@mentee) %>'s College List
 </h2>
+<p>Hi there!</p>
+
+<p>Thanks for helping the research team by taking the time to fill out
+your preferences for your child’s list of colleges. As part of this process,
+ we always examine more colleges than end up on your child’s final list,
+ which will contain approximately 15 schools. If you have specific schools
+ you’d like us to think about, please feel free to include them in this form.
+  However, we’ll only include the schools that we think are the best fit for
+  your child in the final list you receive back.</p>
+
+<p>
+All of your responses are auto-saved, so you can fill this out as you have time without worrying that your progress will be lost.
+</p>
+
 <p class="margin-bottom-l">
-  Hi there! Please add your preferences and answers for your child's list of colleges. Your responses will be auto-saved!
+Thanks!<br />
+Transizion Research Team
 </p>
 
 <div class="background-light-100 padding-xs border margin-bottom-xxl">
