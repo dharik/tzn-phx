@@ -15,7 +15,6 @@ defmodule Tzn.Transizion.ContractPurchase do
     contract_purchase
     |> cast(attrs, [:hours, :date, :notes, :pod_id, :expected_revenue])
     |> validate_required([:hours, :date, :expected_revenue])
-    |> validate_number(:expected_revenue, greater_than_or_equal_to: 0)
     |> validate_number(:expected_revenue, less_than: 100000)
     |> foreign_key_constraint(:pod_id)
   end
