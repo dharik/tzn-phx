@@ -1,10 +1,16 @@
 <%= if @todo.completed do %>
     <li>
+        <%= if @todo.deleted_at do %>
+            (deleted)
+        <% end %>
         <strike><%= @todo.todo_text %></strike>
     </li>
 
 <% else %>
     <li>
+        <%= if @todo.deleted_at do %>
+            (deleted)
+        <% end %>
         <%= @todo.todo_text %>
         <%= if @todo.due_date do %>
             <br />

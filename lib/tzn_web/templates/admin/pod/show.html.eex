@@ -207,7 +207,7 @@
   <div x-show="tab === 'todos'" x-transition>
     <p class="lead-s">Mentor To-Dos:</p>
     <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") do %>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") |> sort_todos() do %>
          <%= render "_todo.html", todo: todo %>
       <% end %>
     </ol>
@@ -216,7 +216,7 @@
 
     <p class="lead-s">Mentee To-Dos:</p>
     <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") do %>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
     </ol>
@@ -224,7 +224,7 @@
 
     <p class="lead-s">Parent To-Dos:</p>
     <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") do %>
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
     </ol>
