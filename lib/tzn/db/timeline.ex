@@ -16,6 +16,9 @@ defmodule Tzn.DB.Timeline do
       join_through: Tzn.DB.TimelineCalendar,
       on_replace: :delete
 
+    field :last_ical_sync_at, :naive_datetime
+    field :last_ical_sync_client, :string
+
     timestamps()
   end
 
@@ -28,7 +31,9 @@ defmodule Tzn.DB.Timeline do
       :user_type,
       :email,
       :emailed_at,
-      :updated_at
+      :updated_at,
+      :last_ical_sync_at,
+      :last_ical_sync_client
     ])
     |> validate_required([:graduation_year])
     |> maybe_validate_email_and_user_type()

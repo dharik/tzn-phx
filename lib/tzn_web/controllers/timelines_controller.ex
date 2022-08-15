@@ -125,6 +125,14 @@ defmodule TznWeb.TimelinesController do
         "REFRESH-INTERVAL": [VALUE: "DURATION", value: "PT24H"]
       )
 
+    if ua = Plug.Conn.get_req_header(conn, "user-agent") do
+      {:ok, _} =
+        Tzn.Timelines.update_timeline(timeline, %{
+          last_ical_sync_at: Timex.now(),
+          last_ical_sync_client: to_string(ua)
+        })
+    end
+
     send_download(conn, {:binary, Calibex.encode(root)},
       filename: key <> ".ics",
       content_type: "text/calendar",
