@@ -404,4 +404,8 @@ defmodule Tzn.Questionnaire do
     })
     |> Repo.insert()
   end
+
+  def only_college_lists(questionnaires) do
+    Enum.filter(questionnaires, &(&1.question_set.slug == "college_list"))
+  end
 end

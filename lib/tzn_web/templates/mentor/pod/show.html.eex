@@ -155,28 +155,33 @@
 <p class="lead">College List</p>
 <div class="border border-radius padding-s">
   <%= if @pod.college_list_access do %>
-    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "college_list")) do %>
-      <em>
-        <%=
-        case q.state do
-          "needs_info" -> "Needs info from you or parent(s)."
-          "ready_for_specialist" -> "Submitted to research specialist to begin research."
-          "specialist" -> "Research specialist is creating the college list."
-          "designer" -> "College list research is done. It's being compiled into a single document."
-          "complete" -> "College list research is done and you should have received a document from the research specialist."
-          _ -> "Unknown"
-        end
-      %>
-      </em>
-      <div class="space-m"></div>
-      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s College List Research Request", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+    <% college_lists =  Tzn.Questionnaire.only_college_lists(@pod.questionnaires) %>
+    <%= if Enum.count(college_lists) > 0 do %>
+      <%= for q <- college_lists do %>
+        <div class="padding-bottom-m">
+          <em>
+              <%=
+              case q.state do
+                "needs_info" -> "Needs info from you or parent(s)."
+                "ready_for_specialist" -> "Submitted to research specialist to begin research."
+                "specialist" -> "Research specialist is creating the college list."
+                "designer" -> "College list research is done. It's being compiled into a single document."
+                "complete" -> "College list research is done and you should have received a document from the research specialist."
+                _ -> "Unknown"
+              end
+            %>
+            </em>
+            <div class="space-xs"></div>
+            <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s College List Research Request (started #{Tzn.Util.fomat_date_month_year(q.inserted_at)})", to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button" %>
+          </div>
+        <% end %>
     <% else %>
       Not started
       <div class="space-m"></div>
       <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s college list research request",
         to: Routes.mentor_college_list_path(@conn, :create, mentee_id: @mentee.id),
         class: "button button-primary", method: :post
-    %>
+      %>
     <% end %>
   <% else %>
     <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a college list. Please reach out to your CMT if you have questions.

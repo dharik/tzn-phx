@@ -9,6 +9,14 @@ defmodule Tzn.Util do
     Timex.Format.DateTime.Formatters.Relative.format!(date, "{relative}")
   end
 
+  def fomat_date_month_year(date) do
+    case Timex.format(date, "%B %Y", :strftime) do
+      {:ok, formatted} -> formatted
+      {:error, _} -> "N/A"
+      _ -> "N/A"
+    end
+  end
+
   def within_n_days_ago(nil, _) do
     false
   end
