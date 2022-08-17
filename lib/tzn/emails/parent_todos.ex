@@ -160,6 +160,6 @@ defmodule Tzn.Emails.ParentTodos do
     last_email_at = Tzn.Emails.last_email_sent_at(parent_email, email_key(pod_id))
 
     String.length(parent_email) > 3 &&
-      (!last_email_at || !Tzn.Util.within_n_days_ago(last_email_at, 3))
+      (!last_email_at || !Tzn.Util.within_n_days_ago(last_email_at, 2))
   end
 end
