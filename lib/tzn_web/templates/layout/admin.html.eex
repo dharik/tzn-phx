@@ -6,9 +6,9 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0, shrink-to-fit=no"/>
     <%= csrf_meta_tag() %>
     <title>Admin - Transizion</title>
-    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/js/app.js") %>"></script>
+    <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/app.js") %>"></script>
     <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/css/app.css") %>"/>
+    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/app.css") %>"/>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script defer src="https://unpkg.com/alpinejs@3.x.x/dist/cdn.min.js"></script>
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
@@ -16,8 +16,8 @@
   </head>
   <body>
     <div class="parent_layout">
-      <nav role="navigation" class="background-light-100">
-        <div class="flex flex-column align-items-center padding-vertical-xl background-light-100">
+      <nav role="navigation" class="bg-off-white">
+        <div class="flex flex-column align-items-center padding-vertical-xl bg-off-white">
           <a href="<%= Routes.entry_path(@conn, :launch_app) %>">
             <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
           </a>

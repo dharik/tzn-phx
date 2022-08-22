@@ -1,140 +1,147 @@
+// @tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+
+
 @import "./admin.scss";
 
+
 .parent_layout {
-  display: grid;
-  grid-template-areas:
-    "nav main main"
-    "nav main main";
-  grid-template-rows: auto;
-  grid-template-columns: 23rem 1fr 10%;
-  grid-row-gap: 10px;
-  grid-column-gap: 10px;
-  height: 100vh;
-  margin: 0;
-
-  /* Stack the layout on small devices/viewports. */
-  @media all and (max-width: 575px) {
+    display: grid;
     grid-template-areas:
-      "nav"
-      "main";
+      "nav main main"
+      "nav main main";
     grid-template-rows: auto;
-    grid-template-columns: 1fr;
-
-    nav > div {
-      height: fit-content;
+    grid-template-columns: 23rem 1fr 10%;
+    grid-row-gap: 10px;
+    grid-column-gap: 10px;
+    height: 100vh;
+    margin: 0;
+  
+    /* Stack the layout on small devices/viewports. */
+    @media all and (max-width: 575px) {
+      grid-template-areas:
+        "nav"
+        "main";
+      grid-template-rows: auto;
+      grid-template-columns: 1fr;
+  
+      nav > div {
+        height: fit-content;
+      }
+    }
+  
+    nav {
+      grid-area: nav;
+  
+      > div {
+        height: 100vh;
+      }
+  
+      a,
+      a:hover,
+      a:active {
+        text-decoration: none;
+      }
+  
+      a.button-block:hover {
+        border-radius: 0.25em;
+        background-color: #2a2e37c4;
+        color: white;
+      }
+  
+      a.hover-color-white:hover {
+        color: white;
+      }
+    }
+  
+    main {
+      grid-area: main;
+    }
+  
+    .top {
+      grid-area: top;
+      display: flex;
+      flex-direction: row;
+      align-items: center;
     }
   }
-
-  nav {
-    grid-area: nav;
-
-    > div {
-      height: 100vh;
+  
+  $border-color: lightgray;
+  
+  .timeline-item {
+    padding: 1em 2em 2em;
+    position: relative;
+    color: rgba(black, 0.7);
+    border-left: 4px solid $border-color;
+  
+    &::after {
+      width: 16px;
+      height: 16px;
+      display: block;
+      top: 1.5em;
+      position: absolute;
+      left: -10px;
+      border-radius: 16px;
+      content: "";
+      border: 2px solid $border-color;
+      background: white;
     }
-
-    a,
-    a:hover,
-    a:active {
+  }
+  
+  .ql-toolbar {
+    background: #f9f9f9;
+  }
+  
+  .ql-editor {
+    ul,
+    ol,
+    li {
+      padding-left: 1em !important;
+      margin-left: 0;
+    }
+  }
+  
+  .ql-container {
+    font-family: inherit !important;
+  }
+  
+  .width-80 {
+    width: 80%;
+  }
+  
+  .main-grid {
+    display: grid;
+    grid-template-columns: auto minmax(20rem, 30vw);
+    grid-template-areas: "main side";
+    grid-template-rows: auto;
+  
+    @media all and (max-width: 575px) {
+      grid-template-areas:
+        "side"
+        "main";
+    }
+  
+    .main {
+      grid-area: main;
+    }
+    .side {
+      grid-area: side;
+    }
+  }
+  
+  .hover-text-decoration-none {
+    &:hover, &:active {
       text-decoration: none;
     }
-
-    a.button-block:hover {
-      border-radius: 0.25em;
-      background-color: #2a2e37c4;
-      color: white;
-    }
-
-    a.hover-color-white:hover {
-      color: white;
-    }
   }
-
-  main {
-    grid-area: main;
+  
+  .white-space-pre-wrap {
+    white-space: pre-wrap;
   }
-
-  .top {
-    grid-area: top;
-    display: flex;
-    flex-direction: row;
-    align-items: center;
+  
+  
+  .phx-change-loading {
+    opacity: .6;
   }
-}
-
-$border-color: lightgray;
-
-.timeline-item {
-  padding: 1em 2em 2em;
-  position: relative;
-  color: rgba(black, 0.7);
-  border-left: 4px solid $border-color;
-
-  &::after {
-    width: 16px;
-    height: 16px;
-    display: block;
-    top: 1.5em;
-    position: absolute;
-    left: -10px;
-    border-radius: 16px;
-    content: "";
-    border: 2px solid $border-color;
-    background: white;
-  }
-}
-
-.ql-toolbar {
-  background: #f9f9f9;
-}
-
-.ql-editor {
-  ul,
-  ol,
-  li {
-    padding-left: 1em !important;
-    margin-left: 0;
-  }
-}
-
-.ql-container {
-  font-family: inherit !important;
-}
-
-.width-80 {
-  width: 80%;
-}
-
-.main-grid {
-  display: grid;
-  grid-template-columns: auto minmax(20rem, 30vw);
-  grid-template-areas: "main side";
-  grid-template-rows: auto;
-
-  @media all and (max-width: 575px) {
-    grid-template-areas:
-      "side"
-      "main";
-  }
-
-  .main {
-    grid-area: main;
-  }
-  .side {
-    grid-area: side;
-  }
-}
-
-.hover-text-decoration-none {
-  &:hover, &:active {
-    text-decoration: none;
-  }
-}
-
-.white-space-pre-wrap {
-  white-space: pre-wrap;
-}
-
-
-.phx-change-loading {
-  opacity: .6;
-}

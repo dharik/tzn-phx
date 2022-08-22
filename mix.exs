@@ -64,7 +64,10 @@ defmodule Tzn.MixProject do
       {:floki, "~> 0.32.1"},
       {:joken, "~> 2.4"},
       {:the_fuzz, "~> 0.5.0"},
-      {:calibex, "~> 0.1.0"}
+      {:calibex, "~> 0.1.0"},
+      {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
+      {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev}
     ]
   end
 
@@ -76,10 +79,11 @@ defmodule Tzn.MixProject do
   # See the documentation for `Mix` for more info on aliases.
   defp aliases do
     [
-      setup: ["deps.get", "ecto.setup", "cmd npm install --prefix assets"],
+      setup: ["deps.get", "ecto.setup"],
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
-      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"]
+      test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
+      "assets.deploy": ["esbuild default --minify", "sass default", "tailwind default --minify", "phx.digest"]
     ]
   end
 end
