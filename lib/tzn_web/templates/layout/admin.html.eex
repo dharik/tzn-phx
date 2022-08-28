@@ -15,32 +15,33 @@
       rel="stylesheet">
   </head>
   <body>
-    <div class="parent_layout">
-      <nav role="navigation" class="bg-off-white">
-        <div class="flex flex-column align-items-center padding-vertical-xl bg-off-white">
+    <div class="grid grid-cols-12 h-screen">
+      <aside class="bg-blue w-full col-span-12 md:col-span-4 xl:col-span-2">
+        <div class="flex flex-col align-items-center padding-vertical-xl bg-blue" x-data="{open: true}">
           <a href="<%= Routes.entry_path(@conn, :launch_app) %>">
-            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
+            <img src="<%= Routes.static_path(@conn, "/images/cz_logo.svg") %>" width="240" />
           </a>
-          <div class="space-l"></div>
-          <div class="space-l"></div>
-          <div class="space-l"></div>
-          <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_user_path(@conn, :index), "Users", "people", @conn.request_path =~ "users") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentee_path(@conn, :index), "Mentees", "school", @conn.request_path =~ ~r/mentees|pods/) %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_path(@conn, :index), "Mentors", "work_outline", @conn.request_path =~ "mentors" || @conn.request_path =~ ~r/admin$/) %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_mentor_timeline_event_path(@conn, :index), "Mentor Timeline", "view_timeline", @conn.request_path =~ "timeline") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_cmt_dashboard_path(@conn, :show), "Mentor Oversight", "supervised_user_circle", @conn.request_path =~ "cmt_dashboard") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.admin_calendar_path(@conn, :index), "Calendars", "calendar_month", @conn.request_path =~ "calendar") %>
-
+         <div class="flex justify-end md:hidden">
+          <span class="material-icons-outlined" @click="open = !open">menu</span>
+         </div>
+          <div class="space-l" x-show="open"></div>
+          <div class="space-l" x-show="open"></div>
+          <div class="space-l" x-show="open"></div>
+          <div class="flex flex-col items-end align-self-stretch space-y-2" x-show="open">
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_user_path(@conn, :index), "Users", "people", @conn.request_path =~ "users") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentee_path(@conn, :index), "Mentees", "school", @conn.request_path =~ ~r/mentees|pods/) %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentor_path(@conn, :index), "Mentors", "work_outline", @conn.request_path =~ "mentors" || @conn.request_path =~ ~r/admin$/) %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentor_timeline_event_path(@conn, :index), "Mentor Timeline", "view_timeline", @conn.request_path =~ "timeline") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_cmt_dashboard_path(@conn, :show), "Mentor Oversight", "supervised_user_circle", @conn.request_path =~ "cmt_dashboard") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_calendar_path(@conn, :index), "Calendars", "calendar_month", @conn.request_path =~ "calendar") %>
           </div>
-          <div class="space-xl"></div>
-          <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %>
+          <div class="space-xl" x-show="open"></div>
+          <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete, "x-show": "open", class: "text-off-white" %>
         </div>
-      </nav>
-      <main role="main" class="padding-m">
-        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      </aside>
+      <main role="main" class="bg-white col-span-12 md:col-span-8 xl:col-span-10 p-4">        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= @inner_content %>
       </main>

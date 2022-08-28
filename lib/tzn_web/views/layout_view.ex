@@ -25,6 +25,30 @@ defmodule TznWeb.LayoutView do
     end
   end
 
+  def left_nav_button_tw(to, text \\ "", icon, is_active \\ false) do
+    if is_active do
+      raw("""
+      <a
+        href="#{to}"
+        class="bg-white text-blue no-underline hover:no-underline  w-full p-4 pl-16 flex align-items-center font-medium"
+      >
+        <span class="material-icons-outlined">#{icon}</span>
+        <span class="margin-left-xs">#{text}</span>
+      </a>
+      """)
+    else
+      raw("""
+      <a
+        href="#{to}"
+        class="text-off-white no-underline hover:no-underline hover:bg-white hover:text-blue focus:text-blue focus:bg-white w-full p-4 pl-16 flex align-items-center active:no-underline font-medium"
+      >
+        <span class="material-icons-outlined">#{icon}</span>
+        <span class="margin-left-xs">#{text}</span>
+      </a>
+      """)
+    end
+  end
+
   def left_nav_button_mentee(to, text \\ "", icon, is_active \\ false) do
     if is_active do
       raw("""

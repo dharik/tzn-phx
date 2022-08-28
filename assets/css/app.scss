@@ -2,10 +2,7 @@
 @tailwind components;
 @tailwind utilities;
 
-
-
 @import "./admin.scss";
-
 
 .parent_layout {
     display: grid;
@@ -132,7 +129,8 @@
   }
   
   .hover-text-decoration-none {
-    &:hover, &:active {
+  &:hover,
+  &:active {
       text-decoration: none;
     }
   }
@@ -141,7 +139,6 @@
     white-space: pre-wrap;
   }
   
-  
   .phx-change-loading {
-    opacity: .6;
+  opacity: 0.6;
   }
