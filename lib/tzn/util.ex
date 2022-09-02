@@ -2,7 +2,7 @@ defmodule Tzn.Util do
   alias Tzn.Transizion.{Mentee, Mentor}
 
   def map_ids(e) do
-    e |> Enum.map(& &1[:id])
+    e |> Enum.map(& &1.id)
   end
 
   def format_date_relative(date) do

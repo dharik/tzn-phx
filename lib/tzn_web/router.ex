@@ -69,7 +69,7 @@ defmodule TznWeb.Router do
       resources "/mentees", Mentor.MenteeController
       resources "/timesheet_entries", Mentor.TimesheetEntryController, except: [:show]
       get "/timeline", Mentor.TimelineController, :index
-      get "/timeline/:mentee_id", Mentor.TimelineController, :index
+      get "/timeline/:pod_id", Mentor.TimelineController, :index
 
       resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
 

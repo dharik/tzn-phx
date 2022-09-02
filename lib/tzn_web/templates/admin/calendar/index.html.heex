@@ -22,8 +22,10 @@
                         <%= link to: Routes.admin_calendar_path(@conn, :edit, c) do %>
                             <span class="material-icons-outlined color-primary">edit</span>
                         <% end %>
-                        <%= link to: Routes.admin_calendar_path(@conn, :delete, c), method: :delete, data: [confirm: "Are you sure?"] do %>
-                            <span class="material-icons-outlined color-error">delete</span>
+                        <%= unless Tzn.Timelines.is_special_calendar(c) do %>
+                            <%= link to: Routes.admin_calendar_path(@conn, :delete, c), method: :delete, data: [confirm: "Are you sure?"] do %>
+                                <span class="material-icons-outlined color-error">delete</span>
+                            <% end %>
                         <% end %>
                     </div>
                 </div>

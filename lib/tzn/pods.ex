@@ -64,6 +64,7 @@ defmodule Tzn.Pods do
       :todos,
       :mentor,
       :mentee,
+      :timeline,
       questionnaires: [:question_set]
     ])
     |> with_strategy_sessions()
@@ -78,6 +79,7 @@ defmodule Tzn.Pods do
       :todos,
       :mentor,
       :mentee,
+      :timeline,
       questionnaires: [:question_set]
     ])
     |> with_strategy_sessions()

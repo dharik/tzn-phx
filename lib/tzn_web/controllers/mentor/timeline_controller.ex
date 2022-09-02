@@ -1,33 +1,25 @@
 defmodule TznWeb.Mentor.TimelineController do
   use TznWeb, :controller
 
-  alias Tzn.Transizion
+  def index(conn, %{"pod_id" => pod_id}) do
+    pod = Tzn.Pods.get_pod!(pod_id)
+    unless pod.id in Tzn.Util.map_ids(conn.assigns.pods) do
+      raise "Unauthorized"
+    end
 
-  def index(conn, %{"mentee_id" => mentee_id}) do
-    mentee = Tzn.Mentee.get_mentee!(mentee_id)
+    timeline =
+      if pod.timeline do
+        Tzn.Timelines.get_timeline(pod.timeline.access_key)
+      else
+        {:ok, t} = Tzn.Timelines.create_timeline(pod)
+        Tzn.Pods.update_pod(pod, %{timeline_id: t.id}, conn.assigns.current_user)
+        t
+      end
 
-    events =
-      Transizion.list_mentor_timeline_events()
-      |> Enum.filter(fn event -> event.grade == mentee.grade end)
-
-    event_markings = Transizion.mentor_timeline_event_markings(mentee)
-
-    render(conn, "index.html",
-      mentee: mentee,
-      events: events,
-      event_markings: event_markings,
-      mentees: mentees(conn)
-    )
+    render(conn, "index.html", timeline: timeline, pod: pod)
   end
 
   def index(conn, _params) do
-
-    render(conn, "no_mentee_index.html",
-      mentees: mentees(conn)
-    )
-  end
-
-  def mentees(conn) do
-    conn.assigns.pods |> Enum.map(& &1.mentee) |> Enum.reject(&is_nil/1)
+    render(conn, "no_mentee_index.html")
   end
 end

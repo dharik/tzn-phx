@@ -70,9 +70,9 @@ defmodule TznWeb.Mentor.TimelineView do
     end
   end
 
-  def sort_by_grade(mentees) do
-    Enum.sort_by(mentees, fn m ->
-      case m.grade do
+  def sort_by_grade(pods) do
+    Enum.sort_by(pods, fn p ->
+      case p.mentee.grade do
         "middle_school" -> 0
         "freshman" -> 2
         "sophomore" -> 4
@@ -80,6 +80,11 @@ defmodule TznWeb.Mentor.TimelineView do
         "senior" -> 8
         _ -> 100
       end
+    end)
+  end
+  def reject_already_graduated(pods) do
+    Enum.reject(pods, fn p ->
+      p.mentee.grade == "college"
     end)
   end
 end

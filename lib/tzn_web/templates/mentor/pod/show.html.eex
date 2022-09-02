@@ -149,7 +149,7 @@
 <div class="space-m"></div>
 <p class="lead">Timeline</p>
 <div class="border border-radius padding-s">
-  <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, mentee_id: @mentee.id), class: "button button-primary" %>
+  <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, @pod.id), class: "button button-primary" %>
 </div>
 <div class="space-m"></div>
 <p class="lead">College List</p>

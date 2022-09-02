@@ -1,49 +1,6 @@
-<%= for mentee <- sort_by_grade(@mentees) do %>
-  <%= link mentee.name, to: Routes.mentor_timeline_path(@conn, :index, mentee.id) %> - <%= mentee.grade |> humanize %><br />
-<% end %>
-<%= for events_by_month <- view_data(@events, @event_markings) do %>
-  <% first = List.first(events_by_month) %>
-  <div class="background-white text-align-center">
-    <h3><%= date_to_year_month_str(first.date) %></h3>
-  </div>
-
-  <div class="flex text-align-center">
-    <div class="background-light-50 padding-s" style="width: 33%">Incomplete</div>
-    <div class="background-primary-50 padding-s margin-horizontal-s" style="width: 33%">In Progress</div>
-    <div class="background-success-50 padding-s" style="width: 33%">Complete</div>
-  </div>
-
-  <%= for event <- events_by_month do %>
-    <div class="flex" id="event-<%= event.id %>">
-      <div class="padding-s background-light-50" style="width: 33%">
-        <%= if has_status(event, "incomplete") do %>
-          <%= render "incomplete_event.html", Map.put(assigns, :event, event) %>
-        <% end %>
-      </div>
-      <div class="padding-s background-primary-50 margin-horizontal-s" style="width: 33%">
-        <%= if has_status(event, "in_progress") do %>
-          <%= render "in_progress_event.html", Map.put(assigns, :event, event) %>
-        <% end %>
-      </div>
-      <div class="padding-s background-success-50" style="width: 33%">
-        <%= if has_status(event, "complete") do %>
-          <%= render "complete_event.html", Map.put(assigns, :event, event) %>
-        <% end %>
-      </div>
-    </div>
-  <% end %>
-  <div class="space-l"></div>
+<%= for pod <- @pods |> reject_already_graduated() |>  sort_by_grade() do %>
+  <%= link pod.mentee.name, to: Routes.mentor_timeline_path(@conn, :index, pod.id) %> - <%= pod.mentee.grade |> humanize %><br />
 <% end %>
 
-Marked as not applicable:
-<div class="space-s"></div>
-<%= for events_by_month <- view_data(@events, @event_markings) do %>
-  <%= for event <- events_by_month do %>
-    <%= if has_status(event, "not_applicable") do %>
-      <div>
-        <%= render "not_applicable_event.html", Map.put(assigns, :event, event) %>
-      </div>
-      <div class="space-s"></div>
-    <% end %>
-  <% end %>
-<% end %>
+<h1><%= @pod.mentee.name %>'s timeline</h1>
+<%= live_render(@conn, TznWeb.MentorTimeline, session: %{"access_key" => @timeline.access_key}) %>

@@ -1,7 +1,7 @@
 defmodule Tzn.Timelines do
   alias Tzn.Repo
   import Ecto.Query
-  alias Tzn.DB.{Calendar, CalendarEvent, Timeline}
+  alias Tzn.DB.{Calendar, CalendarEvent, Timeline, Pod}
 
   def list_calendars(:admin) do
     Repo.all(Calendar) |> Repo.preload(:events) |> Enum.sort_by(&{&1.type, &1.name})
@@ -40,6 +40,10 @@ defmodule Tzn.Timelines do
   end
 
   def delete_calendar(%Calendar{} = c) do
+    if is_special_calendar(c) do
+      raise "Cannot delete a special calendar because it's hardcoded in the backend"
+    end
+
     Repo.delete(c)
   end
 
@@ -116,10 +120,52 @@ defmodule Tzn.Timelines do
         Repo.get_by(Timeline, readonly_access_key: access_key)
 
     if t do
-      t |> Repo.preload(calendars: [:events])
+      t |> Repo.preload([:pod, calendars: [:events]])
     else
       nil
     end
+  end
+
+  def graduation_year(current_grade) do
+    graduation_year(current_grade, Timex.now().month, Timex.now().year)
+  end
+
+  def graduation_year(current_grade, current_month, current_year) do
+    cond do
+      current_month >= 9 && current_grade == "freshman" -> current_year + 4
+      current_grade == "freshman" -> current_year + 3
+      current_month >= 9 && current_grade == "sophomore" -> current_year + 3
+      current_grade == "sophomore" -> current_year + 2
+      current_month >= 9 && current_grade == "junior" -> current_year + 2
+      current_grade == "junior" -> current_year + 1
+      current_month >= 9 && current_grade == "senior" -> current_year + 1
+      current_grade == "senior" -> current_year
+      true -> Timex.now().year - 1
+    end
+  end
+
+  def create_timeline(%Pod{} = pod) do
+    mentee = Ecto.assoc(pod, :mentee) |> Repo.one!()
+
+    %Timeline{}
+    |> Timeline.changeset(%{
+      access_key: Ecto.UUID.generate(),
+      readonly_access_key: Ecto.UUID.generate(),
+      graduation_year: graduation_year(mentee.grade)
+    })
+    |> Ecto.Changeset.put_assoc(
+      :calendars,
+      [logged_in_general_calendar()]
+    )
+    |> Repo.insert()
+  end
+
+  def logged_in_general_calendar do
+    get_calendar(1051)
+  end
+
+  def is_special_calendar(%Calendar{} = c) do
+    c.id == 1051 || c.id == 980
   end
 
   def create_timeline() do

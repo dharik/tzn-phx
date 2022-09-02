@@ -19,6 +19,8 @@ defmodule Tzn.DB.Timeline do
     field :last_ical_sync_at, :naive_datetime
     field :last_ical_sync_client, :string
 
+    has_one :pod, Tzn.DB.Pod
+
     timestamps()
   end
 

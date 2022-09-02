@@ -1,3 +1,7 @@
 <h1>Edit Calendar</h1>
-
+<%= if Tzn.Timelines.is_special_calendar(@calendar) do %>
+    <p class="font-size-small">
+        <span class="color-warning">This calendar is hard-coded in the backend and special care should be taken with any edits.</span>
+    </p>
+<% end %>
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_calendar_path(@conn, :update, @calendar)) %>
