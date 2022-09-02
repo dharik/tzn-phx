@@ -16,6 +16,8 @@ defmodule Tzn.DB.Pod do
 
     has_one :hour_counts, Tzn.Transizion.PodHourCounts
 
+    belongs_to :timeline, Tzn.DB.Timeline
+
     # has_many :parents, through: [:mentee, :parents]
 
     field :active, :boolean
@@ -61,6 +63,7 @@ defmodule Tzn.DB.Pod do
       :scholarship_list_access,
       :mentee_id,
       :mentor_id,
+      :timeline_id,
       :hours_recommended_freshman,
       :hours_recommended_sophomore,
       :hours_recommended_junior,
@@ -72,6 +75,7 @@ defmodule Tzn.DB.Pod do
     ])
     |> foreign_key_constraint(:mentee_id)
     |> foreign_key_constraint(:mentor_id)
+    |> foreign_key_constraint(:timeline_id)
     |> validate_number(:hours_recommended_freshman, greater_than_or_equal_to: 0)
     |> validate_number(:hours_recommended_sophomore, greater_than_or_equal_to: 0)
     |> validate_number(:hours_recommended_junior, greater_than_or_equal_to: 0)
