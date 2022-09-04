@@ -13,6 +13,7 @@
         </div>
         <%= for {year, events} <- @events |> Enum.group_by(fn 
             %Tzn.DB.PodTodo{} = todo -> todo.due_date.year
+            %Tzn.Transizion.MentorTimelineEventMarking{} = m -> Tzn.Timelines.event_year(@timeline.graduation_year, m.mentor_timeline_event.grade, m.mentor_timeline_event.date.month)
             c -> c.year
          end
          ) |> Map.to_list() do %>
@@ -45,7 +46,22 @@
                             <% end %>
                         </div>
                     </div>
-                <% else %>
+                <% end %>
+                <%= if Kernel.is_struct(e, Tzn.Transizion.MentorTimelineEventMarking) do %>
+                    <div class="flex flex-row justify-content-flex-start margin-vertical-m align-items-center">
+                        <div class="border-radius text-align-center padding-s box-shadow background-white border" style="width: 6em; height: 6em;">
+                            <span class=" font-size-l font-weight-light color-grey-500"><%= Timex.month_shortname(e.mentor_timeline_event.date.month) |> String.upcase() %></span>
+                            <br />
+                            <span class="font-size-xxl font-weight-regular"><%= e.mentor_timeline_event.date.day %></span>
+                        </div>
+                        <div class="flex-1 margin-left-s">
+                            <%= raw e.mentor_timeline_event.notes %>
+                            <b><i><%= raw e.notes %></i></b>
+                        </div>
+                    </div>
+                    
+                <% end %>
+                <%= if Kernel.is_struct(e, Tzn.DB.CalendarEvent) do %>
                     <div class="flex flex-row justify-content-flex-start margin-vertical-m align-items-center">
                         <% 
                             calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)

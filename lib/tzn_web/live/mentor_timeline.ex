@@ -114,6 +114,8 @@ defmodule TznWeb.MentorTimeline do
   end
 
   def assign_events(socket) do
+    pod = Tzn.Pods.get_pod!(socket.assigns.timeline.pod.id)
+
     assign(
       socket,
       :events,
@@ -123,14 +125,24 @@ defmodule TznWeb.MentorTimeline do
          socket.assigns.timeline.graduation_year,
          socket.assigns.include_past
        ) ++
-         (socket.assigns.timeline.pod.id
-          |> Tzn.Pods.get_pod!()
-          |> Map.get(:todos)
-          |> Enum.reject(& &1.deleted_at)))
+         (pod.todos
+          |> Enum.reject(& &1.deleted_at)) ++
+         Tzn.Transizion.mentor_timeline_event_markings(pod.mentee))
       |> Enum.sort_by(
         fn
           %Tzn.DB.PodTodo{} = todo ->
             Date.new!(todo.due_date.year, todo.due_date.month, todo.due_date.day)
+
+          %Tzn.Transizion.MentorTimelineEventMarking{} = marking ->
+            Date.new!(
+              Tzn.Timelines.event_year(
+                socket.assigns.timeline.graduation_year,
+                marking.mentor_timeline_event.grade,
+                marking.mentor_timeline_event.date.month
+              ),
+              marking.mentor_timeline_event.date.month,
+              marking.mentor_timeline_event.date.day
+            )
 
           event ->
             Date.new!(event.year, event.month, event.day)
@@ -145,6 +157,20 @@ defmodule TznWeb.MentorTimeline do
             %Tzn.DB.PodTodo{} = e ->
               Timex.after?(
                 Timex.Date.new!(e.due_date.year, e.due_date.month, e.due_date.day),
+                Timex.now()
+              )
+
+            %Tzn.Transizion.MentorTimelineEventMarking{} = m ->
+              Timex.after?(
+                Date.new!(
+                  Tzn.Timelines.event_year(
+                    socket.assigns.timeline.graduation_year,
+                    m.mentor_timeline_event.grade,
+                    m.mentor_timeline_event.date.month
+                  ),
+                  m.mentor_timeline_event.date.month,
+                  m.mentor_timeline_event.date.day
+                ),
                 Timex.now()
               )
 

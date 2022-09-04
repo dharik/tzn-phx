@@ -144,6 +144,24 @@ defmodule Tzn.Timelines do
     end
   end
 
+  def event_year(graduation_year, event_grade, event_month) do
+    if event_month >= 9 do
+      case event_grade do
+        "freshman" -> graduation_year - 4
+        "sophomore" -> graduation_year - 3
+        "junior" -> graduation_year - 2
+        "senior" -> graduation_year - 1
+      end
+    else
+      case event_grade do
+        "freshman" -> graduation_year - 3
+        "sophomore" -> graduation_year - 2
+        "junior" -> graduation_year - 1
+        "senior" -> graduation_year - 0
+      end
+    end
+  end
+
   def create_timeline(%Pod{} = pod) do
     mentee = Ecto.assoc(pod, :mentee) |> Repo.one!()
 

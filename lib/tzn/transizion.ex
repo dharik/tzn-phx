@@ -235,16 +235,12 @@ defmodule Tzn.Transizion do
   end
 
   def mentor_timeline_event_markings(mentee) do
-    markings =
-      Repo.all(
-        from(m in MentorTimelineEventMarking,
-          where: m.mentee_id == ^mentee.id
-        )
+    Repo.all(
+      from(m in MentorTimelineEventMarking,
+        where: m.mentee_id == ^mentee.id
       )
-
-    # Returns a map of event id: marking for easy lookups later.
-    # assumes only one marking per event
-    Map.new(markings, fn marking -> {marking.mentor_timeline_event_id, marking} end)
+    )
+    |> Repo.preload(:mentor_timeline_event)
   end
 
   def change_mentor_timeline_event_marking(%MentorTimelineEventMarking{} = marking, attrs \\ %{}) do
@@ -292,6 +288,4 @@ defmodule Tzn.Transizion do
   def delete_contract_purchase(%ContractPurchase{} = contract_purchase) do
     Repo.delete(contract_purchase)
   end
-
-
 end
