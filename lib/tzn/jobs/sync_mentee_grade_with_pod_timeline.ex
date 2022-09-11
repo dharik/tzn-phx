@@ -10,11 +10,11 @@ defmodule Tzn.Jobs.SyncMenteeGradeWithPodTimelines do
       p.mentee.grade == "college" || p.mentee.grade == "middle_school"
     end)
     |> Enum.filter(fn p ->
-      p.timeline.graduation_year == Tzn.GradeYearConversions.graduation_year(p.mentee.grade)
+      p.timeline.graduation_year != Tzn.GradeYearConversions.graduation_year(p.mentee.grade)
     end)
-    |> Enum.map(fn p ->
-      # For now jsut report so we can verify this detection works
-      Bugsnag.report("#{p.mentee.name}'s grade doesn't match graduation year for ")
+    |> Enum.each(fn p ->
+      # For now just report so we can verify this detection works
+      Bugsnag.report("#{p.mentee.name}'s grade doesn't match graduation year for timeline: #{p.timeline.graduation_year}")
     end)
   end
 end
