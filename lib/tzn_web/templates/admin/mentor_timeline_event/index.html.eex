@@ -22,7 +22,7 @@
 
   <div class="main">
     <div class="flex flex-row justify-content-space-between padding-horizontal-m">
-      <p class="lead">Mentor Timeline</p>
+      <p class="lead">Mentor Timeline <span class="color-error text-sm">Deprecated, use Calendars + Calendar Events now</span></p>
       <%= link to: Routes.admin_mentor_timeline_event_path(@conn, :new), class: "button button-text button-icon button-primary text-transform-uppercase" do %>
       <span class="material-icons-outlined">add</span>
       Add new event

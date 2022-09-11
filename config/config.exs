@@ -48,6 +48,7 @@ config :tzn, Tzn.Scheduler,
 jobs: [
   {"0 */1 * * *",         {Tzn.Jobs.CleanupPodChanges, :run, []}},
   {"0 */1 * * *",         {Tzn.Jobs.CleanupMenteeChanges, :run, []}},
+  {"0 */1 * * *",         {Tzn.Jobs.SyncMenteeGradeWithPodTimelines, :run, []}},
   {"0 0 */1 * *",         {Tzn.Jobs.ParentUpdateEmails, :daily_checks, []}},
 ]
 

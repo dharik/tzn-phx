@@ -1,8 +1,6 @@
 defmodule TznWeb.MentorTimeline do
   use Phoenix.LiveView
   use Phoenix.HTML
-  import TznWeb.ErrorHelpers
-  alias Phoenix.LiveView.JS
 
   def mount(_params, _session = %{"access_key" => ak}, socket) do
     all_calendars = Tzn.Timelines.list_calendars(:public)
@@ -20,9 +18,7 @@ defmodule TznWeb.MentorTimeline do
      |> assign(:search_query, "")
      |> assign(:all_calendars, all_calendars)
      |> assign_search_results()
-     |> assign_events()
-     |> assign(:export_changeset, Tzn.Timelines.change_timeline(timeline))
-     |> assign(:export_complete, !is_nil(timeline.emailed_at))}
+     |> assign_events()}
   end
 
   def handle_event("toggle_calendar", %{"id" => calendar_id}, socket) do
@@ -119,66 +115,24 @@ defmodule TznWeb.MentorTimeline do
     assign(
       socket,
       :events,
-      (Tzn.Timelines.aggregate_calendar_events(
-         socket.assigns.calendars
-         |> Enum.reject(fn c -> MapSet.member?(socket.assigns.hidden_ids, c.id) end),
-         socket.assigns.timeline.graduation_year,
-         socket.assigns.include_past
-       ) ++
-         (pod.todos
-          |> Enum.reject(& &1.deleted_at)) ++
-         Tzn.Transizion.mentor_timeline_event_markings(pod.mentee))
-      |> Enum.sort_by(
-        fn
-          %Tzn.DB.PodTodo{} = todo ->
-            Date.new!(todo.due_date.year, todo.due_date.month, todo.due_date.day)
-
-          %Tzn.Transizion.MentorTimelineEventMarking{} = marking ->
-            Date.new!(
-              Tzn.Timelines.event_year(
-                socket.assigns.timeline.graduation_year,
-                marking.mentor_timeline_event.grade,
-                marking.mentor_timeline_event.date.month
-              ),
-              marking.mentor_timeline_event.date.month,
-              marking.mentor_timeline_event.date.day
-            )
-
-          event ->
-            Date.new!(event.year, event.month, event.day)
-        end,
-        {:asc, Date}
-      )
+      Tzn.Timelines.aggregate_calendar_events(pod)
+      |> Enum.reject(fn e ->
+        case e do
+          %{calendar: c} -> MapSet.member?(socket.assigns.hidden_ids, c.id)
+          _ -> false
+        end
+      end)
       |> Enum.filter(fn e ->
         if socket.assigns.include_past do
           true
         else
-          case e do
-            %Tzn.DB.PodTodo{} = e ->
-              Timex.after?(
-                Timex.Date.new!(e.due_date.year, e.due_date.month, e.due_date.day),
-                Timex.now()
-              )
-
-            %Tzn.Transizion.MentorTimelineEventMarking{} = m ->
-              Timex.after?(
-                Date.new!(
-                  Tzn.Timelines.event_year(
-                    socket.assigns.timeline.graduation_year,
-                    m.mentor_timeline_event.grade,
-                    m.mentor_timeline_event.date.month
-                  ),
-                  m.mentor_timeline_event.date.month,
-                  m.mentor_timeline_event.date.day
-                ),
-                Timex.now()
-              )
-
-            _ ->
-              Timex.after?(Timex.Date.new!(e.year, e.month, e.day), Timex.now())
-          end
+          Timex.after?(
+            e.date,
+            Timex.now()
+          )
         end
       end)
+      |> Enum.sort_by(fn e -> e.date end, {:asc, Date})
     )
   end
 
@@ -230,31 +184,5 @@ defmodule TznWeb.MentorTimeline do
       end
 
     socket |> assign(:search_results, r)
-  end
-
-  # def handle_event("validate_export", %{"timeline" => timeline_params}, socket) do
-  #   updated_changeset =
-  #     Tzn.Timelines.change_timeline(socket.assigns.timeline, timeline_params)
-  #     |> Map.put(:action, :update)
-
-  #   {:noreply, assign(socket, :export_changeset, updated_changeset)}
-  # end
-
-  def handle_event("export", %{"timeline" => timeline_params}, socket) do
-    case Tzn.Timelines.update_timeline(socket.assigns.timeline, timeline_params) do
-      {:ok, timeline} ->
-        Task.async(fn ->
-          Tzn.Emails.TimelineExport.send_timeline(timeline)
-        end)
-
-        {:noreply,
-         socket
-         |> assign(:timeline, timeline)
-         |> assign(:export_changeset, Tzn.Timelines.change_timeline(timeline))
-         |> assign(:export_complete, true)}
-
-      {:error, changeset} ->
-        {:noreply, socket |> assign(:export_changeset, changeset)}
-    end
   end
 end

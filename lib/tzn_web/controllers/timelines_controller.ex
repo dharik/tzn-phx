@@ -139,4 +139,21 @@ defmodule TznWeb.TimelinesController do
       disposition: :inline
     )
   end
+
+  def google_calendar(conn, %{"access_key" => raw_key}) do
+    redirect(conn,
+      external:
+        ("https://calendar.google.com/calendar/r?cid=" <>
+           TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, raw_key))
+        |> String.replace("https://", "http://")
+    )
+  end
+
+  def apple_calendar(conn, %{"access_key" => raw_key}) do
+    redirect(conn,
+      external:
+        TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :ical, raw_key)
+        |> String.replace(["https://", "http://"], "webcal://")
+    )
+  end
 end
