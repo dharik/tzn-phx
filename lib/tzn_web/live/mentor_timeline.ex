@@ -92,14 +92,16 @@ defmodule TznWeb.MentorTimeline do
     {:noreply, socket |> assign_events()}
   end
 
-  # TODO
   def handle_event("complete_todo", %{"id" => todo_id}, socket) do
-    {:noreply, socket}
+    todo = Tzn.Pods.get_todo(todo_id)
+    Tzn.Pods.update_todo_complete_state(todo, %{completed: true, completed_changed_by: "mentor" })
+    {:noreply, socket |> assign_events()}
   end
 
-  # TODO
   def handle_event("incomplete_todo", %{"id" => todo_id}, socket) do
-    {:noreply, socket}
+    todo = Tzn.Pods.get_todo(todo_id)
+    Tzn.Pods.update_todo_complete_state(todo, %{completed: false, completed_changed_by: "mentor" })
+    {:noreply, socket |> assign_events()}
   end
 
   # TODO
