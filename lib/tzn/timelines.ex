@@ -1,6 +1,6 @@
 defmodule Tzn.Timelines do
   alias Tzn.Repo
-  alias Tzn.DB.{Calendar, CalendarEvent, Timeline, Pod}
+  alias Tzn.DB.{Calendar, CalendarEvent, Timeline, Pod, CalendarEventMarking}
   import Tzn.GradeYearConversions
 
   def list_calendars(:admin) do
@@ -77,7 +77,7 @@ defmodule Tzn.Timelines do
         Repo.get_by(Timeline, readonly_access_key: access_key)
 
     if t do
-      t |> Repo.preload([:pod, calendars: [:events]])
+      t |> Repo.preload([:pod, :calendar_event_markings, calendars: [:events]])
     else
       nil
     end
@@ -221,9 +221,45 @@ defmodule Tzn.Timelines do
     end)
   end
 
+  def mark_calendar_event(%CalendarEvent{} = event, %Timeline{} = timeline, %{hidden: hidden}) do
+    find_or_create_calendar_event_marking(event, timeline)
+    |> update_marking(%{
+      hidden_at:
+        if hidden do
+          Timex.now()
+        else
+          nil
+        end
+    })
+  end
+
+  def mark_calendar_event(%CalendarEvent{} = event, %Timeline{} = timeline, %{
+        completed: completed
+      }) do
+    find_or_create_calendar_event_marking(event, timeline)
+    |> update_marking(%{
+      completed_at:
+        if completed do
+          Timex.now()
+        else
+          nil
+        end
+    })
+  end
+
+  def find_or_create_calendar_event_marking(%CalendarEvent{} = event, %Timeline{} = timeline) do
+    Repo.get_by(Tzn.DB.CalendarEventMarking, calendar_event_id: event.id, timeline_id: timeline.id) ||
+      Repo.insert!(%CalendarEventMarking{calendar_event_id: event.id, timeline_id: timeline.id})
+  end
+
+  def update_marking(%CalendarEventMarking{} = m, attrs \\ %{}) do
+    CalendarEventMarking.changeset(m, attrs) |> Repo.update()
+  end
+
   # For mentors
   # pod -> %{
-  #  calendar, calendar_event, date | todo, date | mentor_timeline_event, mentor_timeline_event_marking, date
+  #  calendar, calendar_event | todo | mentor_timeline_event, mentor_timeline_event_marking
+  # date, hidden, completed
   # }
   def aggregate_calendar_events(%Pod{} = pod) do
     grad_year = graduation_year(pod.mentee.grade)
@@ -235,9 +271,24 @@ defmodule Tzn.Timelines do
         Enum.map(c.events, fn e -> {c, e} end)
       end)
       |> Enum.map(fn {c, e} ->
+        marking =
+          Enum.find(timeline.calendar_event_markings, fn m -> m.calendar_event_id == e.id end)
+
         %{
           calendar: c,
           calendar_event: e,
+          completed:
+            if marking && marking.completed_at do
+              true
+            else
+              false
+            end,
+          hidden:
+            if marking && marking.hidden_at do
+              true
+            else
+              false
+            end,
           date: Date.new!(event_year(grad_year, e.grade, e.month), e.month, e.day)
         }
       end)
@@ -248,6 +299,13 @@ defmodule Tzn.Timelines do
       |> Enum.map(fn t ->
         %{
           todo: t,
+          completed: t.completed,
+          hidden:
+            if t.deleted_at do
+              true
+            else
+              false
+            end,
           date: Date.new!(t.due_date.year, t.due_date.month, t.due_date.day)
         }
       end)
@@ -258,6 +316,8 @@ defmodule Tzn.Timelines do
         %{
           mentor_timeline_event_marking: m,
           mentor_timeline_event: m.mentor_timeline_event,
+          completed: m.status == "completed",
+          hidden: m.status == "not_applicable",
           date:
             Date.new!(
               event_year(

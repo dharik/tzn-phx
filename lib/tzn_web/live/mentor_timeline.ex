@@ -10,6 +10,7 @@ defmodule TznWeb.MentorTimeline do
      socket
      |> assign(:timeline, timeline)
      |> assign(:include_past, false)
+     |> assign(:include_hidden_events, false)
      |> assign(
        :calendars,
        MapSet.new(timeline.calendars)
@@ -51,6 +52,64 @@ defmodule TznWeb.MentorTimeline do
      socket
      |> assign(:include_past, !socket.assigns.include_past)
      |> assign_events()}
+  end
+  def handle_event("toggle_hidden_events", _, socket) do
+    {:noreply,
+     socket
+     |> assign(:include_hidden_events, !socket.assigns.include_hidden_events)
+     |> assign_events()}
+  end
+
+  def handle_event("complete_calendar_event", %{"id" => calendar_event_id}, socket) do
+    {:ok, _} =
+      Tzn.Timelines.get_event(calendar_event_id)
+      |> Tzn.Timelines.mark_calendar_event(socket.assigns.timeline, %{completed: true})
+
+    {:noreply, socket |> assign_events()}
+  end
+
+  def handle_event("incomplete_calendar_event", %{"id" => calendar_event_id}, socket) do
+    {:ok, _} =
+      Tzn.Timelines.get_event(calendar_event_id)
+      |> Tzn.Timelines.mark_calendar_event(socket.assigns.timeline, %{completed: false})
+
+    {:noreply, socket |> assign_events()}
+  end
+
+  def handle_event("hide_calendar_event", %{"id" => calendar_event_id}, socket) do
+    {:ok, _} =
+      Tzn.Timelines.get_event(calendar_event_id)
+      |> Tzn.Timelines.mark_calendar_event(socket.assigns.timeline, %{hidden: true})
+
+    {:noreply, socket |> assign_events()}
+  end
+
+  def handle_event("unhide_calendar_event", %{"id" => calendar_event_id}, socket) do
+    {:ok, _} =
+      Tzn.Timelines.get_event(calendar_event_id)
+      |> Tzn.Timelines.mark_calendar_event(socket.assigns.timeline, %{hidden: false})
+
+    {:noreply, socket |> assign_events()}
+  end
+
+  # TODO
+  def handle_event("complete_todo", %{"id" => todo_id}, socket) do
+    {:noreply, socket}
+  end
+
+  # TODO
+  def handle_event("incomplete_todo", %{"id" => todo_id}, socket) do
+    {:noreply, socket}
+  end
+
+  # TODO
+  def handle_event("hide_todo", %{"id" => todo_id}, socket) do
+    {:noreply, socket}
+  end
+
+  # TODO
+  def handle_event("unhide_todo", %{"id" => todo_id}, socket) do
+    {:noreply, socket}
   end
 
   def handle_event("remove_calendar", %{"id" => calendar_id}, socket) do
@@ -130,6 +189,13 @@ defmodule TznWeb.MentorTimeline do
             e.date,
             Timex.now()
           )
+        end
+      end)
+      |> Enum.reject(fn e ->
+        if socket.assigns.include_hidden_events do
+          false
+        else
+          e.hidden
         end
       end)
       |> Enum.sort_by(fn e -> e.date end, {:asc, Date})

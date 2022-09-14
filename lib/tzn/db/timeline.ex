@@ -16,6 +16,8 @@ defmodule Tzn.DB.Timeline do
       join_through: Tzn.DB.TimelineCalendar,
       on_replace: :delete
 
+    has_many :calendar_event_markings, Tzn.DB.CalendarEventMarking
+
     field :last_ical_sync_at, :naive_datetime
     field :last_ical_sync_client, :string
 
