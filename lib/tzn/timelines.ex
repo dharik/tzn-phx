@@ -148,79 +148,6 @@ defmodule Tzn.Timelines do
     t
   end
 
-  # events =
-  #   Tzn.Timelines.aggregate_calendar_events(
-  #     timeline.calendars,
-  #     timeline.graduation_year
-  #   )
-  # event = %{title, description, Date, status, type}
-  def to_ical(events) do
-    # events
-    # |> Enum.map(fn e ->
-    #   calendar = Enum.find(timeline.calendars, nil, fn c -> e.calendar_id == c.id end)
-
-    #   [
-    #     description: HtmlSanitizeEx.strip_tags(e.description),
-    #     summary:
-    #       if calendar.type == "college_cyclic" do
-    #         "#{e.name} (#{calendar.name})"
-    #       else
-    #         e.name
-    #       end,
-    #     dtstart: [
-    #       VALUE: "DATE",
-    #       value:
-    #         Timex.Date.new!(e.year, e.month, e.day)
-    #         |> Timex.to_datetime()
-    #         |> Timex.format!("{YYYY}{0M}{0D}")
-    #     ],
-    #     dtstamp: Timex.Date.new!(e.year, e.month, e.day) |> Timex.to_datetime(),
-    #     # Later on the hash might be cz-todo-{id}
-    #     uid: :crypto.hash(:sha, "organizeu-event-#{e.id}") |> Base.encode32()
-    #   ]
-    # end)
-
-    # root =
-    #   Calibex.new_root(
-    #     vevent: events,
-    #     prodid: "-//Transizion//OrganizeU",
-    #     last_modified: Timex.now(),
-    #     name: "College Application Timeline from OrganizeU",
-    #     "X-WR-CALNAME": "College Application Timeline from OrganizeU",
-    #     "REFRESH-INTERVAL": [VALUE: "DURATION", value: "PT24H"]
-    #   )
-
-    # if ua = Plug.Conn.get_req_header(conn, "user-agent") do
-    #   {:ok, _} =
-    #     Tzn.Timelines.update_timeline(timeline, %{
-    #       last_ical_sync_at: Timex.now(),
-    #       last_ical_sync_client: to_string(ua)
-    #     })
-    # end
-  end
-
-  # For OU
-  def aggregate_calendar_events(calendars, grad_year, include_past \\ true) do
-    calendars
-    |> Enum.flat_map(& &1.events)
-    |> Enum.map(fn event ->
-      Map.put(event, :year, calculate_event_year(event, grad_year))
-    end)
-    |> Enum.sort_by(
-      fn event ->
-        Date.new!(event.year, event.month, event.day)
-      end,
-      {:asc, Date}
-    )
-    |> Enum.filter(fn e ->
-      if include_past do
-        true
-      else
-        Timex.after?(Timex.Date.new!(e.year, e.month, e.day), Timex.now())
-      end
-    end)
-  end
-
   def mark_calendar_event(%CalendarEvent{} = event, %Timeline{} = timeline, %{hidden: hidden}) do
     find_or_create_calendar_event_marking(event, timeline)
     |> update_marking(%{
@@ -256,14 +183,34 @@ defmodule Tzn.Timelines do
     CalendarEventMarking.changeset(m, attrs) |> Repo.update()
   end
 
-  # For mentors
-  # pod -> %{
-  #  calendar, calendar_event | todo | mentor_timeline_event, mentor_timeline_event_marking
-  # date, hidden, completed
-  # }
-  def aggregate_calendar_events(%Pod{} = pod) do
-    grad_year = graduation_year(pod.mentee.grade)
-    timeline = get_timeline(pod.timeline.access_key)
+  @type aggregated_event ::
+          %{
+            calendar: %Calendar{},
+            calendar_event: %CalendarEvent{},
+            date: Date.t(),
+            hidden: boolean(),
+            completed: boolean()
+          }
+          | %{todo: %Tzn.DB.PodTodo{}, date: Date.t(), hidden: boolean(), completed: boolean()}
+          | %{
+              mentor_timeline_event_marking: %Tzn.Transizion.MentorTimelineEventMarking{},
+              mentor_timeline_event: %Tzn.Transizion.MentorTimelineEvent{},
+              date: Date.t(),
+              hidden: boolean(),
+              completed: boolean()
+            }
+
+  @spec aggregate_calendar_events(%Timeline{}) :: [aggregated_event]
+  def aggregate_calendar_events(timeline) do
+    timeline = get_timeline(timeline.access_key)
+
+    pod =
+      if timeline.pod do
+        # Make sure we load
+        Tzn.Pods.get_pod!(timeline.pod.id)
+      else
+        nil
+      end
 
     calendar_events =
       timeline.calendars
@@ -289,48 +236,118 @@ defmodule Tzn.Timelines do
             else
               false
             end,
-          date: Date.new!(event_year(grad_year, e.grade, e.month), e.month, e.day)
+          date: Date.new!(event_year(timeline.graduation_year, e.grade, e.month), e.month, e.day)
         }
       end)
 
     pod_todos =
-      pod.todos
-      |> Enum.reject(& &1.deleted_at)
-      |> Enum.map(fn t ->
-        %{
-          todo: t,
-          completed: t.completed,
-          hidden:
-            if t.deleted_at do
-              true
-            else
-              false
-            end,
-          date: Date.new!(t.due_date.year, t.due_date.month, t.due_date.day)
-        }
-      end)
+      if pod do
+        pod.todos
+        |> Enum.reject(& &1.deleted_at)
+        |> Enum.map(fn t ->
+          %{
+            todo: t,
+            completed: t.completed,
+            hidden:
+              if t.deleted_at do
+                true
+              else
+                false
+              end,
+            date: Date.new!(t.due_date.year, t.due_date.month, t.due_date.day)
+          }
+        end)
+      else
+        []
+      end
 
     mentor_timeline_event_markings =
-      Tzn.Transizion.mentor_timeline_event_markings(pod.mentee)
-      |> Enum.map(fn m ->
-        %{
-          mentor_timeline_event_marking: m,
-          mentor_timeline_event: m.mentor_timeline_event,
-          completed: m.status == "completed",
-          hidden: m.status == "not_applicable",
-          date:
-            Date.new!(
-              event_year(
-                grad_year,
-                m.mentor_timeline_event.grade,
-                m.mentor_timeline_event.date.month
-              ),
-              m.mentor_timeline_event.date.month,
-              m.mentor_timeline_event.date.day
-            )
-        }
-      end)
+      if pod do
+        Tzn.Transizion.mentor_timeline_event_markings(pod.mentee)
+        |> Enum.map(fn m ->
+          %{
+            mentor_timeline_event_marking: m,
+            mentor_timeline_event: m.mentor_timeline_event,
+            completed: m.status == "completed",
+            hidden: m.status == "not_applicable",
+            date:
+              Date.new!(
+                event_year(
+                  timeline.graduation_yaer,
+                  m.mentor_timeline_event.grade,
+                  m.mentor_timeline_event.date.month
+                ),
+                m.mentor_timeline_event.date.month,
+                m.mentor_timeline_event.date.day
+              )
+          }
+        end)
+      else
+        []
+      end
 
     calendar_events ++ pod_todos ++ mentor_timeline_event_markings
+  end
+
+  @spec to_ical([aggregated_event], charlist()) :: charlist()
+  def to_ical(events, calendar_name) do
+    events =
+      events
+      |> Enum.reject(& &1.hidden)
+      |> Enum.map(fn
+        %{calendar: calendar, calendar_event: calendar_event, date: date} ->
+          %{
+            summary:
+              if calendar.type == "college_cyclic" do
+                "#{calendar_event.name} (#{calendar.name})"
+              else
+                calendar_event.name
+              end,
+            description: HtmlSanitizeEx.strip_tags(calendar_event.description),
+            date: date,
+            uid: :crypto.hash(:sha, "calendar-event-#{calendar_event.id}") |> Base.encode32()
+          }
+
+        %{todo: todo, date: date} ->
+          %{
+            description: todo.todo_text,
+            summary: "#{Phoenix.Naming.humanize(todo.assignee_type)} Todo",
+            date: date,
+            uid: "todo-#{todo.id}"
+          }
+
+        %{mentor_timeline_event: mentor_timeline_event, date: date} ->
+          %{
+            description: mentor_timeline_event.notes,
+            summary: "Mentor Event",
+            date: date,
+            uid: "mentor-timeline-event-#{mentor_timeline_event.id}"
+          }
+      end)
+
+    Calibex.new_root(
+      vevent:
+        Enum.map(events, fn e ->
+          [
+            description: HtmlSanitizeEx.strip_tags(e.description),
+            summary: e.summary,
+            dtstart: [
+              VALUE: "DATE",
+              value:
+                e.date
+                |> Timex.to_datetime()
+                |> Timex.format!("{YYYY}{0M}{0D}")
+            ],
+            dtstamp: e.date |> Timex.to_datetime(),
+            uid: :crypto.hash(:sha, e.uid) |> Base.encode32()
+          ]
+        end),
+      prodid: "-//Transizion//OrganizeU",
+      last_modified: Timex.now(),
+      name: calendar_name,
+      "X-WR-CALNAME": calendar_name,
+      "REFRESH-INTERVAL": [VALUE: "DURATION", value: "PT24H"]
+    )
+    |> Calibex.encode()
   end
 end

@@ -70,12 +70,11 @@
             </div>
         <% end %>
         
-        <%= for {year, events} <- @events |> Enum.group_by(& &1.year) |> Map.to_list() do %>
+        <%= for {year, events} <- @events |> Enum.group_by(& &1.date.year) |> Map.to_list() do %>
             <h1><%= year %></h1>
-            <%= for e <- events do %>
+            <%= for %{calendar_event: e, calendar: calendar} <- events do %>
                 <div class="flex flex-row justify-content-flex-start margin-vertical-m align-items-center">
                     <% 
-                        calendar = Enum.find(@calendars, nil, fn c -> c.id == e.calendar_id end)
                         color_class = case calendar.type do
                             "general_cyclic" -> "background-white border"
                             "college_cyclic" -> "background-primary-100"

@@ -171,12 +171,10 @@ defmodule TznWeb.MentorTimeline do
   end
 
   def assign_events(socket) do
-    pod = Tzn.Pods.get_pod!(socket.assigns.timeline.pod.id)
-
     assign(
       socket,
       :events,
-      Tzn.Timelines.aggregate_calendar_events(pod)
+      Tzn.Timelines.aggregate_calendar_events(socket.assigns.timeline)
       |> Enum.reject(fn e ->
         case e do
           %{calendar: c} -> MapSet.member?(socket.assigns.hidden_ids, c.id)

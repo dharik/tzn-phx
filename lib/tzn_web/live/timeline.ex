@@ -10,6 +10,7 @@ defmodule TznWeb.Timeline do
 
     {:ok,
      socket
+     |> assign(:timeline, timeline)
      |> assign(
        :calendars,
        MapSet.new(timeline.calendars)
@@ -24,7 +25,6 @@ defmodule TznWeb.Timeline do
      |> assign(:all_calendars, all_calendars)
      |> assign_search_results()
      |> assign_events()
-     |> assign(:timeline, timeline)
      |> assign(:export_changeset, Tzn.Timelines.change_timeline(timeline))
      |> assign(:export_complete, !is_nil(timeline.emailed_at))
      |> assign(:readonly, ak == timeline.readonly_access_key)}
@@ -127,12 +127,13 @@ defmodule TznWeb.Timeline do
     assign(
       socket,
       :events,
-      Tzn.Timelines.aggregate_calendar_events(
-        socket.assigns.calendars
-        |> Enum.reject(fn c -> MapSet.member?(socket.assigns.hidden_ids, c.id) end),
-        socket.assigns.grad_year,
-        false
-      )
+      Tzn.Timelines.aggregate_calendar_events(socket.assigns.timeline)
+      |> Enum.reject(fn e ->
+        case e do
+          %{calendar: c} -> MapSet.member?(socket.assigns.hidden_ids, c.id)
+          _ -> false
+        end
+      end)
     )
   end
 

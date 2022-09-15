@@ -77,7 +77,7 @@ defmodule TznWeb.TimelinesController do
     |> live_render(TznWeb.Timeline, session: %{"access_key" => access_key_used})
   end
 
-  def ical(conn, params = %{"access_key" => raw_key}) do
+  def ical(conn, %{"access_key" => raw_key}) do
     key =
       case ShortUUID.decode(raw_key) do
         {:ok, decoded} -> decoded
@@ -86,43 +86,15 @@ defmodule TznWeb.TimelinesController do
 
     timeline = Tzn.Timelines.get_timeline(key)
 
-    events =
-      Tzn.Timelines.aggregate_calendar_events(
-        timeline.calendars,
-        timeline.graduation_year
-      )
-      |> Enum.map(fn e ->
-        calendar = Enum.find(timeline.calendars, nil, fn c -> e.calendar_id == c.id end)
-
-        [
-          description: HtmlSanitizeEx.strip_tags(e.description),
-          summary:
-            if calendar.type == "college_cyclic" do
-              "#{e.name} (#{calendar.name})"
-            else
-              e.name
-            end,
-          dtstart: [
-            VALUE: "DATE",
-            value:
-              Timex.Date.new!(e.year, e.month, e.day)
-              |> Timex.to_datetime()
-              |> Timex.format!("{YYYY}{0M}{0D}")
-          ],
-          dtstamp: Timex.Date.new!(e.year, e.month, e.day) |> Timex.to_datetime(),
-          # Later on the hash might be cz-todo-{id}
-          uid: :crypto.hash(:sha, "organizeu-event-#{e.id}") |> Base.encode32()
-        ]
-      end)
-
-    root =
-      Calibex.new_root(
-        vevent: events,
-        prodid: "-//Transizion//OrganizeU",
-        last_modified: Timex.now(),
-        name: "College Application Timeline from OrganizeU",
-        "X-WR-CALNAME": "College Application Timeline from OrganizeU",
-        "REFRESH-INTERVAL": [VALUE: "DURATION", value: "PT24H"]
+    ical =
+      Tzn.Timelines.aggregate_calendar_events(timeline)
+      |> Tzn.Timelines.to_ical(
+        if timeline.pod do
+          fully_loaded_pod = Tzn.Pods.get_pod!(timeline.pod.id)
+          "#{fully_loaded_pod.mentee.name}'s Timeline"
+        else
+          "College Application Timeline from OrganizeU"
+        end
       )
 
     if ua = Plug.Conn.get_req_header(conn, "user-agent") do
@@ -133,7 +105,7 @@ defmodule TznWeb.TimelinesController do
         })
     end
 
-    send_download(conn, {:binary, Calibex.encode(root)},
+    send_download(conn, {:binary, ical},
       filename: key <> ".ics",
       content_type: "text/calendar",
       disposition: :inline
