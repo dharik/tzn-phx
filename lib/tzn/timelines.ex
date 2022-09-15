@@ -201,7 +201,7 @@ defmodule Tzn.Timelines do
             }
 
   @spec aggregate_calendar_events(%Timeline{}) :: [aggregated_event]
-  def aggregate_calendar_events(timeline) do
+  def aggregate_calendar_events(%Timeline{} = timeline) do
     timeline = get_timeline(timeline.access_key)
 
     pod =
@@ -273,7 +273,7 @@ defmodule Tzn.Timelines do
             date:
               Date.new!(
                 event_year(
-                  timeline.graduation_yaer,
+                  timeline.graduation_year,
                   m.mentor_timeline_event.grade,
                   m.mentor_timeline_event.date.month
                 ),
