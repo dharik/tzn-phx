@@ -2,6 +2,7 @@ defmodule Tzn.Profiles do
   import Ecto.Query
   alias Tzn.Repo
   alias Tzn.Transizion.{Mentee, Parent}
+  alias Tzn.DB.{SchoolAdmin}
   alias Tzn.Users.User
 
   @doc """
@@ -25,9 +26,6 @@ defmodule Tzn.Profiles do
   def parent?(%User{} = u) do
     from(p in Parent, where: p.user_id == ^u.id, limit: 1) |> Repo.exists?()
   end
-
-
-
 
   def mentee?(%User{email_confirmed_at: nil}) do
     false
@@ -57,5 +55,25 @@ defmodule Tzn.Profiles do
 
   def list_mentees(nil) do
     []
+  end
+
+  def list_school_admins() do
+    Repo.all(SchoolAdmin)
+  end
+
+  def get_school_admin(id) do
+    Repo.get(SchoolAdmin, id)
+  end
+
+  def change_school_admin(%SchoolAdmin{} = a, changes \\ %{}) do
+    SchoolAdmin.changeset(a, changes)
+  end
+
+  def update_school_admin(%SchoolAdmin{} = a, changes) do
+    SchoolAdmin.changeset(a, changes) |> Repo.update()
+  end
+
+  def create_school_admin(params) do
+    %SchoolAdmin{} |> SchoolAdmin.changeset(params) |> Repo.insert()
   end
 end

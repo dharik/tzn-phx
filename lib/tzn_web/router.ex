@@ -104,6 +104,8 @@ defmodule TznWeb.Router do
       resources "/questionnaires", Admin.QuestionnaireController, only: [:edit, :update]
       resources "/calendars", Admin.CalendarController
       resources "/calendar_events", Admin.CalendarEventController, except: [:index]
+      resources "/pod_groups", Admin.PodGroupController
+      resources "/school_admins", Admin.SchoolAdminController
     end
 
     scope "/", as: :parent do

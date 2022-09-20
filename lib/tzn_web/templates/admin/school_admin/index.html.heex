@@ -1,0 +1,38 @@
+<%= link "Create School Admin", to: Routes.admin_school_admin_path(@conn, :new), class: "button" %>
+
+<br />
+
+<table>
+    <thead>
+        <tr>
+            <th>Name</th>
+            <th>Email</th>
+            <th>Cohorts</th>
+            <th>User Account</th>
+            <th></th>
+        </tr>
+    </thead>
+    <%= for sa <- @admins do %>
+        <tr>
+            <td><%= sa.name %></td>
+            <td><%= sa.email %></td>
+            <td>
+                <ul>
+                    <%= for g <- sa.pod_groups do %>
+                        <li><%= link g.name, to: Routes.admin_pod_group_path(@conn, :show, g) %></li>
+                    <% end %>
+                </ul>
+            </td>
+            <td>
+                <%= if sa.user do %>
+                    <%= sa.user.email %>                
+                <% else %>
+                    -
+                <% end %>
+            </td>
+            <td>
+                <%= link "Edit", to: Routes.admin_school_admin_path(@conn, :edit, sa) %>
+            </td>
+        </tr>
+    <% end %>
+</table>    

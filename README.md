@@ -1,20 +1,11 @@
-# Tzn
+UI/UX:
+* As of Sep 2022, large number of our users are on 1366x769, 1400x900 for desktop.
+For mobile, 390x884.  So design with those sizes in mind. Desktop is 2/3 traffic,
+mobile is 1/3. Tablets are < 1 %
 
-To start your Phoenix server:
+Code:
+* When using many_to_many, specify the join keys. We know they're inflected
+but we prefer it to be explicit
+* Join tables take the name table1_to_table2
 
-  * Install dependencies with `mix deps.get`
-  * Create and migrate your database with `mix ecto.setup`
-  * Install Node.js dependencies with `npm install` inside the `assets` directory
-  * Start Phoenix endpoint with `mix phx.server`
 
-Now you can visit [`localhost:4000`](http://localhost:4000) from your browser.
-
-Ready to run in production? Please [check our deployment guides](https://hexdocs.pm/phoenix/deployment.html).
-
-## Learn more
-
-  * Official website: https://www.phoenixframework.org/
-  * Guides: https://hexdocs.pm/phoenix/overview.html
-  * Docs: https://hexdocs.pm/phoenix
-  * Forum: https://elixirforum.com/c/phoenix-forum
-  * Source: https://github.com/phoenixframework/phoenix

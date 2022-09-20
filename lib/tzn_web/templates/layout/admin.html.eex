@@ -36,6 +36,8 @@
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_cmt_dashboard_path(@conn, :show), "Mentor Oversight", "supervised_user_circle", @conn.request_path =~ "cmt_dashboard") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_calendar_path(@conn, :index), "Calendars", "calendar_month", @conn.request_path =~ "calendar") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_pod_group_path(@conn, :index), "Cohorts", "group", @conn.request_path =~ "pod_group") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_school_admin_path(@conn, :index), "School Administrators", "school", @conn.request_path =~ "school_admin") %>
           </div>
           <div class="space-xl" x-show="open"></div>
           <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete, "x-show": "open", class: "text-off-white" %>

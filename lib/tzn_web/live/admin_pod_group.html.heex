@@ -1,0 +1,124 @@
+<div class="sm:container mt-8">
+    <h2><%= @group.name %></h2>
+    <p>
+        <%= @group.admin_notes %>
+    </p>
+    <p><%= @group.expected_size %> Students Expected</p>
+    <a href={TznWeb.Router.Helpers.admin_pod_group_path(TznWeb.Endpoint, :edit, @group)}>Edit Group Details</a>
+
+    <hr />
+
+    <h3>School Admins:</h3>
+
+    <%= if Enum.empty?(@group.school_admins) do  %>
+        <b>Not set</b>
+    <% else %>
+        <%= for sa <- @group.school_admins do %>
+            <a 
+                class="inline-flex border rounded  p-1 no-underline hover:no-underline align-items-center text-sm" 
+                href="#" 
+                phx-click="remove_school_admin" 
+                phx-value-id={sa.id}>
+
+                <%= sa.name %>
+            
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6 ml-1">
+                    <path stroke-linecap="round" stroke-linejoin="round" d="M9.75 9.75l4.5 4.5m0-4.5l-4.5 4.5M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                </svg>
+
+            
+            </a>
+        <% end %>
+    <% end %>
+
+    <form phx-submit="add_school_admin">
+        <div class="w-72 flex align-items-center">
+            <select name="school_admin_id" class="input-s">
+                <%= for sa <- @all_school_admins |> Enum.sort_by(& &1.name) do %>
+                    <option value={sa.id}><%= sa.name %></option>
+                <% end %>
+            </select>
+            <button type="submit">Add</button>
+        </div>
+    </form>
+
+    <hr />
+
+    <h3>Students (<%= Enum.count(@pods) %>):</h3>
+
+    <table>
+        <thead>
+            <tr>
+                <th>Mentee Name</th>
+                <th>Email</th>
+                <th>Grade</th>
+                <th>Mentor</th>
+                <th>Hours Used</th>
+                <th></th>
+            </tr>
+        </thead>
+        <%= for pod <- Enum.sort_by(@pods, fn p -> p.mentee.name end) do %>
+            <tr>
+                <td><a href={TznWeb.Router.Helpers.admin_pod_path(TznWeb.Endpoint, :show, pod)}><%= pod.mentee.name %></a></td>
+                <td><%= pod.mentee.email %></td>
+                <td><%= pod.mentee.grade%></td>
+                <td><%= if pod.mentor do pod.mentor.name else "-" end %></td>
+                <td><%= pod.hour_counts.hours_used %></td>
+                <td><a href="#" phx-click="remove_pod" phx-value-id={pod.id}>
+                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M15 12H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+
+
+</a></td>
+            </tr>
+        <% end %>
+        <%= if Enum.count(@pods) == 0 do %>
+            <tr><td colspan="5" class="text-center">No students added yet</td></tr>
+        <% end %>
+    </table>
+
+    <div class="h-4"></div>
+
+    <h3>Add Student:</h3>
+        
+    <div class="w-96">
+        <form phx-change="search" phx-submit="search_submit">
+            <input type="search" value={@search_query} placeholder="Search by name or email" name="q" phx-debounce={400} class="input-l"/>
+        </form>
+    </div>
+
+    <%= if @search_result_pods |> Enum.any?() do %>
+        <table>
+            <thead>
+                <tr>
+                    <th>Mentee Name</th>
+                    <th>Email</th>
+                    <th>Mentor</th>
+                    <th>Grade</th>
+                    <th>Type</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <%= for pod <- @search_result_pods do %>
+                <tr>
+                    <td><%= pod.mentee.name %></td>
+                    <td><%= pod.mentee.email %></td>
+                    <td><%= if pod.mentor do pod.mentor.name else "-" end %></td>
+                    <td><%= pod.mentee.grade %></td>
+                    <td><%= pod.type %></td>
+                    <td>
+                        <%= if Enum.find(@pods, nil, fn p -> p.id == pod.id end) do %>
+                            Added
+                        <% else %>
+                            <a href="#" phx-click="add_pod" phx-value-id={pod.id}><svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+  <path stroke-linecap="round" stroke-linejoin="round" d="M12 9v6m3-3H9m12 0a9 9 0 11-18 0 9 9 0 0118 0z" />
+</svg>
+</a>
+                        <% end %>
+                    </td>
+                </tr>
+            <% end %>
+        </table>
+    <% end %>
+</div>
