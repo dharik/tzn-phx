@@ -144,6 +144,8 @@ defmodule TznWeb.Router do
     get "/organizeu/ical/:access_key", TimelinesController, :ical
     get "/organizeu/google_calendar/:access_key", TimelinesController, :google_calendar
     get "/organizeu/apple_calendar/:access_key", TimelinesController, :apple_calendar
+
+    post "/typeform/", TypeformWebhookController, :handle
   end
 
 
