@@ -95,7 +95,6 @@ defmodule TznWeb.Router do
       resources "/strategy_sessions", Admin.StrategySessionController
       resources "/timesheet_entries", Admin.TimesheetEntryController, only: [:edit, :update, :delete]
       resources "/contract_purchases", Admin.ContractPurchaseController
-      resources "/mentor_timeline_events", Admin.MentorTimelineEventController
 
       patch "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up
       patch "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down

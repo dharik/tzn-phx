@@ -31,7 +31,6 @@
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_user_path(@conn, :index), "Users", "people", @conn.request_path =~ "users") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentee_path(@conn, :index), "Mentees", "school", @conn.request_path =~ ~r/mentees|pods/) %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentor_path(@conn, :index), "Mentors", "work_outline", @conn.request_path =~ "mentors" || @conn.request_path =~ ~r/admin$/) %>
-            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_mentor_timeline_event_path(@conn, :index), "Mentor Timeline", "view_timeline", @conn.request_path =~ "timeline") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_matching_algorithm_path(@conn, :show), "Matching Algorithm", "person_search", @conn.request_path =~ "matching") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_question_path(@conn, :index), "Questionnaires", "topic", @conn.request_path =~ "questions") %>
             <%= TznWeb.LayoutView.left_nav_button_tw(Routes.admin_cmt_dashboard_path(@conn, :show), "Mentor Oversight", "supervised_user_circle", @conn.request_path =~ "cmt_dashboard") %>
