@@ -67,7 +67,10 @@ defmodule Tzn.MixProject do
       {:calibex, "~> 0.1.0"},
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
-      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev}
+      {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
+      {:absinthe_plug, "~> 1.5"},
+      {:absinthe, "~> 1.7"},
+      {:dataloader, "~> 1.0"}
     ]
   end
 
@@ -83,7 +86,7 @@ defmodule Tzn.MixProject do
       "ecto.setup": ["ecto.create", "ecto.migrate", "run priv/repo/seeds.exs"],
       "ecto.reset": ["ecto.drop", "ecto.setup"],
       test: ["ecto.create --quiet", "ecto.migrate --quiet", "test"],
-      "assets.deploy": ["esbuild default --minify", "sass default", "tailwind default --minify", "phx.digest"]
+      "assets.deploy": ["esbuild default --minify", "esbuild school_admin --minify", "sass default", "tailwind default --minify", "phx.digest"]
     ]
   end
 end

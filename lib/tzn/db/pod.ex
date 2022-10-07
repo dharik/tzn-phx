@@ -18,6 +18,11 @@ defmodule Tzn.DB.Pod do
 
     belongs_to :timeline, Tzn.DB.Timeline
 
+    many_to_many :pod_groups, Tzn.DB.PodGroup,
+      join_through: Tzn.DB.PodToPodGroup,
+      join_keys: [pod_id: :id, pod_group_id: :id],
+      on_replace: :delete
+
     # has_many :parents, through: [:mentee, :parents]
 
     field :active, :boolean
@@ -26,9 +31,12 @@ defmodule Tzn.DB.Pod do
     field :internal_note, :string
     field :mentor_rate, :decimal
 
-    field :mentor_todo_notes, :string # Deprecated
-    field :parent_todo_notes, :string # Deprecatedg
-    field :mentee_todo_notes, :string # Deprecated
+    # Deprecated
+    field :mentor_todo_notes, :string
+    # Deprecatedg
+    field :parent_todo_notes, :string
+    # Deprecated
+    field :mentee_todo_notes, :string
 
     # features
     field :college_list_access, :boolean, default: false

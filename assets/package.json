@@ -3,11 +3,25 @@
     "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild*"
   },
   "dependencies": {
+    "@apollo/client": "^3.7.0",
+    "@chakra-ui/react": "^2.3.5",
     "@ckeditor/ckeditor5-build-classic": "^24.0.0",
+    "@emotion/react": "^11.10.4",
+    "@emotion/styled": "^11.10.4",
+    "framer-motion": "^7.3.6",
+    "graphql": "^16.6.0",
+    "lodash-es": "^4.17.21",
     "phoenix": "file:../deps/phoenix",
     "phoenix_html": "file:../deps/phoenix_html",
-    "preact": "^10.5.5",
+    "preact": "^10.11.1",
+    "react-icons": "^4.4.0",
     "react-phoenix": "file:../deps/react_phoenix",
+    "react-router": "^6.4.1",
+    "react-router-dom": "^6.4.1",
     "use-debounce": "^7.0.1"
+  },
+  "devDependencies": {
+    "@types/lodash-es": "^4.17.6",
+    "@types/node": "^18.7.21"
   }
 }

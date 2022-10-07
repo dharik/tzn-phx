@@ -183,6 +183,20 @@ defmodule Tzn.Timelines do
     CalendarEventMarking.changeset(m, attrs) |> Repo.update()
   end
 
+  def general_calendar_events() do
+    calendar = logged_in_general_calendar()
+
+    Enum.map(calendar.events, fn e ->
+      %{
+        calendar: calendar,
+        calendar_event: e,
+        completed: false,
+        hidden: false,
+        date: Date.new!(Tzn.GradeYearConversions.event_year(Timex.now().year + 2, e.grade, e.month), e.month, e.day)
+      }
+    end)
+  end
+
   @type aggregated_event ::
           %{
             calendar: %Calendar{},

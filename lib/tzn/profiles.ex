@@ -61,6 +61,10 @@ defmodule Tzn.Profiles do
     Repo.all(SchoolAdmin)
   end
 
+  def get_school_admin(%User{} = u) do
+    Ecto.assoc(u, :school_admin_profile) |> Repo.one()
+  end
+
   def get_school_admin(id) do
     Repo.get(SchoolAdmin, id)
   end

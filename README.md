@@ -7,5 +7,6 @@ Code:
 * When using many_to_many, specify the join keys. We know they're inflected
 but we prefer it to be explicit
 * Join tables take the name table1_to_table2
+* We don't strictly follow REST
 
 

@@ -1,8 +1,10 @@
 defmodule TznWeb.Router do
   use TznWeb, :router
   use Pow.Phoenix.Router
+
   use Pow.Extension.Phoenix.Router,
     extensions: [PowEmailConfirmation, PowResetPassword]
+
   use Plugsnag
 
   import TznWeb.AdminPlugs
@@ -49,6 +51,15 @@ defmodule TznWeb.Router do
     plug :override_current_user_for_impersonation
   end
 
+  pipeline :graphql do
+    plug Plug.Parsers,
+      parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
+      pass: ["*/*"],
+      json_decoder: Jason
+
+    plug TznWeb.Context
+  end
+
   scope "/" do
     pipe_through :browser
 
@@ -56,9 +67,16 @@ defmodule TznWeb.Router do
     pow_extension_routes()
   end
 
+  scope "/gql" do
+    pipe_through [:protected, :graphql]
+    forward "/", Absinthe.Plug, schema: TznWeb.Schema
+  end
+
   scope "/", TznWeb do
     pipe_through [:protected, :browser]
     get "/", EntryController, :launch_app
+    get "/school_admin/*route", EntryController, :launch_school_admin_app
+
     get "/impersonation/stop", Admin.ImpersonationController, :stop
 
     scope "/mentor", as: :mentor do
@@ -71,11 +89,16 @@ defmodule TznWeb.Router do
       get "/timeline", Mentor.TimelineController, :index
       get "/timeline/:pod_id", Mentor.TimelineController, :index
 
-      resources "/timeline_event_markings", Mentor.TimelineEventMarkingController, only: [:new, :edit, :create, :update]
+      resources "/timeline_event_markings", Mentor.TimelineEventMarkingController,
+        only: [:new, :edit, :create, :update]
 
-      resources "/college_lists", Mentor.CollegeListController, only: [:index, :edit, :update, :create]
+      resources "/college_lists", Mentor.CollegeListController,
+        only: [:index, :edit, :update, :create]
+
       resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :edit, :update, :create]
-      resources "/scholarship_lists", Mentor.ScholarshipListController, only: [:index, :edit, :update, :create]
+
+      resources "/scholarship_lists", Mentor.ScholarshipListController,
+        only: [:index, :edit, :update, :create]
 
       get "/help", Mentor.HelpController, :show
     end
@@ -93,11 +116,17 @@ defmodule TznWeb.Router do
       resources "/mentors", Admin.MentorController
       get "/mentor_payments", Admin.MentorPaymentsController, :index
       resources "/strategy_sessions", Admin.StrategySessionController
-      resources "/timesheet_entries", Admin.TimesheetEntryController, only: [:edit, :update, :delete]
+
+      resources "/timesheet_entries", Admin.TimesheetEntryController,
+        only: [:edit, :update, :delete]
+
       resources "/contract_purchases", Admin.ContractPurchaseController
 
       patch "/questions/move_up", Admin.QuestionSetController, :move_up, as: :move_question_up
-      patch "/questions/move_down", Admin.QuestionSetController, :move_down, as: :move_question_down
+
+      patch "/questions/move_down", Admin.QuestionSetController, :move_down,
+        as: :move_question_down
+
       resources "/questions", Admin.QuestionController
       resources "/question_sets", Admin.QuestionSetController, only: [:edit, :update]
       resources "/questionnaires", Admin.QuestionnaireController, only: [:edit, :update]
@@ -109,7 +138,7 @@ defmodule TznWeb.Router do
 
     scope "/", as: :parent do
       get "/dashboard", Parent.DashboardController, :show
-      get "/todo", Parent.TodoController, :update # Not following REST
+      get "/todo", Parent.TodoController, :update
       get "/work_log", Parent.WorklogController, :show
       get "/refer", Parent.ReferralController, :show
       get "/additional_offerings", Parent.AdditionalOfferingsController, :show
@@ -125,11 +154,12 @@ defmodule TznWeb.Router do
     get "/college_list/:access_key_short", Parent.CollegeListController, :edit
     get "/ecvo_list/:access_key_short", Parent.ECVOListController, :edit
     get "/scholarship_list/:access_key_short", Parent.ScholarshipListController, :edit
-    post "/research_list/:access_key_short", Parent.QuestionnaireController, :create_or_update_answer
+
+    post "/research_list/:access_key_short",
+         Parent.QuestionnaireController,
+         :create_or_update_answer
+
     put "/research_list/:access_key_short", Parent.QuestionnaireController, :upload
-
-
-
   end
 
   scope "/", TznWeb do
@@ -147,7 +177,6 @@ defmodule TznWeb.Router do
     post "/typeform/", TypeformWebhookController, :handle
   end
 
-
   scope "/admin/api", TznWeb do
     pipe_through [:admin]
     get "/mentors", Admin.MentorController, :index_json
@@ -159,7 +188,6 @@ defmodule TznWeb.Router do
 
     post "/answers", Mentor.AnswerController, :create_or_update
   end
-
 
   # Enables LiveDashboard only for development
   #
@@ -176,5 +204,11 @@ defmodule TznWeb.Router do
       live_dashboard "/LiveDashboard", metrics: TznWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
+
+    forward "/graphiql",
+            Absinthe.Plug.GraphiQL,
+            schema: TznWeb.Schema,
+            interface: :advanced,
+            default_url: "/gql"
   end
 end
