@@ -33,7 +33,7 @@
                 <% end %>
             </div>
             <div class="w-1/4 flex align-items-center">
-                <%= group.pods |> Enum.map(& &1.hour_counts.hours_used) |> Enum.map(&Number.Conversion.to_float/1) |> Enum.sum() |> Float.round(1) %> Hours Used
+                <%= group.pods |> Enum.map(fn p -> Number.Conversion.to_float(p.hour_counts.hours_used) end) |> Enum.sum() |> Number.Conversion.to_float() |> Float.round(1) %> Hours Used
             </div>
         </div>
 
