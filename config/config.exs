@@ -65,7 +65,7 @@ config :esbuild,
   ],
   school_admin: [
     args:
-      ~w(./js/school_admin/app.js --bundle --target=es2017 --outdir=../priv/static/assets/school_admin --external:/fonts/* --external:/images/*),
+      ~w(./js/school_admin/app.js --bundle --minify --target=es2017 --outdir=../priv/static/assets/school_admin --external:/fonts/* --external:/images/*),
     cd: Path.expand("../assets", __DIR__),
     env: %{"NODE_PATH" => Path.expand("../deps", __DIR__)}
   ]
