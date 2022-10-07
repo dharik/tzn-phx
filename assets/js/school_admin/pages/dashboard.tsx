@@ -1,6 +1,6 @@
 import { gql, useQuery } from '@apollo/client';
 import { Box, Center, Container, Flex, Grid, GridItem, Heading, Link, Skeleton, Square } from '@chakra-ui/react';
-import { h } from 'preact';
+import React from "react";
 import { Link as RouterLink } from 'react-router-dom';
 
 import UpcomingDeadlines from '../components/upcoming_deadlines';

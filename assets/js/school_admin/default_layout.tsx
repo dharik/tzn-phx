@@ -1,7 +1,6 @@
 import { Flex, Box, Image, Button, Spacer, Grid, GridItem, Link } from '@chakra-ui/react';
-import { Fragment, h, render } from 'preact';
 import { useNavigate } from 'react-router';
-
+import React from "react";
 function Nav() {
   const navigate = useNavigate();
 
@@ -64,9 +63,9 @@ function Nav() {
 
 export default function DefaultLayout({ children }) {
   return (
-    <Fragment>
+    <>
       <Nav />
       {children}
-    </Fragment>
+    </>
   );
 }

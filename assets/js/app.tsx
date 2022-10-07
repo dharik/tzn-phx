@@ -1,10 +1,8 @@
 import 'phoenix_html';
-import {Socket} from "phoenix"
-import {LiveSocket} from "phoenix_live_view"
+import { Socket } from 'phoenix';
+import { LiveSocket } from 'phoenix_live_view';
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
-
-import { h, render } from 'preact';
 
 import MentorAnswerPodInput from './mentor/answer_pod_input';
 import MentorAnswerInternalInput from './mentor/answer_internal_input';
@@ -13,7 +11,7 @@ import AdminAnswerInput from './admin/answer_input';
 
 import React from 'react';
 import ReactDOM from 'react-dom';
-
+import { createRoot } from 'react-dom/client';
 export default class ReactPhoenix {
   static init() {
     const elements = document.querySelectorAll('[data-react-class]');
@@ -29,7 +27,8 @@ export default class ReactPhoenix {
         window
       );
       const reactElement = React.createElement(reactClass, JSON.parse(reactProps));
-      ReactDOM.render(reactElement, targetDiv);
+      const root = createRoot(targetDiv);
+      root.render(reactElement);
     });
   }
 }
@@ -42,7 +41,7 @@ window.Components = {
   MentorAnswerPodInput,
   MentorAnswerInternalInput,
   ParentAnswerInput,
-  AdminAnswerInput
+  AdminAnswerInput,
 };
 
 for (const element of document.getElementsByClassName('rte')) {
@@ -67,9 +66,9 @@ for (const el of document.getElementsByClassName('rtem')) {
     });
 }
 
-let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute("content")
-let liveSocket = new LiveSocket("/live", Socket, {params: {_csrf_token: csrfToken}})
-liveSocket.connect()
+let csrfToken = document.querySelector("meta[name='csrf-token']").getAttribute('content');
+let liveSocket = new LiveSocket('/live', Socket, { params: { _csrf_token: csrfToken } });
+liveSocket.connect();
 
 // Expose liveSocket on window for web console debug logs and latency simulation:
 //  liveSocket.enableDebug()

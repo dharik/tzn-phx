@@ -1,5 +1,5 @@
 import { Box, Flex, Square, Text } from '@chakra-ui/react';
-import { h } from 'preact';
+import React from "react";
 export function TimelineEvent({
   year,
   month,

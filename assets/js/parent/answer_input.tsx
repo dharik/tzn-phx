@@ -1,6 +1,5 @@
-import { h, render, Component, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
 import { useDebouncedCallback } from 'use-debounce';
+import React, { useState } from 'react';
 
 interface Props {
   question_id: number;
@@ -10,7 +9,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  let [value, setValue] = useState(props.value);
+  let [value, setValue] = useState(props.value || "");
   const isEmpty = value == null || value == '' || value.length < 2;
 
   const [saveState, setSaveState] = useState<'' | 'saving' | 'success' | 'fail'>('');
@@ -43,14 +42,12 @@ export default (props: Props) => {
   };
 
   return (
-    <Fragment>
-      <textarea onChange={handleChange} required={props.required}>
-        {value}
-      </textarea>
-      {props.required && isEmpty && <span class="form-message error">Required</span>}
-      {saveState === 'success' && !isEmpty && <span class="form-message success">✓ Saved</span>}
-      {saveState === 'saving' && !isEmpty && <span class="form-message">Saving...</span>}
-      {saveState === 'fail' && !isEmpty && <span class="form-message error">Unable to save</span>}
-    </Fragment>
+    <>
+      <textarea onChange={handleChange} required={props.required} value={value}></textarea>
+      {props.required && isEmpty && <span className="form-message error">Required</span>}
+      {saveState === 'success' && !isEmpty && <span className="form-message success">✓ Saved</span>}
+      {saveState === 'saving' && !isEmpty && <span className="form-message">Saving...</span>}
+      {saveState === 'fail' && !isEmpty && <span className="form-message error">Unable to save</span>}
+    </>
   );
 };

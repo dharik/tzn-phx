@@ -1,5 +1,4 @@
 import { gql, useQuery } from '@apollo/client';
-import { Fragment, h } from 'preact';
 import {
   Box,
   Button,
@@ -18,7 +17,7 @@ import { useNavigate, useParams } from 'react-router';
 import DefaultLayout from '../default_layout';
 import { groupBy } from 'lodash-es';
 import { TimelineEvent } from '../components/timeline_event';
-
+import React from "react";
 const StudentPicker = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
@@ -134,7 +133,7 @@ export default function Timeline() {
           </Center>
           {Object.entries(groupedByYear).map(([year, events]) => {
             return (
-              <Fragment>
+              <>
                 <Box my={5}>
                   <Center>
                     <Heading as="h2" size="lg">
@@ -145,7 +144,7 @@ export default function Timeline() {
                 {events.map((event) => (
                   <TimelineEvent {...event} />
                 ))}
-              </Fragment>
+              </>
             );
           })}
         </Container>

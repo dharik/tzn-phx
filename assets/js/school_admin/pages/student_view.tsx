@@ -1,9 +1,8 @@
 import { gql, useQuery } from '@apollo/client';
-import { Fragment, h } from 'preact';
 import { Skeleton } from '@chakra-ui/react';
 import DefaultLayout from '../default_layout';
 import { useParams } from 'react-router';
-
+import React from "react";
 
 export default function StudentView() {
   const {studentId} = useParams();

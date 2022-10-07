@@ -1,11 +1,10 @@
 import { gql, useQuery } from '@apollo/client';
-import { Fragment, h } from 'preact';
-import { Skeleton, Table, Tbody, Td, Th, Thead, Tr, Link, Container, Heading, HStack, Text } from '@chakra-ui/react';
+import { Skeleton, Table, Tbody, Td, Th, Thead, Tr, Link, Container, Heading, HStack, Text, Box } from '@chakra-ui/react';
 import DefaultLayout from '../default_layout';
 import { useParams } from 'react-router';
 import { Link as RouterLink } from 'react-router-dom';
 import { HiOutlineArrowRight } from 'react-icons/hi';
-
+import React, { Fragment } from "react";
 const CohortStudentsTable = ({
   students,
 }: {
@@ -76,12 +75,12 @@ export default function StudentList() {
     <DefaultLayout>
       <Container maxW={'container.xl'}>
         {data.cohorts.map((cohort) => (
-          <Fragment>
+          <Box key={cohort.id}>
             <Heading as="h2" size="md" my={3}>
               {cohort.name}
             </Heading>
             <CohortStudentsTable students={cohort.students} />
-          </Fragment>
+          </Box>
         ))}
       </Container>
     </DefaultLayout>

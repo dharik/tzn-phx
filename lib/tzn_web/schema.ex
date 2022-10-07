@@ -27,7 +27,7 @@ defmodule TznWeb.Schema do
     field :id, :string
     field :name, :string
 
-    field :students, list_of(:cohort_student) do
+    field :students, non_null(list_of(:cohort_student)) do
       resolve(dataloader(:db, :pods))
     end
 

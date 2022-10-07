@@ -22,7 +22,7 @@ config :tzn, TznWeb.Endpoint,
   check_origin: false,
   watchers: [
     esbuild: {Esbuild, :install_and_run, [:default, ~w(--sourcemap=inline --watch)]},
-    esbuild: {Esbuild, :install_and_run, [:school_admin, ~w(--sourcemap=inline --watch)]},
+    esbuild: {Esbuild, :install_and_run, [:school_admin, ~w(--sourcemap --watch)]},
     tailwind: {Tailwind, :install_and_run, [:default, ~w(--watch)]},
     sass: {DartSass, :install_and_run, [:default, ~w(--watch)]}
   ]

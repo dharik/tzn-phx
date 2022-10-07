@@ -1,7 +1,5 @@
-import { h, render, Component, Fragment } from 'preact';
-import { useState } from 'preact/hooks';
 import { useDebouncedCallback } from 'use-debounce';
-
+import React, { Fragment, useState } from 'react';
 interface Props {
   question_id: number;
   mentee_id: number;
@@ -10,7 +8,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  let [value, setValue] = useState(props.value);
+  let [value, setValue] = useState(props.value || "");
   const [saveState, setSaveState] = useState<'' | 'saving' | 'success' | 'fail'>('');
 
   const save = useDebouncedCallback(() => {
@@ -42,10 +40,10 @@ export default (props: Props) => {
 
   return (
     <Fragment>
-      <textarea onChange={handleChange}>{value}</textarea>
-      {saveState === 'success' && <span class="form-message success">✓ Saved</span>}
-      {saveState === 'saving' && <span class="form-message">Saving...</span>}
-      {saveState === 'fail' && <span class="form-message error">Unable to save</span>}
+      <textarea onChange={handleChange} value={value}></textarea>
+      {saveState === 'success' && <span className="form-message success">✓ Saved</span>}
+      {saveState === 'saving' && <span className="form-message">Saving...</span>}
+      {saveState === 'fail' && <span className="form-message error">Unable to save</span>}
     </Fragment>
   );
 };

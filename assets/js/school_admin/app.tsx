@@ -1,12 +1,6 @@
-if (process.env.NODE_ENV === 'development') {
-  // Must use require here as import statements are only allowed
-  // to exist at top-level.
-  require('preact/debug');
-}
-
 import { Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
-
-import { h, render } from 'preact';
+import React from "react";
+import ReactDOM from "react-dom";
 import { ChakraProvider } from '@chakra-ui/react';
 
 import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
@@ -63,4 +57,5 @@ function App() {
   );
 }
 
-render(<App />, document.getElementById('app'));
+
+ReactDOM.render(<App />, document.getElementById('app'))
