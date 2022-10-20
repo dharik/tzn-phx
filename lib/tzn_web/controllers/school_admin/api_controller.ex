@@ -317,34 +317,24 @@ defmodule TznWeb.SchoolAdmin.ApiController do
   end
 
   def load_base_data(conn, _) do
-    d =
-      case Cachex.get(:school_admin_cache, conn.assigns.current_user.school_admin_profile.id) do
-        {:ok, nil} ->
-          value =
-            Tzn.PodGroups.list_groups(conn.assigns.current_user.school_admin_profile)
-            |> Repo.preload([
-              :school_admins,
-              pods: [
-                :timesheet_entries,
-                :mentor,
-                :hour_counts,
-                mentee: [:parents],
-                timeline: [:calendar_event_markings, calendars: [:events]]
-              ]
-            ])
-
-          {:ok, true} =
-            Cachex.put(
-              :school_admin_cache,
-              conn.assigns.current_user.school_admin_profile.id,
-              value,
-              ttl: :timer.seconds(45)
-            )
-          value
-
-        {:ok, value} ->
-          value
-      end
+    {_, d} =
+      Cachex.fetch(
+        :school_admin_cache,
+        conn.assigns.current_user.school_admin_profile.id,
+        fn _key ->
+          Tzn.PodGroups.list_groups(conn.assigns.current_user.school_admin_profile)
+          |> Repo.preload([
+            :school_admins,
+            pods: [
+              :timesheet_entries,
+              :mentor,
+              :hour_counts,
+              mentee: [:parents],
+              timeline: [:calendar_event_markings, calendars: [:events]]
+            ]
+          ])
+        end
+      )
 
     assign(conn, :data, d)
   end
