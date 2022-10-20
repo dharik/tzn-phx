@@ -180,7 +180,7 @@ defmodule TznWeb.SchoolAdmin.ApiController do
 
 
     events =  Tzn.Timelines.general_calendar_events()
-    events = if include_past do
+    events = if include_past == "y" do
       events
     else
       Enum.reject(events, fn e ->

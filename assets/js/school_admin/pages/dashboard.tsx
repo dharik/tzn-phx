@@ -19,7 +19,7 @@ import React from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 
 import UpcomingDeadlines from '../components/upcoming_deadlines';
-import { getDashboard, getGeneralTimeline, getStudentHighlights } from '../queries';
+import { getDashboard, getStudentHighlights } from '../queries';
 
 export default function Dashboard() {
   const { data } = useReactQuery('dashboard', getDashboard, {
@@ -29,11 +29,8 @@ export default function Dashboard() {
   const { data: studentHighlights } = useReactQuery('studentHighlights', getStudentHighlights, {
     staleTime: 1000 * 60 * 5,
   });
-  const { data: generalTimeline } = useReactQuery('generalTimelineShort', () => getGeneralTimeline(5, 'asc', 'n'), {
-    staleTime: 1000 * 60 * 15,
-  });
 
-  if (data && studentHighlights && generalTimeline) {
+  if (data && studentHighlights) {
     return (
       <Center>
         <Container maxW="container.xl">
@@ -104,7 +101,7 @@ export default function Dashboard() {
                 <Heading as="h2" size="md">
                   Upcoming Deadlines
                 </Heading>
-                <UpcomingDeadlines deadlines={generalTimeline} />
+                <UpcomingDeadlines />
               </GridItem>
             </Grid>
           </Center>
