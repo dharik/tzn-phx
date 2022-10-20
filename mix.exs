@@ -68,7 +68,8 @@ defmodule Tzn.MixProject do
       {:esbuild, "~> 0.5", runtime: Mix.env() == :dev},
       {:dart_sass, "~> 0.5", runtime: Mix.env() == :dev},
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
-      {:accent, "~> 1.1"}
+      {:accent, "~> 1.1"},
+      {:cachex, "~> 3.4"}
     ]
   end
 

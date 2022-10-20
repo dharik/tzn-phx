@@ -17,6 +17,7 @@ defmodule Tzn.Application do
       TznWeb.Endpoint,
       Tzn.Scheduler,
       {Pow.Postgres.Store.AutoDeleteExpired, [interval: :timer.hours(1)]},
+      {Cachex, name: :school_admin_cache}
       # Start a worker by calling: Tzn.Worker.start_link(arg)
       # {Tzn.Worker, arg}
     ]

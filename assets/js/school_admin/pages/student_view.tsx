@@ -4,6 +4,8 @@ import React from 'react';
 import { useQuery } from 'react-query';
 import { getStudent } from '../queries';
 import { Link as RouterLink } from 'react-router-dom';
+import { parseISO, formatRelative } from 'date-fns';
+
 export default function StudentView() {
   const { studentId } = useParams();
 
@@ -49,7 +51,7 @@ export default function StudentView() {
         <Tbody>
           {student.timesheetEntries.map((tse) => (
             <Tr>
-              <Td>{tse.startedAt}</Td>
+              <Td>{formatRelative(parseISO(tse.startedAt), new Date())}</Td>
               <Td>{tse.category}</Td>
               <Td dangerouslySetInnerHTML={{ __html: tse.notes }}></Td>
             </Tr>

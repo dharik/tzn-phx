@@ -15,8 +15,12 @@ import {
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
-import { getDashboard } from '../queries';
+
+import * as queries from '../queries';
 import { useQuery } from 'react-query';
+
+import { parseISO, formatRelative } from 'date-fns';
+
 const CohortStudentsTable = ({
   students,
 }: {
@@ -48,8 +52,13 @@ const CohortStudentsTable = ({
                 </HStack>
               </Link>
             </Td>
-            <Td>{student.firstMeetingWithMentor}</Td>
-            <Td>{student.mostRecentMeetingWithMentor}</Td>
+            <Td>
+              {student.firstMeetingWithMentor && formatRelative(parseISO(student.firstMeetingWithMentor), new Date())}
+            </Td>
+            <Td>
+              {student.mostRecentMeetingWithMentor &&
+                formatRelative(parseISO(student.mostRecentMeetingWithMentor), new Date())}
+            </Td>
             <Td>{student.hoursMentored}</Td>
           </Tr>
         ))}
@@ -59,17 +68,17 @@ const CohortStudentsTable = ({
 };
 
 export default function StudentList() {
-  const { data, isLoading } = useQuery('dashboard', getDashboard, {
+  const cohortsAndStudentsQuery = useQuery('cohorts_and_students', queries.cohortsAndStudents, {
     staleTime: 1000 * 60 * 5,
   });
 
-  if (isLoading) {
+  if (cohortsAndStudentsQuery.isLoading) {
     return <Skeleton height="30px" />;
   }
 
   return (
     <Container maxW={'container.xl'}>
-      {data.cohorts.map((cohort) => (
+      {cohortsAndStudentsQuery.data.map((cohort) => (
         <Box key={cohort.id}>
           <Heading as="h2" size="md" my={3}>
             {cohort.name}

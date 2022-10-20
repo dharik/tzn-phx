@@ -1,6 +1,7 @@
-export async function getDashboard() {
-  const r = await fetch('/api/school_admin?query=dashboard', {
+async function genericRequest(queryKey: string, params?: object) {
+  const r = await fetch('/api/school_admin', {
     method: 'POST',
+    body: JSON.stringify({ query: queryKey, ...params }),
     headers: {
       'Content-Type': 'application/json',
     },
@@ -9,25 +10,38 @@ export async function getDashboard() {
   return json;
 }
 
-export async function getStudentTimelineList() {
-  const r = await fetch('/api/school_admin?query=student_timeline_list', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const json = await r.json();
-  return json;
+export async function cohortsAndStudents() {
+  return genericRequest('cohorts_and_students');
 }
+
+export async function getDashboard() {
+  return genericRequest('dashboard');
+}
+
+export async function myName() {
+  return genericRequest('my_name');
+}
+
+export async function numStudents() {
+  return genericRequest('num_students');
+}
+
+export async function hoursMentored() {
+  return genericRequest('hours_mentored');
+}
+
+export async function getStudentTimelineList() {
+  return genericRequest('student_timeline_list');
+}
+
 export async function getStudentHighlights() {
-  const r = await fetch('/api/school_admin?query=student_highlights', {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  return genericRequest('student_highlights');
+}
+
+export async function getStudent(id: number | string) {
+  return genericRequest('student', {
+    student_id: id,
   });
-  const json = await r.json();
-  return json;
 }
 
 export async function getStudentTimeline(
@@ -36,40 +50,18 @@ export async function getStudentTimeline(
   sort: 'asc' | 'desc',
   includePast: 'y' | 'n'
 ) {
-  const r = await fetch('/api/school_admin?query=student_timeline&student_id=' + id, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  return genericRequest('student_timeline', {
+    student_id: id,
+    limit: limit || 0,
+    sort: sort || 'asc',
+    includePast: includePast || 'n',
   });
-  const json = await r.json();
-  return json;
 }
 
 export async function getGeneralTimeline(limit: number, sort: 'asc' | 'desc', includePast: 'y' | 'n') {
-  const r = await fetch('/api/school_admin', {
-    method: 'POST',
-    body: JSON.stringify({
-      query: 'general_timeline',
-      limit: limit,
-      includePast: includePast,
-      sort: sort,
-    }),
-    headers: {
-      'Content-Type': 'application/json',
-    },
+  return genericRequest('general_timeline', {
+    limit: limit || 0,
+    sort: sort || 'asc',
+    includePast: includePast || 'n',
   });
-  const json = await r.json();
-  return json;
-}
-
-export async function getStudent(id: number | string) {
-  const r = await fetch('/api/school_admin?query=student&student_id=' + id, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-    },
-  });
-  const json = await r.json();
-  return json;
 }
