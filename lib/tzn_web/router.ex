@@ -51,25 +51,12 @@ defmodule TznWeb.Router do
     plug :override_current_user_for_impersonation
   end
 
-  pipeline :graphql do
-    plug Plug.Parsers,
-      parsers: [:urlencoded, :multipart, :json, Absinthe.Plug.Parser],
-      pass: ["*/*"],
-      json_decoder: Jason
-
-    plug TznWeb.Context
-  end
 
   scope "/" do
     pipe_through :browser
 
     pow_routes()
     pow_extension_routes()
-  end
-
-  scope "/gql" do
-    pipe_through [:protected, :graphql]
-    forward "/", Absinthe.Plug, schema: TznWeb.Schema
   end
 
   scope "/", TznWeb do
@@ -189,6 +176,13 @@ defmodule TznWeb.Router do
     post "/answers", Mentor.AnswerController, :create_or_update
   end
 
+  scope "/api", TznWeb do
+    pipe_through [:api]
+
+    get "/school_admin", SchoolAdmin.ApiController, :handle
+    post "/school_admin", SchoolAdmin.ApiController, :handle
+  end
+
   # Enables LiveDashboard only for development
   #
   # If you want to use the LiveDashboard in production, you should put
@@ -204,11 +198,5 @@ defmodule TznWeb.Router do
       live_dashboard "/LiveDashboard", metrics: TznWeb.Telemetry
       forward "/mailbox", Plug.Swoosh.MailboxPreview
     end
-
-    forward "/graphiql",
-            Absinthe.Plug.GraphiQL,
-            schema: TznWeb.Schema,
-            interface: :advanced,
-            default_url: "/gql"
   end
 end

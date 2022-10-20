@@ -5,6 +5,7 @@ defmodule Tzn.PodGroups do
   alias Tzn.DB.PodGroupToProfile
   alias Tzn.DB.PodToPodGroup
   alias Tzn.Users.Admin
+  alias Tzn.Users.User
   alias Tzn.Repo
 
   import Ecto.Query
@@ -52,6 +53,10 @@ defmodule Tzn.PodGroups do
     Repo.get(PodGroup, id)
     |> Repo.preload(pods: [:mentee, :mentor, :hour_counts])
     |> Repo.preload(:school_admins)
+  end
+
+  def list_groups(nil) do
+    []
   end
 
   def list_groups(%SchoolAdmin{} = a) do

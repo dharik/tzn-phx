@@ -1,45 +1,47 @@
+import { ReactQueryDevtools } from 'react-query/devtools';
 import { Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
-import React from "react";
-import ReactDOM from "react-dom";
-import { ChakraProvider } from '@chakra-ui/react';
+import React from 'react';
+import ReactDOM from 'react-dom';
+import { ChakraProvider, Spinner } from '@chakra-ui/react';
 
-import { ApolloClient, InMemoryCache, ApolloProvider, gql, useQuery } from '@apollo/client';
 import Dashboard from './pages/dashboard';
 import StudentList from './pages/student_list';
 import Timeline from './pages/timeline';
 import StudentView from './pages/student_view';
-
-const client = new ApolloClient({
-  uri: '/gql',
-
-  cache: new InMemoryCache(),
-});
+import DefaultLayout from './default_layout';
+import { QueryClient, QueryClientProvider } from 'react-query';
 
 const router = createBrowserRouter(
   [
     {
       path: '/',
-      element: <Dashboard />,
-    },
-    {
-      path: '/students',
-      element: <StudentList />,
-    },
-    {
-      path: '/students/:studentId',
-      element: <StudentView />,
-    },
-    {
-      path: '/timeline/general',
-      element: <Timeline />,
-    },
-    {
-      path: '/timeline/:studentId',
-      element: <Timeline />,
-    },
-    {
-      path: '/stats',
-      element: <StudentList />,
+      element: <DefaultLayout>{null}</DefaultLayout>,
+      children: [
+        {
+          path: '/',
+          element: <Dashboard />,
+        },
+        {
+          path: '/students',
+          element: <StudentList />,
+        },
+        {
+          path: '/students/:studentId',
+          element: <StudentView />,
+        },
+        {
+          path: '/timeline/general',
+          element: <Timeline />,
+        },
+        {
+          path: '/timeline/:studentId',
+          element: <Timeline />,
+        },
+        {
+          path: '/stats',
+          element: <StudentList />,
+        },
+      ],
     },
   ],
   {
@@ -48,14 +50,22 @@ const router = createBrowserRouter(
 );
 
 function App() {
+  const queryClient = new QueryClient();
+
   return (
-    <ApolloProvider client={client}>
+    <QueryClientProvider client={queryClient}>
       <ChakraProvider>
-        <RouterProvider router={router} />
+        <RouterProvider
+          router={router}
+          fallbackElement={
+            <DefaultLayout>
+              <Spinner />
+            </DefaultLayout>
+          }
+        />
       </ChakraProvider>
-    </ApolloProvider>
+    </QueryClientProvider>
   );
 }
 
-
-ReactDOM.render(<App />, document.getElementById('app'))
+ReactDOM.render(<App />, document.getElementById('app'));

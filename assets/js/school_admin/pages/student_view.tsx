@@ -1,40 +1,61 @@
-import { gql, useQuery } from '@apollo/client';
-import { Skeleton } from '@chakra-ui/react';
-import DefaultLayout from '../default_layout';
+import { Container, Heading, Link, Skeleton, Table, Tbody, Td, Th, Thead, Tr } from '@chakra-ui/react';
 import { useParams } from 'react-router';
-import React from "react";
-
+import React from 'react';
+import { useQuery } from 'react-query';
+import { getStudent } from '../queries';
+import { Link as RouterLink } from 'react-router-dom';
 export default function StudentView() {
-  const {studentId} = useParams();
+  const { studentId } = useParams();
 
-  const g = gql`
-    query {
-      cohorts {
-        id
-        name
-        students {
-          id
-          name
-          firstMeetingWithMentor
-          mostRecentMeetingWithMentor
-          hoursMentored
-        }
-        schoolAdmins {
-          name
-        }
-      }
+  const { isLoading: isLoadingTimeline, data: student } = useQuery(
+    ['student', studentId],
+    () => getStudent(studentId),
+    {
+      staleTime: 1000 * 60 * 5,
     }
-  `;
+  );
 
-  const { loading, error, data } = useQuery(g);
-
-  if (loading) {
+  if (isLoadingTimeline) {
     return <Skeleton height="30px" />;
   }
 
   return (
-    <DefaultLayout>
-     {studentId}
-    </DefaultLayout>
+    <Container maxW={'container.xl'} pt={4}>
+      <Heading as="h1" size="xl">
+        {student.name}
+      </Heading>
+      <Heading as="h2" size="md">
+        Mentor: {student.mentorName}
+      </Heading>
+      <Heading as="h2" size="sm">
+        Hours Mentored: {student.hoursMentored}
+      </Heading>
+
+      <Link as={RouterLink} to={`/timeline/${student.id}`}>
+        See {student.name}'s Timeline
+      </Link>
+
+      <Heading as="h3" size="sm">
+        Recent Activity:
+      </Heading>
+      <Table>
+        <Thead>
+          <Tr>
+            <Th>Date</Th>
+            <Th>Category</Th>
+            <Th>Notes</Th>
+          </Tr>
+        </Thead>
+        <Tbody>
+          {student.timesheetEntries.map((tse) => (
+            <Tr>
+              <Td>{tse.startedAt}</Td>
+              <Td>{tse.category}</Td>
+              <Td dangerouslySetInnerHTML={{ __html: tse.notes }}></Td>
+            </Tr>
+          ))}
+        </Tbody>
+      </Table>
+    </Container>
   );
 }

@@ -1,4 +1,4 @@
-import { gql, useQuery } from '@apollo/client';
+import { useQuery as useReactQuery } from 'react-query';
 import {
   Box,
   Button,
@@ -14,32 +14,22 @@ import {
   Skeleton,
 } from '@chakra-ui/react';
 import { useNavigate, useParams } from 'react-router';
-import DefaultLayout from '../default_layout';
 import { groupBy } from 'lodash-es';
 import { TimelineEvent } from '../components/timeline_event';
-import React from "react";
+import React from 'react';
+import { getGeneralTimeline, getStudentTimeline, getStudentTimelineList } from '../queries';
 const StudentPicker = () => {
   const { studentId } = useParams();
   const navigate = useNavigate();
-  const g = gql`
-    query {
-      cohorts {
-        name
-        students {
-          id
-          name
-        }
-      }
-    }
-  `;
+  const { isLoading, data } = useReactQuery('studentTimelineList', getStudentTimelineList, {
+    staleTime: 1000 * 60 * 5,
+  });
 
-  const { loading, error, data } = useQuery(g);
-
-  if (loading) {
+  if (isLoading) {
     return <Skeleton height="30px" width="120px"></Skeleton>;
   }
 
-  const allStudents = data.cohorts.flatMap((cohort) => cohort.students);
+  const allStudents = data.flatMap((cohort) => cohort.students);
   const currentStudent = allStudents.find((s) => s.id == studentId);
 
   return (
@@ -64,7 +54,8 @@ const StudentPicker = () => {
       </MenuButton>
       <MenuList>
         <MenuItem onClick={() => navigate(`/timeline/general`)}>General Timeline</MenuItem>
-        {data.cohorts.map((cohort) => (
+        <MenuDivider />
+        {data.map((cohort) => (
           <MenuGroup title={cohort.name}>
             {cohort.students.map((student) => (
               <MenuItem onClick={() => navigate(`/timeline/${student.id}`)}>{student.name}</MenuItem>
@@ -78,77 +69,59 @@ const StudentPicker = () => {
 export default function Timeline() {
   const { studentId } = useParams();
 
-  let q;
+  const { isLoading: loadingGeneral, data: generalTimeline } = useReactQuery(
+    'generalTimelineFull',
+    () => getGeneralTimeline(0, 'asc', 'n'),
+    {
+      staleTime: 1000 * 60 * 15,
+    }
+  );
 
-  if (studentId) {
-    q = gql`
-      query {
-        studentTimeline(id: ${studentId}, includePast: true) {
-          year
-          month
-          day
-          description
-          title
-          monthShortname
-          completed
-        }
-      }
-    `;
-  } else {
-    q = gql`
-      query {
-        generalTimeline {
-          year
-          month
-          day
-          title
-          description
-          monthShortname
-        }
-      }
-    `;
-  }
+  const { isLoading: loadingStudent, data: studentTimeline } = useReactQuery(
+    ['studentTimeline', studentId],
+    () => getStudentTimeline(studentId, 0, 'asc', 'n'),
+    {
+      staleTime: 1000 * 60 * 1,
+      enabled: !!studentId,
+    }
+  );
 
-  const { loading, error, data } = useQuery(q);
-
-  if (loading) {
+  if (loadingGeneral || loadingStudent) {
     return null;
   }
 
   let events;
 
-  if (data.generalTimeline) {
-    events = data.generalTimeline;
-  } else if (data.studentTimeline) {
-    events = data.studentTimeline;
+  if (studentId && studentTimeline) {
+    events = studentTimeline;
+  } else if (generalTimeline) {
+    events = generalTimeline;
   }
 
   const groupedByYear = groupBy(events, (event) => event.year);
   return (
-    <DefaultLayout>
-      <Center>
-        <Container maxW="container.lg">
-          <Center my={5}>
-            <StudentPicker />
-          </Center>
-          {Object.entries(groupedByYear).map(([year, events]) => {
-            return (
-              <>
-                <Box my={5}>
-                  <Center>
-                    <Heading as="h2" size="lg">
-                      {year}
-                    </Heading>
-                  </Center>
-                </Box>
-                {events.map((event) => (
-                  <TimelineEvent {...event} />
-                ))}
-              </>
-            );
-          })}
-        </Container>
-      </Center>
-    </DefaultLayout>
+    <Center>
+      <Container maxW="container.lg">
+        <Center my={5}>
+          <StudentPicker />
+        </Center>
+        {Object.entries(groupedByYear).map(([year, events]) => {
+          return (
+            <>
+              <Box my={5}>
+                <Center>
+                  <Heading as="h2" size="lg">
+                    {year}
+                  </Heading>
+                </Center>
+              </Box>
+              {events.map((event) => (
+                <TimelineEvent {...event} />
+              ))}
+            </>
+          );
+        })}
+      </Container>
+    </Center>
   );
 }
