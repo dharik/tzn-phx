@@ -66,7 +66,7 @@ const StudentPicker = () => {
     </Menu>
   );
 };
-export default function Timeline() {
+export default function Timeline({ showSwitcher = true }) {
   const { studentId } = useParams();
 
   const { isLoading: loadingGeneral, data: generalTimeline } = useReactQuery(
@@ -102,9 +102,11 @@ export default function Timeline() {
   return (
     <Center>
       <Container maxW="container.lg">
-        <Center my={5}>
-          <StudentPicker />
-        </Center>
+        {showSwitcher && (
+          <Center my={5}>
+            <StudentPicker />
+          </Center>
+        )}
         {Object.entries(groupedByYear).map(([year, events]) => {
           return (
             <>

@@ -38,6 +38,10 @@ export async function getStudentHighlights() {
   return genericRequest('student_highlights');
 }
 
+export async function getStudentHighlight(id?: number) {
+  return genericRequest('student_highlights', { student_id: id });
+}
+
 export async function getStudent(id: number | string) {
   return genericRequest('student', {
     student_id: id,

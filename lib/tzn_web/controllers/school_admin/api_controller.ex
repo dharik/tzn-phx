@@ -87,6 +87,41 @@ defmodule TznWeb.SchoolAdmin.ApiController do
     json(conn, data)
   end
 
+  def handle(conn, %{"query" => "student_highlights", "student_id" => pod_id}) do
+    pod_id =
+      if is_binary(pod_id) do
+        String.to_integer(pod_id)
+      else
+        pod_id
+      end
+
+    pod = Enum.find(my_pods(conn), fn p -> p.id == pod_id end)
+    h = Tzn.PodGroupReporting.student_highlights(pod)
+
+    description =
+      cond do
+        h.consecutive_missed_sessions > 1 ->
+          "#{pod.mentee.name} has missed their last #{h.consecutive_missed_sessions} sessions"
+
+        h.hours_mentored_hit_10_at ->
+          "#{pod.mentee.name} has received over 10 hours of 1:1 mentorship!"
+
+        h.hours_mentored_hit_5_at ->
+          "#{pod.mentee.name} has received over 5 hours of 1:1 mentorship!"
+
+        h.missed_sessions_last_30_days > 0 ->
+          "#{pod.mentee.name} has missed #{h.missed_sessions_last_30_days} sessions in the last month"
+
+        Tzn.Util.within_n_days_ago(h.onboarded_at, 30) ->
+          "#{pod.mentee.name} recently completed their onboarding form"
+
+        true ->
+          nil
+      end
+
+    json(conn, %{highlight: description})
+  end
+
   def handle(conn, %{"query" => "student_highlights"}) do
     highlights =
       my_pods(conn)

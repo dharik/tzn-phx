@@ -47,9 +47,7 @@ const CohortStudentsTable = ({
           <Tr key={student.id}>
             <Td>
               <Link as={RouterLink} to={`/students/${student.id}`}>
-                <HStack>
-                  <Text>{student.name}</Text>
-                </HStack>
+                {student.name}
               </Link>
             </Td>
             <Td>
