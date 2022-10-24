@@ -9,6 +9,7 @@ defmodule Tzn.Jobs.SyncMenteeGradeWithPodTimelines do
     |> Enum.reject(fn p ->
       p.mentee.grade == "college" || p.mentee.grade == "middle_school"
     end)
+    |> Enum.filter(& &1.active)
     |> Enum.filter(fn p ->
       p.timeline.graduation_year != Tzn.GradeYearConversions.graduation_year(p.mentee.grade)
     end)
