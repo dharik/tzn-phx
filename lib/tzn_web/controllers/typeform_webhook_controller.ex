@@ -53,6 +53,7 @@ defmodule TznWeb.TypeformWebhookController do
       %{
         name: mentee_name,
         email: mentee_email,
+        grade: "senior",
         pronouns: mentee_pronouns,
         internal_notes:
           "<p>Parent 1 (#{p1_name}) relation: #{p1_relation}, phone: #{p1_phone}</p>" <>
