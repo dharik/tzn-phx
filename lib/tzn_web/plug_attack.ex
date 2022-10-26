@@ -16,7 +16,8 @@ defmodule TznWeb.PlugAttack do
       {:ok, :banned} ->
         # Change to debug after it looks good on prod
         Logger.info("Request blocked because they were banned")
-        {:block, :php_vuln_scanner}
+        # {:block, :php_vuln_scanner} # Need to figure out the remote_ip situation on gigalixir
+        {:allow, :dontcare}
 
       {:ok, nil} ->
         {:allow, :dontcare}
