@@ -48,5 +48,6 @@ defmodule TznWeb.Endpoint do
   plug Plug.Session, @session_options
   plug Pow.Plug.Session, otp_app: :tzn
   plug PowPersistentSession.Plug.Cookie
+  plug TznWeb.PlugAttack
   plug TznWeb.Router
 end
