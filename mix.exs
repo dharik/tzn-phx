@@ -70,7 +70,8 @@ defmodule Tzn.MixProject do
       {:tailwind, "~> 0.1", runtime: Mix.env() == :dev},
       {:accent, "~> 1.1"},
       {:cachex, "~> 3.4"},
-      {:plug_attack, "~> 0.4.2"}
+      {:plug_attack, "~> 0.4.2"},
+      {:plug_forwarded_peer, "~> 0.0.2"}
     ]
   end
 
