@@ -4,9 +4,10 @@ defmodule TznWeb.PlugAttack do
   require Logger
 
   rule "block PHP vuln scanners", conn do
+    ip_as_string = conn.remote_ip |> :inet.ntoa() |> to_string()
     if Regex.match?(~r/\.php$|\/wp-admin|\/wp-content/i, conn.request_path) do
       Logger.warn(
-        "Banning #{conn.remote_ip |> :inet.ntoa() |> to_string()} because they look like a vuln scanner"
+        "Banning #{ip_as_string} because they look like a vuln scanner"
       )
 
       Cachex.put(:ban_hammer, conn.remote_ip, :banned, ttl: :timer.minutes(60 * 24 * 3))
@@ -15,9 +16,8 @@ defmodule TznWeb.PlugAttack do
     case Cachex.get(:ban_hammer, conn.remote_ip) do
       {:ok, :banned} ->
         # Change to debug after it looks good on prod
-        Logger.info("Request blocked because they were banned")
-        # {:block, :php_vuln_scanner} # Need to figure out the remote_ip situation on gigalixir
-        {:allow, :dontcare}
+        Logger.info("Request blocked because #{ip_as_string} was previously banned")
+        {:block, :php_vuln_scanner}
 
       {:ok, nil} ->
         {:allow, :dontcare}
