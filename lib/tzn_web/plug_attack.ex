@@ -5,7 +5,7 @@ defmodule TznWeb.PlugAttack do
 
   rule "block PHP vuln scanners", conn do
     ip_as_string = conn.remote_ip |> :inet.ntoa() |> to_string()
-    if Regex.match?(~r/\.php$|\/wp-admin|\/wp-content/i, conn.request_path) do
+    if Regex.match?(~r/\.php$|\/wp-admin|\/wp-content|\/wp-includes/i, conn.request_path) do
       Logger.warn(
         "Banning #{ip_as_string} because they look like a vuln scanner"
       )
