@@ -54,7 +54,8 @@ defmodule TznWeb.Admin.MentorPaymentsController do
 
     Transizion.list_mentors()
     |> Repo.preload([:timesheet_entries])
-    |> Enum.reject(fn mentor -> mentor.archived end)
+    |> Enum.reject(fn mentor -> Regex.match?(~r/test/i, mentor.name) end)
+    # |> Enum.reject(fn mentor -> mentor.archived end)
     |> Enum.map(fn mentor ->
       %{
         name: mentor.name,
