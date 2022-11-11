@@ -5,6 +5,14 @@ defmodule Tzn.Util do
     e |> Enum.map(& &1.id)
   end
 
+  def format_date_generic(date) do
+      case Timex.format(date, "%b %d %Y %l:%M %p", :strftime) do
+        {:ok, formatted} -> formatted
+        {:error, _} -> date
+        _ -> "N/A"
+      end
+    end
+
   def format_date_relative(date) do
     Timex.Format.DateTime.Formatters.Relative.format!(date, "{relative}")
   end
@@ -45,7 +53,7 @@ defmodule Tzn.Util do
       {"Freshman", "freshman"},
       {"Sophomore", "sophomore"},
       {"Junior", "junior"},
-      {"Senior", "senior"},
+      {"Senior", "senior"}
     ]
   end
 
@@ -113,7 +121,11 @@ defmodule Tzn.Util do
   end
 
   def make_hyperlinks(text) do
-    Regex.replace(~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/, text, "<a href=\"\\0\">\\0</a>")
+    Regex.replace(
+      ~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/,
+      text,
+      "<a href=\"\\0\">\\0</a>"
+    )
   end
 
   def pluralize(num, unit, unit_plural \\ nil) do
@@ -128,4 +140,14 @@ defmodule Tzn.Util do
       "#{num} #{unit_plural}"
     end
   end
+
+  def find_by_id(col, id) when is_binary(id) do
+    Enum.find(col, fn item -> item.id == String.to_integer(id) end)
+  end
+
+  def find_by_id(col, id) when is_integer(id) do
+    Enum.find(col, fn item -> item.id == id end)
+  end
+
+  def find_by_id(col, nil), do: nil
 end
