@@ -90,11 +90,11 @@
         <div class="space-m"></div>
 
         <div>
-            <%= if @todo_error do %>
+            <%= if (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") do %>
                 <p class="form-message warning" ><%= @todo_error %></p>
             <% end %>
             <%= submit "Save", class: "button-primary", 
-                disabled: @todo_error || 
+                disabled: (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") || 
                             Enum.any?(@changeset.errors) || 
                             @changeset.changes |> Map.to_list() |> Enum.empty?()  
             %>
