@@ -22,7 +22,7 @@ defmodule TznWeb.MentorTimesheetEntry do
       else
         %Tzn.Transizion.TimesheetEntry{
           started_at: default_started_at,
-          ended_at: default_started_at |> Timex.shift(minutes: 30),
+          ended_at: default_started_at |> Timex.shift(minutes: 60),
           pod_id: pod_id,
           mentor_id: mentor_id,
           mentee_grade: if pod do
