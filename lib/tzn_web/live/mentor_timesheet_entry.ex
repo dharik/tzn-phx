@@ -15,6 +15,7 @@ defmodule TznWeb.MentorTimesheetEntry do
       ) do
     default_started_at = Timex.now() |> Timex.shift(hours: -6) |> Timex.to_naive_datetime()
 
+    pod = Tzn.Pods.get_pod(pod_id)
     timesheet_entry =
       if timesheet_entry_id do
         Tzn.Timesheets.get_timesheet_entry!(timesheet_entry_id)
@@ -23,11 +24,15 @@ defmodule TznWeb.MentorTimesheetEntry do
           started_at: default_started_at,
           ended_at: default_started_at |> Timex.shift(minutes: 30),
           pod_id: pod_id,
-          mentor_id: mentor_id
+          mentor_id: mentor_id,
+          mentee_grade: if pod do
+            pod.mentee.grade
+          else
+            nil
+          end
         }
       end
 
-    pod = Tzn.Pods.get_pod(pod_id)
 
     mentor = Tzn.Transizion.get_mentor(mentor_id)
 
