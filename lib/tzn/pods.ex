@@ -224,7 +224,7 @@ defmodule Tzn.Pods do
          |> Enum.reject(& &1.completed)
          |> Enum.filter(& &1.due_date)
          |> Enum.any?(fn todo ->
-           Timex.now() |> Timex.after?(todo.due_date)
+           Timex.now() |> Timex.shift(days: -1) |> Timex.after?(todo.due_date)
          end) do
       {:error, "There is a todo past its due date that hasn't been marked complete"}
     else
