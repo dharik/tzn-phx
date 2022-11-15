@@ -42,7 +42,7 @@
           <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete, "x-show": "open", class: "text-off-white" %>
         </div>
       </aside>
-      <main role="main" class="bg-white col-span-12 md:col-span-8 xl:col-span-10 p-4">        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
+      <main role="main" class="col-span-12 md:col-span-8 xl:col-span-10 p-4">        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
         <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= @inner_content %>
       </main>

@@ -4,6 +4,14 @@
 
 @import "./admin.scss";
 
+body {
+  background-image: url('/images/rhombii.png');
+  background-position: center top; 
+  background-size: cover; 
+  background-repeat: no-repeat;
+  background-attachment: fixed;
+  min-height: 100vh;
+}
 .parent_layout {
     display: grid;
     grid-template-areas:
@@ -55,6 +63,7 @@
   
     main {
       grid-area: main;
+      background-color: rgba(255, 255, 255, 0.674);
     }
   
     .top {
@@ -142,3 +151,42 @@
   .phx-change-loading {
   opacity: 0.6;
   }
+
+
+dialog {
+  position: absolute;
+  left: 0; right: 0;
+  width: -moz-fit-content;
+  width: -webkit-fit-content;
+  width: fit-content;
+  height: -moz-fit-content;
+  height: -webkit-fit-content;
+  height: fit-content;
+  margin: auto;
+  border: solid;
+  padding: 1em;
+  background: white;
+  color: black;
+  display: block;
+}
+
+dialog:not([open]) {
+  display: none;
+}
+
+dialog + .backdrop {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+  background: rgba(0,0,0,0.1);
+}
+
+._dialog_overlay {
+  position: fixed;
+  top: 0; right: 0; bottom: 0; left: 0;
+}
+
+dialog.fixed {
+  position: fixed;
+  top: 50%;
+  transform: translate(0, -50%);
+}
