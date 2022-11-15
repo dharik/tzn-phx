@@ -8,44 +8,39 @@
                 <% end %>
             <% end %>
             <div class="flex flex-1 margin-horizontal-xs flex-column">
-                <%= if @changeset do %>
-                    <.form for={@changeset} let={f} phx-change="validate" phx-debounce="1200" phx-target={@myself} phx-click-away="close" onsubmit="return false;">
-                        <%= label f, :todo_text %>
-                        <%= text_input f, :todo_text %>
-                        <%= error_tag f, :todo_text %>
-
-                        <%= label f, :due_date %>
-                        <%= date_input f, :due_date %>
-                        <%= error_tag f, :due_date %>
-                    </.form>
+                <%= if @item.deleted_at do %>
+                    Deleted <a href="#" phx-target={@myself} phx-click="undo_delete">(undo)</a>
                 <% else %>
-                    <%= if @item.deleted_at do %>
-                        Deleted <a href="#" phx-target={@myself} phx-click="undo_delete">(undo)</a>
+                    <%= if @item.completed do %>
+                        <strike><%= @item.todo_text %></strike>
                     <% else %>
-                        <%= if @item.completed do %>
-                            <strike><%= @item.todo_text %></strike>
+                        <%= if @is_editing_text do %>
+                            <.form for={@changeset} let={f} phx-change="save" phx-debounce="1200" phx-target={@myself} phx-click-away="close_text" onsubmit="return false;">
+                                <%= text_input f, :todo_text %>
+                            </.form>
                         <% else %>
-                            <%= @item.todo_text %>
+                            <span phx-click="edit_text" class="cursor-text" phx-target={@myself}><%= @item.todo_text %></span>
                         <% end %>
+                    <% end %>
 
+                   
+                    <%= if @is_editing_date do %>
+                        <.form for={@changeset} let={f} phx-change="save" phx-debounce="1200" phx-target={@myself} phx-click-away="close_date" onsubmit="return false;">
+                            <%= date_input f, :due_date %>
+                        </.form>
+                    <% else %>
                         <%= if @item.due_date do %>
                             <%= if Timex.after?(Timex.now(), @item.due_date) && !@item.completed do %>
-                                <span class="font-size-xs color-error"><%= @item.due_date %></span>
+                                <span class="font-size-xs color-error cursor-text" phx-click="edit_date" phx-target={@myself}><%= @item.due_date %></span>
                             <% else %>
-                                <span class="font-size-xs color-grey-200"><%= @item.due_date %></span>
+                                <span class="font-size-xs color-grey-200 cursor-text" phx-click="edit_date" phx-target={@myself}><%= @item.due_date %></span>
                             <% end %>
                         <% end %>
                     <% end %>
+
                 <% end %>
             </div>
             <%= unless @item.deleted_at do %>
-                    <div>
-                        <%= unless @item.completed do %>
-                            <a href="#" phx-click="edit" phx-target={@myself}>
-                                <span class="material-icons-outlined color-primary-300">edit</span>
-                            </a>
-                        <% end %>
-                    </div>
                 <div>
                     <a href="#" phx-click="delete" phx-target={@myself}><span class="material-icons-outlined color-error-300">delete</span></a>
                 </div>

@@ -4,23 +4,35 @@ defmodule TznWeb.MentorTodoItem do
   import TznWeb.ErrorHelpers
 
   def mount(socket) do
-    {:ok, socket |> assign(:item, nil) |> assign(:changeset, nil)}
+    {:ok, socket |> assign(:item, nil) |> assign(:changeset, nil) |> assign(:is_editing_text, false) |> assign(:is_editing_date, false)}
   end
 
   def update(%{item: item}, socket) do
-    {:ok, socket |> assign(:item, item)}
+    {:ok, socket |> assign(:item, item) |> assign(:changeset, Tzn.Pods.change_todo(item))}
   end
 
-  def handle_event("edit", _params, socket) do
+  def handle_event("edit_text", _params, socket) do
     {:noreply,
      socket
-     |> assign(:changeset, Tzn.Pods.change_todo(socket.assigns.item))}
+     |> assign(:is_editing_text, true)}
   end
 
-  def handle_event("close", _params, socket) do
+  def handle_event("edit_date", _params, socket) do
     {:noreply,
      socket
-     |> assign(:changeset, nil)}
+     |> assign(:is_editing_date, true)}
+  end
+
+  def handle_event("close_text", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:is_editing_text, false)}
+  end
+
+  def handle_event("close_date", _params, socket) do
+    {:noreply,
+     socket
+     |> assign(:is_editing_date, false)}
   end
 
   def handle_event("mark_complete", _params, socket) do
@@ -67,12 +79,12 @@ defmodule TznWeb.MentorTodoItem do
     end
   end
 
-  def handle_event("validate", %{"pod_todo" => attrs}, socket) do
+  def handle_event("save", %{"pod_todo" => attrs}, socket) do
     {:noreply,
      case Tzn.Pods.update_todo(socket.assigns.item, attrs) do
        {:ok, updated_item} ->
          send(self(), :todo_updated)
-         socket |> assign(:item, updated_item)
+         socket |> assign(:item, updated_item) |> assign(:changeset, Tzn.Pods.change_todo(updated_item))
 
        {:error, changeset} ->
          socket |> assign(:changeset, changeset)
