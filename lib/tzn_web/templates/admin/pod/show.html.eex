@@ -205,29 +205,36 @@
 
 
   <div x-show="tab === 'todos'" x-transition>
+    <p class="lead-s">Milestones</p>
+    <div class="grid grid-cols-1">
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.is_milestone) |> sort_todos() do %>
+         <%= render "_milestone.html", milestone: todo %>
+      <% end %>
+    </div>
+
     <p class="lead-s">Mentor To-Dos:</p>
-    <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") |> sort_todos() do %>
+    <div class="grid grid-cols-1">
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
          <%= render "_todo.html", todo: todo %>
       <% end %>
-    </ol>
+    </div>
 
     <div class="space-m"></div>
 
     <p class="lead-s">Mentee To-Dos:</p>
-    <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") |> sort_todos() do %>
+    <div class="grid grid-cols-1">
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
-    </ol>
+    </div>
     <div class="space-m"></div>
 
     <p class="lead-s">Parent To-Dos:</p>
-    <ol>
-      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") |> sort_todos() do %>
+    <div class="grid grid-cols-1">
+      <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
-    </ol>
+    </div>
     <div class="space-m"></div>
   </div>
 

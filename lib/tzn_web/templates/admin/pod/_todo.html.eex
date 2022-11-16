@@ -1,20 +1,16 @@
-<%= if @todo.completed do %>
-    <li>
-        <%= if @todo.deleted_at do %>
-            (deleted)
-        <% end %>
-        <strike><%= @todo.todo_text %></strike>
-    </li>
-
-<% else %>
-    <li>
-        <%= if @todo.deleted_at do %>
-            (deleted)
-        <% end %>
+<div class="border-bottom py-2">
+    <%= if @todo.completed || @todo.deleted_at do %>
+        <span class="color-grey-100"><%= @todo.todo_text %></span>
+    <% else %>
         <%= @todo.todo_text %>
-        <%= if @todo.due_date do %>
-            <br />
-            <span class="font-size-s color-grey">Due <%= @todo.due_date %></span>
-        <% end %>
-    </li>
-<% end %>
+    <% end %>
+
+    <%= if @todo.due_date do %>
+        <br />
+        <span class="font-size-s color-grey-100">
+            Due <%= @todo.due_date %>
+            <%= if @todo.completed do %>, completed on <%= Timex.to_date(@todo.completed_changed_at) %><% end %>
+            <%= if @todo.deleted_at do %>, deleted on <%= Timex.to_date(@todo.deleted_at) %><% end %>
+        </span>
+    <% end %>
+</div>
