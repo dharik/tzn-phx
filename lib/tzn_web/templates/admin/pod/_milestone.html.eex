@@ -13,4 +13,6 @@
             <%= if @milestone.completed do %>, completed on <%= Timex.to_date(@milestone.completed_changed_at) %><% end %>
         </span>
     <% end %>
+
+    <%= link "(edit)", to: Routes.admin_pod_todo_path(TznWeb.Endpoint, :edit, @milestone) %>
 </div>

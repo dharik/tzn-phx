@@ -178,6 +178,14 @@ defmodule Tzn.Pods do
     end)
   end
 
+  def admin_create_todo(attrs), do: PodTodo.admin_changeset(%PodTodo{}, attrs) |> Repo.insert()
+
+  def admin_change_todo(todo \\ %PodTodo{}, attrs \\ %{}),
+    do: PodTodo.admin_changeset(todo, attrs)
+
+  def admin_update_todo(todo, attrs),
+    do: PodTodo.admin_changeset(todo, attrs) |> Repo.update()
+
   def create_todo(attrs) do
     PodTodo.changeset(%PodTodo{}, attrs) |> Repo.insert()
   end
@@ -212,8 +220,10 @@ defmodule Tzn.Pods do
 
   defp check_priority_todos({:error, _} = error), do: error
   defp check_priority_todos({:ok, pod}), do: check_priority_todos(pod)
+
   defp check_priority_todos(pod) do
-    if Enum.any?(pod.todos, & &1.is_milestone) && !Enum.any?(pod.todos, & &1.is_priority && &1.is_milestone) do
+    if Enum.any?(pod.todos, & &1.is_milestone) &&
+         !Enum.any?(pod.todos, &(&1.is_priority && &1.is_milestone)) do
       {:error, "A milestone needs to be prioritized"}
     else
       {:ok, pod}
@@ -222,6 +232,7 @@ defmodule Tzn.Pods do
 
   defp check_unedited_todos({:ok, pod}), do: check_unedited_todos(pod)
   defp check_unedited_todos({:error, _} = error), do: error
+
   defp check_unedited_todos(pod) do
     if pod.active &&
          !Tzn.HourTracking.low_hours?(pod) &&

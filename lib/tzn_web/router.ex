@@ -101,6 +101,7 @@ defmodule TznWeb.Router do
       resources "/mentees", Admin.MenteeController
       resources "/pods", Admin.PodController, except: [:index]
       resources "/pod_flags", Admin.PodFlagController, only: [:edit, :update, :index]
+      resources "/pod_todos", Admin.PodTodoController, only: [:new, :create, :edit, :update]
       resources "/mentors", Admin.MentorController
       get "/mentor_payments", Admin.MentorPaymentsController, :index
       resources "/strategy_sessions", Admin.StrategySessionController

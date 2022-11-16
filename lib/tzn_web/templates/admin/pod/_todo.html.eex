@@ -13,4 +13,5 @@
             <%= if @todo.deleted_at do %>, deleted on <%= Timex.to_date(@todo.deleted_at) %><% end %>
         </span>
     <% end %>
+    <%= link "(edit)", to: Routes.admin_pod_todo_path(TznWeb.Endpoint, :edit, @todo) %>
 </div>

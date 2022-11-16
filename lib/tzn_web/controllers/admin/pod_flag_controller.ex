@@ -1,9 +1,5 @@
 defmodule TznWeb.Admin.PodFlagController do
   use TznWeb, :controller
-  alias Tzn.Transizion
-
-  def index(conn, _) do
-  end
 
   def edit(conn, %{"id" => id}) do
     pod_flag = Tzn.Pods.get_flag(id)
