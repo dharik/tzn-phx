@@ -5,6 +5,7 @@ defmodule Tzn.Pods do
   alias Tzn.Repo
   alias Tzn.DB.Pod
   alias Tzn.DB.PodTodo
+  alias Tzn.DB.PodFlag
   alias Tzn.DB.PodChanges
   alias Tzn.Users.User
 
@@ -13,7 +14,7 @@ defmodule Tzn.Pods do
   end
 
   def list_pods(:admin) do
-    Repo.all(Pod) |> Repo.preload([:hour_counts, :mentor, :mentee])
+    Repo.all(Pod) |> Repo.preload([:hour_counts, :mentor, :mentee, :flags])
   end
 
   def list_pods(%Mentee{} = m) do
@@ -65,6 +66,7 @@ defmodule Tzn.Pods do
       :mentor,
       :mentee,
       :timeline,
+      :flags,
       questionnaires: [:question_set]
     ])
     |> with_strategy_sessions()
@@ -80,6 +82,7 @@ defmodule Tzn.Pods do
       :mentor,
       :mentee,
       :timeline,
+      :flags,
       questionnaires: [:question_set]
     ])
     |> with_strategy_sessions()
@@ -134,6 +137,47 @@ defmodule Tzn.Pods do
     end)
   end
 
+  def create_flag(%Ecto.Changeset{} = changeset) do
+    changeset |> Repo.insert()
+  end
+
+  def create_flag(attrs) do
+    PodFlag.changeset(%PodFlag{}, attrs) |> Repo.insert()
+  end
+
+  def get_flag(id) do
+    Repo.get(PodFlag, id)
+  end
+
+  def change_flag(flag \\ %PodFlag{}, attrs \\ %{}) do
+    PodFlag.changeset(flag, attrs)
+  end
+
+  def update_flag(flag, attrs) do
+    change_flag(flag, attrs) |> Repo.update()
+  end
+
+  def list_important_flags() do
+    two_weeks_ago = Timex.now() |> Timex.shift(days: -14)
+    from(f in PodFlag, where: f.status != "resolved" or f.updated_at > ^two_weeks_ago, order_by: [desc: f.inserted_at]) |> Repo.all()
+  end
+
+  def open_flags?(%Pod{flags: flags}) when is_list(flags) do
+    Enum.any?(flags, fn flag ->
+      flag.status == "open"
+    end)
+  end
+
+  def open_flags?(%Pod{}) do
+    false
+  end
+
+  def sort_flags(flags) when is_list(flags) do
+    Enum.sort_by(flags, fn flag ->
+      {flag.status == "resolved", -Timex.to_unix(flag.inserted_at)}
+    end)
+  end
+
   def create_todo(attrs) do
     PodTodo.changeset(%PodTodo{}, attrs) |> Repo.insert()
   end
@@ -163,16 +207,21 @@ defmodule Tzn.Pods do
     |> check_past_due_todos()
     |> check_last_touched_todos()
     |> check_unedited_todos()
+    |> check_priority_todos()
   end
 
-  defp check_unedited_todos({:ok, pod}) do
-    check_unedited_todos(pod)
+  defp check_priority_todos({:error, _} = error), do: error
+  defp check_priority_todos({:ok, pod}), do: check_priority_todos(pod)
+  defp check_priority_todos(pod) do
+    if Enum.any?(pod.todos, & &1.is_milestone) && !Enum.any?(pod.todos, & &1.is_priority && &1.is_milestone) do
+      {:error, "A milestone needs to be prioritized"}
+    else
+      {:ok, pod}
+    end
   end
 
-  defp check_unedited_todos({:error, _} = error) do
-    error
-  end
-
+  defp check_unedited_todos({:ok, pod}), do: check_unedited_todos(pod)
+  defp check_unedited_todos({:error, _} = error), do: error
   defp check_unedited_todos(pod) do
     if pod.active &&
          !Tzn.HourTracking.low_hours?(pod) &&

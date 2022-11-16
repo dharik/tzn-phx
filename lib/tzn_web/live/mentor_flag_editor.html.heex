@@ -1,0 +1,98 @@
+<div class="border-radius box-shadow-m padding-m margin-vertical-l">
+    <%= if Enum.any?(@flags_to_show) do %>
+        <h2>Flags</h2>
+        <table class="mb-0">
+            <thead>
+                <tr>
+                    <th>Note</th>
+                    <th>Status</th>
+                    <th>Opened</th>
+                    <th>Last Updated</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for flag <- @flags_to_show do %>
+                    <tr>
+                        <td><%= flag.description %></td>
+                        <td><%= flag.status %></td>
+                        <td><%= flag.inserted_at |> Tzn.Util.format_date_relative() %></td>
+                        <td><%= flag.updated_at |> Tzn.Util.format_date_relative() %></td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
+        <%= if @can_show_all do %>
+            <center>
+                <button 
+                    type="button" 
+                    class="button button-text button-s font-light" 
+                    phx-target={@myself} 
+                    phx-click="show_all">
+                    Show More (<%= Enum.count(@all_flags) - Enum.count(@flags_to_show) %>)
+                </button>
+            </center>
+        <% end %>
+    <% end %>
+
+    <%= if @new_flag_changeset do %>
+        <dialog 
+        class="fixed border-none rounded-md" 
+        phx-mounted={JS.show(transition: {"duration-75", "opacity-0", "opacity-100"})}
+        phx-remove={JS.hide(transition: {"duration-75", "opacity-100", "opacity-0"})}
+        open 
+        phx-click-away="stop_create_flag" 
+        phx-target={@myself}
+        >
+            <.form for={@new_flag_changeset} let={f} phx-change="validate" phx-debounce="1000" phx-target={@myself} phx-submit="save" onsubmit="return false;">
+                
+                <fieldset>
+                    <%= label f, :description %>
+                    <%= textarea f, :description %>
+                    <%= error_tag f, :description %>
+                </fieldset>
+                Who can see this flag?
+                <br />
+                <%= label f, :parent_can_read, class: "control switch" do %>
+                    <%= checkbox f, :parent_can_read %>
+                    <span class="control-indicator"></span>
+                    <span class="control-label">Parents</span>
+                    <%= error_tag f, :parent_can_read %>
+                <% end %>
+
+                <%= label f, :school_admin_can_read, class: "control switch" do %>
+                    <%= checkbox f, :school_admin_can_read %>
+                    <span class="control-indicator"></span>
+                    <span class="control-label">Guidance Counselors &amp; School Administrators</span>
+                    <%= error_tag f, :school_admin_can_read %>
+                <% end %>
+
+                <button 
+                    type="button"
+                    phx-click="stop_create_flag" 
+                    phx-target={@myself}>
+                    Cancel
+                </button>
+
+
+                <button 
+                    type="button"
+                    class="button button-primary"
+                    phx-click="save"
+                    phx-target={@myself}>
+                    Save
+                </button>
+
+            </.form>
+        </dialog>
+        <div class="backdrop"></div>
+    <% end %>
+
+    <button 
+        type="button" 
+        class="my-1" 
+        phx-click="start_create_flag" 
+        disabled={!is_nil(@new_flag_changeset)}
+        phx-target={@myself}>
+        Flag this student for CMT to review
+    </button>
+</div>

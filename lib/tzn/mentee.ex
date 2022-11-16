@@ -73,7 +73,7 @@ defmodule Tzn.Mentee do
   end
 
   def list_mentees(:admin) do
-    list_mentees() |> Repo.preload([pods: [:mentor, :hour_counts]])
+    list_mentees() |> Repo.preload([pods: [:mentor, :hour_counts, :flags]])
   end
 
   def list_mentees(%Mentor{} = mentor) do

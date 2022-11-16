@@ -49,6 +49,13 @@
                     <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
                 <% end %>
             <% end %>
+
+            <%= if @pod.todos |> Enum.filter(& &1.is_milestone) |> Enum.any?() do %>
+                <p class="lead-s">Milestones</p>
+                <%= for item <- @pod.todos |> Enum.filter(& &1.is_milestone) do %>
+                    <.live_component module={TznWeb.MentorMilestoneItem} id={item.id} item={item}/>
+                <% end %>
+            <% end %>
         </div>
     <% end %>
 

@@ -1,0 +1,6 @@
+<h1>Edit Flag</h1>
+
+<%= render "form.html", Map.put(assigns, :action, Routes.admin_pod_flag_path(@conn, :update, @flag)) %>
+
+<div class="space-l"></div>
+<span><%= link "Back to pod", to: Routes.admin_pod_path(@conn, :show, @flag.pod_id) %></span>

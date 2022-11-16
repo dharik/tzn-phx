@@ -20,6 +20,9 @@ defmodule Tzn.DB.PodTodo do
 
     field :deleted_at, :naive_datetime
 
+    field :is_milestone, :boolean
+    field :is_priority, :boolean
+
     timestamps()
   end
 
@@ -33,7 +36,9 @@ defmodule Tzn.DB.PodTodo do
       :assignee_type,
       :due_date,
       :deleted_at,
-      :pod_id
+      :pod_id,
+      :is_milestone,
+      :is_priority
     ])
     |> validate_required(:todo_text)
     |> validate_required(:due_date)

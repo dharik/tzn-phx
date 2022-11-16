@@ -322,9 +322,39 @@
     </table>
   </div>
 
+  <%= if Enum.any?(@pod.flags) do %>
+    <div class="space-m"></div>
+    <div x-show="tab === 'internal_info'" style="max-width: 80rem">
+      <p class="lead text-decoration-none">Flags</p>
+      <table>
+        <thead>
+          <tr>
+            <th>Status</th>
+            <th>Description</th>
+            <th>Opened</th>
+            <th>Last Updated</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody>
+          <%= for flag <- @pod.flags |> Enum.sort_by(fn f -> {f.status == "resolved", -Timex.to_unix(f.inserted_at)} end) do %>
+            <tr>
+              <td><%= flag.status %></td>
+              <td><%= flag.description %></td>
+              <td><%= flag.inserted_at |> Tzn.Util.format_date_generic() %></td>
+              <td><%= flag.updated_at |> Tzn.Util.format_date_generic() %></td>
+              <td><%= link "edit", to: Routes.admin_pod_flag_path(@conn, :edit, flag) %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+    </div>
+  <% end %>
+
   <div x-show="tab === 'contract_purchases' || tab === 'internal_info'">
     <%= live_render(@conn, TznWeb.AdminPodHours, session: %{"pod_id" => @pod.id, "current_user_id" => @current_user.id}) %>
   </div>
+
 </div>
 
 <div class="space-xl"></div>

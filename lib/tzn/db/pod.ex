@@ -13,6 +13,7 @@ defmodule Tzn.DB.Pod do
     has_many :answers, through: [:mentee, :answers]
     has_many :changes, Tzn.DB.PodChanges
     has_many :todos, Tzn.DB.PodTodo
+    has_many :flags, Tzn.DB.PodFlag
 
     has_one :hour_counts, Tzn.Transizion.PodHourCounts
 

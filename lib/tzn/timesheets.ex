@@ -52,8 +52,31 @@ defmodule Tzn.Timesheets do
     TimesheetEntry.changeset(timesheet_entry, attrs)
   end
 
-  def hour_pay_stats(_entries) do
-    %{total_hours: 3, estimated_pay: 55}
+  def hour_pay_stats(entries) do
+    hours =
+      entries
+      |> Enum.map(fn entry ->
+        Timex.diff(entry.ended_at, entry.started_at, :duration)
+      end)
+      |> Enum.reduce(Timex.Duration.zero(), fn diff, acc ->
+        Timex.Duration.add(acc, diff)
+      end)
+      |> Timex.Duration.to_hours()
+
+    pay =
+      entries
+      |> Enum.map(fn entry ->
+        hours =
+          Timex.diff(entry.ended_at, entry.started_at, :duration) |> Timex.Duration.to_hours()
+
+        hours * Decimal.to_float(entry.hourly_rate)
+      end)
+      |> Enum.sum()
+
+    %{
+      pay: Decimal.from_float(pay) |> Decimal.round(2),
+      hours: hours |> Float.round(2),
+    }
   end
 
   @spec mentor_timesheet_aggregate(number()) :: list()

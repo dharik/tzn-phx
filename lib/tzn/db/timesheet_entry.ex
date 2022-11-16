@@ -57,7 +57,7 @@ defmodule Tzn.Transizion.TimesheetEntry do
       notes = get_field(changeset, :notes)
 
       if category.requires_pod == false && (!notes || String.length(notes) < 2) do
-        [notes: "required"]
+        [notes: "required for selected work category"]
       else
         []
       end

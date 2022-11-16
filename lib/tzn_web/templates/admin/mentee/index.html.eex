@@ -25,6 +25,9 @@
               <%= if !pod.active do %>
                 (archived)
               <% end %>
+              <%= if Tzn.Pods.open_flags?(pod) do %>
+                ⚠️
+              <% end %>
             </td>
             <td>
               <%= humanize(pod.type) %>

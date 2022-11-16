@@ -129,14 +129,10 @@ defmodule Tzn.Util do
   end
 
   def pluralize(num, unit, unit_plural \\ nil) do
-    unit_plural =
-      if is_nil(unit_plural) do
-        unit <> "s"
-      end
-
     if num == 1 do
       "#{num} #{unit}"
     else
+      unit_plural = unit_plural || (unit <> "s")
       "#{num} #{unit_plural}"
     end
   end
