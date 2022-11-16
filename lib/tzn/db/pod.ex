@@ -32,13 +32,6 @@ defmodule Tzn.DB.Pod do
     field :internal_note, :string
     field :mentor_rate, :decimal
 
-    # Deprecated
-    field :mentor_todo_notes, :string
-    # Deprecatedg
-    field :parent_todo_notes, :string
-    # Deprecated
-    field :mentee_todo_notes, :string
-
     # features
     field :college_list_access, :boolean, default: false
     field :ecvo_list_access, :boolean, default: false
