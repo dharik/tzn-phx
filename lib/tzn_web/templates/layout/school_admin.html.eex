@@ -7,7 +7,6 @@
     <%= csrf_meta_tag() %>
     <title>Transizion</title>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/school_admin/app.js") %>"></script>
-    <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/app.css") %>"/>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
   </head>
   <body>

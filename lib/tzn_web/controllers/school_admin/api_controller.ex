@@ -19,7 +19,12 @@ defmodule TznWeb.SchoolAdmin.ApiController do
               %{
                 id: pod.id,
                 name: pod.mentee.name,
-                mentor_name: pod.mentor.name,
+                mentor_name:
+                  if pod.mentor do
+                    pod.mentor.name
+                  else
+                    nil
+                  end,
                 first_meeting_with_mentor:
                   pod.timesheet_entries
                   |> Enum.sort_by(& &1.id)
@@ -31,7 +36,17 @@ defmodule TznWeb.SchoolAdmin.ApiController do
                   |> List.last(%{})
                   |> Map.get(:started_at),
                 hours_mentored:
-                  pod.hour_counts.hours_used |> Number.Conversion.to_float() |> Float.round(2)
+                  pod.hour_counts.hours_used |> Number.Conversion.to_float() |> Float.round(2),
+                any_open_flags: Tzn.Pods.open_flags?(pod),
+                total_milestones: Enum.count(pod.todos, fn t -> t.is_milestone end),
+                completed_milestones: Enum.count(pod.todos, fn t -> t.is_milestone && t.completed end),
+                current_priority: Enum.find_value(pod.todos, nil, fn t ->
+                  if t.is_priority do
+                    t.todo_text
+                  else
+                    nil
+                  end
+                end)
               }
             end),
           school_admins:
@@ -333,7 +348,22 @@ defmodule TznWeb.SchoolAdmin.ApiController do
           nil
         end,
       grade: pod.mentee.grade,
-      notes: pod.internal_note
+      notes: pod.internal_note,
+      flags:
+        pod.flags
+        |> Tzn.Pods.sort_flags()
+        |> Enum.filter(& &1.school_admin_can_read)
+        |> Enum.map(fn flag ->
+          %{
+            id: flag.id,
+            status: flag.status,
+            description: flag.description,
+            created_at: flag.inserted_at,
+            updated_at: flag.updated_at
+          }
+        end),
+      total_milestones: Enum.count(pod.todos, fn t -> t.is_milestone end),
+      completed_milestones: Enum.count(pod.todos, fn t -> t.is_milestone && t.completed end)
     })
   end
 
@@ -364,12 +394,20 @@ defmodule TznWeb.SchoolAdmin.ApiController do
               :timesheet_entries,
               :mentor,
               :hour_counts,
+              :flags,
+              :todos,
               mentee: [:parents],
               timeline: [:calendar_event_markings, calendars: [:events]]
             ]
           ])
         end
       )
+
+    Cachex.expire(
+      :school_admin_cache,
+      conn.assigns.current_user.school_admin_profile.id,
+      :timer.seconds(2)
+    )
 
     assign(conn, :data, d)
   end

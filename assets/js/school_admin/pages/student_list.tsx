@@ -12,6 +12,7 @@ import {
   HStack,
   Text,
   Box,
+  Tooltip,
 } from '@chakra-ui/react';
 import { Link as RouterLink } from 'react-router-dom';
 import React from 'react';
@@ -20,6 +21,7 @@ import * as queries from '../queries';
 import { useQuery } from 'react-query';
 
 import { parseISO, formatRelative } from 'date-fns';
+import { HiCheck, HiExclamation } from 'react-icons/hi';
 
 const CohortStudentsTable = ({
   students,
@@ -27,9 +29,12 @@ const CohortStudentsTable = ({
   students: {
     id: number;
     name: string;
-    firstMeetingWithMentor: string;
-    mostRecentMeetingWithMentor: string;
+    mentorName: string | null;
+    firstMeetingWithMentor: string | null;
+    mostRecentMeetingWithMentor: string | null;
     hoursMentored: number;
+    anyOpenFlags: boolean;
+    currentPriority: string | null;
   }[];
 }) => {
   return (
@@ -37,27 +42,32 @@ const CohortStudentsTable = ({
       <Thead>
         <Tr>
           <Th>Name</Th>
-          <Th>First Meeting With Mentor</Th>
+          <Th>Onboarded</Th>
           <Th>Latest Meeting With Mentor</Th>
-          <Th>Hours Mentored</Th>
+          <Th>Current Priority</Th>
         </Tr>
       </Thead>
       <Tbody>
         {students.map((student) => (
           <Tr key={student.id}>
             <Td>
-              <Link as={RouterLink} to={`/students/${student.id}`}>
-                {student.name}
-              </Link>
+              <HStack>
+                {student.anyOpenFlags && (
+                  <span>
+                    <HiExclamation />
+                  </span>
+                )}
+                <Link as={RouterLink} to={`/students/${student.id}`}>
+                  {student.name}
+                </Link>
+              </HStack>
             </Td>
-            <Td>
-              {student.firstMeetingWithMentor && formatRelative(parseISO(student.firstMeetingWithMentor), new Date())}
-            </Td>
+            <Td>{student.mentorName && <HiCheck />}</Td>
             <Td>
               {student.mostRecentMeetingWithMentor &&
                 formatRelative(parseISO(student.mostRecentMeetingWithMentor), new Date())}
             </Td>
-            <Td>{student.hoursMentored}</Td>
+            <Td>{student.currentPriority}</Td>
           </Tr>
         ))}
       </Tbody>

@@ -17,6 +17,13 @@ import {
   Tab,
   TabPanel,
   TabPanels,
+  Alert,
+  AlertIcon,
+  VStack,
+  Progress,
+  Flex,
+  Spacer,
+  Avatar,
 } from '@chakra-ui/react';
 import { useParams } from 'react-router';
 import React from 'react';
@@ -47,20 +54,22 @@ export default function StudentView() {
       <Heading as="h1" size="xl">
         {student.name}
       </Heading>
-      <Box maxW="container.sm" my={3}>
-        <SimpleGrid columns={2} spacing={2}>
+
+      <VStack gap="2" mb="4">
+        {student.flags.map((flag) => (
+          <Alert status="warning" key={flag.id}>
+            <AlertIcon />({flag.status}) {flag.description}
+          </Alert>
+        ))}
+      </VStack>
+
+      <SimpleGrid columns={2} spacing={2} minChildWidth="20rem">
+        <SimpleGrid columns={2} spacing={2} alignItems="center">
           <Box>
             <Text>Mentor:</Text>
           </Box>
           <HStack>
-            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" className="w-5 h-5">
-              <path
-                fillRule="evenodd"
-                d="M18 10a8 8 0 11-16 0 8 8 0 0116 0zm-5.5-2.5a2.5 2.5 0 11-5 0 2.5 2.5 0 015 0zM10 12a5.99 5.99 0 00-4.793 2.39A6.483 6.483 0 0010 16.5a6.483 6.483 0 004.793-2.11A5.99 5.99 0 0010 12z"
-                clipRule="evenodd"
-              />
-            </svg>
-
+            <Avatar name={student.mentorName} />
             <Text>{student.mentorName}</Text>
           </HStack>
           <Box>
@@ -70,9 +79,17 @@ export default function StudentView() {
             <Text>{student.hoursMentored}</Text>
           </Box>
         </SimpleGrid>
-      </Box>
+        <Flex flexDir="column" justifyContent="flex-end">
+          {student.totalMilestones > 0 && (
+            <>
+              {student.completedMilestones} / {student.totalMilestones} milestones completed
+              <Progress min={0} max={student.totalMilestones} value={student.completedMilestones} />
+            </>
+          )}
+        </Flex>
+      </SimpleGrid>
 
-      <Tabs isFitted>
+      <Tabs isFitted mt="4">
         <TabList>
           <Tab>Mentorship Log</Tab>
           <Tab>Timeline</Tab>

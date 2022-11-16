@@ -2,7 +2,7 @@ import { ReactQueryDevtools } from 'react-query/devtools';
 import { Route, createBrowserRouter, RouterProvider } from 'react-router-dom';
 import React from 'react';
 import ReactDOM from 'react-dom';
-import { ChakraProvider, Spinner } from '@chakra-ui/react';
+import { ChakraProvider, extendTheme, Spinner } from '@chakra-ui/react';
 
 import Dashboard from './pages/dashboard';
 import StudentList from './pages/student_list';
@@ -53,8 +53,23 @@ function App() {
   const queryClient = new QueryClient();
 
   return (
-    <QueryClientProvider client={queryClient}>
-      <ChakraProvider>
+    <ChakraProvider
+      theme={extendTheme({
+        styles: {
+          global: {
+            body: {
+              backgroundImage: "url('/images/rhombii.png')",
+              backgroundPosition: 'center top',
+              backgroundSize: 'cover',
+              backgroundRepeat: 'no-repeat',
+              backgroundAttachment: 'fixed',
+              minHeight: '100vh',
+            },
+          },
+        },
+      })}
+    >
+      <QueryClientProvider client={queryClient}>
         <RouterProvider
           router={router}
           fallbackElement={
@@ -63,8 +78,8 @@ function App() {
             </DefaultLayout>
           }
         />
-      </ChakraProvider>
-    </QueryClientProvider>
+      </QueryClientProvider>
+    </ChakraProvider>
   );
 }
 
