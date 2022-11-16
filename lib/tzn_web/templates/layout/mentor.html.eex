@@ -62,6 +62,7 @@
 
     mixpanel.init('1ed07a56082fd0d21153b2a84fe1b8c9');
     mixpanel.identify("<%= @current_user.id %>")
+    mixpanel.track("mentor_page_load")
     </script>
 
   </body>
