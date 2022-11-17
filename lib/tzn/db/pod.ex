@@ -33,9 +33,14 @@ defmodule Tzn.DB.Pod do
     field :mentor_rate, :decimal
 
     # features
-    field :college_list_access, :boolean, default: false
-    field :ecvo_list_access, :boolean, default: false
-    field :scholarship_list_access, :boolean, default: false
+    # Keep these fields for now
+    field :college_list_access, :boolean, default: false # Deprecated in favor of college_list_limit
+    field :ecvo_list_access, :boolean, default: false # Deprecated in favor of ecvo_list_limit
+    field :scholarship_list_access, :boolean, default: false # Deprecated in favor of scholarship_list_limit
+
+    field :college_list_limit, :integer, default: 1
+    field :ecvo_list_limit, :integer, default: 0
+    field :scholarship_list_limit, :integer, default: 0
 
     # hour breakdown by grade
     field :hours_recommended_freshman, :decimal
@@ -57,9 +62,9 @@ defmodule Tzn.DB.Pod do
       :active,
       :mentor_rate,
       :internal_note,
-      :college_list_access,
-      :ecvo_list_access,
-      :scholarship_list_access,
+      :college_list_limit,
+      :ecvo_list_limit,
+      :scholarship_list_limit,
       :mentee_id,
       :mentor_id,
       :timeline_id,
@@ -83,6 +88,9 @@ defmodule Tzn.DB.Pod do
     |> validate_number(:hours_cap_sophomore, greater_than_or_equal_to: 0)
     |> validate_number(:hours_cap_junior, greater_than_or_equal_to: 0)
     |> validate_number(:hours_cap_senior, greater_than_or_equal_to: 0)
+    |> validate_number(:college_list_limit, less_than: 10, greater_than_or_equal_to: -1)
+    |> validate_number(:ecvo_list_limit, less_than: 10, greater_than_or_equal_to: -1)
+    |> validate_number(:scholarship_list_limit, less_than: 10, greater_than_or_equal_to: -1)
   end
 
   # TODO: Recommended hours/year cannot exceed the capped hours

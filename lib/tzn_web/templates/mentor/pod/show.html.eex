@@ -154,7 +154,7 @@
 <div class="space-m"></div>
 <p class="lead">College List</p>
 <div class="border border-radius padding-s">
-  <%= if @pod.college_list_access do %>
+  <%= if Tzn.Pods.college_list_access?(@pod) do %>
     <% college_lists =  Tzn.Questionnaire.only_college_lists(@pod.questionnaires) %>
     <%= if Enum.count(college_lists) > 0 do %>
       <%= for q <- college_lists do %>
@@ -190,7 +190,7 @@
 <div class="space-m"></div>
 <p class="lead">Extracurricular / Volunteer Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if @pod.ecvo_list_access do %>
+  <%= if Tzn.Pods.ecvo_list_access?(@pod) do %>
     <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
       <em>
         <%=
@@ -221,7 +221,7 @@
 <div class="space-m"></div>
 <p class="lead">Scholarship Opportunity List</p>
 <div class="border border-radius padding-s">
-  <%= if @pod.scholarship_list_access do %>
+  <%= if Tzn.Pods.scholarship_list_access?(@pod) do %>
     <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
       <em>
         <%=

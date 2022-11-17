@@ -20,9 +20,9 @@ defmodule TznWeb.Admin.PodController do
       Tzn.Pods.change_pod(
         %Tzn.DB.Pod{
           active: true,
-          college_list_access: true,
-          scholarship_list_access: true,
-          ecvo_list_access: true
+          college_list_limit: 1,
+          scholarship_list_limit: 0,
+          ecvo_list_limit: 0
         },
         %{mentee_id: mentee_id}
       )
@@ -34,9 +34,9 @@ defmodule TznWeb.Admin.PodController do
     changeset =
       Tzn.Pods.change_pod(%Tzn.DB.Pod{
         active: true,
-        college_list_access: true,
-        scholarship_list_access: true,
-        ecvo_list_access: true
+        college_list_limit: 1,
+        scholarship_list_limit: 0,
+        ecvo_list_limit: 0
       })
 
     render(conn, "new.html", changeset: changeset)

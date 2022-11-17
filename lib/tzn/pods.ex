@@ -159,7 +159,12 @@ defmodule Tzn.Pods do
 
   def list_important_flags() do
     two_weeks_ago = Timex.now() |> Timex.shift(days: -14)
-    from(f in PodFlag, where: f.status != "resolved" or f.updated_at > ^two_weeks_ago, order_by: [desc: f.inserted_at]) |> Repo.all()
+
+    from(f in PodFlag,
+      where: f.status != "resolved" or f.updated_at > ^two_weeks_ago,
+      order_by: [desc: f.inserted_at]
+    )
+    |> Repo.all()
   end
 
   def open_flags?(%Pod{flags: flags}) when is_list(flags) do
@@ -176,6 +181,63 @@ defmodule Tzn.Pods do
     Enum.sort_by(flags, fn flag ->
       {flag.status == "resolved", -Timex.to_unix(flag.inserted_at)}
     end)
+  end
+
+  def college_list_access?(%Pod{college_list_limit: limit}) do
+    case limit do
+      nil -> false
+      0 -> false
+      _ -> true
+    end
+  end
+
+  def college_list_usage(%Pod{} = p) do
+    used =
+      p.questionnaires
+      |> Tzn.Questionnaire.only_college_lists()
+      |> Enum.count()
+
+    total = p.college_list_limit || 0
+
+    %{used: used, total: total}
+  end
+
+  def ecvo_list_access?(%Pod{ecvo_list_limit: limit}) do
+    case limit do
+      nil -> false
+      0 -> false
+      _ -> true
+    end
+  end
+
+  def ecvo_list_usage(%Pod{} = p) do
+    used =
+      p.questionnaires
+      |> Tzn.Questionnaire.only_ecvo_lists()
+      |> Enum.count()
+
+    total = p.ecvo_list_limit || 0
+
+    %{used: used, total: total}
+  end
+
+  def scholarship_list_access?(%Pod{scholarship_list_limit: limit}) do
+    case limit do
+      nil -> false
+      0 -> false
+      _ -> true
+    end
+  end
+
+  def scholarship_list_usage(%Pod{} = p) do
+    used =
+      p.questionnaires
+      Tzn.Questionnaire.only_scholarship_lists()
+      |> Enum.count()
+
+    total = p.scholarship_list_limit || 0
+
+    %{used: used, total: total}
   end
 
   def admin_create_todo(attrs), do: PodTodo.admin_changeset(%PodTodo{}, attrs) |> Repo.insert()

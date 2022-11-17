@@ -45,29 +45,17 @@
   ] %>
   <%= error_tag f, :type %>
 
+  <%= label f, :college_list_limit %>
+  <%= number_input f, :college_list_limit %>
+  <%= error_tag f, :college_list_limit %>
 
-  <%= label f, :college_list_access, class: "control switch" do %>
-    <%= checkbox f, :college_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">College List Access</span>
-  <% end %>
-  <%= error_tag f, :college_list_access %>
+  <%= label f, :ecvo_list_limit %>
+  <%= number_input f, :ecvo_list_limit %>
+  <%= error_tag f, :ecvo_list_limit %>
 
-  <%= label f, :ecvo_list_access, class: "control switch" do %>
-    <%= checkbox f, :ecvo_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">EC/VO List Access</span>
-  <% end %>
-  <%= error_tag f, :ecvo_list_access %>
-
-  <%= label f, :scholarship_list_access, class: "control switch" do %>
-    <%= checkbox f, :scholarship_list_access %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Scholarship List Access</span>
-  <% end %>
-  <%= error_tag f, :scholarship_list_access %>
-
-
+  <%= label f, :scholarship_list_limit %>
+  <%= number_input f, :scholarship_list_limit %>
+  <%= error_tag f, :scholarship_list_limit %>
 
 
   <div class="space-l"> </div>
