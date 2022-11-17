@@ -32,12 +32,6 @@ defmodule Tzn.DB.Pod do
     field :internal_note, :string
     field :mentor_rate, :decimal
 
-    # features
-    # Keep these fields for now
-    field :college_list_access, :boolean, default: false # Deprecated in favor of college_list_limit
-    field :ecvo_list_access, :boolean, default: false # Deprecated in favor of ecvo_list_limit
-    field :scholarship_list_access, :boolean, default: false # Deprecated in favor of scholarship_list_limit
-
     field :college_list_limit, :integer, default: 1
     field :ecvo_list_limit, :integer, default: 0
     field :scholarship_list_limit, :integer, default: 0

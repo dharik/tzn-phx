@@ -232,7 +232,7 @@ defmodule Tzn.Pods do
   def scholarship_list_usage(%Pod{} = p) do
     used =
       p.questionnaires
-      Tzn.Questionnaire.only_scholarship_lists()
+      |> Tzn.Questionnaire.only_scholarship_lists()
       |> Enum.count()
 
     total = p.scholarship_list_limit || 0

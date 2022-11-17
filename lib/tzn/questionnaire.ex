@@ -408,4 +408,10 @@ defmodule Tzn.Questionnaire do
   def only_college_lists(questionnaires) do
     Enum.filter(questionnaires, &(&1.question_set.slug == "college_list"))
   end
+  def only_ecvo_lists(questionnaires) do
+    Enum.filter(questionnaires, &(&1.question_set.slug == "ec_vo_list"))
+  end
+  def only_scholarship_lists(questionnaires) do
+    Enum.filter(questionnaires, &(&1.question_set.slug == "scholarship_list"))
+  end
 end
