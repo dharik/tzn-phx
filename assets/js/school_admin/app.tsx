@@ -22,25 +22,21 @@ const router = createBrowserRouter(
           element: <Dashboard />,
         },
         {
-          path: '/students',
-          element: <StudentList />,
+          path: 'cohort/:cohortId/stats',
+          element: <StudentList /> // TODO
         },
         {
-          path: '/students/:studentId',
+          path: 'cohort/:cohortId/timeline',
+          element: <Timeline />
+        },
+        {
+          path: 'cohort/:cohortId/student/:studentId',
           element: <StudentView />,
         },
         {
-          path: '/timeline/general',
-          element: <Timeline />,
-        },
-        {
-          path: '/timeline/:studentId',
-          element: <Timeline />,
-        },
-        {
-          path: '/stats',
+          path: 'cohort/:cohortId',
           element: <StudentList />,
-        },
+        }
       ],
     },
   ],

@@ -10,60 +10,53 @@ async function genericRequest(queryKey: string, params?: object) {
   return json;
 }
 
-export async function cohortsAndStudents() {
-  return genericRequest('cohorts_and_students');
+export async function getCohorts() {
+  return genericRequest('cohorts');
 }
 
-export async function getDashboard() {
-  return genericRequest('dashboard');
+export async function getCohort(id: number | string) {
+  return genericRequest('cohort', {
+    id,
+  });
+}
+
+export async function getCohortHighlights(id: number | string) {
+  return genericRequest('cohort_highlights', {
+    id,
+  });
 }
 
 export async function myName() {
   return genericRequest('my_name');
 }
 
-export async function numStudents() {
-  return genericRequest('num_students');
-}
-
-export async function hoursMentored() {
-  return genericRequest('hours_mentored');
-}
-
-export async function getStudentTimelineList() {
-  return genericRequest('student_timeline_list');
-}
-
-export async function getStudentHighlights() {
-  return genericRequest('student_highlights');
-}
-
-export async function getStudentHighlight(id?: number) {
-  return genericRequest('student_highlights', { student_id: id });
-}
-
 export async function getStudent(id: number | string) {
   return genericRequest('student', {
-    student_id: id,
+    id,
   });
 }
 
-export async function getStudentTimeline(
-  id: number | string,
-  limit: number,
-  sort: 'asc' | 'desc',
-  includePast: 'y' | 'n'
-) {
-  return genericRequest('student_timeline', {
+export async function getStudentTimeline(id: number | string, sort: 'asc' | 'desc', includePast: 'y' | 'n') {
+  return genericRequest('timeline', {
     student_id: id,
-    limit: limit || 0,
     sort: sort || 'asc',
     includePast: includePast || 'n',
   });
 }
+export async function getStudentMilestones(id: string | number) {
+  return genericRequest('milestones', {
+    student_id: id,
+  });
+}
 
-export async function getGeneralTimeline(limit: number, sort: 'asc' | 'desc', includePast: 'y' | 'n') {
-  return genericRequest('general_timeline', {
+export async function getGeneralTimeline(
+  cohortId: number | string,
+  limit: number,
+  sort: 'asc' | 'desc',
+  includePast: 'y' | 'n'
+) {
+  return genericRequest('timeline', {
+    cohort_id: cohortId,
     limit: limit || 0,
     sort: sort || 'asc',
     includePast: includePast || 'n',

@@ -14,7 +14,7 @@ import {
   Box,
   Tooltip,
 } from '@chakra-ui/react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useParams } from 'react-router-dom';
 import React from 'react';
 
 import * as queries from '../queries';
@@ -53,11 +53,14 @@ const CohortStudentsTable = ({
             <Td>
               <HStack>
                 {student.anyOpenFlags && (
-                  <span>
-                    <HiExclamation />
-                  </span>
+                  <Tooltip
+                    label={`${student.mentorName} flagged this student. Open the student's profile to see more details.`}
+                    aria-label="Warning"
+                  >
+                    <Text>⚠️</Text>
+                  </Tooltip>
                 )}
-                <Link as={RouterLink} to={`/students/${student.id}`}>
+                <Link as={RouterLink} to={`student/${student.id}`}>
                   {student.name}
                 </Link>
               </HStack>
@@ -76,24 +79,26 @@ const CohortStudentsTable = ({
 };
 
 export default function StudentList() {
-  const cohortsAndStudentsQuery = useQuery('cohorts_and_students', queries.cohortsAndStudents, {
+  const { cohortId } = useParams();
+  const cohortQuery = useQuery(['cohort', cohortId], () => queries.getCohort(cohortId), {
     staleTime: 1000 * 60 * 5,
+    enabled: !!cohortId,
   });
 
-  if (cohortsAndStudentsQuery.isLoading) {
+  if (cohortQuery.isLoading) {
     return <Skeleton height="30px" />;
   }
 
+  const cohort = cohortQuery.data;
+
   return (
     <Container maxW={'container.xl'}>
-      {cohortsAndStudentsQuery.data.map((cohort) => (
-        <Box key={cohort.id}>
-          <Heading as="h2" size="md" my={3}>
-            {cohort.name}
-          </Heading>
-          <CohortStudentsTable students={cohort.students} />
-        </Box>
-      ))}
+      <Box>
+        <Heading as="h2" size="md" my={3}>
+          {cohort.name}
+        </Heading>
+        <CohortStudentsTable students={cohort.students} />
+      </Box>
     </Container>
   );
 }

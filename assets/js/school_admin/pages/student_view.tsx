@@ -31,6 +31,7 @@ import { useQuery } from 'react-query';
 import * as queries from '../queries';
 import { parseISO, formatRelative } from 'date-fns';
 import Timeline from './timeline';
+import { Milestone } from '../components/milestone';
 
 const fiveMinCache = {
   staleTime: 1000 * 60 * 5,
@@ -118,6 +119,16 @@ export default function StudentView() {
           </TabPanel>
           <TabPanel>
             <Timeline showSwitcher={false} />
+            <Container maxW="container.lg" py={4}>
+              {student.milestones.map((milestone) => (
+                <Milestone
+                  completed={milestone.isCompleted}
+                  description={milestone.text}
+                  isPriority={milestone.isPriority}
+                  title="Milestone"
+                />
+              ))}
+            </Container>
           </TabPanel>
         </TabPanels>
       </Tabs>
