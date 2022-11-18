@@ -326,6 +326,7 @@ defmodule TznWeb.SchoolAdmin.ApiController do
       timesheet_entries:
         Enum.map(pod.timesheet_entries, fn tse ->
           %{
+            id: tse.id,
             category: Tzn.Util.humanize(tse.category),
             started_at: tse.started_at,
             ended_at: tse.ended_at,
@@ -360,6 +361,7 @@ defmodule TznWeb.SchoolAdmin.ApiController do
       completed_milestones: Enum.count(pod.todos, fn t -> t.is_milestone && t.completed end),
       milestones: pod.todos |> Enum.filter(& &1.is_milestone) |> Enum.map(fn milestone ->
         %{
+          id: milestone.id,
           is_priority: milestone.is_priority,
           text: milestone.todo_text,
           is_completed: milestone.completed

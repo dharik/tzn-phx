@@ -1,6 +1,7 @@
 import { Box, Flex, Square, Text } from '@chakra-ui/react';
 import React from 'react';
-import { HiOutlineStar, HiStar } from 'react-icons/hi';
+import { HiStar } from 'react-icons/hi';
+
 export function Milestone({
   title,
   description,

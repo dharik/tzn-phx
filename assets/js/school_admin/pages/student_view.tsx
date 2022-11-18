@@ -108,7 +108,7 @@ export default function StudentView() {
               </Thead>
               <Tbody>
                 {student.timesheetEntries.map((tse) => (
-                  <Tr>
+                  <Tr key={tse.id}>
                     <Td>{formatRelative(parseISO(tse.startedAt), new Date())}</Td>
                     <Td>{tse.category}</Td>
                     <Td dangerouslySetInnerHTML={{ __html: tse.notes }}></Td>
@@ -119,16 +119,6 @@ export default function StudentView() {
           </TabPanel>
           <TabPanel>
             <Timeline showSwitcher={false} />
-            <Container maxW="container.lg" py={4}>
-              {student.milestones.map((milestone) => (
-                <Milestone
-                  completed={milestone.isCompleted}
-                  description={milestone.text}
-                  isPriority={milestone.isPriority}
-                  title="Milestone"
-                />
-              ))}
-            </Container>
           </TabPanel>
         </TabPanels>
       </Tabs>
