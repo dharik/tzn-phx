@@ -13,6 +13,7 @@ defmodule Tzn.Questionnaire.Questionnaire do
     field :parent_email_sent_at, :naive_datetime
 
     has_many :files, Tzn.Files.MenteeFile
+    has_many :snapshots, Tzn.DB.QuestionnaireSnapshot, preload_order: [asc: :inserted_at]
 
     timestamps()
   end

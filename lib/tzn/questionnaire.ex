@@ -7,6 +7,7 @@ defmodule Tzn.Questionnaire do
   alias Tzn.Questionnaire.Answer
   alias Tzn.Transizion.Mentee
   alias Tzn.Transizion.Mentor
+  alias Tzn.DB.QuestionnaireSnapshot
 
   alias Tzn.Users.User
   import Tzn.Policy
@@ -257,8 +258,6 @@ defmodule Tzn.Questionnaire do
     Questionnaire.changeset(q, attrs)
   end
 
-  # TODO: Only if admin | mentor
-  # TODO: No duplicates, at least for now
   def create_questionnaire(attrs, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
 
@@ -270,7 +269,32 @@ defmodule Tzn.Questionnaire do
   def update_questionnare_state(%Questionnaire{} = q, new_state, %User{} = current_user) do
     assert_admin_or_mentor(current_user)
     change_questionnaire(q, %{state: new_state}) |> Repo.update()
+    save_snapshot(q)
   end
+
+  def save_snapshot(nil), do: {:ok, :no_questionnaire}
+
+  def save_snapshot(%Questionnaire{} = q) do
+    q = q |> Repo.preload(:question_set)
+    questions = ordered_questions_in_set(q.question_set)
+    question_ids = Tzn.Util.map_ids(questions)
+    answers = from(a in Answer, where: a.question_id in ^question_ids, where: a.mentee_id == ^q.mentee_id) |> Repo.all()
+
+    %QuestionnaireSnapshot{
+      state: q.state,
+      questionnaire_id: q.id,
+      snapshot_data: %{
+        questions: Enum.map(questions, fn q -> Map.take(q, [:id, :question, :updated_at]) end),
+        answers: Enum.map(answers, fn a -> Map.take(a, [:id, :from_pod, :from_parent, :internal, :question_id, :updated_at]) end)
+      }
+    } |> Repo.insert()
+  end
+
+  def get_latest_snapshot(nil), do: nil
+  def get_latest_snapshot(%Questionnaire{} = q) do
+    from(s in QuestionnaireSnapshot, where: s.questionnaire_id == ^q.id, order_by: [desc: s.inserted_at], limit: 1) |> Repo.one()
+  end
+
 
   @doc """
   Note these will not be in order!
