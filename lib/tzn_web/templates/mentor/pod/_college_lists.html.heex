@@ -1,0 +1,45 @@
+<%= if Tzn.Pods.completed_college_lists(@pod) |> Enum.any? do %>
+    <ol>
+        <%= for q <- Tzn.Pods.completed_college_lists(@pod) do %>
+            <li>
+                <%= link "Completed: " <> Tzn.Util.fomat_date_month_year(q.updated_at), to: Routes.mentor_college_list_path(@conn, :show, q) %>
+            </li>
+        <% end %>
+    </ol>
+<% end %>
+
+
+
+<%= if q = Tzn.Pods.current_college_list(@pod) do %>
+    <div class="flex flex-col space-y-2 items-start">
+        <span>
+            Current College List: 
+            <%=
+                case q.state do
+                    "needs_info" -> "Needs info from you or parent(s)."
+                    "ready_for_specialist" -> "Submitted to research specialist to begin research."
+                    "specialist" -> "Research specialist is creating the college list."
+                    "designer" -> "College list research is done. It's being compiled into a single document."
+                    _ -> "Unknown"
+                end 
+            %>
+        </span>
+        <%= link to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-primary" do %>
+            View
+        <% end %>
+    </div>
+<% end %>
+
+<%= if Tzn.Pods.can_start_college_list(@pod) do %>
+    <%= if Tzn.Pods.completed_college_lists(@pod) |> Enum.any? do %>
+    <%= link "Start New",
+        to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
+        class: "button button-primary", method: :post
+        %>
+    <% else %>
+    <%= link "Start",
+        to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
+        class: "button button-primary", method: :post
+    %>
+    <% end %>
+<% end %>

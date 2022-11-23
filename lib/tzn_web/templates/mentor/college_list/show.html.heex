@@ -1,0 +1,47 @@
+Attached files:
+<ul>
+    <%= for file <- @questionnaire.files do %>
+        <li>
+            <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
+        </li>
+    <% end %>
+</ul>
+
+<%= if Enum.count(@questionnaire.snapshots) > 0 do %>
+    Version History:
+    <ul>
+        <%= for snapshot <- @questionnaire.snapshots do %>
+            <% version_title = Tzn.Util.format_date_generic(snapshot.inserted_at) <> " - " <> snapshot.state %>
+            <%= if @snapshot.id == snapshot.id do %>
+                <li><b><%= version_title %></b></li>
+            <% else %>
+                <li><%= link version_title, to: Routes.mentor_college_list_path(@conn, :show, @questionnaire.id, version: snapshot.id) %></li>
+            <% end %>
+        <% end %>
+    </ul>
+<% end %>
+
+Answers:
+<div class="overflow-x-auto w-full">
+    <table>
+        <thead>
+            <tr>
+                <th>Question</th>
+                <th>Parent Response</th>
+                <th>Pod Response</th>
+                <th>Interal Notes</th>
+            </tr>
+        </thead>
+        <tbody>
+            <%= for question <- @snapshot.snapshot_data["questions"] do %>
+                <% answer = @snapshot.snapshot_data["answers"] |> Enum.find(fn a -> a["question_id"] == question["id"] end) %>
+                <tr>
+                    <td width="25%" class="whitespace-pre-wrap"><%= raw question["question"] %></td>
+                    <td width="25%" class="whitespace-pre-wrap"><%= answer["from_parent"] %></td>
+                    <td width="25%" class="whitespace-pre-wrap"><%= answer["from_pod"] %></td>
+                    <td width="25%" class="whitespace-pre-wrap"><%= answer["internal"] %></td>
+                </tr>
+            <% end %>
+        </tbody>
+    </table>
+</div>

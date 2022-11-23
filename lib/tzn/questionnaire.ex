@@ -217,7 +217,7 @@ defmodule Tzn.Questionnaire do
     Questionnaire
     |> order_by(desc: :inserted_at)
     |> Repo.all()
-    |> Repo.preload([:question_set, mentee: [pods: :mentor]])
+    |> Repo.preload([:question_set, mentee: [questionnaires: :question_set, pods: :mentor]])
   end
 
   def list_questionnaires(%Mentee{} = mentee) do
@@ -275,10 +275,10 @@ defmodule Tzn.Questionnaire do
   def save_snapshot(nil), do: {:ok, :no_questionnaire}
 
   def save_snapshot(%Questionnaire{} = q) do
-    q = q |> Repo.preload(:question_set)
+    q = q |> Repo.reload() |> Repo.preload([:mentee, :question_set])
     questions = ordered_questions_in_set(q.question_set)
     question_ids = Tzn.Util.map_ids(questions)
-    answers = from(a in Answer, where: a.question_id in ^question_ids, where: a.mentee_id == ^q.mentee_id) |> Repo.all()
+    answers = list_answers(q)
 
     %QuestionnaireSnapshot{
       state: q.state,
@@ -307,6 +307,14 @@ defmodule Tzn.Questionnaire do
       where: a.question_id in ^question_ids
     )
     |> Repo.all()
+  end
+
+  def touch_answer(%Answer{} = a) do
+    Answer.changeset(a, %{}) |> Repo.update(force: true)
+  end
+
+  def get_answer(id) do
+    Repo.get(Answer, id)
   end
 
   defp create_or_update_answer(%Question{} = question, %Mentee{} = mentee, params) do

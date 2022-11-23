@@ -69,50 +69,95 @@ end
         </ul>
     </div>
 
-    <%= for q <- @questions do %>
-        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
-        <%= raw q.question %>
-        <table class="margin-bottom-xxl">
-            <thead>
+    <%= if Enum.count(@snapshots) > 0 do %>
+        State Changes:
+        <ul>
+            <%= for snapshot <- @snapshots do %>
+                <% version_title = Tzn.Util.format_date_generic(snapshot.inserted_at) <> " - " <> snapshot.state %>
+                <%= if @selected_snapshot == snapshot && @questionnaire.state == "complete" do %>
+                    <li><b><%= version_title %></b></li>
+                <% else %>
+                    <%= if @questionnaire.state == "complete" do %>
+                        <li><%= link version_title, to: Routes.admin_questionnaire_path(@conn, :edit, @questionnaire, version: snapshot.id) %></li>
+                    <% else %>
+                        <li><%= version_title %></li>
+                    <% end %>
+                <% end %>
+            <% end %>
+        </ul>
+        <hr />
+    <% end %>
+
+    <%= if @questionnaire.state == "complete" && @selected_snapshot do %>
+        <div class="overflow-x-auto w-full">
+            <table>
+                <thead>
+                    <tr>
+                        <th>Question</th>
+                        <th>Parent Response</th>
+                        <th>Pod Response</th>
+                        <th>Interal Notes</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <%= for question <- @selected_snapshot.snapshot_data["questions"] do %>
+                        <% answer = @selected_snapshot.snapshot_data["answers"] |> Enum.find(fn a -> a["question_id"] == question["id"] end) %>
+                        <tr>
+                            <td width="25%" class="whitespace-pre-wrap"><%= raw question["question"] %></td>
+                            <td width="25%" class="whitespace-pre-wrap"><%= answer["from_parent"] %></td>
+                            <td width="25%" class="whitespace-pre-wrap"><%= answer["from_pod"] %></td>
+                            <td width="25%" class="whitespace-pre-wrap"><%= answer["internal"] %></td>
+                        </tr>
+                    <% end %>
+                </tbody>
+            </table>
+        </div>
+    <% else %>
+        <%= for q <- @questions do %>
+            <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
+            <%= raw q.question %>
+            <table class="margin-bottom-xxl">
+                <thead>
+                    <tr>
+                        <th>
+                            Parent response
+                        </th>
+                        <th>
+                            Pod response <br /><small>Parents can see this</small>
+                        </th>
+                        <th>
+                            Internal Notes <br /><small>Parents cannot see this</small>
+                        </th>
+                    </tr>
+                </thead>
                 <tr>
-                    <th>
-                        Parent response
-                    </th>
-                    <th>
-                        Pod response <br /><small>Parents can see this</small>
-                    </th>
-                    <th>
-                        Internal Notes <br /><small>Parents cannot see this</small>
-                    </th>
+                    <td width="33%">
+                        <%= react_component("Components.AdminAnswerInput", %{
+                            question_id: q.id,
+                            mentee_id: @mentee.id,
+                            answer_from: "from_parent",
+                            value: Map.get(answer, :from_parent)
+                        }) %>
+                    </td>
+                    <td width="33%">
+                        <%= react_component("Components.AdminAnswerInput", %{
+                            question_id: q.id,
+                            mentee_id: @mentee.id,
+                            answer_from: "from_pod",
+                            value: Map.get(answer, :from_pod)
+                        }) %>
+                    </td>
+                    <td width="33%">
+                        <%= react_component("Components.AdminAnswerInput", %{
+                            question_id: q.id,
+                            mentee_id: @mentee.id,
+                            answer_from: "internal",
+                            value: Map.get(answer, :internal)
+                        }) %>
+                    </td>
                 </tr>
-            </thead>
-            <tr>
-                <td width="33%">
-                    <%= react_component("Components.AdminAnswerInput", %{
-                        question_id: q.id,
-                        mentee_id: @mentee.id,
-                        answer_from: "from_parent",
-                        value: Map.get(answer, :from_parent)
-                    }) %>
-                </td>
-                <td width="33%">
-                    <%= react_component("Components.AdminAnswerInput", %{
-                        question_id: q.id,
-                        mentee_id: @mentee.id,
-                        answer_from: "from_pod",
-                        value: Map.get(answer, :from_pod)
-                    }) %>
-                </td>
-                <td width="33%">
-                    <%= react_component("Components.AdminAnswerInput", %{
-                        question_id: q.id,
-                        mentee_id: @mentee.id,
-                        answer_from: "internal",
-                        value: Map.get(answer, :internal)
-                    }) %>
-                </td>
-            </tr>
-        </table>
+            </table>
+        <% end %>
     <% end %>
 </div>
 

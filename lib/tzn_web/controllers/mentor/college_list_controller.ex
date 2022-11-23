@@ -1,5 +1,6 @@
 defmodule TznWeb.Mentor.CollegeListController do
   use TznWeb, :controller
+  alias Tzn.Repo
   alias Tzn.Questionnaire
 
   # For the specialists
@@ -13,6 +14,21 @@ defmodule TznWeb.Mentor.CollegeListController do
     render(conn, "index.html", lists: questionnaires, include_hidden: !!params["include_hidden"])
   end
 
+  def show(conn, %{"id" => id} = params) do
+    questionnaire =
+        Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
+        |> Repo.preload(:snapshots)
+
+    selected_snapshot =
+      Tzn.Util.find_by_id(questionnaire.snapshots, params["version"]) || List.last(questionnaire.snapshots)
+
+    if is_nil(selected_snapshot) do
+      raise "No snapshot found"
+    end
+
+    conn |> render("show.html", questionnaire: questionnaire, snapshot: selected_snapshot)
+  end
+
   def edit(conn, %{"id" => id}) do
     questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
     questions = Questionnaire.ordered_questions_in_set(questionnaire.question_set)
@@ -23,14 +39,18 @@ defmodule TznWeb.Mentor.CollegeListController do
       |> Enum.filter(fn p -> p.mentee_id == questionnaire.mentee_id end)
       |> Enum.any?()
 
-    render(conn, "edit.html",
-      mentee: questionnaire.mentee,
-      questions: questions,
-      answers: answers,
-      questionnaire: questionnaire,
-      state_changeset: Questionnaire.Questionnaire.changeset(questionnaire),
-      is_my_mentee: is_my_mentee
-    )
+    if questionnaire.state == "complete" && !conn.assigns.current_mentor.college_list_specialty do
+      redirect(conn, to: Routes.mentor_college_list_path(conn, :show, questionnaire))
+    else
+      render(conn, "edit.html",
+        mentee: questionnaire.mentee,
+        questions: questions,
+        answers: answers,
+        questionnaire: questionnaire,
+        state_changeset: Questionnaire.Questionnaire.changeset(questionnaire),
+        is_my_mentee: is_my_mentee
+      )
+    end
   end
 
   def update(conn, %{"id" => id, "questionnaire" => %{"state" => new_state}}) do
@@ -65,26 +85,21 @@ defmodule TznWeb.Mentor.CollegeListController do
     |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
   end
 
-  def create(conn, %{"mentee_id" => mentee_id}) do
-    mentee = Tzn.Mentee.get_mentee!(mentee_id)
+  def create(conn, %{"pod_id" => pod_id}) do
+    pod = Tzn.Pods.get_pod!(pod_id)
 
-    case Questionnaire.create_questionnaire(
-           %{
-             question_set_id: Tzn.Questionnaire.college_list_question_set().id,
-             mentee_id: mentee.id,
-             state: "needs_info",
-             access_key: nil
-           },
-           conn.assigns.current_user
-         ) do
+    case Tzn.Pods.create_college_list(pod, conn.assigns.current_user) do
       {:ok, questionnaire} ->
+        conn
+        |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
+
+      {:in_progress, questionnaire} ->
         conn
         |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))
 
       {:error, _changeset} ->
         conn
-        |> put_flash(:error, "Something went wrong")
-        |> redirect(to: Routes.mentor_mentee_path(conn, :show, mentee))
+        |> redirect(to: Routes.mentor_pod_path(conn, :show, pod))
     end
   end
 end

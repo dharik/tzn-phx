@@ -125,49 +125,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
 
         <div class="space-l"></div>
 
-        <%= for q <- @questions do %>
-            <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
-            <%= raw q.question %>
-            <table class="margin-bottom-xxl">
-                <thead>
-                    <tr>
-                        <th>
-                            Parent response
-                        </th>
-                        <th>
-                            Pod response <br /><small>Parents can see this</small>
-                        </th>
-                        <th>
-                            Internal Notes <br /><small>Parents cannot see this</small>
-                        </th>
-                    </tr>
-                </thead>
-                <tr>
-                    <td width="33%">
-                         <em class="color-grey-200 white-space-pre-wrap"><%= answer.from_parent %></em>
-                    </td>
-                    <td width="33%">
-                        <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
-                            <%= react_component("Components.MentorAnswerPodInput", %{
-                                question_id: q.id,
-                                mentee_id: @mentee.id,
-                                value: Map.get(answer, :from_pod)
-                            }) %>
-                        <% else %>
-                            <p class="white-space-pre-wrap"><%= Map.get(answer, :from_pod) %></p>
-                        <% end %>
-
-                    </td>
-                    <td width="33%">
-                        <%= react_component("Components.MentorAnswerInternalInput", %{
-                            question_id: q.id,
-                            mentee_id: @mentee.id,
-                            value: Map.get(answer, :internal)
-                        }) %>
-                    </td>
-                </tr>
-            </table>
-        <% end %>
+        <%= live_render(@conn, TznWeb.MentorQuestionnaireAnswers, session: %{"questionnaire_id" => @questionnaire.id, "current_user_id" => @current_user.id}) %>
     </div>
 
     <div class="side position-top position-sticky align-self-flex-start background-primary-50 margin-horizontal-m padding-m border-radius">

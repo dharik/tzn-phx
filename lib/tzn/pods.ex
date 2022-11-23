@@ -202,6 +202,58 @@ defmodule Tzn.Pods do
     %{used: used, total: total}
   end
 
+  def can_start_college_list(%Pod{} = p) do
+    lists = Tzn.Questionnaire.only_college_lists(p.questionnaires)
+    used = Enum.count(lists)
+    total = p.college_list_limit || 0
+    Enum.all?(lists, fn q -> q.state == "complete" end) && total > used
+  end
+
+  def completed_college_lists(%Pod{} = p) do
+    p.questionnaires
+      |> Tzn.Questionnaire.only_college_lists()
+      |> Enum.filter(& &1.state == "complete")
+  end
+
+  def current_college_list(%Pod{} = p) do
+    p.questionnaires
+    |> Tzn.Questionnaire.only_college_lists()
+    |> Enum.reject(& &1.state == "complete")
+    |> List.first()
+  end
+
+  def create_college_list(%Pod{} = p, current_user) do
+    if q = current_college_list(p) do
+      {:in_progress, q} # There's a college list in progress so return that
+    else
+      college_list_question_set = Tzn.Questionnaire.college_list_question_set()
+      questions = college_list_question_set |> Ecto.assoc(:questions) |> Repo.all()
+      question_ids = Tzn.Util.map_ids(questions)
+
+      # Wipe pod answers that are impacted by the question having changed
+      from(
+          a in Tzn.Questionnaire.Answer,
+          where: a.question_id in ^question_ids,
+          where: a.mentee_id == ^p.mentee_id,
+          join: q in assoc(a, :question),
+          where: q.updated_at > a.updated_at
+          )
+        |> Repo.update_all([set: [from_pod: ""]])
+
+      # Wipe all the parent answers because we force those to be re-answered
+      from(a in Tzn.Questionnaire.Answer, where: a.question_id in ^question_ids, where: a.mentee_id == ^p.mentee_id)
+      |> Repo.update_all([set: [from_parent: ""]])
+
+      # Create the new questionnaire
+      Tzn.Questionnaire.create_questionnaire(%{
+        question_set_id: college_list_question_set.id,
+        mentee_id: p.mentee_id,
+        state: "needs_info",
+        access_key: nil
+      }, current_user)
+    end
+  end
+
   def ecvo_list_access?(%Pod{ecvo_list_limit: limit}) do
     case limit do
       nil -> false

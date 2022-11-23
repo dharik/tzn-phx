@@ -80,7 +80,7 @@ defmodule TznWeb.Router do
         only: [:new, :edit, :create, :update]
 
       resources "/college_lists", Mentor.CollegeListController,
-        only: [:index, :edit, :update, :create]
+        only: [:index, :show, :edit, :update, :create]
 
       resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :edit, :update, :create]
 
