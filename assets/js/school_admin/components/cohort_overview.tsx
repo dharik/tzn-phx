@@ -85,6 +85,12 @@ function CohortHighlights({ cohortId }) {
 
   const highlights = cohortHighlightsQuery.data;
 
+  if(highlights.length == 0 && cohortHighlightsQuery.isFetched) {
+    return <Flex alignItems={"center"} height="100%">
+      We are in the process of onboarding your students! After that, we'll have some highlights for you here.
+    </Flex>
+  }
+
   return (
     <Flex>
       <List spacing={3}>

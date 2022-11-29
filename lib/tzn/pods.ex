@@ -167,13 +167,22 @@ defmodule Tzn.Pods do
     |> Repo.all()
   end
 
-  def open_flags?(%Pod{flags: flags}) when is_list(flags) do
+  def open_flags?(%Pod{flags: flags}, reader \\ :admin) when is_list(flags) do
     Enum.any?(flags, fn flag ->
-      flag.status == "open"
+      case reader do
+        :admin ->
+          flag.status == "open"
+
+        :school_admin ->
+          flag.status == "open" && flag.school_admin_can_read
+
+        :parent ->
+          flag.status == "open" && flag.parent_can_read
+      end
     end)
   end
 
-  def open_flags?(%Pod{}) do
+  def open_flags?(%Pod{}, _reader) do
     false
   end
 

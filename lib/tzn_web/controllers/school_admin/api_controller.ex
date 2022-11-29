@@ -36,16 +36,19 @@ defmodule TznWeb.SchoolAdmin.ApiController do
         description =
           cond do
             h.consecutive_missed_sessions > 1 ->
-              "#{pod.mentee.name} has missed their last #{h.consecutive_missed_sessions} sessions"
+              "#{pod.mentee.name} missed their last #{h.consecutive_missed_sessions} sessions"
 
-            h.hours_mentored_hit_10_at ->
-              "#{pod.mentee.name} has received over 10 hours of 1:1 mentorship!"
+            Tzn.Util.within_n_days_ago(h.last_milestone_completion, 30) ->
+              "#{pod.mentee.name} completed their #{Number.Human.number_to_ordinal(h.milestones_completed)} milestone"
 
-            h.hours_mentored_hit_5_at ->
-              "#{pod.mentee.name} has received over 5 hours of 1:1 mentorship!"
+            # h.hours_mentored_hit_10_at ->
+            #   "#{pod.mentee.name} has received over 10 hours of 1:1 mentorship!"
+
+            # h.hours_mentored_hit_5_at ->
+            #   "#{pod.mentee.name} has received over 5 hours of 1:1 mentorship!"
 
             h.missed_sessions_last_30_days > 0 ->
-              "#{pod.mentee.name} has missed #{h.missed_sessions_last_30_days} sessions in the last month"
+              "#{pod.mentee.name} missed #{Tzn.Util.pluralize(h.missed_sessions_last_30_days, "session")} in the last month"
 
             Tzn.Util.within_n_days_ago(h.onboarded_at, 30) ->
               "#{pod.mentee.name} recently completed their onboarding form"
@@ -367,7 +370,7 @@ defmodule TznWeb.SchoolAdmin.ApiController do
           is_completed: milestone.completed
         }
       end),
-      any_open_flags: Tzn.Pods.open_flags?(pod),
+      any_open_flags: Tzn.Pods.open_flags?(pod, :school_admin),
       current_priority:
         Enum.find_value(pod.todos, nil, fn t ->
           if t.is_priority do
