@@ -6,7 +6,7 @@ else
 end
 %>
 
-<table>
+<table class="table w-full">
     <thead>
         <tr>
             <th>Mentee</th>
@@ -30,28 +30,28 @@ end
 
                         <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :opened do %>
                             <small>
-                                <span class="color-success-300 padding-horizontal-xxs">
+                                <span class="text-success px-1">
                                     Parent opened form <%= Tzn.Util.format_date_relative(q.access_key_used_at) %>
                                 </span>
                             </small>
                         <% end %>
                          <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :email_not_sent do %>
                             <small>
-                                <span class="color-grey-200 padding-horizontal-xxs">
+                                <span class="text-grey px-1">
                                     Email not sent to parents
                                 </span>
                             </small>
                         <% end  %>
                         <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :in_grace_period do %>
                             <small>
-                                <span class="color-grey-200 padding-horizontal-xxs">
+                                <span class="text-grey px-1">
                                     Email sent to parents <%= Tzn.Util.format_date_relative(q.parent_email_sent_at) %> but they haven't opened it yet
                                 </span>
                             </small>
                         <% end %>
                         <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :past_grace_period do %>
                             <small>
-                                <span class="color-error-300 padding-horizontal-xxs">
+                                <span class="text-error px-1">
                                     Email sent to parents <%= Tzn.Util.format_date_relative(q.parent_email_sent_at) %> but they haven't opened it yet
                                 </span>
                             </small>
@@ -68,22 +68,22 @@ end
                         Completed
                     <% end  %>
                 </td>
-                <td><%= link "See Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button button-xs" %>
+                <td><%= link "See Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "btn btn-sm btn-outline" %>
             </tr>
         <% end %>
     </tbody>
 </table>
 
-<div class="space-l"></div>
+<div class="h-8"></div>
 <%= if @include_hidden do %>
-    <span class="color-grey-100 font-size-s">Showing only hidden</span>
-    <%= link "Back to normal", to: Routes.mentor_scholarship_list_path(@conn, :index) %>
+    <span class="text-grey text-sm">Showing only hidden</span>
+    <%= link "Back to normal", to: Routes.mentor_scholarship_list_path(@conn, :index), class: "link" %>
 <% else %>
     <% hidden_count =  @lists |> TznWeb.Mentor.CollegeListView.only_hidden() |> Enum.count() %>
     <%= if hidden_count > 0 do %>
-        <span class="color-grey-100 font-size-s">
+        <span class="text-grey text-sm">
             (<%= hidden_count %> hidden because they are complete or not ready for SST yet)
         </span>
-        <%= link "Show hidden", to: Routes.mentor_scholarship_list_path(@conn, :index, include_hidden: true) %>
+        <%= link "Show hidden", to: Routes.mentor_scholarship_list_path(@conn, :index, include_hidden: true), class: "link" %>
     <% end %>
 <% end %>

@@ -1,79 +1,72 @@
 
 <div x-data="{tab: 'timesheet'}">
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'timesheet'}"
-    @click.prevent="tab = 'timesheet'">
-    Timesheet Entries
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'hours'}"
-    @click.prevent="tab = 'hours'">
-    Hours by month
-  </a>
+  <div class="tabs">
+    <a class="tab tab-lg tab-bordered" :class="{'tab-active': tab == 'timesheet'}" @click.prevent="tab = 'timesheet'">Timesheet Entries</a>
+    <a class="tab tab-lg tab-bordered" :class="{'tab-active': tab == 'hours'}" @click.prevent="tab = 'hours'">Hours By Month</a>
+  </div>
 
   <div x-show="tab === 'timesheet'" x-transition>
     <div>
-      <%= link "New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: "button button-primary" %>
+      <%= link "Add New Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new), class: "btn btn-primary btn-sm my-3" %>
     </div>
 
-    <table>
-      <thead>
-        <tr>
-          <th>Mentee Name</th>
-          <th>Start Date</th>
-          <th>End Date</th>
-          <th>Notes</th>
-          <th></th>
-        </tr>
-      </thead>
-      <tbody>
-        <%= for timesheet_entry <- @timesheet_entries do %>
+    <div class="overflow-x-auto">
+      <table class="table w-full">
+        <thead>
           <tr>
-            <td>
-              <%= if timesheet_entry.pod && timesheet_entry.pod.mentee do %>
-                <%= link timesheet_entry.pod.mentee.name, to: Routes.mentor_pod_path(@conn, :show, timesheet_entry.pod) %>
-              <% else %>
-                N/A
-              <% end %>
-            </td>
-            <td><%= timesheet_entry.started_at |> format_date %></td>
-            <td><%= timesheet_entry.ended_at |> format_date %></td>
-            <td>
-              <%=
-                if timesheet_entry.notes do
-                  raw timesheet_entry.notes
-                else
-                  Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name
-                end
-              %>
-            </td>
-            <td>
-              <%= unless timesheet_entry.pod && !timesheet_entry.pod.active do %>
-                <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
-                  <span class="material-icons-outlined">edit</span>
-                <% end %>
-                <%= link to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry),
-                    method: :delete, data: [confirm: "Are you sure?"] do %>
-                  <span class="material-icons-outlined color-error">delete</span>
-                <% end %>
-              <% end %>
-            </td>
+            <th>Mentee Name</th>
+            <th>Start Date</th>
+            <th>End Date</th>
+            <th>Notes</th>
+            <th>Actions</th>
           </tr>
+        </thead>
+        <tbody>
+          <%= for timesheet_entry <- @timesheet_entries do %>
+            <tr class="hover">
+              <td>
+                <%= if timesheet_entry.pod && timesheet_entry.pod.mentee do %>
+                  <%= link timesheet_entry.pod.mentee.name, to: Routes.mentor_pod_path(@conn, :show, timesheet_entry.pod), class: "link" %>
+                <% else %>
+                  N/A
+                <% end %>
+              </td>
+              <td><%= timesheet_entry.started_at |> format_date %></td>
+              <td><%= timesheet_entry.ended_at |> format_date %></td>
+              <td class="whitespace-pre-wrap">
+                <%=
+                  if timesheet_entry.notes do
+                    raw timesheet_entry.notes
+                  else
+                    Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name
+                  end
+                %>
+              </td>
+              <td>
+                <%= unless timesheet_entry.pod && !timesheet_entry.pod.active do %>
+                  <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "btn btn-ghost btn-square text-decoration-none" do %>
+                    <span class="material-icons-outlined">edit</span>
+                  <% end %>
+                  <%= link to: Routes.mentor_timesheet_entry_path(@conn, :delete, timesheet_entry),
+                      method: :delete, data: [confirm: "Are you sure?"],
+                      class: "btn btn-ghost btn-square" do %>
+                    <span class="material-icons-outlined">delete</span>
+                  <% end %>
+                <% end %>
+              </td>
+            </tr>
 
-        <% end %>
-        <tr>
-        </tr>
-      </tbody>
-    </table>
+          <% end %>
+          <tr>
+          </tr>
+        </tbody>
+      </table>
+    </div>
   </div>
 
   <div style="max-width: 80rem;" x-show="tab === 'hours'" x-transition>
     <small>All payments sent on 1st Wednesday of every month</small>
-    <table>
+    <table class="table w-full">
       <thead>
         <tr>
           <th>Month</th>
@@ -98,5 +91,3 @@
     </table>
   </div>
 </div>
-
-<div class="space-l"></div>

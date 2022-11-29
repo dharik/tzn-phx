@@ -6,55 +6,51 @@ public_url = case @questionnaire.question_set.slug do
 end
 %>
 
-<h2>
+<h2 class="text-2xl">
     <%= @questionnaire.question_set.name %> Questionnaire for
-    <%=link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee) %>
+    <%= link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee), class: "link" %>
 </h2>
 
-<div class="box-shadow-m margin-m padding-m">
+<div class="shadow-md m-4 p-4">
     <%= form_for @state_changeset, Routes.admin_questionnaire_path(@conn, :update, @questionnaire), fn f -> %>
-        <label class="control radio">
-            <%= radio_button f, :state, "needs_info", class: "" %>
-            <span class="control-indicator"></span>
-            <span class="control-label">Needs info from parents or mentor</span>
+        <label class="label justify-start space-x-2">
+            <%= radio_button f, :state, "needs_info", class: "radio" %>
+            <span>Needs info from parents or mentor</span>
         </label>
-        <label class="control radio">
-            <%= radio_button f, :state, "ready_for_specialist", class: "" %>
-            <span class="control-indicator"></span>
-            <span class="control-label">All info is provided. Ready to start research</span>
+        <label class="label justify-start space-x-2">
+            <%= radio_button f, :state, "ready_for_specialist", class: "radio" %>
+            <span>All info is provided. Ready to start research</span>
         </label>
-        <label class="control radio">
-            <%= radio_button f, :state, "specialist", class: "" %>
-            <span class="control-indicator"></span>
-            <span class="control-label">Research in progress</span>
+        <label class="label justify-start space-x-2">
+            <%= radio_button f, :state, "specialist", class: "radio" %>
+            <span>Research in progress</span>
         </label>
-        <label class="control radio">
-            <%= radio_button f, :state, "designer", class: "" %>
-            <span class="control-indicator"></span>
-            <span class="control-label">Sent to designer to put togther PDF</span>
+        <label class="label justify-start space-x-2">
+            <%= radio_button f, :state, "designer", class: "radio" %>
+            <span>Sent to designer to put togther PDF</span>
         </label>
-        <label class="control radio">
-            <%= radio_button f, :state, "complete", class: "" %>
-            <span class="control-indicator"></span>
-            <span class="control-label">Document is complete and sent to mentor</span>
+        <label class="label justify-start space-x-2">
+            <%= radio_button f, :state, "complete", class: "radio" %>
+            <span>Document is complete and sent to mentor</span>
         </label>
 
-        <%= submit "Update Status", class: "button button-primary" %>
+        <%= submit "Update Status", class: "btn btn-primary my-3" %>
     <% end %>
 </div>
 
-<pre><%=public_url %></pre>
+<pre class="bg-gray-100 p-3 border"><%=public_url %></pre>
 <%= if @questionnaire.parent_email_sent_at do %>
-    <p>Email sent to parents at <%= (@questionnaire.parent_email_sent_at) %></p>
+    <p>Email sent to parents <%= Tzn.Util.format_date_generic(@questionnaire.parent_email_sent_at) %></p>
 <% end %>
 <%= if @questionnaire.access_key_used_at do %>
-    <p>Form opened via public URL at <%= (@questionnaire.access_key_used_at) %></p>
+    <p>Form opened via public URL <%= Tzn.Util.format_date_generic(@questionnaire.access_key_used_at) %></p>
 <% end %>
-<div class="space-l"></div>
+
+<div class="h-4"></div>
 
 
 <div class="">
-     <div class=" padding-xs border margin-bottom-xxl">
+     <div class="p-2 border mb-16">
         <p>
             Attached Files
         </p>
@@ -63,7 +59,7 @@ end
         <ul>
             <%= for file <- @questionnaire.files do %>
                 <li>
-                    <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
+                    <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external", class: "link" %>
                 </li>
             <% end %>
         </ul>
@@ -71,7 +67,7 @@ end
 
     <%= if Enum.count(@snapshots) > 0 do %>
         State Changes:
-        <ul>
+        <ul class="menu">
             <%= for snapshot <- @snapshots do %>
                 <% version_title = Tzn.Util.format_date_generic(snapshot.inserted_at) <> " - " <> snapshot.state %>
                 <%= if @selected_snapshot == snapshot && @questionnaire.state == "complete" do %>
@@ -85,12 +81,14 @@ end
                 <% end %>
             <% end %>
         </ul>
+        <div class="h-4"></div>
         <hr />
+        <div class="h-4"></div>
     <% end %>
 
     <%= if @questionnaire.state == "complete" && @selected_snapshot do %>
         <div class="overflow-x-auto w-full">
-            <table>
+            <table class="table w-full">
                 <thead>
                     <tr>
                         <th>Question</th>
@@ -116,7 +114,7 @@ end
         <%= for q <- @questions do %>
             <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
             <%= raw q.question %>
-            <table class="margin-bottom-xxl">
+            <table class="mb-16 table w-full">
                 <thead>
                     <tr>
                         <th>

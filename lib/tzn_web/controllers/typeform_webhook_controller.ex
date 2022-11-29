@@ -78,9 +78,9 @@ defmodule TznWeb.TypeformWebhookController do
         Tzn.Pods.create_pod(%{
           type: "college_mentoring",
           mentee_id: mentee.id,
-          college_list_access: false,
-          ecvo_list_access: false,
-          scholarship_list_access: false,
+          college_list_limit: 1,
+          ecvo_list_limit: 0,
+          scholarship_list_limit: 0,
           internal_note: "<p>Time slots: #{time_slots}</p>"
         })
 

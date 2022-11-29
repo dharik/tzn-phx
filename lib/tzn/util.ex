@@ -5,6 +5,10 @@ defmodule Tzn.Util do
     e |> Enum.map(& &1.id)
   end
 
+  def to_initials(name) when is_binary(name) do
+    name |> String.split(" ") |> Enum.map(&String.first/1) |> Enum.join("") |> String.upcase()
+  end
+
   def format_date_generic(date) do
       case Timex.format(date, "%b %d %Y %l:%M %p", :strftime) do
         {:ok, formatted} -> formatted
@@ -124,7 +128,7 @@ defmodule Tzn.Util do
     Regex.replace(
       ~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/,
       text,
-      "<a href=\"\\0\">\\0</a>"
+      "<a href=\"\\0\" class=\"link\">\\0</a>"
     )
   end
 

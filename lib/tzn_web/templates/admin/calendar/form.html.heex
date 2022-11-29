@@ -1,45 +1,45 @@
 
 
 <%= form_for @changeset, @action, fn f -> %>
-  <%= label f, "Display Name"  %>
-  <%= text_input f, :name %>
+  <%= label f, "Display Name", class: "label"  %>
+  <%= text_input f, :name, class: "input input-bordered w-full" %>
   <%= error_tag f, :name %>
 
-  <%= label f, "Lookup name - the name of the school as used by auto-update scripts. Any common app school will have this set. Other schools don't need it right now"  %>
-  <%= text_input f, :lookup_name %>
+  <%= label f, "Lookup name - the name of the school as used by auto-update scripts. Any common app school will have this set. Other schools don't need it right now", class: "label"  %>
+  <%= text_input f, :lookup_name, class: "input input-bordered w-full" %>
   <%= error_tag f, :lookup_name %>
 
-  <br />
-  <%= label f, :searchable, class: "control switch" do %>
-    <%= checkbox f, :searchable %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Searchable</span>
+
+  <div class="h-8"></div>
+  <%= label f, :searchable, class: "label justify-start" do %>
+    <%= checkbox f, :searchable, class: "toggle" %>
+    <span class="mx-2">Searchable</span>
     <%= error_tag f, :searchable %>
   <% end %>
 
+
   <%= label f, "Searchable Names - extra text that users can search for to find this calendar"  %>
-  <%= text_input f, :searchable_name %>
+  <%= text_input f, :searchable_name, class: "input input-bordered w-full" %>
   <%= error_tag f, :searchable_name %>
 
-  <br />
+  <div class="h-8"></div>
   
   
-  <%= label f, :subscribed_by_default, class: "control switch" do %>
-    <%= checkbox f, :subscribed_by_default %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Subscribed by default</span>
+  <%= label f, :subscribed_by_default, class: "label justify-start" do %>
+    <%= checkbox f, :subscribed_by_default, class: "toggle" %>
+    <span class="mx-2">Subscribed by default</span>
     <%= error_tag f, :subscribed_by_default %>
   <% end %>
 
   <br />
 
   <%= label f, :type %>
-  <%= select f, :type, [{"General - cyclic", "general_cyclic"}, {"College - cyclic", "college_cyclic"}] %>
+  <%= select f, :type, [{"General - cyclic", "general_cyclic"}, {"College - cyclic", "college_cyclic"}], class: "select select-bordered w-full" %>
   <%= error_tag f, :type %>
 
-  <div class="space-m"></div>
+  <div class="h-8"></div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

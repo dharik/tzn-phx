@@ -1,12 +1,10 @@
-<h1>Edit Timesheet entry</h1>
-
 <p>
   Mentor:<br />
-  <%= link @mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentor) %>
+  <%= link @mentor.name, to: Routes.admin_mentor_path(@conn, :show, @mentor), class: "link" %>
 </p>
 
-<div class="space-m"></div>
+<div class="h-4"></div>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_timesheet_entry_path(@conn, :update, @timesheet_entry)) %>
 
-<div class="space-m"></div>
+<div class="h-8"></div>

@@ -1,11 +1,16 @@
 <%= if @conn.assigns[:impersonating] do %>
-  <div class="background-info-50 padding-xxs border-radius">
-   <strong>
-    You are currently impersonating the user <%= @conn.assigns.current_user.email %>.
-   </strong>
-   Any changes you make will be saved as if the user made the changes so
-   be mindful of what you do. When you're done, you should
-   <%= link "stop impersonating and go back to the admin panel", to: Routes.impersonation_path(@conn, :stop) %>
+  <div class="shadow-lg my-2 p-4 bg-slate-200 rounded">
+    <p>
+      <strong>
+        You are currently impersonating the user <%= @conn.assigns.current_user.email %>.
+      </strong>
+    </p>
+    <p>
+      Any changes you make will be saved as if the user made the changes so
+      be mindful of what you do. When you're done, you should
+      <%= link "stop impersonating and go back to the admin panel", to: Routes.impersonation_path(@conn, :stop), class: "link" %>
+    </p>
   </div>
-  <div class="space-m"></div>
+
+  <div class="h-4"></div>
 <% end %>

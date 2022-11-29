@@ -16,9 +16,9 @@
   <%= error_tag f, :password_confirmation %>
 
   <div>
-    <%= submit "Submit" %>
+    <%= submit "Submit", class: "btn btn-primary" %>
   </div>
 <% end %>
 
 
-<span><%= link "Sign in", to: Routes.pow_session_path(@conn, :new) %></span>
+<span><%= link "Sign in", to: Routes.pow_session_path(@conn, :new), class: "link" %></span>

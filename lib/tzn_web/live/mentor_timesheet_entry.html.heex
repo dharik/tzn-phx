@@ -1,110 +1,140 @@
 <.form for={@changeset} let={f} phx-change="validate" action={@action}>
-    <div class="border-radius box-shadow-m padding-m margin-vertical-l ">
+    <div class="rounded shadow-md p-4 my-4 bg-white">
         <h2>Select mentee</h2>
-        <%
-        mentee_options =  Enum.map(@pods, fn pod ->  {pod.mentee.name, pod.id} end)
-
-        %>
-        <%= select f, :pod_id, mentee_options, prompt: [key: "No specific mentee - general / admin work", disabled: false] %>
+        <% mentee_options = Enum.map(@pods, fn pod -> {pod.mentee.name, pod.id} end) %>
+        <%= select f, :pod_id, mentee_options, prompt: [key: "No specific mentee - general / admin work", disabled: false], class: "select select-bordered" %>
         <%= error_tag f, :pod_id %>
-
     </div>
 
     <%= if @pod do %>
-        <div class="border-radius box-shadow-m padding-m margin-vertical-l" >
-            <h2>To-Do Lists for <%= Tzn.Util.informal_name(@pod.mentee) %>, Their Parents, and You!</h2>
+        <div class="rounded shadow-md p-4 my-4 bg-white" >
+            <h2 class="text-xl">
+                To-Do Lists for <%= Tzn.Util.informal_name(@pod.mentee) %>, Their Parents, and You!
+            </h2>
 
-            <p class="lead-s">What should <%= Tzn.Util.informal_name(@pod.mentee) %> be working on?</p>
-            <%= for item <- @pod.todos |> Enum.reject(& &1.deleted_at || &1.completed) |> Enum.filter(& &1.assignee_type == "mentee") |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) do %>
-                <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
-            <% end %>
-            <a class="button button-icon button-s" href="#" phx-click="add_todo_mentee">
+            <p class="text-lg font-light my-2">What should <u><em><%= Tzn.Util.informal_name(@pod.mentee) %></em></u> be working on?</p>
+
+            <div class="space-y-2 my-3" style="width: 60rem;">
+                <%= for item <- @pod.todos 
+                                |> Enum.reject(& &1.deleted_at || &1.completed) 
+                                |> Enum.filter(& &1.assignee_type == "mentee") 
+                                |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) 
+                do %>
+                    <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
+                <% end %>
+            </div>
+            <a class="btn btn-sm btn-outline" href="#" phx-click="add_todo_mentee" tabindex="0">
                 <span class="material-icons-outlined">add</span>
                 <span>Add Todo</span>
             </a>
 
+            <div class="h-8"></div>
 
+            <p class="text-lg font-light my-2">What can their <em><u>parent</u></em> be helping them get done?</p>
 
-            <p class="lead-s">What can their parent be helping them get done?</p>
-            <%= for item <- @pod.todos |> Enum.reject(& &1.deleted_at || &1.completed) |> Enum.filter(& &1.assignee_type == "parent") |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) do %>
-                <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
-            <% end %>
-            <a class="button button-icon button-s" href="#" phx-click="add_todo_parent">
+            <div class="space-y-2 my-3" style="width: 60rem;">
+                <%= for item <- @pod.todos |> Enum.reject(& &1.deleted_at || &1.completed) |> Enum.filter(& &1.assignee_type == "parent") |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) do %>
+                    <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
+                <% end %>
+            </div>
+            <a class="btn btn-sm btn-outline" href="#" phx-click="add_todo_parent" tabindex="0">
                 <span class="material-icons-outlined">add</span>
                 <span>Add Todo</span>
             </a>
 
-            <p class="lead-s">What will you be working on for <%= Tzn.Util.informal_name(@pod.mentee) %> outside of meeting times?</p>
-            <%= for item <- @pod.todos |> Enum.reject(& &1.deleted_at || &1.completed) |> Enum.filter(& &1.assignee_type == "mentor") |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) do %>
-                <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
-            <% end %>
-            <a class="button button-icon button-s" href="#" phx-click="add_todo_mentor">
+            <div class="h-8"></div>
+
+            <p class="text-lg font-light my-2">What will <em><u>you</u></em> be working on for <%= Tzn.Util.informal_name(@pod.mentee) %> outside of meeting times?</p>
+            <div class="space-y-2 my-3" style="width: 60rem;">
+                <%= for item <- @pod.todos |> Enum.reject(& &1.deleted_at || &1.completed) |> Enum.filter(& &1.assignee_type == "mentor") |> Enum.sort_by(& &1.inserted_at, {:desc, NaiveDateTime}) do %>
+                    <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
+                <% end %>
+            </div>
+            <a class="btn btn-sm btn-outline" href="#" phx-click="add_todo_mentor">
                 <span class="material-icons-outlined">add</span>
                 <span>Add Todo</span>
             </a>
 
             <%= if @pod.todos |> Enum.filter(& &1.completed) |> Enum.any?() do %>
-                <p class="lead-s">Recently Completed:</p>
-                <%= for item <- @pod.todos |> Enum.filter(& &1.completed) |> Enum.reject(& &1.deleted_at) |> Enum.sort_by(& &1.completed_changed_at, {:desc, NaiveDateTime}) |> Enum.take(5) do %>
-                    <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
-                <% end %>
+                <div class="h-8"></div>
+                <p class="text-lg font-light my-2">Recently Completed:</p>
+                <div class="space-y-2 my-3" style="width: 60rem;">
+                    <%= for item <- @pod.todos |> Enum.filter(& &1.completed) |> Enum.reject(& &1.deleted_at) |> Enum.sort_by(& &1.completed_changed_at, {:desc, NaiveDateTime}) |> Enum.take(5) do %>
+                        <.live_component module={TznWeb.MentorTodoItem} id={item.id} item={item}/>
+                    <% end %>
+                </div>
             <% end %>
 
+            <div class="h-8"></div>
+
             <%= if @pod.todos |> Enum.filter(& &1.is_milestone) |> Enum.any?() do %>
-                <p class="lead-s">Milestones</p>
-                <%= for item <- @pod.todos |> Enum.filter(& &1.is_milestone) do %>
-                    <.live_component module={TznWeb.MentorMilestoneItem} id={item.id} item={item}/>
-                <% end %>
+                <p class="text-lg">Milestones</p>
+                <div class="space-y-2 my-3" style="width: 60rem;">
+                    <%= for item <- @pod.todos |> Enum.filter(& &1.is_milestone) do %>
+                        <.live_component module={TznWeb.MentorMilestoneItem} id={item.id} item={item}/>
+                    <% end %>
+                </div>
             <% end %>
         </div>
     <% end %>
 
-    <div class="border-radius box-shadow-m padding-m margin-vertical-l">
-        <h2>Select category</h2>
+    <div class="shadow-lg rounded p-4 my-4 bg-white">
+        <h2 class="text-xl">Select category</h2>
 
         <%= select f, :category,
             [{"-- Select Category -- ", ""} | Enum.map(@categories, fn c -> {c.name, c.slug} end)],
-            value: Ecto.Changeset.get_field(@changeset, :category) %>
+            value: Ecto.Changeset.get_field(@changeset, :category),
+            class: "select select-bordered" %>
         <%= error_tag f, :category %>
     </div>
 
     <%= if @pod do %>
-        <div class="border-radius box-shadow-m padding-m margin-vertical-l" >
-            <h2>Enter Grade</h2>
-            <%= select f, :mentee_grade, @grade_options, value: Ecto.Changeset.get_field(@changeset, :mentee_grade) %>
+        <div class="shadow-lg rounded p-4 my-4 bg-white" >
+            <h2 class="text-xl">Enter Grade</h2>
+            <%= select f, :mentee_grade, @grade_options, value: Ecto.Changeset.get_field(@changeset, :mentee_grade), class: "select select-bordered" %>
             <%= error_tag f, :mentee_grade %>
         </div>
     <% end %>
 
-    <div class="border-radius box-shadow-m padding-m margin-vertical-l" >
-        <h2>Enter Timesheet Information</h2>
+    <div class="shadow-lg rounded p-4 my-4 space-y-2 bg-white" >
+        <h2 class="text-xl">Enter Timesheet Information</h2>
 
-        <%= label f, :started_at %>
-        <%= datetime_local_input f, :started_at %>
-        <%= error_tag f, :started_at %>
+        <div class="form-control max-w-lg">
+            <%= label f, :started_at, "Start Time", class: "label" %>
+            <%= datetime_local_input f, :started_at, class: "input input-bordered" %>
+            <%= error_tag f, :started_at %>
+        </div>
 
-        <%= label f, :ended_at %>
-        <%= datetime_local_input f, :ended_at %>
-        <%= error_tag f, :ended_at %>
+        <div class="form-control max-w-lg">
+            <%= label f, :ended_at, "End Time", class: "label"  %>
+            <%= datetime_local_input f, :ended_at, class: "input input-bordered" %>
+            <%= error_tag f, :ended_at %>
+        </div>
 
         <%= unless @pod do %>
-            <div class="space-m"></div>
-            <%= label f, :notes %>
-            <%= textarea f, :notes, "phx-debounce": 800 %>
-            <%= error_tag f, :notes %>
+            <div class="form-control">
+                <%= label f, :notes, class: "label" %>
+                <%= textarea f, :notes, "phx-debounce": 800, class: "textarea textarea-bordered", placeholder: "Type here..." %>
+                <%= error_tag f, :notes %>
+            </div>
         <% end %>
-
-        <div class="space-m"></div>
-
-        <div>
-            <%= if (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") do %>
-                <p class="form-message warning" ><%= @todo_error %></p>
-            <% end %>
-            <%= submit "Save", class: "button-primary", 
-                disabled: (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") || 
-                            Enum.any?(@changeset.errors) || 
-                            @changeset.changes |> Map.to_list() |> Enum.empty?()  
-            %>
-        </div>
     </div>
+
+    <%= if @pod do %>
+        <.live_component module={TznWeb.MentorFlagEditor} id={@pod.id} pod={@pod}/>
+    <% end %>
+    
+    <div class="flex space-x-2 my-4 items-center bg-white p-4 rounded shadow-md">
+        <%= submit "Save", class: "btn btn-primary", 
+            disabled: (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") || 
+                        Enum.any?(@changeset.errors) || 
+                        @changeset.changes |> Map.to_list() |> Enum.empty?()  
+        %>
+        <%= if (@todo_error && Ecto.Changeset.get_field(@changeset, :category) !== "missed_session") do %>
+            <div class="text-sm text-error" ><%= @todo_error %></div>
+        <% end %>
+    </div>
+
 </.form>
+
+

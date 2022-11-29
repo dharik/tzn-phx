@@ -22,7 +22,7 @@ defmodule Tzn.DB.PodFlag do
       :parent_can_read,
       :school_admin_can_read
     ])
-    |> validate_required([:pod_id, :status])
+    |> validate_required([:pod_id, :status, :description])
     |> validate_length(:description, min: 3)
     |> validate_inclusion(:status, ["open", "resolved"])
     |> foreign_key_constraint(:pod_id)

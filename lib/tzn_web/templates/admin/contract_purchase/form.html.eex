@@ -1,30 +1,30 @@
 
 
 <%= form_for @changeset, @action, fn f -> %>
-  <%= label f, :pod_id  %>
-  <%= select f, :pod_id, [{"#{@pod.mentee.name} - #{humanize(@pod.type)}", @pod.id}] %>
+  <%= label f, :pod_id, class: "label"  %>
+  <%= select f, :pod_id, [{"#{@pod.mentee.name} - #{humanize(@pod.type)}", @pod.id}], class: "select select-bordered" %>
   <%= error_tag f, :pod_id %>
 
-  <%= label f, :hours %>
-  <%= number_input f, :hours, step: 0.1 %>
+  <%= label f, :hours, class: "label" %>
+  <%= number_input f, :hours, step: 0.1, class: "input input-bordered" %>
   <%= error_tag f, :hours %>
 
-  <%= label f, :expected_revenue, "Expected Revenue (USD)" %>
-  <%= text_input f, :expected_revenue, placeholder: "2000" %>
+  <%= label f, :expected_revenue, "Expected Revenue (USD)", class: "label" %>
+  <%= text_input f, :expected_revenue, placeholder: "2000", class: "input input-bordered" %>
   <%= error_tag f, :expected_revenue %>
 
 
-  <%= label f, :date %>
-  <%= datetime_local_input f, :date %>
+  <%= label f, :date, class: "label" %>
+  <%= datetime_local_input f, :date, class: "input input-bordered" %>
   <%= error_tag f, :date %>
 
-  <%= label f, :notes %>
-  <%= textarea f, :notes %>
+  <%= label f, :notes, class: "label" %>
+  <%= textarea f, :notes, class: "textarea textarea-bordered" %>
   <%= error_tag f, :notes %>
 
-  <div class="space-m"></div>
+  <div class="h-8"></div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

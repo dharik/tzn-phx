@@ -1,8 +1,7 @@
-<h1>Listing Pods</h1>
-<%= link "Create Mentee", to: Routes.admin_mentee_path(@conn, :new), class: "button button-primary" %>
-<%= link "Create Pod", to: Routes.admin_pod_path(@conn, :new), class: "button button-primary" %>
+<%= link "Create Mentee", to: Routes.admin_mentee_path(@conn, :new), class: "btn btn-primary" %>
+<%= link "Create Pod", to: Routes.admin_pod_path(@conn, :new), class: "btn btn-primary" %>
 
-<table>
+<table class="table mt-3 w-full">
   <thead>
     <tr>
       <th>Name</th>
@@ -21,9 +20,9 @@
         <%= for pod <- mentee.pods do %>
           <tr>
             <td>
-              <%= link mentee.name, to: Routes.admin_pod_path(@conn, :show, pod) %>
+              <%= link mentee.name, to: Routes.admin_pod_path(@conn, :show, pod), class: "link" %>
               <%= if !pod.active do %>
-                (archived)
+                <div class="badge badge-outline text-grey">archived</div>
               <% end %>
               <%= if Tzn.Pods.open_flags?(pod) do %>
                 ⚠️
@@ -36,7 +35,7 @@
               <%= if pod.mentor do %>
                 <%= pod.mentor.name %>
               <% else %>
-                <span class="color-error">No mentor</span>
+                <span class="text-error">No mentor</span>
               <% end %>
             </td>
             <td>
@@ -53,7 +52,7 @@
                 hours_left = Tzn.HourTracking.hours_remaining(pod) |> Float.round(1)
               %>
               <%= if Tzn.HourTracking.low_hours?(pod) do %>
-                <span class="color-error"><%= hours_left %></span>
+                <span class="text-error"><%= hours_left %></span>
               <% else %>
                 <%= hours_left %>
               <% end %>

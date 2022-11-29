@@ -1,14 +1,14 @@
-<h1><%= @set.name %></h1>
+<h1 class="text-2xl"><%= @set.name %></h1>
 <div style="max-width: 80rem">
     <%= for q <- @questions do %>
-        <div class="flex flex-row border border-radius padding-m margin-vertical-m justify-content-space-between">
+        <div class="flex flex-row border rounded p-4 my-4 items-center justify-space-between">
             <div class="flex-1">
                 <%= raw q.question %>
             </div>
             <div class="flex-0-1">
-                <%= link to: Routes.admin_question_path(@conn, :edit, q) do %><span class="material-icons-outlined color-primary">edit</span><% end %>
-                <%= link to: Routes.admin_move_question_up_path(@conn, :move_up, question_id: q.id, question_set_id: @set.id), method: :patch do %><span class="material-icons-outlined color-primary">arrow_upward</span><% end %>
-                <%= link to: Routes.admin_move_question_down_path(@conn, :move_down, question_id: q.id, question_set_id: @set.id), method: :patch do %><span class="material-icons-outlined color-primary">arrow_downward</span><% end %>
+                <%= link to: Routes.admin_question_path(@conn, :edit, q), class: "btn btn-ghost btn-square" do %><span class="material-icons-outlined text-primary">edit</span><% end %>
+                <%= link to: Routes.admin_move_question_up_path(@conn, :move_up, question_id: q.id, question_set_id: @set.id), method: :patch, class: "btn btn-ghost btn-square" do %><span class="material-icons-outlined text-primary">arrow_upward</span><% end %>
+                <%= link to: Routes.admin_move_question_down_path(@conn, :move_down, question_id: q.id, question_set_id: @set.id), method: :patch, class: "btn btn-ghost btn-square" do %><span class="material-icons-outlined text-primary">arrow_downward</span><% end %>
             </div>
         </div>
     <% end %>

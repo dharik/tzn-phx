@@ -1,27 +1,29 @@
-<p>
-  Welcome! You have multiple profiles. Choose which profile you want to continue with this session.
-</p>
-
-<%= if @current_admin do %>
+<div class="space-y-4 w-10/12 lg:w-7/12 mx-auto">
   <p>
-    <%= link "Continue as admin", to: Routes.admin_mentor_path(@conn, :index) %>
+    Welcome! You have multiple profiles. Choose which profile you want to continue with this session.
   </p>
-<% end %>
 
-<%= if @current_mentor do %>
-  <p>
-    <%= link "Continue as mentor", to: Routes.mentor_pod_path(@conn, :index) %>
-  </p>
-<% end %>
+  <%= if @current_admin do %>
+    <p>
+      <%= link "Continue as admin", to: Routes.admin_mentor_path(@conn, :index), class: "link" %>
+    </p>
+  <% end %>
 
-<%= if @parent_profile do %>
-  <p>
-    <%= link "Continue as parent", to: Routes.parent_dashboard_path(@conn, :show) %>
-  </p>
-<% end %>
+  <%= if @current_mentor do %>
+    <p>
+      <%= link "Continue as mentor", to: Routes.mentor_pod_path(@conn, :index), class: "link" %>
+    </p>
+  <% end %>
 
-<%= if @school_admin_profile do %>
-  <p>
-    <%= link "Continue as school administrator", to: Routes.entry_path(@conn, :launch_school_admin_app, []) %>
-  </p>
-<% end %>
+  <%= if @parent_profile do %>
+    <p>
+      <%= link "Continue as parent", to: Routes.parent_dashboard_path(@conn, :show), class: "link" %>
+    </p>
+  <% end %>
+
+  <%= if @school_admin_profile do %>
+    <p>
+      <%= link "Continue as school administrator", to: Routes.entry_path(@conn, :launch_school_admin_app, []), class: "link" %>
+    </p>
+  <% end %>
+</div>

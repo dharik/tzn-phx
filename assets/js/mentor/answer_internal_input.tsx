@@ -7,7 +7,7 @@ interface Props {
 }
 
 export default (props: Props) => {
-  let [value, setValue] = useState(props.value || "");
+  let [value, setValue] = useState(props.value || '');
   const [saveState, setSaveState] = useState<'' | 'saving' | 'success' | 'fail'>('');
 
   const save = useDebouncedCallback(() => {
@@ -38,11 +38,19 @@ export default (props: Props) => {
   };
 
   return (
-    <>
-      <textarea onChange={handleChange} value={value}></textarea>
-      {saveState === 'success' && <span className="form-message success">✓ Saved</span>}
-      {saveState === 'saving' && <span className="form-message">Saving...</span>}
-      {saveState === 'fail' && <span className="form-message error">Unable to save</span>}
-    </>
+    <div className="form-control">
+      <textarea
+        onChange={handleChange}
+        value={value}
+        className="textarea textarea-bordered w-full"
+        placeholder="Type here..."
+      ></textarea>
+      <label className="label pl-0">
+        <span className="label-text-alt">Parents cannot see this</span>
+        {saveState === 'success' && <span className="label-text-alt text-success ">✓ Saved</span>}
+        {saveState === 'saving' && <span className="label-text-alt ">Saving...</span>}
+        {saveState === 'fail' && <span className="label-text-alt text-error ">Unable to save</span>}
+      </label>
+    </div>
   );
 };

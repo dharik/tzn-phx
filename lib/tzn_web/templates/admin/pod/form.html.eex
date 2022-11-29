@@ -5,68 +5,75 @@
     </div>
   <% end %>
 
-  <%= label f, :active, class: "control switch" do %>
-    <%= checkbox f, :active %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Active?</span>
+  <%= label f, :active, class: "label justify-start cursor-pointer space-x-2" do %>
+    <%= checkbox f, :active, class: "checkbox" %>
+    <span>Active?</span>
   <% end %>
   <%= error_tag f, :active %>
 
-  <div class="space-m"></div>
+  <div class="h-4"></div>
 
-  <%= label f, :mentee_id  %>
+  <%= label f, :mentee_id, class: "label"  %>
   <%= select f, :mentee_id, [
     {'None', nil} |
     @mentees |> Enum.sort_by(& &1.name ) |> Enum.map(fn m -> {"#{m.name}", m.id} end)
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :mentee_id %>
 
-  <div class="space-l"></div>
+  <div class="h-8"></div>
 
-  <%= label f, :mentor_id  %>
-  <%= select f, :mentor_id, [
-    {'None', nil} |
-    Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
-  ] %>
-  <%= error_tag f, :mentor_id %>
+  <div class="flex space-x-3">
 
-  <%= label f, :mentor_rate, "Mentor hourly rate for this pod"%>
-  <%= text_input f, :mentor_rate %>
-  <%= error_tag f, :mentor_rate %>
+    <div>
+      <%= label f, :mentor_id, class: "label"  %>
+      <%= select f, :mentor_id, [
+        {'None', nil} |
+        Enum.map(@mentors, fn mentor ->  {"#{mentor.name}", mentor.id} end) |> Enum.sort
+      ], class: "select select-bordered" %>
+      <%= error_tag f, :mentor_id %>
+    </div>
 
-  <div class="space-l"></div>
+    <div>
+      <%= label f, :mentor_rate, "Mentor hourly rate for this pod", class: "label" %>
+      <%= text_input f, :mentor_rate, class: "input input-bordered" %>
+      <%= error_tag f, :mentor_rate %>
+    </div>
+
+  </div>
+
+  <div class="h-8"></div>
 
 
-  <%= label f, :type %>
+  <%= label f, :type, class: "label" %>
   <%= select f, :type, [
     {"College Mentoring", "college_mentoring"},
     {"Tutoring", "tutoring"},
     {"Capstone", "capstone"}
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :type %>
 
-  <%= label f, :college_list_limit %>
-  <%= number_input f, :college_list_limit %>
+  <%= label f, :college_list_limit, class: "label" %>
+  <%= number_input f, :college_list_limit, class: "input input-bordered" %>
   <%= error_tag f, :college_list_limit %>
 
-  <%= label f, :ecvo_list_limit %>
-  <%= number_input f, :ecvo_list_limit %>
+  <%= label f, :ecvo_list_limit, class: "label" %>
+  <%= number_input f, :ecvo_list_limit, class: "input input-bordered" %>
   <%= error_tag f, :ecvo_list_limit %>
 
-  <%= label f, :scholarship_list_limit %>
-  <%= number_input f, :scholarship_list_limit %>
+  <%= label f, :scholarship_list_limit, class: "label" %>
+  <%= number_input f, :scholarship_list_limit, class: "input input-bordered" %>
   <%= error_tag f, :scholarship_list_limit %>
 
 
-  <div class="space-l"> </div>
-  <%= label f, :internal_note %>
+  <div class="h-8"> </div>
+  <%= label f, :internal_note, class: "label" %>
   <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
 
 
-  <div class="space-m"> </div>
+  <div class="h-4"> </div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

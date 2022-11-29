@@ -1,5 +1,5 @@
 <%= if Tzn.Pods.completed_college_lists(@pod) |> Enum.any? do %>
-    <ol>
+    <ol class="menu">
         <%= for q <- Tzn.Pods.completed_college_lists(@pod) do %>
             <li>
                 <%= link "Completed: " <> Tzn.Util.fomat_date_month_year(q.updated_at), to: Routes.mentor_college_list_path(@conn, :show, q) %>
@@ -24,7 +24,9 @@
                 end 
             %>
         </span>
-        <%= link to: Routes.mentor_college_list_path(@conn, :edit, q), class: "button button-primary" do %>
+    </div>
+    <div class="card-actions">
+        <%= link to: Routes.mentor_college_list_path(@conn, :edit, q), class: "btn btn-primary" do %>
             View
         <% end %>
     </div>
@@ -32,14 +34,18 @@
 
 <%= if Tzn.Pods.can_start_college_list(@pod) do %>
     <%= if Tzn.Pods.completed_college_lists(@pod) |> Enum.any? do %>
-    <%= link "Start New",
-        to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
-        class: "button button-primary", method: :post
-        %>
+        <div class="card-actions">
+            <%= link "Start New",
+                to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
+                class: "btn btn-primary", method: :post
+                %>
+        </div>
     <% else %>
-    <%= link "Start",
-        to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
-        class: "button button-primary", method: :post
-    %>
+        <div class="card-actions">
+            <%= link "Start",
+                to: Routes.mentor_college_list_path(@conn, :create, pod_id: @pod),
+                class: "btn btn-primary", method: :post
+            %>
+        </div>
     <% end %>
 <% end %>

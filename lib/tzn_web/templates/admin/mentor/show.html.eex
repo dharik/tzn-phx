@@ -1,43 +1,45 @@
 <div x-data="{tab: 'internal_info'}">
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'internal_info'}"
-    @click.prevent="tab = 'internal_info'">
-    Profile
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'strategy_sessions'}"
-    @click.prevent="tab = 'strategy_sessions'">
-    Strategy Sessions
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'timesheet_entries'}"
-    @click.prevent="tab = 'timesheet_entries'">
-    Timesheet Entries
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'hours'}"
-    @click.prevent="tab = 'hours'">
-    Hour Counts
-  </a>
+
+  <div class="tabs">
+     <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'internal_info'}"
+      @click.prevent="tab = 'internal_info'">
+      Profile
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'strategy_sessions'}"
+      @click.prevent="tab = 'strategy_sessions'">
+      Strategy Sessions
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'timesheet_entries'}"
+      @click.prevent="tab = 'timesheet_entries'">
+      Timesheet Entries
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'hours'}"
+      @click.prevent="tab = 'hours'">
+      Hour Counts
+    </a>
+  </div>
 
 
-
-  <div class="flex border border-radius flex-wrap" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
-    <div class="flex flex-column justify-content-flex-start align-items-center padding-horizontal-xl padding-vertical-m">
+  <div class="flex rounded shadow-lg flex-wrap bg-white my-5" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
+    <div class="flex flex-col justify-start items-center px-8">
       <img src="<%= @mentor.photo_url %>" style="width: 120px; height: 120px; border-radius: 50%; object-fit: cover;" />
 
-      <div class="space-xs"></div>
+      <div class="h-8"></div>
 
 
-      <p class="display-title"><%= Tzn.Util.informal_name(@mentor) %></p>
+      <p class="text-xl"><%= Tzn.Util.informal_name(@mentor) %></p>
       <%= if @mentor.pronouns do %>
         <small><%= @mentor.pronouns %></small>
       <% end %>
@@ -45,8 +47,7 @@
 
 
       <%= if @mentor.archived do %>
-        <span class="text-transform-uppercase display-title color-info">Archived</span>
-        <div class="space-xs"></div>
+        <span class="text-info">ARCHIVED</span>
       <% end %>
 
       <div class="space-xs"></div>
@@ -58,81 +59,80 @@
       end %>
 
       <%= if @mentor.college_list_specialty do %>
-        <div class="space-xs"></div>
+        <div class="h-4"></div>
         👩‍🔬 College Research Specialist
       <% end %>
 
       <%= if @mentor.ecvo_list_specialty do %>
-        <div class="space-xs"></div>
+        <div class="h-4"></div>
        👩‍🔬  Extraccuricular Research Specialist
       <% end %>
 
       <%= if @mentor.scholarship_list_specialty do %>
-        <div class="space-xs"></div>
+        <div class="h-4"></div>
         👩‍🔬 Scholarship Research Specialist
       <% end %>
 
 
-      <div class="space-m"></div>
+      <div class="h-8"></div>
 
-      <%= link to: Routes.admin_mentor_path(@conn, :edit, @mentor), class: "button button-primary button-icon" do %>
+      <%= link to: Routes.admin_mentor_path(@conn, :edit, @mentor), class: "btn btn-primary" do %>
         <span class="material-icons-outlined">edit</span>
-        <div class="space-xxs"></div>
         <span>Edit Profile</span>
       <% end %>
     </div>
 
-    <div class="flex-1 flex flex-column border-left">
-
-      <div class="padding-m">
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Email Address (Parent Facing)</span>
-          <span><%= @mentor.email %></span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Full Name</span>
-          <span><%= @mentor.name %></span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Time Zone</span>
-          <span><%= Tzn.Util.offset_to_timezone_city(@mentor.timezone_offset) %></span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Desired Mentee Count</span>
-          <span><%= @mentor.desired_mentee_count %></span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">Max Mentee Count</span>
-          <span><%= @mentor.max_mentee_count %></span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 14rem;">User Login</span>
-          <%= if @mentor.user do %>
-            <%= link to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "button button-icon" do %>
-              <span class="material-icons-outlined margin-right-xs">login</span>
+    <div class="flex-1 flex flex-col border-l">
+      <table class="table flex-1">
+        <tr>
+          <td class="font-light">Email</td>
+          <td><%= @mentor.email %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Full Name</td>
+          <td><%= @mentor.name %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Time Zone</td>
+          <td><%= Tzn.Util.offset_to_timezone_city(@mentor.timezone_offset) %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Desired Mentee Count</td>
+          <td><%= @mentor.desired_mentee_count %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Max Mentee Count</td>
+          <td><%= @mentor.max_mentee_count %></td>
+        </tr>
+        <tr>
+          <td class="font-light">User Account</td>
+          <td>
+            <%= if @mentor.user do %>
+            <%= link to: Routes.admin_impersonation_path(@conn, :start, user_id: @mentor.user.id), class: "btn btn-outline" do %>
               <span>Login as <%= @mentor.name %></span>
+              <span class="material-icons-outlined">login</span>
             <% end %>
           <% else %>
             N/A
           <% end %>
-        </p>
-      </div>
-      <div class="border-bottom"></div>
-      <div class="padding-m">
+          </td>
+        </tr>
+      </table>
+      <div class="p-4 border-t">
         <%= for {pod_type, pods} <- Enum.group_by(@pods, & &1.type) |> Map.to_list() do %>
-          <p class="lead-s"><%= humanize(pod_type) %> Pods</p>
-          <ol>
+          <p class="text-xl mb-4"><%= humanize(pod_type) %> Pods</p>
+          <ol class="list-decimal">
             <%= for pod <- pods |> Enum.sort_by(fn pod -> if pod.active do 0 else 1 end end) do %>
-              <li>
+              <li class="py-2 ml-8">
                 <%= if pod.hour_counts.hours_purchased |> Decimal.gt?(25) do %>
                   ★
                 <% end %>
                 <%= link pod.mentee.name,
                   to: Routes.admin_pod_path(@conn, :show, pod),
-                  class: if(!pod.active, do: "color-grey-200", else: "")
+                  class: if(!pod.active, do: "text-gray-400 link", else: "link")
                 %>
                 <%= if !pod.active do %>
-                  <span class="font-size-s color-grey-200">(archived)</span>
+                  <span class="text-sm text-gray-400">(archived)</span>
                 <% end %>
               </li>
             <% end %>
@@ -144,15 +144,15 @@
     </div>
   </div>
 
-    <div x-show="tab === 'timesheet_entries'">
-    <table>
+  <div x-show="tab === 'timesheet_entries'">
+    <table class="table w-full">
       <thead>
         <tr>
           <th>Mentee Name</th>
           <th>Start Date</th>
           <th>End Date</th>
           <th>Notes</th>
-          <th></th>
+          <th>Actions</th>
         </tr>
       </thead>
       <tbody>
@@ -160,19 +160,19 @@
           <tr>
             <td>
               <%= if timesheet_entry.pod && timesheet_entry.pod.mentee do %>
-                <%= link timesheet_entry.pod.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.pod.mentee) %>
+                <%= link timesheet_entry.pod.mentee.name, to: Routes.admin_mentee_path(@conn, :show, timesheet_entry.pod.mentee), class: "link" %>
               <% else %>
                 N/A
               <% end %>
             </td>
             <td><%= timesheet_entry.started_at |> format_date %></td>
             <td><%= timesheet_entry.ended_at |> format_date %></td>
-            <td>
+            <td class="whitespace-normal">
               <%= HtmlSanitizeEx.strip_tags(timesheet_entry.notes || Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name) %>
             </td>
             <td>
-              <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "button button-s button-border" %></span>
-              <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "button button-s button-text button-warning", data: [confirm: "Are you sure?"] %></span>
+              <span><%= link "Edit", to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "btn btn-link btn-sm" %></span>
+              <span><%= link "Delete", to: Routes.admin_timesheet_entry_path(@conn, :delete, timesheet_entry), method: :delete,class: "btn btn-link btn-sm", data: [confirm: "Are you sure?"] %></span>
             </td>
           </tr>
 
@@ -185,31 +185,31 @@
 
   <div x-show="tab === 'strategy_sessions'">
     <%= for strategy_session <- @mentor.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
-      <div class="border border-radius margin-vertical-m padding-s">
-        <div class="flex justify-content-space-between">
-          <span class="lead-s"><%= strategy_session.email_subject %></span>
-          <span class="font-size-s color-grey"><%= format_date(strategy_session.date) %></span>
+      <div class="border rounded my-8 p-4">
+        <div class="flex justify-between">
+          <span class="text-xl"><%= strategy_session.email_subject %></span>
+          <span class="text-sm text-grey"><%= format_date(strategy_session.date) %></span>
         </div>
 
-        <div class="space-xs"></div>
-        <small class="color-grey">
+        <div class="h-4"></div>
+        <small class="text-grey">
           <%= cond do %>
             <% strategy_session.published && strategy_session.emailed -> %>
-              <span class="color-info">email sent</span>
+              <span class="text-info">email sent</span>
             <% strategy_session.published -> %>
-              <span class="color-info">email queued to send</span>
+              <span class="text-info">email queued to send</span>
             <% true -> %>
               <span></span>
           <% end %>
         </small>
 
-        <div class="space-xs"></div>
-        <span class="color-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
+        <div class="h-4"></div>
+        <span class="text-grey"><%= raw HtmlSanitizeEx.markdown_html(strategy_session.notes) %></span>
       </div>
     <% end %>
   </div>
 
-  <table x-show="tab === 'hours'">
+  <table x-show="tab === 'hours'" class="table">
     <thead>
       <tr>
         <th>Month</th>

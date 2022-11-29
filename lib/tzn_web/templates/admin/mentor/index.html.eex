@@ -1,7 +1,6 @@
-<h1>Listing Mentors</h1>
 <div class="group-m">
-    <%= link "Create Mentor", to: Routes.admin_mentor_path(@conn, :new), class: "button button-primary" %>
-    <%= link "Mentor payments", to: Routes.admin_mentor_payments_path(@conn, :index), class: "button" %>
+    <%= link "Create Mentor", to: Routes.admin_mentor_path(@conn, :new), class: "btn btn-primary" %>
+    <%= link "Mentor payments", to: Routes.admin_mentor_payments_path(@conn, :index), class: "btn btn-link" %>
 </div>
 
 <div x-data="{
@@ -34,18 +33,18 @@
 "
 >
 
-<div class="flex justify-content-flex-end">
-    <label class="control checkbox">
+<div class="flex justify-end">
+    <label class="label space-x-2 cursor-pointer">
         <input
         type="checkbox"
+        class="toggle"
         x-model="show_archived"
         />
-        <span class="control-indicator"></span>
-        <span class="control-label">Show archived?</span>
+        <span class="label-text">Show archived?</span>
     </label>
 </div>
 
-<table>
+<table class="table w-full">
     <thead>
         <tr>
         <th width="15%">Name</th>
@@ -59,7 +58,7 @@
         <template x-for="mentor in filtered_mentors">
             <tr>
                 <td>
-                    <a :href="mentor.admin_path" x-text="mentor.name"></a>
+                    <a :href="mentor.admin_path" x-text="mentor.name" class="link"></a>
                     <span x-show="mentor.experience_level === 'veteran'">⭐️</span>
                     <span x-show="mentor.experience_level === 'rising'">🔷</span>
                     <span x-show="mentor.experience_level === 'rookie'">🔺</span>

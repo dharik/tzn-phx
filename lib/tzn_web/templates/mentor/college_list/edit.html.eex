@@ -3,61 +3,57 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
 %>
 
 <div class="main-grid">
-    <div class="main">
-        <h2>
+    <div class="main px-8">
+        <h2 class="text-2xl mb-3">
             <%= @questionnaire.question_set.name %> Questionnaire for
             <%=
-                link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee)
+                link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee), class: "link"
             %>
             (<%= Tzn.Util.fomat_date_month_year(@questionnaire.inserted_at) %>)
         </h2>
 
         <%= if @conn.assigns.current_mentor.college_list_specialty do %>
-            <div class="box-shadow-m margin-m padding-m">
+            <div class="shadow-md m-3 p-3">
                 <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
-                    <label class="control radio">
-                        <%= radio_button f, :state, "needs_info", class: "" %>
-                        <span class="control-indicator"></span>
-                        <span class="control-label">Needs info from parents or mentor</span>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "needs_info", class: "radio" %>
+                        <span>Needs info from parents or mentor</span>
                     </label>
-                    <label class="control radio">
-                        <%= radio_button f, :state, "ready_for_specialist", class: "" %>
-                        <span class="control-indicator"></span>
-                        <span class="control-label">All info is provided. Ready to start college research</span>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "ready_for_specialist", class: "radio" %>
+                        <span>All info is provided. Ready to start college research</span>
                     </label>
-                    <label class="control radio">
-                        <%= radio_button f, :state, "specialist", class: "" %>
-                        <span class="control-indicator"></span>
-                        <span class="control-label">College research in progress</span>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "specialist", class: "radio" %>
+                        <span>College research in progress</span>
                     </label>
-                    <label class="control radio">
-                        <%= radio_button f, :state, "designer", class: "" %>
-                        <span class="control-indicator"></span>
-                        <span class="control-label">Sent to designer to put togther PDF</span>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "designer", class: "radio" %>
+                        <span>Sent to designer to put togther PDF</span>
                     </label>
-                    <label class="control radio">
-                        <%= radio_button f, :state, "complete", class: "" %>
-                        <span class="control-indicator"></span>
-                        <span class="control-label">Document is complete and sent to mentor</span>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "complete", class: "radio" %>
+                        <span>Document is complete and sent to mentor</span>
                     </label>
 
-                    <%= submit "Update Status", class: "button button-primary" %>
+                    <%= submit "Update Status", class: "btn btn-primary" %>
                 <% end %>
             </div>
         <% end %>
 
 
         <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-            Fill out the Pod Response column for each question.
+            <p>Fill out the Pod Response column for each question.
             Then submit it for a research specialist to get started.
             Once you've submitted the form,
             you'll be able to invite the parent to fill out the Parent Response column.
             The researcher will reach out to you directly if there is any missing information.
             You will be able to go back and change your answers,
             but try to have the most accurate response the first time.
-            Your responses will be auto-saved! 🙂
+            Your responses will be auto-saved! 🙂</p>
         <% end %>
         <%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
+
             <%= form_for @conn, Routes.mentor_college_list_path(@conn, :update, @questionnaire), [method: :patch], fn _f -> %>
                 The research team has been notified and will review your answers.
 
@@ -65,7 +61,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                     <span>
                         An email was sent to the parents
                         <%= Timex.Format.DateTime.Formatters.Relative.format!(@questionnaire.parent_email_sent_at, "{relative}") %>
-                        with the following link: <pre class="margin-horizontal-l"><%= public_url %></pre>
+                        with the following link: <pre class="mx-6"><%= public_url %></pre>
                     </span>
                 <% else %>
                     Now is a good time to have the parents fill in their answers.
@@ -75,38 +71,37 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                     <br />
                     <br />
 
-                    <div class="border border-radius padding-s">
-                    <p>
-                        <strong>To:</strong> <%= [@mentee.parent1_email, @mentee.parent2_email] |> Enum.join(";") %>
-                    </p>
-                    <p>
-                        <strong>Subject:</strong> <%= Tzn.Util.informal_name(@mentee) %>'s College List
-                    </p>
-                    <textarea class="rte" rows="8" name="body">
+                    <div class="rounded shadow-md p-6 space-y-4 bg-white border">
                         <p>
-                            Hi <%= Tzn.Transizion.Mentee.parent_names(@mentee) %>,
+                            <strong>To:</strong> <%= [@mentee.parent1_email, @mentee.parent2_email] |> Enum.join("; ") %>
                         </p>
                         <p>
-                            Please fill out some info for <%= Tzn.Util.informal_name(@mentee) %>'s college list by
-                            <b><%= Timex.today() |> Timex.shift(days: +3) |> Timex.format!("%B %d", :strftime) %></b>.
-                            You can access the form <a href="<%= public_url %>">here</a> or with the URL below.
+                            <strong>Subject:</strong> <%= Tzn.Util.informal_name(@mentee) %>'s College List
+                        </p>
+                        <textarea class="rte" rows="8" name="body">
+                            <p>
+                                Hi <%= Tzn.Transizion.Mentee.parent_names(@mentee) %>,
+                            </p>
+                            <p>
+                                Please fill out some info for <%= Tzn.Util.informal_name(@mentee) %>'s college list by
+                                <b><%= Timex.today() |> Timex.shift(days: +3) |> Timex.format!("%B %d", :strftime) %></b>.
+                                You can access the form <a href="<%= public_url %>">here</a> or with the URL below.
 
-                        </p>
-                        <p>
-                            <%= public_url %>
-                        </p>
-                        <p>
-                            Thanks,<br />
-                            <%= Tzn.Util.informal_name(@current_mentor) %>
-                        </p>
-                    </textarea>
-                    <div class="space-s"></div>
+                            </p>
+                            <p>
+                                <%= public_url %>
+                            </p>
+                            <p>
+                                Thanks,<br />
+                                <%= Tzn.Util.informal_name(@current_mentor) %>
+                            </p>
+                        </textarea>
                         <%= if (@mentee.parent1_email || @mentee.parent2_email) do %>
                             <%= submit "Send email to #{Tzn.Transizion.Mentee.parent_names(@mentee)}",
-                                class: "button button-primary"
+                                class: "btn btn-primary"
                             %>
                         <% else %>
-                            No parents on file for <%= @mentee.name %>
+                            <p>No parents on file for <%= @mentee.name %></p>
                         <% end %>
                     </div>
                 <% end %>
@@ -120,56 +115,50 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
             College list research is done. It's being compiled into a single document. Responses are locked.
         <% end %>
         <%= if @questionnaire.state === "complete" && @is_my_mentee do %>
-            College list research is done and you should have received a document from the research specialist. Responses are locked.
+            <div class="alert alert-success shadow-md">
+                College list research is done and you should have received a document from the research specialist. Responses are locked.
+            </div>
         <% end %>
 
-        <div class="space-l"></div>
+        <div class="h-8"></div>
 
         <%= live_render(@conn, TznWeb.MentorQuestionnaireAnswers, session: %{"questionnaire_id" => @questionnaire.id, "current_user_id" => @current_user.id}) %>
+
     </div>
 
-    <div class="side position-top position-sticky align-self-flex-start background-primary-50 margin-horizontal-m padding-m border-radius">
+    <div class="side md:top-6 md:sticky h-min bg-sky-blue-light p-4 rounded space-y-3 shadow-lg">
         <p>
             Feel free to attach any files that would help the research team.
         </p>
 
         <%= form_for @conn, Routes.mentor_college_list_path(@conn, :update, @questionnaire), [multipart: true, method: :put], fn f -> %>
-            <%= file_input f, :attachment, required: true%>
-            <%= submit "Upload File", class: "button button-secondary button-s"%>
+            <div class="input-group">
+                <%= file_input f, :attachment, required: true, class: "file-input file-input-bordered" %>
+                <%= submit "Upload File", class: "btn btn-secondary" %>
+            </div>
         <% end %>
 
-        <ul>
+        <div class="space-y-2">
             <%= for file <- @questionnaire.files do %>
-                <li>
+                <div class="flex flex-row space-x-2">
                     <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
-                </li>
+                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                        <path stroke-linecap="round" stroke-linejoin="round" d="M13.5 6H5.25A2.25 2.25 0 003 8.25v10.5A2.25 2.25 0 005.25 21h10.5A2.25 2.25 0 0018 18.75V10.5m-10.5 6L21 3m0 0h-5.25M21 3v5.25" />
+                    </svg>
+                </div>
             <% end %>
-        </ul>
+        </div>
     </div>
 </div>
 
 
 
-
-
-
-
-
-<div class="">
-
-
-</div>
-
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-    <div class="space-m"></div>
-    <center>
-        After submitting, you'll have an option to email this form to the parent.
-        <div class="space-s"></div>
+    <div class="my-8 flex justify-center items-center flex-col space-y-3">
+        <div>After submitting, the form link needs to be emailed to the parents. You'll find a templated email on the next page.</div>
         <%= form_for @state_changeset, Routes.mentor_college_list_path(@conn, :update, @questionnaire), fn f -> %>
             <%= hidden_input f, :state, value: "ready_for_specialist" %>
-            <%= submit "Submit responses to research team", class: "button button-primary" %>
+            <%= submit "Submit responses to research team", class: "btn btn-primary" %>
         <% end %>
-    </center>
+    </div>
 <% end %>
-
-<div class="space-l"></div>

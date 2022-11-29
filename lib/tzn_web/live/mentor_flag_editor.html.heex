@@ -1,7 +1,7 @@
-<div class="border-radius box-shadow-m padding-m margin-vertical-l">
+<div class="rounded shadow-md bg-white p-4">
     <%= if Enum.any?(@flags_to_show) do %>
         <h2>Flags</h2>
-        <table class="mb-0">
+        <table class="mb-0 table">
             <thead>
                 <tr>
                     <th>Note</th>
@@ -13,7 +13,7 @@
             <tbody>
                 <%= for flag <- @flags_to_show do %>
                     <tr>
-                        <td><%= flag.description %></td>
+                        <td class="max-w-2xl whitespace-pre-wrap"><%= flag.description %></td>
                         <td><%= flag.status %></td>
                         <td><%= flag.inserted_at |> Tzn.Util.format_date_relative() %></td>
                         <td><%= flag.updated_at |> Tzn.Util.format_date_relative() %></td>
@@ -43,44 +43,49 @@
         phx-click-away="stop_create_flag" 
         phx-target={@myself}
         >
-            <.form for={@new_flag_changeset} let={f} phx-change="validate" phx-debounce="1000" phx-target={@myself} phx-submit="save" onsubmit="return false;">
+            <.form for={@new_flag_changeset} let={f} phx-change="validate" phx-debounce="1000" phx-target={@myself} phx-submit="save" onsubmit="return false;" class="space-y-3">
                 
-                <fieldset>
-                    <%= label f, :description %>
-                    <%= textarea f, :description %>
+                <div class="form-control">
+                    <%= label f, :description, class: "label" %>
+                    <%= textarea f, :description, class: "textarea textarea-bordered w-full" %>
                     <%= error_tag f, :description %>
-                </fieldset>
-                Who can see this flag?
-                <br />
-                <%= label f, :parent_can_read, class: "control switch" do %>
-                    <%= checkbox f, :parent_can_read %>
-                    <span class="control-indicator"></span>
-                    <span class="control-label">Parents</span>
+                </div>
+
+                <div>Who can see this flag?</div>
+                
+                <div class="form-control">
+                    <%= label f, :parent_can_read, class: "label cursor-pointer justify-start space-x-2" do %>
+                        <%= checkbox f, :parent_can_read, class: "toggle" %>
+                        <span class="label-text">Parents</span>
+                    <% end %>
                     <%= error_tag f, :parent_can_read %>
-                <% end %>
+                </div>
 
-                <%= label f, :school_admin_can_read, class: "control switch" do %>
-                    <%= checkbox f, :school_admin_can_read %>
-                    <span class="control-indicator"></span>
-                    <span class="control-label">Guidance Counselors &amp; School Administrators</span>
+                <div class="form-control">
+                    <%= label f, :school_admin_can_read, class: "label cursor-pointer justify-start space-x-2" do %>
+                    <%= checkbox f, :school_admin_can_read, class: "toggle" %>
+                    <span class="label-text">Guidance Counselors &amp; School Administrators</span>
                     <%= error_tag f, :school_admin_can_read %>
-                <% end %>
+                    <% end %>
+                </div>
 
-                <button 
-                    type="button"
-                    phx-click="stop_create_flag" 
-                    phx-target={@myself}>
-                    Cancel
-                </button>
+                <div class="flex justify-end">
+                    <button 
+                        type="button"
+                        class="btn btn-ghost"
+                        phx-click="stop_create_flag" 
+                        phx-target={@myself}>
+                        Cancel
+                    </button>
 
-
-                <button 
-                    type="button"
-                    class="button button-primary"
-                    phx-click="save"
-                    phx-target={@myself}>
-                    Save
-                </button>
+                    <button 
+                        type="button"
+                        class="btn btn-primary"
+                        phx-click="save"
+                        phx-target={@myself}>
+                        Save
+                    </button>
+                </div>
 
             </.form>
         </dialog>
@@ -89,7 +94,7 @@
 
     <button 
         type="button" 
-        class="my-1" 
+        class="btn btn-outline my-1" 
         phx-click="start_create_flag" 
         disabled={!is_nil(@new_flag_changeset)}
         phx-target={@myself}>

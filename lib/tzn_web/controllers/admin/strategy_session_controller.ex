@@ -5,7 +5,7 @@ defmodule TznWeb.Admin.StrategySessionController do
   alias Tzn.Repo
 
   def edit(conn, %{"id" => id}) do
-    strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload([:mentee, :mentor])
+    strategy_session = Transizion.get_strategy_session!(id) |> Repo.preload([pod: [:mentee, :mentor]])
     changeset = Transizion.change_strategy_session(strategy_session)
     render(conn, "edit.html", strategy_session: strategy_session, changeset: changeset)
   end

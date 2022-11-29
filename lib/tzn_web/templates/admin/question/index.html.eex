@@ -1,32 +1,32 @@
 <div class="main-grid">
     <div class="side">
-        <h2>Question Sets</h2>
+        <ul class="menu">
         <%= for s <- @question_sets do %>
-            <p><%= link s.name, to: Routes.admin_question_set_path(@conn, :edit, s) %></p>
+            <li><%= link s.name <> " Questions", to: Routes.admin_question_set_path(@conn, :edit, s), class: "link" %></li>
         <% end %>
+        </ul>
     </div>
-    <div class="main padding-horizontal-m">
+    <div class="main px-4">
         <div class="flex flex-row justify-content-space-between">
-            <h2>Questions</h2>
-            <%= link to: Routes.admin_question_path(@conn, :new), class: "button button-primary button-text button-icon text-transform-uppercase" do %>
+            <%= link to: Routes.admin_question_path(@conn, :new), class: "btn btn-primary btn-ghost" do %>
                 <span class="material-icons-outlined">add</span> Create Question
             <% end %>
 
         </div>
 
         <%= for q <- @questions do %>
-        <div class="flex flex-row margin-vertical-s border border-radius padding-m justify-content-space-between">
-            <div class="flex-1 flex align-items-center">
+        <div class="flex flex-row my-3 border rounded p-4 justify-space-between">
+            <div class="flex-1 flex items-center">
                 <%= raw q.question %>
             </div>
             <div>
-                <%= link to: Routes.admin_question_path(@conn, :edit, q) do %>
-                    <span class="material-icons-outlined color-primary">edit</span>
+                <%= link to: Routes.admin_question_path(@conn, :edit, q), class: "btn btn-square btn-ghost" do %>
+                    <span class="material-icons-outlined text-primary">edit</span>
                 <% end %>
             </div>
         </div>
         <% end %>
-        <div class="space-l"></div>
+        <div class="h-8"></div>
         <p>
             <small>
                 * indicates the question is not a member of any question sets
@@ -36,14 +36,11 @@
     </div>
 </div>
 
+<div class="h-8"></div>
 
 
-
-
-
-
-<h2>Questionnaires</h2>
-<table>
+<h2 class="text-2xl">Questionnaires</h2>
+<table class="table w-full">
     <thead>
         <tr>
             <th>Mentee</th>
@@ -70,7 +67,7 @@
                     %>)
                 </td>
                 <td><%= q.state %></td>
-                <td><%= link "See Request", to: Routes.admin_questionnaire_path(@conn, :edit, q), class: "button button-xs" %>
+                <td><%= link "See Request", to: Routes.admin_questionnaire_path(@conn, :edit, q), class: "btn btn-link btn-sm" %>
             </tr>
         <% end %>
     </tbody>

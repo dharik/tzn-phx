@@ -34,6 +34,8 @@ defmodule TznWeb.AdminPodGroup do
     results =
       if socket.assigns.search_query == "" do
         Tzn.Pods.list_pods(:admin)
+        |> Enum.filter(& &1.mentee)
+        |> Enum.reject(& &1.mentee.archived)
         |> Enum.sort_by(& &1.updated_at, {:desc, NaiveDateTime})
         |> Enum.take(5)
       else

@@ -1,225 +1,232 @@
 <div class="main-grid">
-  <div class="side padding-horizontal-m">
-
-    <p class="lead">
+  <div class="side px-8">
+    <p class="text-lg">
       Private Notes
     </p>
     <div>
-    <small>This is an internal field and <%= Tzn.Util.informal_name(@mentee) %> will not see this.</small>
-      <%= form_for @changeset, Routes.mentor_pod_path(@conn, :update, @pod), fn f -> %>
-      <%= textarea f, :internal_note, class: "rte" %>
-      <%= error_tag f, :internal_note %>
-      <%= submit "Save" %>
-    <% end %>
+      <small>This is an internal field and <%= Tzn.Util.informal_name(@mentee) %> will not see this.</small>
+        <%= form_for @changeset, Routes.mentor_pod_path(@conn, :update, @pod), fn f -> %>
+        <%= textarea f, :internal_note, class: "rte" %>
+        <%= error_tag f, :internal_note %>
+        <%= submit "Save", class: "btn btn-sm btn-outline my-2" %>
+      <% end %>
     </div>
   </div>
 
-<div class="main">
+  <div class="main">
+    <div class="flex flex-wrap shadow-lg rounded" style="max-width: 80rem;">
+        <div class="flex flex-col justify-start items-center px-8 py-4 space-y-6 min-w-80">
+          <div class="avatar placeholder">
+            <div class="bg-yellow-light text-neutral-content rounded-full w-24">
+              <span class="text-3xl">
+                <%= Tzn.Util.to_initials(@mentee.name) %>
+              </span>
+            </div>
+          </div>
 
-  <p class="lead">Internal Information</p>
-
-  <div class="flex border border-radius flex-wrap" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
-      <div class="flex flex-column justify-content-flex-start align-items-center padding-horizontal-xl padding-vertical-m">
-        <div class="background-light-50 flex justify-content-center align-items-center border" style="width: 90px; height: 90px; border-radius: 50%">
-          <span class="material-icons-outlined">school</span>
-        </div>
-
-        <div class="space-xs"></div>
-
-        <p class="display-title"><%= Tzn.Util.informal_name(@mentee) %></p>
-        <%= if @mentee.pronouns do %>
-          <small><%= @mentee.pronouns %></small>
-        <% end %>
-
-        <%= if @mentee.archived do %>
-          <span class="text-transform-uppercase display-title color-info">Archived</span>
-        <% end %>
-
-
-        <div class="space-m"></div>
-
-        <%= link to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: "button button-primary button-icon" do %>
-          <span class="material-icons-outlined">edit</span>
-          <div class="space-xxs"></div>
-          <span>Edit Profile</span>
-        <% end %>
-      </div>
-
-      <div class="flex-1 flex flex-column border-left">
-        <div class="padding-m">
-          <%= for {key, value} <- [
-            {"Full Name", @mentee.name},
-            {"Time Zone", Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
-            {"Email Address", @mentee.email},
-            {"Grade", humanize(@mentee.grade) || 'Not set'},
-          ] do %>
-          <p>
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;"><%= key %></span>
-            <span><%= value %></span>
-          </p>
-          <% end %>
-          <p class="vertical-align-middle">
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-              Hours Used
+          <div class="flex flex-col text-center">
+            <span class="text-lg">
+              <%= Tzn.Util.informal_name(@mentee) %>
             </span>
-            <progress
-              class="display-inline-block no-margin" style="width: 15rem;"
-              value="<%= @pod.hour_counts.hours_used %>"
-              max="<%= @pod.hour_counts.hours_purchased %>">
-            </progress>
-            <span class="color-grey-600 font-size-xs">
-              <%= Decimal.round(@pod.hour_counts.hours_used, 1) %> / <%= Decimal.round(@pod.hour_counts.hours_purchased, 1) %>
-            <span>
-            <%= if Tzn.HourTracking.low_hours?(@pod) do %>
-              <p class="color-warning text-align-center font-size-s">
-                This student's contract hours are running low. Please inform Jason to reload hours.
-              </p>
+
+            <%= if @mentee.pronouns do %>
+              <span class="text-sm"><%= @mentee.pronouns %></span>
             <% end %>
-          </p>
-        </div>
+          </div>
 
-        <div class="border-bottom"></div>
-        <div class="padding-m">
-          <span class="lead-s">Parents</span>
-
-          <%= if @mentee.parent1_email do %>
-            <p>
-              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-                Name
-              </span>
-              <span>
-                <%= @mentee.parent1_name %>
-              </span>
-            </p>
-            <p>
-              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-                Email
-              </span>
-              <span>
-                <%= @mentee.parent1_email %>
-              </span>
-            </p>
+          <%= if @mentee.archived do %>
+            <span class="uppercase text-info">Archived</span>
           <% end %>
-          <%= if @mentee.parent2_email do %>
-            <p>
-              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-                Name
-              </span>
-              <span>
-                <%= @mentee.parent2_name %>
-              </span>
-            </p>
-            <p>
-              <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-                Email
-              </span>
-              <span>
-                <%= @mentee.parent2_email %>
-              </span>
-            </p>
+
+          <%= link to: Routes.mentor_mentee_path(@conn, :edit, @mentee), class: "btn btn-sm btn-outline" do %>
+            <span class="material-icons-outlined">edit</span>
+            <div class="space-xxs"></div>
+            <span>Edit Profile</span>
           <% end %>
         </div>
-      </div>
+
+        <div class="flex-1">
+        <table class="table w-full">
+          <tr>
+            <td>Full Name</td>
+            <td><%= @mentee.name %></td>
+          </tr>
+          <tr>
+            <td>Time Zone</td>
+            <td><%= Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset) %></td>
+          </tr>
+          <tr>
+            <td>Email</td>
+            <td><%= @mentee.name %></td>
+          </tr>
+          <tr>
+            <td>Grade</td>
+            <td><%= Tzn.Util.humanize(@mentee.grade) || "Not Set" %></td>
+          </tr>
+          <tr>
+            <td>Hours Used</td>
+            <td>
+              <div>
+                  <progress
+                    class="progress progress-primary w-56"
+                    value="<%= @pod.hour_counts.hours_used %>"
+                    max="<%= @pod.hour_counts.hours_purchased %>">
+                  </progress>
+                  <%= Decimal.round(@pod.hour_counts.hours_used, 1) %> / <%= Decimal.round(@pod.hour_counts.hours_purchased, 1) %>
+                  <%= if Tzn.HourTracking.low_hours?(@pod) do %>
+                    <p class="alert alert-warning">
+                      This student's contract hours are running low. Please inform your CMT to reload hours.
+                    </p>
+                  <% end %>
+                </div>
+
+            </td>
+          </tr>
+          <tr>
+            <td>Parents</td>
+            <td>
+              <%= if @mentee.parent1_email do %>
+                <%= @mentee.parent1_name %>: <%= @mentee.parent1_email %>
+              <% end %>
+              <br />
+              <%= if @mentee.parent2_email do %>
+                <%= @mentee.parent2_name %>: <%= @mentee.parent2_email %>
+              <% end %>
+            </td>
+          </tr>
+        </table>
+        </div>
+    </div>
   </div>
-
-
 </div>
 
-</div>
-<div class="space-m"></div>
-<p class="lead">Timesheet Entries</p>
-<div class="overflow-y-scroll border border-radius padding-s" style="max-height: 40vh">
-  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, pod_id: @pod.id), class: "button button-primary" %>
-  <table>
-    <%= for timesheet_entry <- @pod.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
+<div class="h-8"></div>
+
+<p class="text-lg">Timesheet Entries</p>
+<div class="overflow-y-scroll rounded shadow-lg p-4" style="max-height: 40vh">
+  <%= link "Create Timesheet Entry", to: Routes.mentor_timesheet_entry_path(@conn, :new, pod_id: @pod.id), class: "btn btn btn-primary my-2" %>
+
+  <table class="table w-full">
+    <thead>
       <tr>
-        <td><%= timesheet_entry.started_at |> format_date %></td>
-        <td><span><%= raw timesheet_entry.notes || humanize(timesheet_entry.category) %></span></td>
-        <td>
-          <%= if @current_mentor.id == timesheet_entry.mentor_id do %>
-            <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "color-primary text-decoration-none" do%>
-              <span class="material-icons-outlined">edit</span> Edit
-            <% end %>
-          <% end %>
-        </td>
+        <th>Date</th>
+        <th>Category / Notes</th>
+        <th>Actions</th>
       </tr>
-    <% end %>
+    </thead>
+    <tbody>
+      <%= for timesheet_entry <- @pod.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
+        <tr>
+          <td ><%= timesheet_entry.started_at |> format_date %></td>
+          <td width="80%">
+            <div class="whitespace-normal">
+              <%= raw timesheet_entry.notes || humanize(timesheet_entry.category) %>
+            </div>
+          </td>
+          <td >
+            <%= if @current_mentor.id == timesheet_entry.mentor_id do %>
+              <%= link to: Routes.mentor_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "btn btn-sm btn-square btn-ghost" do%>
+                <span class="material-icons-outlined mr-1">edit</span>
+              <% end %>
+            <% end %>
+          </td>
+        </tr>
+      <% end %>
+    </tbody>
   </table>
 </div>
-<div class="space-m"></div>
-<p class="lead">Timeline</p>
-<div class="border border-radius padding-s">
-  <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, @pod.id), class: "button button-primary" %>
+
+
+<div class="h-12"></div>
+
+
+<p class="text-lg">Timeline</p>
+<div class="rounded">
+  <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Timeline", to: Routes.mentor_timeline_path(@conn, :index, @pod.id), class: "btn btn-primary" %>
 </div>
-<div class="space-m"></div>
-<p class="lead">College List</p>
-<div class="border border-radius padding-s">
-  <%= if Tzn.Pods.college_list_access?(@pod) do %>
-    <%= render "_college_lists.html", conn: @conn, pod: @pod %>
-  <% else %>
-    <%= Tzn.Util.informal_name(@pod.mentee) %>’s package does not cover a college list. Please reach out to your CMT if you have questions.
-  <% end %>
-</div>
-<div class="space-m"></div>
-<p class="lead">Extracurricular / Volunteer Opportunity List</p>
-<div class="border border-radius padding-s">
-  <%= if Tzn.Pods.ecvo_list_access?(@pod) do %>
-    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
-      <em>
-        <%=
-        case q.state do
-          "needs_info" -> "Needs info from you or parent(s)."
-          "ready_for_specialist" -> "Submitted to research specialist to begin research."
-          "specialist" -> "Research specialist is creating the Extracurricular/Volunteer opportunity list."
-          "designer" -> "Extracurricular/Volunteer opportunity research is done. It's being compiled into a single document."
-          "complete" -> "Extracurricular/Volunteer opportunity research is done and you should have received a document from the research specialist."
-          _ -> "Unknown"
-        end
-      %>
-      </em>
-      <div class="space-m"></div>
-      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Extracurricular/Volunteer Opportunity List Research Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "button" %>
+
+
+<div class="h-12"></div>
+
+
+<div class="grid grid-cols-1 xl:grid-cols-3 gap-x-8">
+  <div class="card bg-white shadow-lg">
+    <div class="card-body">
+      <h2 class="card-title">College List</h2>
+      <%= if Tzn.Pods.college_list_access?(@pod) do %>
+        <%= render "_college_lists.html", conn: @conn, pod: @pod %>
+      <% else %>
+        <%= Tzn.Util.informal_name(@pod.mentee) %>’s package does not cover a college list. Please reach out to your CMT if you have questions.
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card shadow-lg bg-white">
+    <div class="card-body">
+      <h2 class="card-title">Extracurricular / Volunteer Opportunity List</h2>
+        <%= if Tzn.Pods.ecvo_list_access?(@pod) do %>
+          <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
+            <em>
+              <%=
+              case q.state do
+                "needs_info" -> "Needs info from you or parent(s)."
+                "ready_for_specialist" -> "Submitted to research specialist to begin research."
+                "specialist" -> "Research specialist is creating the list."
+                "designer" -> "Research is done. It's being compiled into a single document."
+                "complete" -> "Research is done and you should have received a document from the research specialist."
+                _ -> "Unknown"
+              end
+            %>
+            </em>
+            <div class="card-actions">
+              <%= link "Open", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "btn btn-primary" %>
+            </div>
+          <% else %>
+            Not started
+            <div class="card-actions">
+              <%= link "Start",
+                to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
+                class: "btn btn-primary", method: :post
+              %>
+            </div>
+        <% end %>
+      <% else %>
+        <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
+      <% end %>
+    </div>
+  </div>
+
+  <div class="card shadow-lg bg-white">
+    <div class="card-body">
+      <h2 class="card-title">Scholarship Opportunity List</h2>
+      <%= if Tzn.Pods.scholarship_list_access?(@pod) do %>
+      <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
+        <em>
+          <%=
+          case q.state do
+            "needs_info" -> "Needs info from you or parent(s)."
+            "ready_for_specialist" -> "Submitted to research specialist to begin research."
+            "specialist" -> "Research specialist is creating the Scholarship opportunity list."
+            "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
+            "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
+            _ -> "Unknown"
+          end
+        %>
+        </em>
+        <div class="space-m"></div>
+        <%= link "Open", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "btn-primary" %>
+      <% else %>
+        Not started
+        <div class="card-actions">
+        <%= link "Start",
+          to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
+          class: "btn btn-primary", method: :post
+        %>
+        </div>
+      <% end %>
     <% else %>
-      Not started
-      <div class="space-m"></div>
-      <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s Extracurricular/Volunteer Opportunity List Research Request",
-        to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
-        class: "button button-primary", method: :post
-    %>
+      <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
     <% end %>
-  <% else %>
-    <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
-  <% end %>
+    </div>
+  </div>
 </div>
-<div class="space-m"></div>
-<p class="lead">Scholarship Opportunity List</p>
-<div class="border border-radius padding-s">
-  <%= if Tzn.Pods.scholarship_list_access?(@pod) do %>
-    <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
-      <em>
-        <%=
-        case q.state do
-          "needs_info" -> "Needs info from you or parent(s)."
-          "ready_for_specialist" -> "Submitted to research specialist to begin research."
-          "specialist" -> "Research specialist is creating the Scholarship opportunity list."
-          "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
-          "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
-          _ -> "Unknown"
-        end
-      %>
-      </em>
-      <div class="space-m"></div>
-      <%= link "Open #{Tzn.Util.informal_name(@mentee)}'s Scholarship Opportunity List Research Request", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "button" %>
-    <% else %>
-      Not started
-      <div class="space-m"></div>
-      <%= link "Start #{Tzn.Util.informal_name(@mentee)}'s Scholarship Opportunity List Research Request",
-        to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
-        class: "button button-primary", method: :post
-    %>
-    <% end %>
-  <% else %>
-    <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
-  <% end %>
-</div>
-<div class="space-l"></div>

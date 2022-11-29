@@ -5,44 +5,44 @@
     </div>
   <% end %>
 
-  <%= label f, :name %>
-  <%= text_input f, :name %>
+  <%= label f, :name, class: "label" %>
+  <%= text_input f, :name, class: "input input-bordered" %>
   <%= error_tag f, :name %>
 
-  <%= label f, :nick_name %>
-  <%= text_input f, :nick_name %>
+  <%= label f, :nick_name, class: "label" %>
+  <%= text_input f, :nick_name, class: "input input-bordered" %>
   <%= error_tag f, :nick_name %>
 
-  <%= label f, :pronouns %>
-  <%= text_input f, :pronouns %>
+  <%= label f, :pronouns, class: "label" %>
+  <%= text_input f, :pronouns, class: "input input-bordered" %>
   <%= error_tag f, :pronouns %>
 
-  <%= label f, :grade %>
-  <%= select f, :grade, Tzn.Util.grade_options() %>
+  <%= label f, :grade, class: "label" %>
+  <%= select f, :grade, Tzn.Util.grade_options(), class: "select select-bordered" %>
   <%= error_tag f, :grade %>
 
-  <%= label f, :timezone_offset %>
-  <%= select f, :timezone_offset, Tzn.Util.timezone_options() %>
+  <%= label f, :timezone_offset, class: "label" %>
+  <%= select f, :timezone_offset, Tzn.Util.timezone_options(), class: "select select-bordered" %>
   <%= error_tag f, :timezone_offset %>
 
   <div class="space-l"></div>
 
-  <%= label f, :email %>
-  <%= email_input f, :email %>
+  <%= label f, :email, class: "label" %>
+  <%= email_input f, :email, class: "input input-bordered" %>
   <%= error_tag f, :email %>
 
-  <%= label f, :user_id  %>
+  <%= label f, :user_id , class: "label" %>
   <%= select f, :user_id, [
     {'None', nil} |
     @users |> Enum.sort_by(fn user -> user.email end ) |> Enum.map(fn user -> {"#{user.email}", user.id} end)
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :user_id %>
 
-  <div class="space-l"></div>
+  <div class="h-8"></div>
 
 
 
-  <%= label f, :internal_note %>
+  <%= label f, :internal_note, class: "label" %>
   <%= textarea f, :internal_note, class: "rte" %>
   <%= error_tag f, :internal_note %>
 
@@ -50,46 +50,47 @@
 
 
 
-  <div class="space-m"></div>
+  <div class="h-5"></div>
 
-  <%= label f, :parent1_email %>
-  <%= email_input f, :parent1_email %>
+  <%= label f, :parent1_email, class: "label" %>
+  <%= email_input f, :parent1_email, class: "input input-bordered" %>
   <%= error_tag f, :parent1_email %>
 
-  <%= label f, :parent1_name %>
-  <%= text_input f, :parent1_name %>
+  <%= label f, :parent1_name, class: "label" %>
+  <%= text_input f, :parent1_name, class: "input input-bordered" %>
   <%= error_tag f, :parent1_name %>
 
-  <div class="space-m"></div>
+  <div class="h-5"></div>
 
-  <%= label f, :parent2_email %>
-  <%= email_input f, :parent2_email %>
+  <%= label f, :parent2_email, class: "label" %>
+  <%= email_input f, :parent2_email, class: "input input-bordered" %>
   <%= error_tag f, :parent2_email %>
 
-  <%= label f, :parent2_name %>
-  <%= text_input f, :parent2_name %>
+  <%= label f, :parent2_name, class: "label" %>
+  <%= text_input f, :parent2_name, class: "input input-bordered" %>
   <%= error_tag f, :parent2_name %>
 
-  <div class="space-l"> </div>
+  <div class="h-8"> </div>
 
-    <%= label f, :archived do %>
-    <%= checkbox f, :archived %> Archived?
+  <%= label f, :archived, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :archived, class: "checkbox" %>
+    <span>Archived?</span>
   <% end %>
   <%= error_tag f, :archived %>
 
-  <%= label f, :archived_reason  %>
+  <%= label f, :archived_reason , class: "label" %>
   <%= select f, :archived_reason, [
     {"-- Reason for Archiving --", nil},
     {"Fake/Test Account", "fake_or_test"},
     {"Contract Completed", "contract_completed"},
     {"User Churned", "churn"},
     {"Other", "other"},
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :archived_reason %>
 
-  <div class="space-l"></div>
+  <div class="h-8"></div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

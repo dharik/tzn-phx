@@ -1,17 +1,19 @@
 <div class="main-grid">
-  <div class="main">
+  <div class="main px-6">
     <%= if @show_scoring do %>
-      <table>
-        <tr>
-          <th>Name</th>
-          <th>Major</th>
-          <th>Schools Tier</th>
-          <th>Gender</th>
-          <th>Learning Disability</th>
-          <th>Social Factor</th>
-          <th>Hobbies</th>
-          <th>Total</th>
-        </tr>
+      <table class="table w-full">
+        <thead>
+          <tr>
+            <th>Name</th>
+            <th>Major</th>
+            <th>Schools Tier</th>
+            <th>Gender</th>
+            <th>Learning Disability</th>
+            <th>Social Factor</th>
+            <th>Hobbies</th>
+            <th>Total</th>
+          </tr>
+        </thead>
         <%= for m <- @scored_mentors do %>
           <tr>
             <td><%= Tzn.Util.informal_name(m) %></td>
@@ -28,8 +30,8 @@
     <% else %>
       <div class="flex-1 matching-result">
         <%= for m <- Enum.take(@scored_mentors, 5) do %>
-          <div class="border border-radius margin-vertical-s padding-s transition-fast flex flex-column align-items-center text-align-center">
-            <div>
+          <div class="shadow-md rounded my-3 p-3 flex flex-col items-center text-center bg-white/80">
+            <div class="avatar rounded-full">
               <%= if m.photo_url do %>
                 <img
                   src={m.photo_url}
@@ -52,7 +54,7 @@
             <p class="lead-xs"><%= m.name %></p>
             <a
               href={"/admin/mentors/#{m.id}"}
-              class="text-decoration-none color-primary-500 font-weight-medium"
+              class="btn btn-link"
             >
               View profile
             </a>
@@ -61,146 +63,139 @@
       </div>
     <% end %>
 
-    <button class="button button-primary button-text button-xs" phx-click="toggle_scoring">Toggle Score Breakdown</button>
+    <button class="btn btn-ghost" phx-click="toggle_scoring">Toggle Score Breakdown</button>
   </div>
 
-  <div class="side padding-horizontal-m">
-    <div class="background-light-100 padding-s">
+  <div class="side p-4 bg-white/80 shadow-md">
+    <div class="bg-base-200 p-3">
       <strong>Prospective Major</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
+    <div class="my-2 px-2">
       <%= for {label, value} <- Tzn.Transizion.Mentor.career_interest_options()  do%>
-        <label class="control checkbox">
+        <label class="label justify-start cursor-pointer">
           <input
             type="checkbox"
+            class="checkbox"
             checked={MapSet.member?(@careers, value)}
             phx-click="set_career"
             phx-value-career={value}
           />
-          <span class="control-indicator"></span>
-          <span class="control-label"><%= label %></span>
+          <span class="mx-2"><%= label %></span>
         </label>
       <% end %>
     </div>
     <div class="space-m"></div>
 
-    <div class="background-light-100 padding-s">
+    <div class="bg-base-200 p-3">
       <strong>Schools Tier</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
+    <div class="my-2 px-2">
       <%= for {label, value} <- Tzn.Transizion.Mentor.school_tier_options()  do%>
-          <label class="control checkbox">
+          <label class="label justify-start cursor-pointer">
             <input
               type="checkbox"
+              class="checkbox"
               checked={MapSet.member?(@school_tiers, value)}
               phx-click="set_school_tier"
               phx-value-school_tier={value}
             />
-            <span class="control-indicator"></span>
-            <span class="control-label"><%= label %></span>
+            <span class="mx-2"><%= label %></span>
           </label>
       <% end %>
     </div>
     <div class="space-m"></div>
 
-    <div class="background-light-100 padding-s">
+    <div class="bg-base-200 p-3">
       <strong>Gender preference</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
-      <label class="control radio">
+    <div class="my-2 px-2">
+      <label class="label justify-start cursor-pointer">
         <input type="radio"
+              class="radio"
               checked={@gender == "male"}
               phx-click="set_gender_male"/>
-        <span class="control-indicator"></span>
-        <span class="control-label">Male</span>
+        <span class="mx-2">Male</span>
       </label>
-      <label class="control radio">
+      <label class="label justify-start cursor-pointer">
         <input type="radio"
+              class="radio"
               checked={@gender == "female"}
               phx-click="set_gender_female"/>
-        <span class="control-indicator"></span>
-        <span class="control-label">Female</span>
+        <span class="mx-2">Female</span>
       </label>
-      <label class="control radio">
+      <label class="label justify-start cursor-pointer">
         <input type="radio"
+              class="radio"
               checked={@gender == "non_binary"}
               phx-click="set_gender_non_binary"/>
-        <span class="control-indicator"></span>
-        <span class="control-label">Non-binary</span>
+        <span class="mx-2">Non-binary</span>
       </label>
-      <label class="control radio">
+      <label class="label justify-start cursor-pointer">
         <input type="radio"
+              class="radio"
               checked={@gender == "no_preference"}
               phx-click="set_gender_no_preference"/>
-        <span class="control-indicator"></span>
-        <span class="control-label">No preference</span>
+        <span class="mx-2">No preference</span>
       </label>
     </div>
     <div class="space-m"></div>
 
-    <div class="background-light-100 padding-s">
+    <div class="bg-base-200 p-3">
       <strong>Learning Disability</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
-      <label class="control radio">
+    <div class="my-2 px-2">
+      <label class="label justify-start cursor-pointer">
         <input type="radio" checked={@learning_disability} phx-click="toggle_learning_disability" />
-        <span class="control-indicator"></span>
-        <span class="control-label">Yes</span>
+        <span class="mx-2">Yes</span>
       </label>
-      <label class="control radio">
+      <label class="label justify-start cursor-pointer">
         <input type="radio" checked={!@learning_disability} phx-click="toggle_learning_disability" />
-        <span class="control-indicator"></span>
-        <span class="control-label">No</span>
+        <span class="mx-2">No</span>
       </label>
     </div>
     <div class="space-m"></div>
 
-    <div class="background-light-100 padding-s">
+    <div class="bg-base-200 p-3">
       <strong>Social Factor</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
-      <label class="control radio">
-        <input type="radio" checked={@social_factor == "1"} phx-click="set_social_factor" phx-value-social_factor="1" />
-        <span class="control-indicator"></span>
-        <span class="control-label">1</span>
+    <div class="my-2 px-2">
+      <label class="label justify-start cursor-pointer">
+        <input type="radio" class="radio" checked={@social_factor == "1"} phx-click="set_social_factor" phx-value-social_factor="1" />
+        <span class="mx-2">1</span>
       </label>
-      <label class="control radio">
-        <input type="radio" checked={@social_factor == "2"} phx-click="set_social_factor" phx-value-social_factor="2" />
-        <span class="control-indicator"></span>
-        <span class="control-label">2</span>
+      <label class="label justify-start cursor-pointer">
+        <input type="radio" class="radio" checked={@social_factor == "2"} phx-click="set_social_factor" phx-value-social_factor="2" />
+        <span class="mx-2">2</span>
       </label>
-      <label class="control radio">
-        <input type="radio" checked={@social_factor == "3"} phx-click="set_social_factor" phx-value-social_factor="3" />
-        <span class="control-indicator"></span>
-        <span class="control-label">3</span>
+      <label class="label justify-start cursor-pointer">
+        <input type="radio" class="radio" checked={@social_factor == "3"} phx-click="set_social_factor" phx-value-social_factor="3" />
+        <span class="mx-2">3</span>
       </label>
-      <label class="control radio">
-        <input type="radio" checked={@social_factor == "4"} phx-click="set_social_factor" phx-value-social_factor="4" />
-        <span class="control-indicator"></span>
-        <span class="control-label">4</span>
+      <label class="label justify-start cursor-pointer">
+        <input type="radio" class="radio" checked={@social_factor == "4"} phx-click="set_social_factor" phx-value-social_factor="4" />
+        <span class="mx-2">4</span>
       </label>
-      <label class="control radio">
-        <input type="radio" checked={@social_factor == "5"} phx-click="set_social_factor" phx-value-social_factor="5" />
-        <span class="control-indicator"></span>
-        <span class="control-label">5</span>
+      <label class="label justify-start cursor-pointer">
+        <input type="radio" class="radio" checked={@social_factor == "5"} phx-click="set_social_factor" phx-value-social_factor="5" />
+        <span class="mx-2">5</span>
       </label>
     </div>
     <div class="space-m"></div>
 
-    <div class="background-light-100 padding-s">
+    <div class="bg-base-200 p-3">
       <strong>Hobbies</strong>
     </div>
-    <div class="margin-vertical-s padding-horizontal-m">
+    <div class="my-2 px-2">
       <%= for {label, value} <- Tzn.Transizion.Mentor.hobby_options()  do%>
-        <label class="control checkbox">
+      <label class="label justify-start cursor-pointer">
           <input
             type="checkbox"
+            class="checkbox"
             checked={MapSet.member?(@hobbies, value)}
             phx-click="set_hobby"
             phx-value-hobby={value}
           />
-          <span class="control-indicator"></span>
-          <span class="control-label"><%= label %></span>
+          <span class="mx-2"><%= label %></span>
         </label>
       <% end %>
     </div>

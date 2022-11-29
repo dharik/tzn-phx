@@ -1,22 +1,22 @@
 
 <%= form_for @changeset, @action, fn f -> %>
-    <%= label f, :calendar_id %>
+    <%= label f, :calendar_id, class: "label" %>
     <%= hidden_input f, :calendar_id, value: @calendar.id %>
-    <%= link @calendar.name, to: Routes.admin_calendar_path(@conn, :show, @calendar) %>
+    <%= link @calendar.name, to: Routes.admin_calendar_path(@conn, :show, @calendar), class: "link" %>
     <br />
 
-  <%= label f, :title  %>
-  <%= text_input f, :name %>
+  <%= label f, :title, class: "label"  %>
+  <%= text_input f, :name, class: "input input-bordered w-full" %>
   <%= error_tag f, :name %>
 
-  <%= label f, :description  %>
+  <%= label f, :description, class: "label"  %>
   <%= textarea f, :description, class: "rte" %>
   <%= error_tag f, :description %>
 
 
   
 
-  <%= label f, :month  %>
+  <%= label f, :month, class: "label"  %>
   <%= select f, :month, [
     {"January", "1"},
     {"February", "2"},
@@ -30,22 +30,22 @@
     {"October", "10"},
     {"November", "11"},
     {"December", "12"}
-    ] %>
+    ], class: "select select-bordered" %>
   <%= error_tag f, :month %>
 
-  <%= label f, :day  %>
-  <%= select f, :day, 1..31 %>
+  <%= label f, :day, class: "label"  %>
+  <%= select f, :day, 1..31, class: "select select-bordered" %>
   <%= error_tag f, :day %>
 
 
 
-  <%= label f, :grade %>
-  <%= select f, :grade, Tzn.Util.grade_options(:high_school) %>
+  <%= label f, :grade, class: "label" %>
+  <%= select f, :grade, Tzn.Util.grade_options(:high_school), class: "select select-bordered" %>
   <%= error_tag f, :grade %>
 
-  <div class="space-m"></div>
+  <div class="h-8"></div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

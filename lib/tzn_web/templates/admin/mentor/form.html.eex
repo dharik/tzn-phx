@@ -5,133 +5,151 @@
     </div>
   <% end %>
 
-  <%= label f, :name, "Full Name (used in formal contexts)" %>
-  <%= text_input f, :name %>
+  <%= label f, :name, "Full Name (used in formal contexts)", class: "label" %>
+  <%= text_input f, :name, class: "input input-bordered" %>
   <%= error_tag f, :name %>
 
-  <%= label f, :nick_name, "Nick Name (used in most contexts)" %>
-  <%= text_input f, :nick_name %>
+  <%= label f, :nick_name, "Nick Name (used in most contexts)", class: "label" %>
+  <%= text_input f, :nick_name, class: "input input-bordered" %>
   <%= error_tag f, :nick_name %>
 
-  <%= label f, :pronouns %>
-  <%= text_input f, :pronouns %>
+  <%= label f, :pronouns, class: "label" %>
+  <%= text_input f, :pronouns, class: "input input-bordered" %>
   <%= error_tag f, :pronouns %>
 
-  <%= label f, :desired_mentee_count %>
-  <%= number_input f, :desired_mentee_count %>
-  <%= error_tag f, :desired_mentee_count %>
-
-  <%= label f, :max_mentee_count %>
-  <%= number_input f, :max_mentee_count %>
-  <%= error_tag f, :max_mentee_count %>
-
-  <%= label f, :timezone_offset %>
-  <%= select f, :timezone_offset, Tzn.Util.timezone_options() %>
-  <%= error_tag f, :timezone_offset %>
-
-  <%= label f, :email %>
-  <%= email_input f, :email %>
-  <%= error_tag f, :email %>
-
-  <%= label f, :photo_url %>
-  <%= text_input f, :photo_url %>
+  <%= label f, :photo_url, class: "label" %>
+  <%= text_input f, :photo_url, class: "input input-bordered" %>
   <%= error_tag f, :photo_url %>
 
-  <%= label f, :experience_level %>
-  <%= select f, :experience_level, [
-    {"N/A", nil}, {"Veteran", "veteran"}, {"Rising", "rising"}, {"Rookie", "rookie"}
-  ] %>
-  <%= error_tag f, :experience_level %>
+  <%= label f, :timezone_offset, class: "label" %>
+  <%= select f, :timezone_offset, Tzn.Util.timezone_options(), class: "select select-bordered" %>
+  <%= error_tag f, :timezone_offset %>
 
-  <%= label f, :college_list_specialty, class: "control switch" do %>
-    <%= checkbox f, :college_list_specialty %>
-    <span class="control-indicator"></span>
-    <span class="control-label">College research specialist?</span>
-  <% end %>
-  <%= error_tag f, :college_list_specialty %>
+  <%= label f, :email, class: "label" %>
+  <%= email_input f, :email, class: "input input-bordered" %>
+  <%= error_tag f, :email %>
 
-  <%= label f, :ecvo_list_specialty, class: "control switch" do %>
-    <%= checkbox f, :ecvo_list_specialty %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Extracurricular/Volunteer Opportunity research specialist?</span>
-  <% end %>
-  <%= error_tag f, :ecvo_list_specialty %>
-
-  <%= label f, :scholarship_list_specialty, class: "control switch" do %>
-    <%= checkbox f, :scholarship_list_specialty %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Scholarship research specialist?</span>
-  <% end %>
-  <%= error_tag f, :scholarship_list_specialty %>
-
-  <%= label f, :hourly_rate %>
-  <%= text_input f, :hourly_rate %>
-  <%= error_tag f, :hourly_rate %>
-
-  <%= label f, :user_id  %>
+  <%= label f, :user_id , class: "label" %>
   <%= select f, :user_id, [
     {'None', nil} |
     @users |> Enum.sort_by(fn user -> user.id end ) |> Enum.reverse |> Enum.map(fn user -> {"#{user.email}", user.id} end)
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :user_id %>
 
-  <%= label f, :archived do %>
-    <%= checkbox f, :archived %> Archived?
+  <div class="flex gap-x-4 my-8">
+    <div>
+      <%= label f, :desired_mentee_count, class: "label" %>
+      <%= number_input f, :desired_mentee_count, class: "input input-bordered" %>
+      <%= error_tag f, :desired_mentee_count %>
+    </div>
+
+    <div>
+      <%= label f, :max_mentee_count, class: "label" %>
+      <%= number_input f, :max_mentee_count, class: "input input-bordered" %>
+      <%= error_tag f, :max_mentee_count %>
+    </div>
+  </div>
+
+
+
+  <%= label f, :experience_level, class: "label" %>
+  <%= select f, :experience_level, [
+    {"N/A", nil}, {"Veteran", "veteran"}, {"Rising", "rising"}, {"Rookie", "rookie"}
+  ], class: "select select-bordered" %>
+  <%= error_tag f, :experience_level %>
+
+  <%= label f, :college_list_specialty, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :college_list_specialty, class: "toggle" %>
+    <span>College research specialist?</span>
   <% end %>
-  <%= error_tag f, :archived %>
+  <%= error_tag f, :college_list_specialty %>
 
-  <%= label f, :archived_reason  %>
-  <%= select f, :archived_reason, [
-    {"-- Reason for Archiving --", nil},
-    {"Unknown", "unknown"},
-    {"Test Account", "test_account"}
-  ] %>
-  <%= error_tag f, :archived_reason %>
+  <%= label f, :ecvo_list_specialty, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :ecvo_list_specialty, class: "toggle" %>
+    <span>Extracurricular/Volunteer Opportunity research specialist?</span>
+  <% end %>
+  <%= error_tag f, :ecvo_list_specialty %>
 
-  <div class="space-l"></div>
-  <p class="lead">Matching Algorithm Data</p>
+  <%= label f, :scholarship_list_specialty, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :scholarship_list_specialty, class: "toggle" %>
+    <span>Scholarship research specialist?</span>
+  <% end %>
+  <%= error_tag f, :scholarship_list_specialty %>
 
-  <%= label f, :career_interests  %>
-  <%= multiple_select f, :career_interests, Tzn.Transizion.Mentor.career_interest_options, size: 15 %>
+  <%= label f, :hourly_rate, class: "label" %>
+  <%= text_input f, :hourly_rate, class: "input input-bordered" %>
+  <%= error_tag f, :hourly_rate %>
+
+
+
+  <div class="flex gap-x-4 my-6">
+    <div class="flex flex-col justify-center">
+      <%= label f, :archived, class: "label justify-start space-x-2" do %>
+        <%= checkbox f, :archived, class: "checkbox" %>
+        <span>Archived?</span>
+      <% end %>
+      <%= error_tag f, :archived %>
+    </div>
+
+    <div>
+      <%= select f, :archived_reason, [
+        {"-- Reason for Archiving --", nil},
+        {"Unknown", "unknown"},
+        {"Test Account", "test_account"}
+      ], class: "select select-bordered" %>
+      <%= error_tag f, :archived_reason %>
+    </div>
+  </div>
+
+
+  <div class="h-8"></div>
+  <p class="text-xl">Matching Algorithm Data</p>
+
+  <%= label f, :career_interests , class: "label" %>
+  <%= multiple_select f, :career_interests, Tzn.Transizion.Mentor.career_interest_options, size: 15, class: "select select-bordered" %>
   <%= error_tag f, :career_interests %>
 
-  <%= label f, :school_tiers  %>
-  <%= multiple_select f, :school_tiers, Tzn.Transizion.Mentor.school_tier_options, size: 4 %>
+  <div class="h-4"></div>
+
+  <%= label f, :school_tiers , class: "label" %>
+  <%= multiple_select f, :school_tiers, Tzn.Transizion.Mentor.school_tier_options, size: 4, class: "select select-bordered" %>
   <%= error_tag f, :school_tiers %>
 
-  <%= label f, :gender  %>
-  <%= radio_button f, :gender, "male" %> Male
+  <div class="h-4"></div>
+
+  <%= label f, :gender , class: "label" %>
+  <%= radio_button f, :gender, "male", class: "radio" %> Male
   <br />
-  <%= radio_button f, :gender, "female" %> Female
+  <%= radio_button f, :gender, "female", class: "radio" %> Female
   <br />
-  <%= radio_button f, :gender, "non_binary" %> Non-binary
+  <%= radio_button f, :gender, "non_binary", class: "radio" %> Non-binary
   <br />
   <%= error_tag f, :gender %>
 
-  <div></div>
+  <div class="h-4"></div>
 
-  <%= label f, :hobbies  %>
-  <%= multiple_select f, :hobbies, Tzn.Transizion.Mentor.hobby_options, size: 25 %>
+  <%= label f, :hobbies , class: "label" %>
+  <%= multiple_select f, :hobbies, Tzn.Transizion.Mentor.hobby_options, size: 25, class: "select select-bordered" %>
   <%= error_tag f, :hobbies %>
 
 
-  <%= label f, :disability_experience  %>
-  <%= checkbox f, :disability_experience %> Yes
+  <%= label f, :disability_experience , class: "label" %>
+  <%= checkbox f, :disability_experience, class: "checkbox" %> Yes
   <%= error_tag f, :disability_experience %>
   <br />
 
-  <%= label f, :social_factor  %>
-  <%= select f, :social_factor, [1, 2, 3, 4, "5 - Ultra Social": 5] %>
+  <%= label f, :social_factor , class: "label" %>
+  <%= select f, :social_factor, [1, 2, 3, 4, "5 - Ultra Social": 5], class: "select select-bordered" %>
   <%= error_tag f, :social_factor %>
 
-  <%= label f, :international_experience  %>
-  <%= checkbox f, :international_experience %> Yes
+  <%= label f, :international_experience , class: "label" %>
+  <%= checkbox f, :international_experience, class: "checkbox" %> Yes
   <%= error_tag f, :international_experience %>
 
-  <div class="space-m"></div>
+  <div class="h-8"></div>
 
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

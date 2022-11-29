@@ -1,29 +1,39 @@
-Attached files:
-<ul>
-    <%= for file <- @questionnaire.files do %>
-        <li>
-            <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
-        </li>
-    <% end %>
-</ul>
-
-<%= if Enum.count(@questionnaire.snapshots) > 0 do %>
-    Version History:
-    <ul>
-        <%= for snapshot <- @questionnaire.snapshots do %>
-            <% version_title = Tzn.Util.format_date_generic(snapshot.inserted_at) <> " - " <> snapshot.state %>
-            <%= if @snapshot.id == snapshot.id do %>
-                <li><b><%= version_title %></b></li>
-            <% else %>
-                <li><%= link version_title, to: Routes.mentor_college_list_path(@conn, :show, @questionnaire.id, version: snapshot.id) %></li>
+<div class="grid grid-cols-2 gap-16 mb-16">
+    <div class="border rounded p-4">
+        <h2 class="text-lg">Attached files:</h2>
+        <ul class="menu">
+            <%= for file <- @questionnaire.files do %>
+                <li>
+                    <%= link file.file_name, to: Tzn.Files.get_signed_url(file), target: "_blank", rel: "external" %>
+                </li>
             <% end %>
+        </ul>
+        <%= if Enum.count(@questionnaire.files) == 0 do %>
+            <div class="w-full h-full flex justify-center items-center">None</div>
         <% end %>
-    </ul>
-<% end %>
+    </div>
 
-Answers:
+    <div class="border rounded p-4">
+        <%= if Enum.count(@questionnaire.snapshots) > 0 do %>
+            <h2 class="text-lg">Version History:</h2>
+            <div class="h-64 overflow-y-auto">
+                <ul class="steps steps-vertical">
+                    <%= for snapshot <- @questionnaire.snapshots do %>
+                        <% version_title = Tzn.Util.format_date_generic(snapshot.inserted_at) <> " - " <> snapshot.state %>
+                        <%= if @snapshot.id == snapshot.id do %>
+                            <li class="step step-primary text-bold" data-content="➜"><%= version_title %></li>
+                        <% else %>
+                            <li class="step" data-content=""><%= link version_title, to: Routes.mentor_college_list_path(@conn, :show, @questionnaire.id, version: snapshot.id), class: "link" %></li>
+                        <% end %>
+                    <% end %>
+                </ul>
+            </div>
+        <% end %>
+    </div>
+</div>
+
 <div class="overflow-x-auto w-full">
-    <table>
+    <table class="table">
         <thead>
             <tr>
                 <th>Question</th>

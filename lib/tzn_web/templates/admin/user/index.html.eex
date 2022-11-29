@@ -1,8 +1,6 @@
-<h1>Listing Users</h1>
-<table>
+<table class="table table-compact w-full">
   <thead>
     <tr>
-      <th>ID</th>
       <th>Email</th>
       <th>Created</th>
       <th>Admin?</th>
@@ -14,18 +12,16 @@
   </thead>
   <tbody>
     <%= for user <- @users do %>
-      <tr>
+      <tr class="hover">
         <td>
-          <%= user.id %>
-        </td>
-        <td>
-          <%= link user.email, to: Routes.admin_user_path(@conn, :edit, user) %>
-          <%= if user.email_confirmed_at do %>
-            <svg width="16" height="16" viewBox="0 0 16 16" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <path d="M8.0008 16.0016C3.58409 15.9968 0.00485038 12.4175 0 8.00081V7.8408C0.087954 3.44398 3.70804 -0.0576263 8.10535 0.000718646C12.5027 0.0590636 16.0286 3.65549 15.9998 8.05309C15.9711 12.4507 12.3985 16.0007 8.0008 16.0016ZM4.32843 7.67278L3.20032 8.80089L6.40064 12.0012L12.8013 5.60057L11.6732 4.46446L6.40064 9.73698L4.32843 7.67278Z" fill="#00B636"/>
-            </svg>
-
-          <% end %>
+          <div class="flex items-center space-x-2">
+            <%= link user.email, to: Routes.admin_user_path(@conn, :edit, user), class: "link" %>
+            <%= if user.email_confirmed_at do %>
+              <svg width="16" height="16" viewBox="0 0 16 16" xmlns="http://www.w3.org/2000/svg" class="fill-green">
+                <path d="M8.0008 16.0016C3.58409 15.9968 0.00485038 12.4175 0 8.00081V7.8408C0.087954 3.44398 3.70804 -0.0576263 8.10535 0.000718646C12.5027 0.0590636 16.0286 3.65549 15.9998 8.05309C15.9711 12.4507 12.3985 16.0007 8.0008 16.0016ZM4.32843 7.67278L3.20032 8.80089L6.40064 12.0012L12.8013 5.60057L11.6732 4.46446L6.40064 9.73698L4.32843 7.67278Z" />
+              </svg>
+            <% end %>
+          </div>
         </td>
         <td>
           <%= user.inserted_at %>
@@ -37,12 +33,12 @@
         </td>
         <td>
           <%= if user.mentor_profile do %>
-            <%= link user.mentor_profile.name, to: Routes.admin_mentor_path(@conn, :show, user.mentor_profile) %>
+            <%= link user.mentor_profile.name, to: Routes.admin_mentor_path(@conn, :show, user.mentor_profile), class: "link" %>
           <% end %>
         </td>
         <td>
           <%= if user.mentee_profile do %>
-            <%= link user.mentee_profile.name, to: Routes.admin_mentee_path(@conn, :show, user.mentee_profile) %>
+            <%= link user.mentee_profile.name, to: Routes.admin_mentee_path(@conn, :show, user.mentee_profile), class: "link" %>
           <% end %>
         </td>
         <td>
@@ -51,7 +47,7 @@
           <% end %>
         </td>
         <td>
-          <%= link "Impersonate", to: Routes.admin_impersonation_path(@conn, :start, user_id: user.id) %>
+          <%= link "Impersonate", to: Routes.admin_impersonation_path(@conn, :start, user_id: user.id), class: "link" %>
         </td>
       </tr>
     <% end %>

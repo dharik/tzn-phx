@@ -2,255 +2,260 @@
 <div class="space-l"></div>
 
 <div x-data="{tab: 'internal_info'}">
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'internal_info'}"
-    @click.prevent="tab = 'internal_info'">
-    Profile
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'todos'}"
-    @click.prevent="tab = 'todos'">
-    To-Dos
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'strategy_sessions'}"
-    @click.prevent="tab = 'strategy_sessions'">
-    Strategy Sessions
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'timesheet_entries'}"
-    @click.prevent="tab = 'timesheet_entries'">
-    Timesheet Entries
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'contract_purchases'}"
-    @click.prevent="tab = 'contract_purchases'">
-    Contract Purchases
-  </a>
-  <a
-    href="#"
-    class="lead display-inline-block margin-horizontal-m text-decoration-none"
-    :class="{'color-grey-100': tab !== 'changes'}"
-    @click.prevent="tab = 'changes'">
-    Change History
-  </a>
+  <div class="tabs">
+     <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'internal_info'}"
+      @click.prevent="tab = 'internal_info'">
+      Profile
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'todos'}"
+      @click.prevent="tab = 'todos'">
+      To-Dos
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'strategy_sessions'}"
+      @click.prevent="tab = 'strategy_sessions'">
+      Strategy Sessions
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'timesheet_entries'}"
+      @click.prevent="tab = 'timesheet_entries'">
+      Timesheet Entries
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'contract_purchases'}"
+      @click.prevent="tab = 'contract_purchases'">
+      Contract Purchases
+    </a>
+    <a
+      href="#"
+      class="tab tab-bordered"
+      :class="{'tab-active': tab == 'changes'}"
+      @click.prevent="tab = 'changes'">
+      Change History
+    </a>
+
+  </div>
 
 
-  <div class="space-m"></div>
+  <div class="h-8"></div>
 
-  <div class="flex border border-radius flex-wrap" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
-    <div class="flex flex-column justify-content-flex-start align-items-center padding-horizontal-xl padding-vertical-m">
-      <div class="background-light-50 flex justify-content-center align-items-center border" style="width: 90px; height: 90px; border-radius: 50%">
-        <span class="material-icons-outlined">school</span>
+  <div class="flex rounded shadow-lg flex-wrap p-4 bg-white my-5" style="max-width: 80rem;" x-show="tab === 'internal_info'" x-transition>
+    <div class="flex flex-col justify-start items-center px-8">
+      <div class="avatar placeholder">
+        <div class="bg-yellow-light text-neutral-content rounded-full w-24">
+          <span class="text-3xl">
+            <%= @mentee && Tzn.Util.to_initials(@mentee.name) %>
+          </span>
+        </div>
       </div>
 
-      <div class="space-xs"></div>
+      <div class="h-8"></div>
+
       <%= if @mentee do %>
-        <p class="display-title"><%= link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee), class: "text-decoration-none" %></p>
+        <p class="text-xl">
+          <%= link @mentee.name, to: Routes.admin_mentee_path(@conn, :show, @mentee), class: "" %>
+        </p>
         <%= if @mentee.pronouns do %>
           <small><%= @mentee.pronouns %></small>
         <% end %>
 
         <%= if @mentee.archived || !@pod.active do %>
-          <span class="text-transform-uppercase display-title color-info">Archived</span>
+          <span class="text-info">ARCHIVED</span>
+        <% end %>
+
+        <%= link to: Routes.admin_mentee_path(@conn, :edit, @mentee), class: "btn btn-ghost btn-xs my-2" do %>
+          <span class="material-icons-outlined">edit</span>
+          <span class="mx-2">Mentee Profile</span>
         <% end %>
       <% else %>
-        <p class="display-title">No mentee</p>
+        <p class="text-xl">No mentee</p>
       <% end %>
 
 
-      <div class="space-m"></div>
+      <div class="h-8"></div>
 
-      <%= link to: Routes.admin_pod_path(@conn, :edit, @pod), class: "button button-primary button-icon" do %>
+      <%= link to: Routes.admin_pod_path(@conn, :edit, @pod), class: "btn btn-primary btn-sm" do %>
         <span class="material-icons-outlined">edit</span>
-        <div class="space-xxs"></div>
-        <span>Edit Pod</span>
+        <span class="mx-2">Edit Pod</span>
       <% end %>
     </div>
 
-    <div class="flex-1 flex flex-column border-left">
-      <div class="padding-m">
-        <%= for {key, value} <- [
-          {"Nick Name", @mentee && @mentee.nick_name || "Not set"},
-          {"Time Zone", @mentee && Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset)},
-          {"Pod Type", humanize(@pod.type)},
-          {"College Lists", "#{Tzn.Pods.college_list_usage(@pod).used} / #{Tzn.Pods.college_list_usage(@pod).total}"},
-          {"EC/VO Lists", "#{Tzn.Pods.ecvo_list_usage(@pod).used} / #{Tzn.Pods.ecvo_list_usage(@pod).total}"},
-          {"Scholarship Lists", "#{Tzn.Pods.scholarship_list_usage(@pod).used} / #{Tzn.Pods.scholarship_list_usage(@pod).total}"},
-          {"Email Address", @mentee && @mentee.email},
-          # {"User Login", if(@mentee.user, do: @mentee.user.email, else: "N/A") },
-          {"Grade", (@mentee && humanize(@mentee.grade)) || 'Not set'},
-        ] do %>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;"><%= key %></span>
-          <span><%= value %></span>
-        </p>
-        <% end %>
-        <p class="vertical-align-middle">
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-            Hours Used
-          </span>
-          <progress
-            class="display-inline-block no-margin" style="width: 15rem;"
-            value="<%= @pod.hour_counts.hours_used %>"
-            max="<%= @pod.hour_counts.hours_purchased %>">
-          </progress>
-          <span class="color-grey-600 font-size-xs">
-            <%= Decimal.round(@pod.hour_counts.hours_used, 1) %> / <%= Decimal.round(@pod.hour_counts.hours_purchased, 1) %>
-          <span>
-          <%= if Tzn.HourTracking.low_hours?(@pod) do %>
-            <p class="color-warning text-align-center font-size-s">
-              This student's contract hours are running low.
-            </p>
-          <% end %>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">Internal Notes</span>
-          <span><%= raw @pod.internal_note || 'N/A' %></span>
-        </p>
-      </div>
-      <div class="border-bottom"></div>
-      <div class="padding-m">
-        <span class="lead-s">Mentor</span>
+    <table class="table w-full flex-1">
+        <tr>
+          <td class="font-light text-sm">Name</td>
+          <td>
+            <%= if @mentee do %>
+              <%= @mentee.name %>
+              <%= if @mentee.nick_name do %>
+                &nbsp;(<%= @mentee.nick_name %>)
+              <% end %>
+            <% else %>
+              Not set
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="font-light">Grade</td>
+          <td><%= (@mentee && humanize(@mentee.grade)) || "Not Set" %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Time Zone</td>
+          <td><%= @mentee && Tzn.Util.offset_to_timezone_city(@mentee.timezone_offset) %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Email</td>
+          <td><%= @mentee && @mentee.email %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Parents</td>
+          <td>
+            <%= if @mentee && @mentee.parent1_email do %>
+              <%= @mentee.parent1_name %> &lt;<%= @mentee.parent1_email %>&gt;
+            <% end %>
+            <br />
+            <%= if @mentee && @mentee.parent2_email do %>
+              <%= @mentee.parent2_name %> &lt;<%= @mentee.parent2_email %>&gt;
+            <% end %>
+          </td>
+        </tr>
+        <tr>
+          <td class="font-light">Pod Type</td>
+          <td><%= humanize(@pod.type) %></td>
+        </tr>
+        <tr>
+          <td class="font-light">College Lists</td>
+          <td><%= "#{Tzn.Pods.college_list_usage(@pod).used} / #{Tzn.Pods.college_list_usage(@pod).total}" %></td>
+        </tr>
+        <tr>
+          <td class="font-light">EC/VO Lists</td>
+          <td><%= "#{Tzn.Pods.ecvo_list_usage(@pod).used} / #{Tzn.Pods.ecvo_list_usage(@pod).total}" %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Scholarship Lists</td>
+          <td><%= "#{Tzn.Pods.scholarship_list_usage(@pod).used} / #{Tzn.Pods.scholarship_list_usage(@pod).total}" %></td>
+        </tr>
+        <tr>
+          <td class="font-light">Hours Used</td>
+          <td>
+            <div>
+                <progress
+                  class="progress progress-primary w-56"
+                  value="<%= @pod.hour_counts.hours_used %>"
+                  max="<%= @pod.hour_counts.hours_purchased %>">
+                </progress>
+                <%= Decimal.round(@pod.hour_counts.hours_used, 1) %> / <%= Decimal.round(@pod.hour_counts.hours_purchased, 1) %>
+                <%= if Tzn.HourTracking.low_hours?(@pod) do %>
+                  <p class="alert alert-warning">
+                    This student's contract hours are running low. Please inform your CMT to reload hours.
+                  </p>
+                <% end %>
+              </div>
 
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">Mentor</span>
-          <span>
+          </td>
+        </tr>
+        <tr>
+          <td class="font-light">Mentor</td>
+          <td class="items-center space-x-2 flex">
             <%= if @pod.mentor do %>
               <%= if @pod.mentor.photo_url do %>
-                <img src="<%= @pod.mentor.photo_url %>" class="icon" style="border-radius: 50%; width: 24px; height: 24px;" />
+                <div class="avatar">
+                  <div class="w-8 rounded-full">
+                      <img src="<%= @pod.mentor.photo_url %>" />
+                  </div>
+                </div>
               <% end %>
-              <%= link @pod.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @pod.mentor) %>
+              <%= link @pod.mentor.name, to: Routes.admin_mentor_path(@conn, :show, @pod.mentor), class: "link" %>
               <%= case @pod.mentor.experience_level do
-                "veteran" -> "⭐"
-                "rising" -> "🔷"
-                "rookie" -> "🔺"
+                "veteran" -> " ⭐"
+                "rising" -> " 🔷"
+                "rookie" -> " 🔺"
                 _ -> ""
               end %>
+              <span class="text-sm text-gray-600">
+                <%=
+                  cond do
+                    @pod.mentor_rate -> " ($#{@pod.mentor_rate}/hr)"
+                    @pod.mentor -> " ($#{@pod.mentor.hourly_rate}/hr)"
+                    true -> " (default hourly rate)"
+                  end
+                %>
+              </span>
             <% else %>
-              <span class="color-error">No mentor assigned</span>
+              <span class="text-error">No mentor assigned</span>
             <% end %>
-          </span>
-        </p>
-        <p>
-          <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-            Hourly Rate
-          </span>
-          <span>
-            <%=
-              cond do
-                @pod.mentor_rate -> @pod.mentor_rate
-                @pod.mentor -> @pod.mentor.hourly_rate
-                true -> "N/A"
-              end
-             %>
-          </span>
-        </p>
-      </div>
-      <div class="border-bottom"></div>
-      <div class="padding-m">
-        <span class="lead-s">Parents</span>
-
-        <%= if @mentee && @mentee.parent1_email do %>
-          <p>
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-              Name
-            </span>
-            <span>
-              <%= @mentee.parent1_name %>
-            </span>
-          </p>
-          <p>
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-              Email
-            </span>
-            <span>
-              <%= @mentee.parent1_email %>
-            </span>
-          </p>
-        <% end %>
-        <%= if @mentee && @mentee.parent2_email do %>
-          <p>
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-              Name
-            </span>
-            <span>
-              <%= @mentee.parent2_name %>
-            </span>
-          </p>
-          <p>
-            <span class="text-transform-uppercase color-grey-200 font-size-xs display-inline-block" style="min-width: 10rem;">
-              Email
-            </span>
-            <span>
-              <%= @mentee.parent2_email %>
-            </span>
-          </p>
-        <% end %>
-      </div>
-    </div>
+          </td>
+        </tr>
+        <tr>
+          <td class="font-light">Internal Notes</td>
+          <td class="whitespace-normal font-light"><%= raw @pod.internal_note || "N/A" %></td>
+        </tr>
+    </table>
 </div>
 
 
 
 
-  <div x-show="tab === 'todos'" x-transition>
-    <%= link "Add Todo Or Milestone", to: Routes.admin_pod_todo_path(@conn, :new, pod_id: @pod.id), class: "button button-primary" %>
-    <p class="lead-s">Milestones</p>
-    <div class="grid grid-cols-1">
+  <div x-show="tab === 'todos'" x-transition class="py-2">
+    <%= link "Add Todo Or Milestone", to: Routes.admin_pod_todo_path(@conn, :new, pod_id: @pod.id), class: "btn btn-primary" %>
+    <p class="text-xl my-3">Milestones:</p>
+    <div class="grid grid-cols-1 divide-y pl-4">
       <%= for todo <- @pod.todos |> Enum.filter(& &1.is_milestone) |> sort_todos() do %>
          <%= render "_milestone.html", milestone: todo %>
       <% end %>
     </div>
 
-    <p class="lead-s">Mentor To-Dos:</p>
-    <div class="grid grid-cols-1">
+    <div class="h-8"></div>
+
+    <p class="text-xl my-3">Mentor To-Dos:</p>
+    <div class="grid grid-cols-1 divide-y pl-4">
       <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentor") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
          <%= render "_todo.html", todo: todo %>
       <% end %>
     </div>
 
-    <div class="space-m"></div>
+    <div class="h-8"></div>
 
-    <p class="lead-s">Mentee To-Dos:</p>
-    <div class="grid grid-cols-1">
+    <p class="text-xl my-3">Mentee To-Dos:</p>
+    <div class="grid grid-cols-1 divide-y pl-4">
       <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "mentee") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
     </div>
-    <div class="space-m"></div>
+    <div class="h-8"></div>
 
-    <p class="lead-s">Parent To-Dos:</p>
-    <div class="grid grid-cols-1">
+    <p class="text-xl my-3">Parent To-Dos:</p>
+    <div class="grid grid-cols-1 divide-y pl-4">
       <%= for todo <- @pod.todos |> Enum.filter(& &1.assignee_type == "parent") |> Enum.reject(& &1.is_milestone) |> sort_todos() do %>
         <%= render "_todo.html", todo: todo %>
       <% end %>
     </div>
-    <div class="space-m"></div>
+    <div class="h-8"></div>
   </div>
 
   <div x-show="tab === 'strategy_sessions'" x-transition>
     <%= for strategy_session <- @pod.strategy_sessions |> Enum.sort_by(&(&1.date), {:desc, Date}) do %>
       <p>
         <span class="lead-xs"><%= strategy_session.email_subject %></span><br />
-        <span class="color-grey"><%= raw strategy_session.notes %></span><br />
-        <small class="color-grey">
+        <span class="text-grey"><%= raw strategy_session.notes %></span><br />
+        <small class="text-grey">
           <%= strategy_session.date |> format_date %> with <%= strategy_session.mentor.name %>
         <%= cond do %>
           <% strategy_session.published && strategy_session.emailed -> %>
-            <span class="color-info">email sent</span>
+            <span class="text-info">email sent</span>
           <% strategy_session.published -> %>
-            <span class="color-info">email queued to send</span>
+            <span class="text-info">email queued to send</span>
           <% true -> %>
             <span></span>
         <% end %>
@@ -267,14 +272,14 @@
     <% end %>
   </div>
 
-  <table x-show="tab === 'timesheet_entries'" x-transition>
+  <table x-show="tab === 'timesheet_entries'" x-transition class="table w-full">
     <thead>
       <tr>
         <th>Start</th>
         <th>End</th>
         <th>Hours</th>
         <th>Notes</th>
-        <th>&nbsp;</th>
+        <th>Actions</th>
       </tr>
     </thead>
     <%= for timesheet_entry <- @pod.timesheet_entries |> Enum.sort_by(&(&1.started_at), {:desc, Date}) do %>
@@ -284,8 +289,8 @@
         <td><%= Tzn.Util.diff_in_hours(timesheet_entry.ended_at, timesheet_entry.started_at) %></td>
         <td><span><%= if timesheet_entry.notes, do: raw(timesheet_entry.notes), else: Tzn.Timesheets.get_category_by_slug(timesheet_entry.category).name %></span></td>
         <td>
-          <%= link to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "text-decoration-none color-primary" do %>
-            <span class="material-icons-outlined">edit</span> Edit
+          <%= link to: Routes.admin_timesheet_entry_path(@conn, :edit, timesheet_entry), class: "link" do %>
+            Edit
           <% end %>
         </td>
       </tr>
@@ -293,37 +298,37 @@
   </table>
 
   <div x-show="tab === 'contract_purchases'" x-transition>
-    <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, pod_id: @pod.id), class: "button button-primary" %>
+    <%= link "Add Contract Hours", to: Routes.admin_contract_purchase_path(@conn, :new, pod_id: @pod.id), class: "btn btn-primary my-2" %>
     <%= for contract_purchase <- Enum.sort_by(@pod.contract_purchases, &(&1.date), {:desc, NaiveDateTime}) do %>
-      <p>
-        <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> format_date %> with expected revenue of <%= Number.Currency.number_to_currency(contract_purchase.expected_revenue) || "N/A" %>
+      <p class="my-3">
+        <%= contract_purchase.hours %> hours purchased on <%= contract_purchase.date |> Tzn.Util.format_date_generic() %> with expected revenue of <%= Number.Currency.number_to_currency(contract_purchase.expected_revenue) || "N/A" %>
         <br />
-        <span class="color-grey"><%= contract_purchase.notes || "No notes about this contract purchases were recorded" %></span>
+        <span class="text-grey"><%= contract_purchase.notes || "No notes about this contract purchases were recorded" %></span>
         <br />
-        <%= link "Delete", to: Routes.admin_contract_purchase_path(@conn, :delete, contract_purchase), method: :delete, data: [confirm: "Are you sure?"] %>
+        <%= link "Delete", to: Routes.admin_contract_purchase_path(@conn, :delete, contract_purchase), method: :delete, data: [confirm: "Are you sure?"], class: "link" %>
       </p>
     <% end %>
   </div>
 
   <div x-show="tab === 'changes'">
-    <table>
+    <table class="table">
       <thead>
         <tr>
+          <th>Date</th>
+          <th>Changed By</th>
           <th>Field name</th>
           <th>Old value</th>
           <th>New value</th>
-          <th>Changed By</th>
-          <th>Timestamp</th>
         </tr>
       </thead>
       <tbody>
         <%= for c <- Enum.sort_by(@pod.changes, &(&1.inserted_at), {:desc, NaiveDateTime}) do %>
           <tr>
-            <td><%= c.field %></td>
-            <td><%= c.old_value %></td>
-            <td><%= c.new_value %></td>
+            <td><%= Tzn.Util.format_date_generic(c.inserted_at) %></td>
             <td><%= c.user.email %></td>
-            <td><%= c.inserted_at %></td>
+            <td><%= c.field %></td>
+            <td class="whitespace-normal"><%= c.old_value %></td>
+            <td class="whitespace-normal"><%= c.new_value %></td>
           </tr>
         <% end %>
       </tbody>
@@ -331,27 +336,27 @@
   </div>
 
   <%= if Enum.any?(@pod.flags) do %>
-    <div class="space-m"></div>
+    <div class="h-8"></div>
     <div x-show="tab === 'internal_info'" style="max-width: 80rem">
-      <p class="lead text-decoration-none">Flags</p>
-      <table>
+      <p class="text-xl my-2">Flags</p>
+      <table class="table">
         <thead>
           <tr>
             <th>Status</th>
             <th>Description</th>
             <th>Opened</th>
             <th>Last Updated</th>
-            <th></th>
+            <th>Actions</th>
           </tr>
         </thead>
         <tbody>
           <%= for flag <- @pod.flags |> Enum.sort_by(fn f -> {f.status == "resolved", -Timex.to_unix(f.inserted_at)} end) do %>
             <tr>
-              <td><%= flag.status %></td>
-              <td><%= flag.description %></td>
+              <td><%= flag.status |> String.capitalize() %></td>
+              <td class="whitespace-normal"><%= flag.description %></td>
               <td><%= flag.inserted_at |> Tzn.Util.format_date_generic() %></td>
               <td><%= flag.updated_at |> Tzn.Util.format_date_generic() %></td>
-              <td><%= link "edit", to: Routes.admin_pod_flag_path(@conn, :edit, flag) %></td>
+              <td><%= link "edit", to: Routes.admin_pod_flag_path(@conn, :edit, flag), class: "btn btn-ghost" %></td>
             </tr>
           <% end %>
         </tbody>

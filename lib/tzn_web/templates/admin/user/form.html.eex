@@ -5,17 +5,17 @@
     </div>
   <% end %>
 
-  <%= label f, :password %>
-  <%= text_input f, :password %>
+  <%= label f, :password, class: "label" %>
+  <%= text_input f, :password, class: "input input-bordered" %>
   <%= error_tag f, :password %>
 
-  <%= label f, :password_confirmation %>
-  <%= text_input f, :password_confirmation %>
+  <%= label f, :password_confirmation, class: "label" %>
+  <%= text_input f, :password_confirmation, class: "input input-bordered" %>
   <%= error_tag f, :password_confirmation %>
-  
+
   <div class="space-m"></div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

@@ -39,8 +39,7 @@ defmodule TznWeb.MentorTimeline do
   end
 
   def handle_event("add_calendar", %{"id" => calendar_id}, socket) do
-    calendar_id = String.to_integer(calendar_id)
-    calendar = Tzn.Timelines.get_calendar(calendar_id)
+    calendar = socket.assigns.all_calendars |> Tzn.Util.find_by_id(calendar_id)
 
     {:noreply,
      socket
@@ -115,8 +114,7 @@ defmodule TznWeb.MentorTimeline do
   end
 
   def handle_event("remove_calendar", %{"id" => calendar_id}, socket) do
-    calendar_id = String.to_integer(calendar_id)
-    calendar = Tzn.Timelines.get_calendar(calendar_id)
+    calendar = socket.assigns.calendars |> MapSet.to_list() |> Tzn.Util.find_by_id(calendar_id)
     new_calendars = MapSet.delete(socket.assigns.calendars, calendar)
 
     {:ok, timeline} =

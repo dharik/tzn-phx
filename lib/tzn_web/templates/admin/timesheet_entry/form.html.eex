@@ -5,14 +5,14 @@
     </div>
   <% end %>
 
-  <%= label f, :pod_id %>
+  <%= label f, :pod_id, class: "label" %>
   <%= select f, :pod_id, [
         {"No specific mentee - general / admin work", nil}
         | Enum.map(@pods, fn pod ->  {pod.mentee.name <> " (" <> humanize(pod.type) <> ")", pod.id} end)
-      ] %>
+      ], class: "select select-bordered" %>
   <%= error_tag f, :pod_id %>
 
-  <%= label f, :category %>
+  <%= label f, :category, class: "label" %>
   <%= select f,
       :category,
       Tzn.Timesheets.categories() ++ [Tzn.Timesheets.get_category_by_slug("uncategorized")]
@@ -22,30 +22,32 @@
           else
           {c.name, c.slug}
           end
-        end) %>
+        end), class: "select select-bordered" %>
   <%= error_tag f, :category %>
 
-  <%= label f, :mentee_grade %>
-  <%= select f, :mentee_grade, [{"-- Not set --", nil}] ++ Tzn.Util.grade_options() %>
+  <%= label f, :mentee_grade, class: "label" %>
+  <%= select f, :mentee_grade,
+    [{"-- Not set --", nil}] ++ Tzn.Util.grade_options(),
+    class: "select select-bordered" %>
   <%= error_tag f, :mentee_grade %>
 
-  <%= label f, :started_at %>
-  <%= datetime_local_input f, :started_at %>
+  <%= label f, :started_at, class: "label" %>
+  <%= datetime_local_input f, :started_at, class: "input input-bordered" %>
   <%= error_tag f, :started_at %>
 
-  <%= label f, :ended_at %>
-  <%= datetime_local_input f, :ended_at %>
+  <%= label f, :ended_at, class: "label" %>
+  <%= datetime_local_input f, :ended_at, class: "input input-bordered" %>
   <%= error_tag f, :ended_at %>
 
-  <%= label f, :hourly_rate %>
-  <%= text_input f, :hourly_rate %>
+  <%= label f, :hourly_rate, class: "label" %>
+  <%= text_input f, :hourly_rate, class: "input input-bordered" %>
   <%= error_tag f, :hourly_rate %>
 
-  <%= label f, :notes %>
-  <%= textarea f, :notes %>
+  <%= label f, :notes, class: "label" %>
+  <%= textarea f, :notes, class: "textarea textarea-bordered w-full" %>
   <%= error_tag f, :notes %>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

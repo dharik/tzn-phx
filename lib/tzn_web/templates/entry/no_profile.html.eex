@@ -1,7 +1,9 @@
-<p>
-  Welcome!
-</p>
-<p>
-  You've successfully signed in but your account needs a little more setup by a Transizion admin.
-  <div data-tf-widget="H4hN5uAD" data-tf-iframe-props="title=New User Onboarding" data-tf-medium="snippet" data-tf-hidden="email=<%= @current_user.email %>"  style="height: 800px"></div><script src="//embed.typeform.com/next/embed.js"></script>
-</p>
+<div class="space-y-4 w-10/12 lg:w-7/12 mx-auto">
+  <p>
+    Welcome!
+  </p>
+  <p>
+    You've successfully signed in but your account needs a little more setup by a Transizion admin.
+    <div data-tf-widget="H4hN5uAD" data-tf-iframe-props="title=New User Onboarding" data-tf-medium="snippet" data-tf-hidden="email=<%= @current_user.email %>"  style="height: 800px"></div><script src="//embed.typeform.com/next/embed.js"></script>
+  </p>
+</div>

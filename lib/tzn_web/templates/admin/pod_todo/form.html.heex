@@ -1,52 +1,58 @@
 <%= form_for @changeset, @action, fn f -> %>
     <%= hidden_input f, :pod_id %>
 
-    <%= label f, :todo_text %>
-    <%= text_input f, :todo_text %>
+    <%= label f, :todo_text, class: "label" %>
+    <%= textarea f, :todo_text, class: "textarea textarea-bordered w-full" %>
     <%= error_tag f, :todo_text %>
 
-    <%= label f, :due_date %>
-    <%= date_input f, :due_date %>
+    <%= label f, :due_date, class: "label" %>
+    <%= date_input f, :due_date, class: "input input-bordered" %>
     <%= error_tag f, :due_date %>
 
-    <%= label f, :completed, class: "control switch" do %>
-        <%= checkbox f, :completed %>
-        <span class="control-indicator"></span>
-        <span class="control-label">Is Complete?</span>
-    <% end %>
-    <%= error_tag f, :completed %> (last changed by <%= @changeset.data.completed_changed_by %> on <%= @changeset.data.completed_changed_at %>)
 
-    <%= label f, :deleted, class: "control switch" do %>
-        <%= checkbox f, :deleted, checked: !is_nil(@changeset.data.deleted_at) %>
-        <span class="control-indicator"></span>
-        <span class="control-label">Is Deleted</span>
+    <%= label f, :completed, class: "label justify-start space-x-2 cursor-pointer" do %>
+        <%= checkbox f, :completed, class: "checkbox" %>
+        <span>
+            Completed?
+            <%= if @changeset.data.completed_changed_at do %>
+                <span class="text-sm">
+                    (last changed by <%= @changeset.data.completed_changed_by %> on <%= Tzn.Util.format_date_generic(@changeset.data.completed_changed_at) %>)
+                </span>
+            <% end %>
+        </span>
+    <% end %>
+    <%= error_tag f, :completed %> 
+ 
+
+
+    <%= label f, :deleted, class: "label justify-start space-x-2 cursor-pointer" do %>
+        <%= checkbox f, :deleted, checked: !is_nil(@changeset.data.deleted_at), class: "checkbox" %>
+        <span>Deleted?</span>
     <% end %>
     <%= error_tag f, :deleted %>
 
 
-    <%= label f, :is_milestone, class: "control switch" do %>
-        <%= checkbox f, :is_milestone %>
-        <span class="control-indicator"></span>
-        <span class="control-label">Is Milestone?</span>
+    <%= label f, :is_milestone, class: "label justify-start space-x-2 cursor-pointer" do %>
+        <%= checkbox f, :is_milestone, class: "checkbox" %>
+        <span >Milestone?</span>
     <% end %>
     <%= error_tag f, :is_milestone %>
 
-    <%= label f, :is_priority, class: "control switch" do %>
-        <%= checkbox f, :is_priority %>
-        <span class="control-indicator"></span>
-        <span class="control-label">Is The Priority Milestone?</span>
+    <%= label f, :is_priority, class: "label justify-start space-x-2 cursor-pointer" do %>
+        <%= checkbox f, :is_priority, class: "checkbox" %>
+        <span>Priority Milestone?</span>
     <% end %>
     <%= error_tag f, :is_priority %>
 
 
-    <%= label f, :assignee_type %>
+    <%= label f, :assignee_type, class: "label" %>
     <%= select f, :assignee_type, [
         {"Mentor", "mentor"},
         {"Parent", "parent"},
         {"Mentee", "mentee"},
-    ] %>
+    ], class: "select select-bordered" %>
 
-    <div class="space-s"></div>
+    <div class="h-4"></div>
 
-    <%= submit "Save", class: "button-primary" %>
+    <%= submit "Save", class: "btn btn-primary" %>
 <% end %>

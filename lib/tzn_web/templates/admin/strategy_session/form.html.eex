@@ -7,21 +7,21 @@
 
   <p>
     Mentee: <br />
-    <%= @strategy_session.mentee.name %>
+    <%= @strategy_session.pod.mentee.name %>
   </p>
 
-  <%= label f, :date, class: "control" %>
+  <%= label f, :date, class: "label" %>
   <%= datetime_local_input f, :date %>
   <%= error_tag f, :date %>
 
-  <%= label f, :email_subject %>
+  <%= label f, :email_subject, class: "label" %>
   <%= text_input f, :email_subject %>
   <%= error_tag f, :email_subject %>
-  
-  <%= label f, :notes %>
+
+  <%= label f, :notes, class: "label" %>
   <%= textarea f, :notes, class: "rte" %>
   <%= error_tag f, :notes %>
-  
+
   <div class="space-m"></div>
 
   <%= checkbox f, :cc_mentee %> CC the mentee?
@@ -32,7 +32,7 @@
   <%= checkbox f, :published %> Published
   <%= error_tag f, :published %>
   <br />
-  <span class="color-grey">
+  <span class="text-grey">
     Once published, the session will be locked to editing and an email will be
     sent to the parent(s) with details of the strategy session.
   </span>
@@ -42,12 +42,12 @@
   <%= checkbox f, :emailed %> Emailed
   <%= error_tag f, :emailed %>
   <br />
-  <span class="color-grey">
+  <span class="text-grey">
     If checked, this indicates that an email was already sent to the parent(s).
   </span>
-    
+
   <div class="space-l"></div>
 
-  <%= submit "Save", class: "button button-primary button-border" %>
- 
+  <%= submit "Save", class: "btn btn-primary" %>
+
 <% end %>

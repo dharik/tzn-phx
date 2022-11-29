@@ -1,30 +1,40 @@
 <div class="main-grid">
     <div class="main">
 
-        <div class="flex flex-row justify-content-space-between">
-            <h2><%= @calendar.name %></h2>
-            <%= link to: Routes.admin_calendar_event_path(@conn, :new, calendar_id: @calendar.id), class: "button button-primary button-text button-icon text-transform-uppercase" do %>
+        <div class="flex flex-row justify-between items-center">
+            <h2 class="text-2xl"><%= @calendar.name %></h2>
+            <%= link to: Routes.admin_calendar_event_path(@conn, :new, calendar_id: @calendar.id), class: "btn btn-ghost" do %>
                 <span class="material-icons-outlined">add</span> Create Deadline
             <% end %>
         </div>
 
-        <%= for e <- @calendar.events |> Enum.sort_by(fn e -> Date.new!(Tzn.GradeYearConversions.event_year(2030, e.grade, e.month), e.month, e.day) end, {:asc, Date}) do %>
-            <div class="flex flex-row margin-vertical-s border border-radius padding-m justify-content-space-between">
-                    <div class="flex-1">
-                        <%= link e.name, to: Routes.admin_calendar_event_path(@conn, :edit, e) %>
-                        <br />
-                        <%= e.month %> / <%= e.day %> of <%= e.grade %> year
-                    </div>
-                    <div>
-                        <%= link to: Routes.admin_calendar_event_path(@conn, :edit, e) do %>
-                            <span class="material-icons-outlined color-primary">edit</span>
-                        <% end %>
-                        <%= link to: Routes.admin_calendar_event_path(@conn, :delete, e), method: :delete, data: [confirm: "Are you sure?"] do %>
-                            <span class="material-icons-outlined color-primary">delete</span>
-                        <% end %>
-                    </div>
-                </div>
-        <% end %>
+        <table class="w-full table">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for e <- @calendar.events |> Enum.sort_by(fn e -> Date.new!(Tzn.GradeYearConversions.event_year(2030, e.grade, e.month), e.month, e.day) end, {:asc, Date}) do %>
+                    <tr>
+                        <td>
+                            <%= link e.name, to: Routes.admin_calendar_event_path(@conn, :edit, e), class: "link" %>
+                            <br />
+                            <%= e.month %> / <%= e.day %> of <%= e.grade %> year
+                        </td>
+                        <td width="160">
+                            <%= link to: Routes.admin_calendar_event_path(@conn, :edit, e), class: "btn btn-square btn-ghost" do %>
+                                <span class="material-icons-outlined">edit</span>
+                            <% end %>
+                            <%= link to: Routes.admin_calendar_event_path(@conn, :delete, e), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-square btn-ghost" do %>
+                                <span class="material-icons-outlined">delete</span>
+                            <% end %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
     </div>
 </div>
 

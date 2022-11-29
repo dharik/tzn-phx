@@ -5,23 +5,21 @@
     </div>
   <% end %>
 
-  <%= label f, :description %>
-  <%= textarea f, :description %>
+  <%= label f, :description, class: "label" %>
+  <%= textarea f, :description, class: "textarea textarea-bordered w-full" %>
   <%= error_tag f, :description %>
 
-  <div class="space-m"></div>
+  <div class="h-4"></div>
   
-  <%= label f, :parent_can_read, class: "control switch" do %>
-    <%= checkbox f, :parent_can_read %>
-    <span class="control-indicator"></span>
-    <span class="control-label">Parent Can See?</span>
+  <%= label f, :parent_can_read, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :parent_can_read, class: "toggle" %>
+    <span class="">Parent Can See?</span>
   <% end %>
   <%= error_tag f, :parent_can_read %>
 
-  <%= label f, :school_admin_can_read, class: "control switch" do %>
-    <%= checkbox f, :school_admin_can_read %>
-    <span class="control-indicator"></span>
-    <span class="control-label">School Administrators Can See?</span>
+  <%= label f, :school_admin_can_read, class: "label justify-start space-x-2" do %>
+    <%= checkbox f, :school_admin_can_read, class: "toggle" %>
+    <span class="">School Administrators Can See?</span>
   <% end %>
   <%= error_tag f, :school_admin_can_read %>
 
@@ -30,22 +28,19 @@
   <div class="space-l"></div>
 
 
-  <%= label f, :status %>
+  <%= label f, :status, class: "label" %>
   <%= select f, :status, [
     {"Open", "open"},
     {"Resolved", "resolved"}
-  ] %>
+  ], class: "select select-bordered" %>
   <%= error_tag f, :status %>
 
 
-  <div class="space-l"> </div>
-
-  
 
 
-  <div class="space-m"> </div>
+  <div class="h-12"> </div>
 
   <div>
-    <%= submit "Save" %>
+    <%= submit "Save", class: "btn btn-primary" %>
   </div>
 <% end %>

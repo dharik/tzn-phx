@@ -30,20 +30,21 @@ defmodule TznWeb.LayoutView do
       raw("""
       <a
         href="#{to}"
-        class="bg-white text-blue no-underline hover:no-underline  w-full p-4 pl-16 flex align-items-center font-medium"
+        class="bg-white text-blue no-underline hover:no-underline  w-full p-4 pl-16 flex items-center font-medium"
       >
         <span class="material-icons-outlined">#{icon}</span>
-        <span class="margin-left-xs">#{text}</span>
+        <span class="ml-2">#{text}</span>
       </a>
       """)
     else
       raw("""
       <a
+        tabindex="0"
         href="#{to}"
-        class="text-off-white no-underline hover:no-underline hover:bg-white hover:text-blue focus:text-blue focus:bg-white w-full p-4 pl-16 flex align-items-center active:no-underline font-medium"
+        class="text-off-white no-underline hover:no-underline hover:bg-white hover:text-blue focus:text-blue focus:bg-white w-full p-4 pl-16 flex items-center active:no-underline font-medium duration-200"
       >
         <span class="material-icons-outlined">#{icon}</span>
-        <span class="margin-left-xs">#{text}</span>
+        <span class="ml-2">#{text}</span>
       </a>
       """)
     end

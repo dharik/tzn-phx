@@ -1,18 +1,20 @@
-<h1>Reset password</h1>
 
-<%= form_for @changeset, @action, [as: :user], fn f -> %>
-  <%= if @changeset.action do %>
-    <div class="alert alert-danger">
-      <p>Oops, something went wrong! Please check the errors below.</p>
+<div class="w-11/12 md:w-8/12 xl:w-1/2 mx-auto">
+  <h1 class="text-2xl">Reset password</h1>
+
+  <%= form_for @changeset, @action, [as: :user], fn f -> %>
+    <%= if @changeset.action do %>
+      <div class="alert alert-danger">
+        <p>Oops, something went wrong! Please check the errors below.</p>
+      </div>
+    <% end %>
+
+    <%= label f, :email, class: "label" %>
+    <%= text_input f, :email, class: "input input-bordered w-full" %>
+    <%= error_tag f, :email %>
+
+    <div class="my-3">
+      <%= submit "Submit", class: "btn btn-primary" %>
     </div>
   <% end %>
-
-  <%= label f, :email %>
-  <%= text_input f, :email %>
-  <%= error_tag f, :email %>
-
-  <div>
-    <%= submit "Submit" %>
-  </div>
-<% end %>
-
+</div>

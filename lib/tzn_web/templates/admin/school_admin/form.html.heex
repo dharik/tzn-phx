@@ -1,22 +1,22 @@
 <%= form_for @changeset, @action, fn f -> %>
-    <%= label f, :name %>
-    <%= text_input f, :name %>
+    <%= label f, :name, class: "label" %>
+    <%= text_input f, :name, class: "input input-bordered" %>
     <%= error_tag f, :name %>
 
-    <%= label f, :email %>
-    <%= email_input f, :email %>
+    <%= label f, :email, class: "label" %>
+    <%= email_input f, :email, class: "input input-bordered" %>
     <%= error_tag f, :email %>
 
-    <%= label f, :nick_name %>
-    <%= text_input f, :nick_name %>
+    <%= label f, :nick_name, class: "label" %>
+    <%= text_input f, :nick_name, class: "input input-bordered" %>
     <%= error_tag f, :nick_name %>
 
 
-    <%= label f, :pronouns %>
-    <%= text_input f, :pronouns %>
+    <%= label f, :pronouns, class: "label" %>
+    <%= text_input f, :pronouns, class: "input input-bordered" %>
     <%= error_tag f, :pronouns %>
     
-    <div class="space-s"></div>
+    <div class="h-8"></div>
 
-    <%= submit "Save", class: "button-primary" %>
+    <%= submit "Save", class: "btn btn-primary" %>
 <% end %>

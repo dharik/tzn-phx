@@ -1,6 +1,8 @@
 <%= for pod <- @pods |> reject_already_graduated() |>  sort_by_grade() do %>
-  <%= link pod.mentee.name, to: Routes.mentor_timeline_path(@conn, :index, pod.id) %> - <%= pod.mentee.grade |> humanize %><br />
+  <%= link pod.mentee.name, to: Routes.mentor_timeline_path(@conn, :index, pod.id), class: "link" %> - <%= pod.mentee.grade |> humanize %><br />
 <% end %>
 
-<h1><%= @pod.mentee.name %>'s timeline</h1>
+<div class="h-8"></div>
+
+<h1 class="text-2xl"><%= @pod.mentee.name %>'s timeline</h1>
 <%= live_render(@conn, TznWeb.MentorTimeline, session: %{"access_key" => @timeline.access_key}) %>

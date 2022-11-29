@@ -1,34 +1,54 @@
 <div class="main-grid">
     <div class="main">
 
-        <div class="flex flex-row justify-content-space-between">
-            <h2>OrganizeU Calendars (<%= Enum.count(@calendars) %>)</h2>
-            <%= link to: Routes.admin_calendar_path(@conn, :new), class: "button button-primary button-text button-icon text-transform-uppercase" do %>
+        <div class="flex flex-row justify-between">
+            <h2 class="text-2xl">OrganizeU Calendars (<%= Enum.count(@calendars) %>)</h2>
+            <%= link to: Routes.admin_calendar_path(@conn, :new), class: "btn btn-ghost" do %>
                 <span class="material-icons-outlined">add</span> Create Calendar
             <% end %>
         </div>
 
-        <%= for c <- @calendars do %>
-            <div class="flex flex-row margin-vertical-s border border-radius padding-m justify-content-space-between">
-                    <div class="flex-1">
-                        <%= c.name %>
-                        <br />
-                        <%= link Tzn.Util.pluralize(Enum.count(c.events), "deadline"), to: Routes.admin_calendar_path(@conn, :show, c) %>
-                    </div>
-                    <div>
-                        <span class="button button-pill button-s margin-left-s button-outline" disabled>
-                            <%= humanize(c.type) %>
-                        </span>
-                        <%= link to: Routes.admin_calendar_path(@conn, :edit, c) do %>
-                            <span class="material-icons-outlined color-primary">edit</span>
-                        <% end %>
-                        <%= unless Tzn.Timelines.is_special_calendar(c) do %>
-                            <%= link to: Routes.admin_calendar_path(@conn, :delete, c), method: :delete, data: [confirm: "Are you sure?"] do %>
-                                <span class="material-icons-outlined color-error">delete</span>
+        <table class="table w-full">
+            <thead>
+                <tr>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <tbody>
+                <%= for c <- @calendars do %>
+                    <tr>
+                        <td>
+                            <%= c.name %>
+                            <br />
+                            <%= link Tzn.Util.pluralize(Enum.count(c.events), "deadline"), to: Routes.admin_calendar_path(@conn, :show, c), class: "link" %>
+                        </td>
+                        <td>
+                            <%
+                                color_class = case c.type do
+                                    "general_cyclic" -> "text-primary"
+                                    "college_cyclic" -> "text-secondary"
+                                    _ -> "text-secondary"
+                                end
+                            %>
+                            <span class={"badge badge-outline #{color_class}"} disabled>
+                                <%= humanize(c.type) %>
+                            </span>
+                        </td>
+                        <td>
+                            <%= link to: Routes.admin_calendar_path(@conn, :edit, c), class: "btn btn-square btn-ghost" do %>
+                                <span class="material-icons-outlined">edit</span>
                             <% end %>
-                        <% end %>
-                    </div>
-                </div>
-        <% end %>
+                            <%= unless Tzn.Timelines.is_special_calendar(c) do %>
+                                <%= link to: Routes.admin_calendar_path(@conn, :delete, c), method: :delete, data: [confirm: "Are you sure?"], class: "btn btn-square btn-ghost" do %>
+                                    <span class="material-icons-outlined">delete</span>
+                                <% end %>
+                            <% end %>
+                        </td>
+                    </tr>
+                <% end %>
+            </tbody>
+        </table>
     </div>
 </div>

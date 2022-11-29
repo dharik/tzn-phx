@@ -1,18 +1,18 @@
-<div class="border-bottom py-2">
+<div class="py-2">
     <%= if @milestone.is_priority do %>⭐️<% end %>
     <%= if @milestone.completed do %>
-        <span class="color-grey-100"><%= @milestone.todo_text %></span>
+        <span class="text-gray-400"><%= @milestone.todo_text %></span>
     <% else %>
         <%= @milestone.todo_text %>
     <% end %>
 
     <%= if @milestone.due_date do %>
         <br />
-        <span class="font-size-s color-grey-100">
+        <span class="text-sm text-gray-400">
             Due <%= @milestone.due_date %>
             <%= if @milestone.completed do %>, completed on <%= Timex.to_date(@milestone.completed_changed_at) %><% end %>
         </span>
     <% end %>
 
-    <%= link "(edit)", to: Routes.admin_pod_todo_path(TznWeb.Endpoint, :edit, @milestone) %>
+    <%= link "(edit)", to: Routes.admin_pod_todo_path(TznWeb.Endpoint, :edit, @milestone), class: "link" %>
 </div>

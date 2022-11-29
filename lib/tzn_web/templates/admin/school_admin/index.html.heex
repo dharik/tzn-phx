@@ -1,15 +1,15 @@
-<%= link "Create School Admin", to: Routes.admin_school_admin_path(@conn, :new), class: "button" %>
+<%= link "Create School Admin", to: Routes.admin_school_admin_path(@conn, :new), class: "btn btn-ghost" %>
 
 <br />
 
-<table>
+<table class="table w-full">
     <thead>
         <tr>
             <th>Name</th>
             <th>Email</th>
             <th>Cohorts</th>
             <th>User Account</th>
-            <th></th>
+            <th>Actions</th>
         </tr>
     </thead>
     <%= for sa <- @admins do %>
@@ -17,7 +17,7 @@
             <td><%= sa.name %></td>
             <td><%= sa.email %></td>
             <td>
-                <ul>
+                <ul class="menu">
                     <%= for g <- sa.pod_groups do %>
                         <li><%= link g.name, to: Routes.admin_pod_group_path(@conn, :show, g) %></li>
                     <% end %>
@@ -31,7 +31,7 @@
                 <% end %>
             </td>
             <td>
-                <%= link "Edit", to: Routes.admin_school_admin_path(@conn, :edit, sa) %>
+                <%= link "Edit", to: Routes.admin_school_admin_path(@conn, :edit, sa), class: "link" %>
             </td>
         </tr>
     <% end %>

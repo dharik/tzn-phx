@@ -1,43 +1,44 @@
 <.form for={@changeset} let={pod_hours_form} phx-change="validate" phx-submit="save">
-
-    <table style="max-width: 80em">
-    <tr>
-        <th></th>
-        <th>Hours Used</th>
-        <th>Hours Recommended</th>
-        <th>Hour cap</th>
-    </tr>
-    <tr>
-        <th>Freshman year</th>
-        <td><%= Map.get(@hours_by_grade, "freshman", " ") %></td>
-        <td><%= text_input pod_hours_form, :hours_recommended_freshman, inputmode: "numeric", class: error_class(pod_hours_form, :hours_recommended_freshman) %> </td>
-        <td><%= text_input pod_hours_form, :hours_cap_freshman, inputmode: "numeric", class: error_class(pod_hours_form, :hours_cap_freshman) %> </td>
-    </tr>
-    <tr>
-        <th>Sophomore year</th>
-        <td><%= Map.get(@hours_by_grade, "sophomore", " ") %></td>
-        <td><%= text_input pod_hours_form, :hours_recommended_sophomore, inputmode: "numeric", class: error_class(pod_hours_form, :hours_recommended_sophomore) %> </td>
-        <td><%= text_input pod_hours_form, :hours_cap_sophomore, inputmode: "numeric", class: error_class(pod_hours_form, :hours_cap_sophomore) %> </td>
-    </tr>
-    <tr>
-        <th>Junior year</th>
-        <td><%= Map.get(@hours_by_grade, "junior", " ") %></td>
-        <td><%= text_input pod_hours_form, :hours_recommended_junior, inputmode: "numeric", class: error_class(pod_hours_form, :hours_recommended_junior) %> </td>
-        <td><%= text_input pod_hours_form, :hours_cap_junior, inputmode: "numeric", class: error_class(pod_hours_form, :hours_cap_junior) %> </td>
-    </tr>
-    <tr>
-        <th>Senior year</th>
-        <td><%= Map.get(@hours_by_grade, "senior", " ") %></td>
-        <td><%= text_input pod_hours_form, :hours_recommended_senior, inputmode: "numeric", class: error_class(pod_hours_form, :hours_recommended_senior) %> </td>
-        <td><%= text_input pod_hours_form, :hours_cap_senior, inputmode: "numeric", class: error_class(pod_hours_form, :hours_cap_senior) %> </td>
-    </tr>
-    <tr>
-        <th></th>
-        <th><%= @pod.hour_counts.hours_used |> Decimal.round(2) %> hours used</th>
-        <th colspan="2" class="text-align-center"><%= @pod.hour_counts.hours_purchased %> Hours Purchased</th>
-    </tr>
+    <table style="max-width: 80em" class="table">
+        <thead>
+            <tr>
+                <th></th>
+                <th>Hours Used</th>
+                <th>Hours Recommended</th>
+                <th>Hour cap</th>
+            </tr>
+        </thead>
+        <tr>
+            <th class="bg-gray-200">Freshman year</th>
+            <td><%= Map.get(@hours_by_grade, "freshman", " ") %></td>
+            <td><%= text_input pod_hours_form, :hours_recommended_freshman, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_recommended_freshman) %> </td>
+            <td><%= text_input pod_hours_form, :hours_cap_freshman, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_cap_freshman) %> </td>
+        </tr>
+        <tr>
+            <th class="bg-gray-200">Sophomore year</th>
+            <td><%= Map.get(@hours_by_grade, "sophomore", " ") %></td>
+            <td><%= text_input pod_hours_form, :hours_recommended_sophomore, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_recommended_sophomore) %> </td>
+            <td><%= text_input pod_hours_form, :hours_cap_sophomore, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_cap_sophomore) %> </td>
+        </tr>
+        <tr>
+            <th class="bg-gray-200">Junior year</th>
+            <td><%= Map.get(@hours_by_grade, "junior", " ") %></td>
+            <td><%= text_input pod_hours_form, :hours_recommended_junior, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_recommended_junior) %> </td>
+            <td><%= text_input pod_hours_form, :hours_cap_junior, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_cap_junior) %> </td>
+        </tr>
+        <tr>
+            <th class="bg-gray-200">Senior year</th>
+            <td><%= Map.get(@hours_by_grade, "senior", " ") %></td>
+            <td><%= text_input pod_hours_form, :hours_recommended_senior, inputmode: "numeric", class: "input input-bordered " <> error_class(pod_hours_form, :hours_recommended_senior) %> </td>
+            <td><%= text_input pod_hours_form, :hours_cap_senior, inputmode: "numeric",  class: "input input-bordered " <> error_class(pod_hours_form, :hours_cap_senior) %> </td>
+        </tr>
+        <tr>
+            <th class="bg-gray-200"></th>
+            <th class="bg-gray-200"><%= @pod.hour_counts.hours_used |> Decimal.round(2) %> hours used</th>
+            <th colspan="2" class="text-center bg-gray-200"><%= @pod.hour_counts.hours_purchased %> Hours Purchased</th>
+        </tr>
     </table>
     <%= if @changeset.changes |> Map.to_list() |> Enum.any?() do %>
-        <%= submit "Save" %>
+        <%= submit "Save", class: "btn btn-primary my-2" %>
     <% end %>
 </.form>

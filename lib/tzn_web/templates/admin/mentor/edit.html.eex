@@ -1,6 +1,4 @@
-<h1>Edit Mentor</h1>
-
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_mentor_path(@conn, :update, @mentor)) %>
 
-<div class="space-s"></div>
-<span><%= link "Back", to: Routes.admin_mentor_path(@conn, :show, @mentor) %></span>
+<div class="h-4"></div>
+<span><%= link "Back", to: Routes.admin_mentor_path(@conn, :show, @mentor), class: "link" %></span>

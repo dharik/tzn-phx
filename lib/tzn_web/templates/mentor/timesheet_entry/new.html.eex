@@ -1,5 +1,3 @@
-<h1>New Timesheet Entry</h1>
-
 <p>This information will be shown to parents to keep them updated on their student’s progress.</p>
 
 <%=
@@ -13,6 +11,6 @@
   )
 %>
 
-<%= link "Back to my timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index) %>
+<%= link "Back to my timesheet", to: Routes.mentor_timesheet_entry_path(@conn, :index), class: "link" %>
 
 <div class="space-m"></div>

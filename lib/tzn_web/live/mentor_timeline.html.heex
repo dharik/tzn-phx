@@ -4,14 +4,15 @@
 <div class="flex">
     <div class="flex-1 padding-right-m">
         <div class="flex justify-center">
-            <label class="control switch">
-                <input type="checkbox" name="include_past" phx-click="toggle_past" checked={@include_past}/>
-                <span class="control-indicator"></span>
-                <span class="control-label text-grey">Show Older Events</span>
-            </label>
+            <div class="form-control">
+                <label class="label cursor-pointer space-x-2">
+                    <input type="checkbox" class="toggle" name="include_past" phx-click="toggle_past" checked={@include_past}/>
+                    <span class="label-text">Show Older Events</span>
+                </label>
+            </div>
         </div>
         <%= for {year, events} <- @events |> Enum.group_by(& &1.date.year) |> Map.to_list() do %>
-            <h1>
+            <h1 class="text-2xl">
                 <%= 
                     if year == @timeline.graduation_year do 
                         "🎓#{year}"
@@ -23,21 +24,21 @@
             <%= for e <- events do %>
                 <%= case e do %>
                     <% %{calendar: calendar, calendar_event: calendar_event, date: date, completed: completed, hidden: hidden} -> %>
-                        <div class="flex flex-row justify-content-flex-start margin-vertical-l align-items-top">
+                        <div class="flex flex-row justify-start my-4">
                             <% 
                                 color_class = case calendar.type do
-                                    "general_cyclic" -> "background-white border"
-                                    "college_cyclic" -> "background-primary-100"
-                                    _ -> "background-white border"
+                                    "general_cyclic" -> "bg-white"
+                                    "college_cyclic" -> "bg-sky-blue-light"
+                                    _ -> "bg-white"
                                 end
                             %>
-                            <div class={"border-radius text-align-center padding-s box-shadow  " <> color_class} style="width: 6em; height: 6em;">
-                                <span class=" font-size-l font-weight-light color-grey-500"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
+                            <div class={"rounded flex flex-col justify-center items-center p2 shadow-md  " <> color_class} style="width: 6em; height: 6em;">
+                                <span class="text-lg font-light text-base-content"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
                                 <br />
-                                <span class="font-size-xxl font-weight-regular"><%= date.day %></span>
+                                <span class="text-2xl"><%= date.day %></span>
                             </div>
                             
-                            <div class="flex-1 margin-left-s">
+                            <div class="flex-1 ml-2">
                                 <%= if completed || hidden do %>
                                     <%= calendar_event.name %><%= if calendar.type == "college_cyclic" do " (#{calendar.name})" end %>
                                 <% else %>
@@ -50,11 +51,11 @@
                                 
                                 <%= cond do %>
                                     <% completed -> %>
-                                        <strike class="text-grey">
+                                        <strike class="text-base-200">
                                             <%= raw Regex.replace(~r/^<p>(.*)<\/p>$/, calendar_event.description, "\\1") %> 
                                         </strike>
                                     <% hidden -> %>
-                                        <span class="text-grey">
+                                        <span class="text-base-200">
                                             <%= raw Regex.replace(~r/^<p>(.*)<\/p>$/, calendar_event.description, "\\1") %> 
                                         </span>
                                     <% true -> %>
@@ -68,7 +69,7 @@
                                             href="#" 
                                             title="Mark as incomplete"
                                             phx-click="incomplete_calendar_event" phx-value-id={calendar_event.id}
-                                            class="inline-flex align-items-center text-xs text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
+                                            class="inline-flex align-items-center text-xs text-base-200 hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                                 <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -79,7 +80,7 @@
                                         href="#" 
                                         phx-click="complete_calendar_event" phx-value-id={calendar_event.id}
                                         title="Mark as complete"
-                                        class="inline-flex align-items-center  text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
+                                        class="inline-flex align-items-center  text-base-200 hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
                                     >
                                         <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                             <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -90,14 +91,14 @@
                                     <%= if hidden do %>
                                         <a href="#" 
                                             phx-click="unhide_calendar_event" phx-value-id={calendar_event.id} 
-                                            class="inline-flex align-items-center text-xs text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded">
+                                            class="inline-flex align-items-center text-xs text-base-200 hover:text-blue hover:border-blue no-underline hover:no-underline rounded">
                                             Unhide from timeline
                                         </a>
                                     <% else %>
                                         <a href="#" 
                                             title="Hide from timeline"
                                             phx-click="hide_calendar_event" phx-value-id={calendar_event.id} 
-                                            class="inline-flex align-items-center border-grey text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded">
+                                            class="inline-flex align-items-center border-grey text-base-200 hover:text-blue hover:border-blue no-underline hover:no-underline rounded">
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                                 <path fill-rule="evenodd" d="M3.28 2.22a.75.75 0 00-1.06 1.06l14.5 14.5a.75.75 0 101.06-1.06l-1.745-1.745a10.029 10.029 0 003.3-4.38 1.651 1.651 0 000-1.185A10.004 10.004 0 009.999 3a9.956 9.956 0 00-4.744 1.194L3.28 2.22zM7.752 6.69l1.092 1.092a2.5 2.5 0 013.374 3.373l1.091 1.092a4 4 0 00-5.557-5.557z" clip-rule="evenodd" />
                                                 <path d="M10.748 13.93l2.523 2.523a9.987 9.987 0 01-3.27.547c-4.258 0-7.894-2.66-9.337-6.41a1.651 1.651 0 010-1.186A10.007 10.007 0 012.839 6.02L6.07 9.252a4 4 0 004.678 4.678z" />
@@ -109,13 +110,13 @@
                             </div>
                         </div>
                     <% %{todo: todo, date: date, completed: completed, hidden: hidden} -> %>
-                        <div class="flex flex-row justify-content-flex-start margin-vertical-m">
-                            <div class="border-radius text-align-center padding-s box-shadow bg-yellow-pale border-yellow" style="width: 6em; height: 6em;">
-                                <span class=" font-size-l font-weight-light color-grey-500"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
+                        <div class="flex flex-row justify-start my-4">
+                            <div class="rounded p-2 flex flex-col justify-center items-center  shadow-md bg-yellow-pale border-yellow" style="width: 6em; height: 6em;">
+                                <span class="text-lg font-light text-base-content"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
                                 <br />
-                                <span class="font-size-xxl font-weight-regular"><%= date.day %></span>
+                                <span class="text-2xl"><%= date.day %></span>
                             </div>
-                            <div class="flex-1 margin-left-s">
+                            <div class="flex-1 ml-2">
                                 <b><%= humanize(todo.assignee_type) %> Todo</b>
                                 <br />
                                 <%= if completed do %>
@@ -132,7 +133,7 @@
                                             href="#" 
                                             title="Mark as incomplete"
                                             phx-click="incomplete_todo" phx-value-id={todo.id}
-                                            class="inline-flex align-items-center text-xs text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
+                                            class="inline-flex align-items-center text-xs text-base-content hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                                 <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -143,7 +144,7 @@
                                             href="#" 
                                             phx-click="complete_todo" phx-value-id={todo.id}
                                             title="Mark as complete"
-                                            class="inline-flex align-items-center  text-grey hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
+                                            class="inline-flex align-items-center  text-base-content hover:text-blue hover:border-blue no-underline hover:no-underline rounded"
                                         >
                                             <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="currentColor" class="w-5 h-5">
                                                 <path fill-rule="evenodd" d="M16.704 4.153a.75.75 0 01.143 1.052l-8 10.5a.75.75 0 01-1.127.075l-4.5-4.5a.75.75 0 011.06-1.06l3.894 3.893 7.48-9.817a.75.75 0 011.05-.143z" clip-rule="evenodd" />
@@ -154,13 +155,13 @@
                             </div>
                         </div>
                     <% %{mentor_timeline_event: mentor_timeline_event, mentor_timeline_event_marking: marking, date: date, completed: completed, hidden: hidden} -> %>
-                        <div class="flex flex-row justify-content-flex-start margin-vertical-m align-items-center">
-                            <div class="border-radius text-align-center padding-s box-shadow background-white border" style="width: 6em; height: 6em;">
-                                <span class=" font-size-l font-weight-light color-grey-500"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
+                        <div class="flex flex-row justify-start my-4">
+                            <div class="rounded p-2 flex flex-col justify-center items-center shadow-md" style="width: 6em; height: 6em;">
+                                <span class="text-lg font-light text-grey"><%= Timex.month_shortname(date.month) |> String.upcase() %></span>
                                 <br />
-                                <span class="font-size-xxl font-weight-regular"><%= date.day %></span>
+                                <span class="text-2xl"><%= date.day %></span>
                             </div>
-                            <div class="flex-1 margin-left-s">
+                            <div class="flex-1 ml-2">
                                 <%= if completed do %>
                                     <strike>
                                         <%= raw mentor_timeline_event.notes %>
@@ -178,22 +179,29 @@
         <% end %>
     </div>
 
-    <div class="flex-0 " style="width: 30%">
-        <div class="border padding-m margin-vertical-m background-light-100">
+    <div class="flex-0 space-y-4" style="width: 30%">
+        <div class="border rounded p-6 bg-white/70 shadow-md">
             <div class="hide-print ">
                 <b>Add a School:</b>
                 <br />
                 <br />
                 
                 <form phx-change="search" phx-submit="search_submit">
-                    <input type="search" value={@search_query} placeholder="Search" name="q" phx-debounce={400} class="input-l"/>
+                    <div class="input-group w-full">
+                        <input type="search" value={@search_query} placeholder="Type to search" name="q" phx-debounce={400} class="input input-bordered w-full" autocomplete="off" />
+                        <button class="btn btn-square">
+                            <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5" stroke="currentColor" class="w-6 h-6">
+                                <path stroke-linecap="round" stroke-linejoin="round" d="M21 21l-5.197-5.197m0 0A7.5 7.5 0 105.196 5.196a7.5 7.5 0 0010.607 10.607z" />
+                            </svg>
+                        </button>
+                    </div>
                 </form>
-                <ul>
+                <ul class="list-disc pl-4 my-2 space-y-2">
                     <%= for c <- @search_results do %>
                         <%= if MapSet.member?(@calendars, c) do %>
-                            <li><%= c.name %> ✓</li>
+                            <li><a href="#"><%= c.name %> ✓</a></li>
                         <% else %>
-                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id}><%= c.name %></a></li>
+                            <li><a href="#" phx-click="add_calendar" phx-value-id={c.id} tabindex="0" class="link"><%= c.name %></a></li>
                         <% end %>
                     <% end %>
                 </ul>
@@ -203,7 +211,7 @@
             <b>My College List:</b>
             <br />
             <%= for c <- @calendars do %>
-                <div class="flex flex-1 justify-content-space-between margin-vertical-xs">
+                <div class="flex flex-1 justify-between my-2">
                     <div><%= c.name %></div>
                     <div class="flex hide-print">
                         <span class="material-icons-outlined cursor-pointer" phx-click="toggle_calendar" phx-value-id={c.id}>
@@ -220,17 +228,18 @@
                             </span>
                         <% else %>
                             <span class="material-icons-outlined hidden">
-                                delete
+                            
                             </span>
                         <% end %>
                     </div>
                 </div>
                 <%= if Tzn.Timelines.is_special_calendar(c) do %>
-                    <label class="control checkbox ml-4">
-                        <input type="checkbox" name="include_hidden" phx-click="toggle_hidden_events" checked={@include_hidden_events}/>
-                        <span class="control-indicator"></span>
-                        <span class="control-label text-grey">Show Hidden Events</span>
-                    </label>
+                    <div class="form-control ml-4">
+                        <label class="label space-x-2 justify-start cursor-pointer">
+                            <input type="checkbox" class="checkbox" name="include_hidden" phx-click="toggle_hidden_events" checked={@include_hidden_events}/>
+                            <span class="label-text">Show Hidden Events</span>
+                        </label>
+                    </div>
                 <% end %>
             <% end %> 
 
@@ -238,17 +247,19 @@
             
         </div>
 
-        <div class="border padding-m margin-vertical-l hide-print">              
+        <div class="border rounded bg-white/20 shadow-md p-4 hide-print">              
             <b>Google Calendar Sync:</b>
 
             <br />
             <br />
             
-            Google Calendar link to share with mentees/parents:
-                <pre><%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :google_calendar, @timeline.access_key) %></pre>
+            <div class="space-y-4">
+                <p>Google Calendar link to share with mentees/parents:</p>
+                <textarea class="overflow-x-auto bg-gray-100 w-full" rows="1" disabled><%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :google_calendar, @timeline.access_key) %></textarea>
 
-            Apple iCal link to share with mentees/parents:
-                <pre><%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :apple_calendar, @timeline.access_key) %></pre>
+                <p>Apple iCal link to share with mentees/parents:</p>
+                <textarea class="overflow-x-auto bg-gray-100 w-full" rows="1" disabled><%= TznWeb.Router.Helpers.timelines_url(TznWeb.Endpoint, :apple_calendar, @timeline.access_key) %></textarea>
+            </div>
 
         </div>
     </div>

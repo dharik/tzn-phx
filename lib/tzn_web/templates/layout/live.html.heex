@@ -8,7 +8,7 @@
     <%= csrf_meta_tag() %>
     <script defer type="text/javascript" src={Routes.static_path(@conn, "/assets/app.js")}></script>
     <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
-    <link rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} />
+    <% #<link rel="stylesheet" href={Routes.static_path(@conn, "/assets/app.css")} /> %>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <script async src="https://www.googletagmanager.com/gtag/js?id=G-8BENH6CVF6"></script>
     <script>
@@ -33,8 +33,8 @@
       </nav>
     </header>
     <main role="main" class="container container-xl">
-      <p class="color-info" role="alert"><%= live_flash(@flash, :info) %></p>
-      <p class="color-error" role="alert"><%= live_flash(@flash, :error) %></p>
+      <p class="text-info" role="alert"><%= live_flash(@flash, :info) %></p>
+      <p class="text-error" role="alert"><%= live_flash(@flash, :error) %></p>
       <%= @inner_content %>
     </main>
   </body>

@@ -1,18 +1,18 @@
 <%= form_for @changeset, @action, fn f -> %>
 
-    <%= label f, :name %>
-    <%= text_input f, :name %>
+    <%= label f, :name, class: "label" %>
+    <%= text_input f, :name, class: "input input-bordered" %>
     <%= error_tag f, :name %>
 
-    <%= label f, :admin_notes, "Internal (Admin) Notes" %>
-    <%= textarea f, :admin_notes %>
+    <%= label f, :admin_notes, "Internal (Admin) Notes", class: "label" %>
+    <%= textarea f, :admin_notes, class: "textarea textarea-bordered" %>
     <%= error_tag f, :admin_notes %>
 
-    <%= label f, :expected_size, "Expected number of students" %>
-    <%= number_input f, :expected_size %>
+    <%= label f, :expected_size, "Expected number of students", class: "label" %>
+    <%= number_input f, :expected_size, class: "input input-bordered" %>
     <%= error_tag f, :expected_size %>
 
-    <div class="space-s"></div>
+    <div class="h-8"></div>
 
-    <%= submit "Save", class: "button-primary" %>
+    <%= submit "Save", class: "btn btn-primary" %>
 <% end %>

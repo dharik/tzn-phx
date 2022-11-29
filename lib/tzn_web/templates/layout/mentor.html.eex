@@ -7,7 +7,6 @@
     <%= csrf_meta_tag() %>
     <title>CollegeRize</title>
     <script defer type="text/javascript" src="<%= Routes.static_path(@conn, "/assets/app.js") %>"></script>
-    <link rel="stylesheet" href="https://unpkg.com/turretcss/dist/turretcss.min.css" crossorigin="anonymous">
     <link rel="stylesheet" href="<%= Routes.static_path(@conn, "/assets/app.css") %>"/>
     <link rel="icon" type="image/x-icon" href="/favicon.ico">
     <link href="https://fonts.googleapis.com/icon?family=Material+Icons+Outlined"
@@ -18,42 +17,41 @@
     <script src="https://cdn.quilljs.com/1.3.7/quill.min.js"></script>
   </head>
   <body>
-    <div class="parent_layout">
-      <nav role="navigation" class="background-light-100">
-        <div class="flex flex-column align-items-center padding-vertical-xl background-light-100">
+    <div class="grid grid-cols-12 min-h-screen">
+      <nav role="navigation" class="bg-blue w-full col-span-12 md:col-span-4 xl:col-span-2">
+        <div class="flex flex-col items-center py-12">
           <a href="<%= Routes.entry_path(@conn, :launch_app) %>">
-            <img src="<%= Routes.static_path(@conn, "/images/logo-small.png") %>" width="240" />
+            <img src="<%= Routes.static_path(@conn, "/images/cz_logo.svg") %>" width="240" />
           </a>
-          <div class="space-l"></div>
-          <div class="space-l"></div>
-          <div class="space-l"></div>
-          <div class="group group-column group-stretch group-m width-80 margin-horizontal-auto">
-            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_pod_path(@conn, :index), "My Mentees", "people", @conn.request_path =~ ~r/\/mentor$/ || @conn.request_path =~ ~r/mentees|pods/) %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_timeline_path(@conn, :index), "Mentee Timelines", "view_timeline", @conn.request_path =~ "timeline") %>
-            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_timesheet_entry_path(@conn, :index), "My Timesheet", "work_outline", @conn.request_path =~ "timesheet") %>
+          <div class="flex flex-col self-stretch space-y-2 mt-8">
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_pod_path(@conn, :index), "My Mentees", "people", @conn.request_path =~ ~r/\/mentor$/ || @conn.request_path =~ ~r/mentees|pods/) %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_timeline_path(@conn, :index), "Mentee Timelines", "view_timeline", @conn.request_path =~ "timeline") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_timesheet_entry_path(@conn, :index), "My Timesheet", "work_outline", @conn.request_path =~ "timesheet") %>
 
             <%= if @current_mentor.college_list_specialty do %>
-              <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_college_list_path(@conn, :index), "College Lists", "school", @conn.request_path =~ "college_lists") %>
+              <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_college_list_path(@conn, :index), "College Lists", "school", @conn.request_path =~ "college_lists") %>
             <% end %>
             <%= if @current_mentor.ecvo_list_specialty do %>
-              <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_ecvo_list_path(@conn, :index), "EC/VO Lists", "volunteer_activism", @conn.request_path =~ "ecvo_lists") %>
+              <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_ecvo_list_path(@conn, :index), "EC/VO Lists", "volunteer_activism", @conn.request_path =~ "ecvo_lists") %>
             <% end %>
             <%= if @current_mentor.scholarship_list_specialty do %>
-              <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_scholarship_list_path(@conn, :index), "Scholarship Lists", "savings", @conn.request_path =~ "scholarship_list") %>
+              <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_scholarship_list_path(@conn, :index), "Scholarship Lists", "savings", @conn.request_path =~ "scholarship_list") %>
             <% end %>
 
-            <%= TznWeb.LayoutView.left_nav_button(Routes.mentor_help_path(@conn, :show), "Help", "help_outline", @conn.request_path =~ "help") %>
+            <%= TznWeb.LayoutView.left_nav_button_tw(Routes.mentor_help_path(@conn, :show), "Help", "help_outline", @conn.request_path =~ "help") %>
           </div>
-          <div class="space-xl"></div>
-          <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete %>
+          <div class="h-8"></div>
+          <%= link "Log Out", to: Routes.pow_session_path(@conn, :delete), method: :delete, class: "link text-white" %>
         </div>
       </nav>
-      <main role="main" class="padding-m">
-        <p class="color-info" role="alert"><%= get_flash(@conn, :info) %></p>
-        <p class="color-error" role="alert"><%= get_flash(@conn, :error) %></p>
+       <main role="main" class="col-span-12 md:col-span-8 xl:col-span-10 p-4">
+        <p class="text-grey-dark" role="alert"><%= get_flash(@conn, :info) %></p>
+        <p class="text-red" role="alert"><%= get_flash(@conn, :error) %></p>
         <%= render "impersonation_status.html", conn: @conn %>
         <%= @inner_content %>
+        <div class="h-8"></div>
       </main>
+
     </div>
     <script type="text/javascript">
     (function(f,b){if(!b.__SV){var e,g,i,h;window.mixpanel=b;b._i=[];b.init=function(e,f,c){function g(a,d){var b=d.split(".");2==b.length&&(a=a[b[0]],d=b[1]);a[d]=function(){a.push([d].concat(Array.prototype.slice.call(arguments,0)))}}var a=b;"undefined"!==typeof c?a=b[c]=[]:c="mixpanel";a.people=a.people||[];a.toString=function(a){var d="mixpanel";"mixpanel"!==c&&(d+="."+c);a||(d+=" (stub)");return d};a.people.toString=function(){return a.toString(1)+".people (stub)"};i="disable time_event track track_pageview track_links track_forms track_with_groups add_group set_group remove_group register register_once alias unregister identify name_tag set_config reset opt_in_tracking opt_out_tracking has_opted_in_tracking has_opted_out_tracking clear_opt_in_out_tracking start_batch_senders people.set people.set_once people.unset people.increment people.append people.union people.track_charge people.clear_charges people.delete_user people.remove".split(" ");

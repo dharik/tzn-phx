@@ -1,57 +1,61 @@
-<%= for q <- @questions do %>
-    <% 
-        answer = Map.get(@question_to_answer_map, q.id,  %{id: nil, from_pod: "", from_parent: "", internal: "", updated_at: Timex.now()}) 
-        answer_outdated? = Timex.before?(answer.updated_at, q.updated_at) || Timex.before?(answer.updated_at, @questionnaire.inserted_at)
-    %>
-    <%= raw q.question %>
-     <table class="margin-bottom-xxl">
-        <thead>
-            <tr>
-                <th>
-                    Parent response
-                </th>
-                <th>
-                    Pod response <br /><small>Parents can see this</small>
-                </th>
-                <th>
-                    Internal Notes <br /><small>Parents cannot see this</small>
-                </th>
-            </tr>
-        </thead>
-        <tr>
-            <td width="33%">
-                <em class="color-grey-200 white-space-pre-wrap"><%= answer.from_parent %></em>
-            </td>
-            <td width="33%" class="align-top"><% #align-top can be removed when turret is removed %>
-                <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
+ <div class="space-y-8">
+    <%= for q <- @questions do %>
+        <% 
+            answer = Map.get(@question_to_answer_map, q.id,  %{id: nil, from_pod: "", from_parent: "", internal: "", updated_at: Timex.now()}) 
+            answer_outdated? = Timex.before?(answer.updated_at, q.updated_at) || Timex.before?(answer.updated_at, @questionnaire.inserted_at)
+        %>
+        <div class="rounded px-4 py-8 bg-white border">
+            <%= raw q.question %>
+            <div class="grid grid-cols-3 auto-rows-auto gap-x-8 gap-y-4 mt-6">
+                <div class="font-light">Parent response</div>
+                <div class="font-light">Pod response</div>
+                <div class="font-light">Internal Notes <br /><small></small></div>
+                <div class="text-grey2 whitespace-pre-wrap italic">
+                    <%= answer.from_parent %>
+                </div>
+                <div>
+                    <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
+                        <.form for={:answer} as="answer" let={f} phx-change="change_answer">
+                            <%= hidden_input f, :question_id, value: q.id %>
+                            <label class="label pl-0">
+                                <span class="label-text font-light">Parents cannot see this</span>
+                                <%= if MapSet.member?(@answers_updated_this_session, "#{answer.id}/from_pod") do %>
+                                    <span class="label-text-alt">Updated just now</span>
+                                <% end %>
+                            </label>
+                            <%= textarea f, :from_pod, value: Map.get(answer, :from_pod), phx_debounce: 1200, placeholder: "Type here...", class: "textarea textarea-bordered w-full" %>
+                        </.form>
+                        
+                        
+                        <%= if answer_outdated? && answer.from_pod !== "" do %>
+                            <label class="label">
+                                <span class="label-text text-yellow-med">Please confirm this answer is up-to-date</span>
+                            </label>
+                            <a class="btn btn-sm" 
+                               phx-click="confirm_answer" 
+                               phx-value-id={answer.id}>
+                                    This answer is up-to-date
+                            </a>
+                        <% end %>
+                    <% else %>
+                        <p class="white-space-pre-wrap"><%= Map.get(answer, :from_pod) %></p>
+                    <% end %>
+ 
+                </div>
+                <div>
                     <.form for={:answer} as="answer" let={f} phx-change="change_answer">
                         <%= hidden_input f, :question_id, value: q.id %>
-                        <%= textarea f, :from_pod, value: Map.get(answer, :from_pod), phx_debounce: 1200, placeholder: "Type here..." %>
+                        <label class="label pl-0">
+                            <span class="label-text font-light">Parents cannot see this</span>
+                            <%= if MapSet.member?(@answers_updated_this_session, "#{answer.id}/internal") do %>
+                                <span class="label-text-alt">Updated just now</span>
+                            <% end %>
+                        </label>
+                        <%= textarea f, :internal, value: Map.get(answer, :internal), phx_debounce: 1200, placeholder: "Type here...", class: "textarea textarea-bordered w-full    " %>
                     </.form>
-                    <%= if answer_outdated? && answer.from_pod !== "" do %>
-                        <span class="text-yellow-med text-sm">Please confirm this answer is up-to-date</span>
-                        <a 
-                            class="button button-sm button-primary" 
-                            phx-click="confirm_answer" 
-                            phx-value-id={answer.id}>This answer is up-to-date</a>
-                    <% end %>
-                    <%= if MapSet.member?(@answers_updated_this_session, "#{answer.id}/from_pod") do %>
-                        <span class="text-sm">Updated just now</span>
-                    <% end %>
-                <% else %>
-                    <p class="white-space-pre-wrap"><%= Map.get(answer, :from_pod) %></p>
-                <% end %>
-
-            </td>
-            <td width="33%" class="align-top">
-                <.form for={:answer} as="answer" let={f} phx-change="change_answer">
-                    <%= hidden_input f, :question_id, value: q.id %>
-                    <%= textarea f, :internal, value: Map.get(answer, :internal), phx_debounce: 1200, placeholder: "Type here..." %>
-                </.form>
-                <%= if MapSet.member?(@answers_updated_this_session, "#{answer.id}/internal") do %>
-                    <span class="text-sm">Updated just now</span>
-                <% end %>
-            </td>
-        </tr>
-    </table>
-<% end %>
+                </div>
+            </div>
+        </div>
+    <% end %>
+</div>
+        

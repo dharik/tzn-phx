@@ -1,5 +1,5 @@
 <%= form_for @changeset, @action, fn f -> %>
-    <%= label f, :question, "Question Text" %>
+    <%= label f, :question, "Question Text", class: "label" %>
     <%= textarea f, :question, class: "rtem" %>
     <%= error_tag f, :question %>
 
@@ -7,23 +7,24 @@
     <%#= textarea f, :placeholder, placeholder: "This is what placeholder text looks like. It disappears when the user starts typing." %>
     <%#= error_tag f, :placeholder %>
 
-    <%= label f, :parent_answer_required do %>
-        <%= checkbox f, :parent_answer_required %> Parent Answer Required?
+    <%= label f, :parent_answer_required, class: "label justify-start cursor-pointer" do %>
+        <%= checkbox f, :parent_answer_required, class: "toggle mr-2" %> Parent Answer Required?
     <% end %>
     <%= error_tag f, :parent_answer_required %>
 
-    <div class="space-s"></div>
-    <%= label f, :question_sets %>
+    <div class="h-4"></div>
+    <%= label f, :question_sets, class: "label" %>
     <small>(Select multiple)</small>
+    <br />
     <%=
         multiple_select f,
         :question_sets,
         Enum.map(@question_sets, fn s -> {s.name, s.id} end),
         selected: Enum.map(@selected_sets,&(&1.id)),
-        class: "multi"
+        class: "select select-bordered"
     %>
 
-    <div class="space-s"></div>
+    <div class="h-4"></div>
 
-    <%= submit "Save", class: "button-primary" %>
+    <%= submit "Save", class: "btn btn-primary" %>
 <% end %>

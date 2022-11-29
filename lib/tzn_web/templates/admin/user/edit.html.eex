@@ -1,10 +1,11 @@
-<h1>Edit User</h1>
+<h1 class="text-xl">Edit User</h1>
 
 <%= @user.email %>
-<div class="space-m"></div>
+
+<div class="h-4"></div>
 
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_user_path(@conn, :update, @user)) %>
 
-<div class="space-m"></div>
+<div class="h-4"></div>
 
-<%= link "Back to Users", to: Routes.admin_user_path(@conn, :index) %>
+<%= link "Back to Users", to: Routes.admin_user_path(@conn, :index), class: "link" %>

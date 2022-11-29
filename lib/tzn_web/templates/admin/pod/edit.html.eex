@@ -1,5 +1,3 @@
-<h1>Edit Pod</h1>
-
 <%= render "form.html", Map.put(assigns, :action, Routes.admin_pod_path(@conn, :update, @pod)) %>
 
-<span><%= link "Back", to: Routes.admin_pod_path(@conn, :show, @pod) %></span>
+<span><%= link "Back", to: Routes.admin_pod_path(@conn, :show, @pod), class: "link" %></span>

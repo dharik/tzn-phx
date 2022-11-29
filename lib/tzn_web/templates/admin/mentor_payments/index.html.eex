@@ -1,34 +1,37 @@
-<h1>Mentor Payments</h1>
-<table>
-    <tr>
-        <th>Mentor Name</th>
-        <th>Hours</th>
-        <th>Pay</th>
-    </tr>
+<h1 class="text-2xl my-2">Mentor Payments</h1>
+
 <% current_year = Timex.now().year %>
 <%= form_for @conn, Routes.admin_mentor_payments_path(@conn, :index), [method: :get], fn f -> %>
     Month/Year:
-
-    <div class="input-group vertical-align-middle">
-        <%= select f, :start_month, 1..12 %>
-        <%= select f, :start_year, 2020..current_year %>
-        to
-        <%= select f, :end_month, 1..12 %>
-        <%= select f, :end_year, 2020..current_year %>
-    <%= submit "Submit" %>
+    <div class="input-group flex items-center">
+        <%= select f, :start_month, 1..12, class: "select select-bordered" %>
+        <%= select f, :start_year, 2020..current_year, class: "select select-bordered" %>
+        &nbsp;to&nbsp;
+        <%= select f, :end_month, 1..12, class: "select select-bordered" %>
+        <%= select f, :end_year, 2020..current_year, class: "select select-bordered" %>
+        <%= submit "Submit", class: "btn btn-outline" %>
     </div>
-
-
 <% end %>
 
-<%= for m <- @mentors do %>
-    <tr>
-        <td><%= link m.name, to: Routes.admin_mentor_path(@conn, :show, m.id) %></td>
-        <td><%= m.hours |> Number.Conversion.to_decimal() |> Decimal.round(2) %></td>
-        <td><%=  Number.Currency.number_to_currency(m.payment) %></td>
-    </tr>
-<% end %>
-    <tr class="background-light-200">
+<table class="table w-full my-2">
+    <thead>
+        <tr>
+            <th>Mentor Name</th>
+            <th>Hours</th>
+            <th>Pay</th>
+        </tr>
+    </thead>
+
+
+    <%= for m <- @mentors do %>
+        <tr>
+            <td><%= link m.name, to: Routes.admin_mentor_path(@conn, :show, m.id) %></td>
+            <td><%= m.hours |> Number.Conversion.to_decimal() |> Decimal.round(2) %></td>
+            <td><%=  Number.Currency.number_to_currency(m.payment) %></td>
+        </tr>
+    <% end %>
+
+    <tr class="active">
         <td><strong>Total</strong></td>
         <td></td>
         <td><strong><%= Number.Currency.number_to_currency(@sum_total) %></strong></td>
