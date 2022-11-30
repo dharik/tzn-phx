@@ -84,7 +84,7 @@ end
     </tbody>
 </table>
 
-<div class="h-8></div>
+<div class="h-8"></div>
 <%= if @include_hidden do %>
     <span class="text-grey text-sm">Showing only hidden</span>
     <%= link "Back to normal", to: Routes.mentor_college_list_path(@conn, :index) %>

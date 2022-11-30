@@ -105,10 +105,6 @@ defmodule Tzn.Questionnaire do
     get_question_set_by_slug("college_list")
   end
 
-  def ecvo_list_question_set do
-    get_question_set_by_slug("ec_vo_list")
-  end
-
   def scholarship_list_question_set do
     get_question_set_by_slug("scholarship_list")
   end
@@ -258,8 +254,8 @@ defmodule Tzn.Questionnaire do
     Questionnaire.changeset(q, attrs)
   end
 
-  def create_questionnaire(attrs, %User{} = current_user) do
-    assert_admin_or_mentor(current_user)
+  def create_questionnaire(attrs, _to_deprecate_current_user) do
+    # assert_admin_or_mentor(current_user) # Do this in a layer above like Tzn.EcvoLists.create()
 
     %Questionnaire{}
     |> Questionnaire.changeset(attrs)
@@ -285,16 +281,25 @@ defmodule Tzn.Questionnaire do
       questionnaire_id: q.id,
       snapshot_data: %{
         questions: Enum.map(questions, fn q -> Map.take(q, [:id, :question, :updated_at]) end),
-        answers: Enum.map(answers, fn a -> Map.take(a, [:id, :from_pod, :from_parent, :internal, :question_id, :updated_at]) end)
+        answers:
+          Enum.map(answers, fn a ->
+            Map.take(a, [:id, :from_pod, :from_parent, :internal, :question_id, :updated_at])
+          end)
       }
-    } |> Repo.insert()
+    }
+    |> Repo.insert()
   end
 
   def get_latest_snapshot(nil), do: nil
-  def get_latest_snapshot(%Questionnaire{} = q) do
-    from(s in QuestionnaireSnapshot, where: s.questionnaire_id == ^q.id, order_by: [desc: s.inserted_at], limit: 1) |> Repo.one()
-  end
 
+  def get_latest_snapshot(%Questionnaire{} = q) do
+    from(s in QuestionnaireSnapshot,
+      where: s.questionnaire_id == ^q.id,
+      order_by: [desc: s.inserted_at],
+      limit: 1
+    )
+    |> Repo.one()
+  end
 
   @doc """
   Note these will not be in order!
@@ -341,50 +346,6 @@ defmodule Tzn.Questionnaire do
       when is_binary(note) do
     assert_admin_or_mentor(current_user)
     create_or_update_answer(%Question{} = question, %Mentee{} = mentee, %{internal: note})
-  end
-
-  def send_parent_email(%Questionnaire{} = questionnaire, email_body, %Mentor{} = mentor)
-      when is_binary(email_body) do
-    mentee = questionnaire.mentee
-
-    subject =
-      cond do
-        questionnaire.question_set_id == college_list_question_set().id ->
-          "#{Tzn.Util.informal_name(mentee)}'s College List"
-
-        questionnaire.question_set_id == ecvo_list_question_set().id ->
-          "#{Tzn.Util.informal_name(mentee)}'s Extracurricular/Volunteer Opportunity List"
-
-        questionnaire.question_set_id == scholarship_list_question_set().id ->
-          "#{Tzn.Util.informal_name(mentee)}'s Scholarship List"
-      end
-
-    if mentee.parent1_email do
-      Tzn.Emails.Questionnaire.welcome(
-        subject,
-        email_body,
-        Tzn.Util.informal_name(mentee),
-        mentee.parent1_email,
-        Tzn.Util.informal_name(mentor),
-        mentor.email
-      )
-      |> Tzn.Mailer.deliver!()
-    end
-
-    if mentee.parent2_email do
-      Tzn.Emails.Questionnaire.welcome(
-        subject,
-        email_body,
-        Tzn.Util.informal_name(mentee),
-        mentee.parent2_email,
-        Tzn.Util.informal_name(mentor),
-        mentor.email
-      )
-      |> Tzn.Mailer.deliver!()
-    end
-
-    # Mark as email sent
-    change_questionnaire(questionnaire, %{parent_email_sent_at: Timex.now()}) |> Repo.update()
   end
 
   def attach_file(%Questionnaire{} = q, %Plug.Upload{} = file, %User{} = current_user) do
@@ -439,11 +400,5 @@ defmodule Tzn.Questionnaire do
 
   def only_college_lists(questionnaires) do
     Enum.filter(questionnaires, &(&1.question_set.slug == "college_list"))
-  end
-  def only_ecvo_lists(questionnaires) do
-    Enum.filter(questionnaires, &(&1.question_set.slug == "ec_vo_list"))
-  end
-  def only_scholarship_lists(questionnaires) do
-    Enum.filter(questionnaires, &(&1.question_set.slug == "scholarship_list"))
   end
 end

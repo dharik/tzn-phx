@@ -2,136 +2,141 @@
 public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> ShortUUID.encode!())
 %>
 
-<h2 class="text-2xl mb-3">
-    <%= @questionnaire.question_set.name %> Questionnaire for
-    <%= link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee), class: "link" %>
-</h2>
+<div class="main-grid">
+    <div class="main px-8">
+        <h2 class="text-2xl mb-3">
+            <%= @questionnaire.question_set.name %> Questionnaire for
+            <%= link @mentee.name, to: Routes.mentor_mentee_path(@conn, :show, @mentee), class: "link" %>
+            (<%= Tzn.Util.fomat_date_month_year(@questionnaire.inserted_at) %>)
+        </h2>
 
-<%= if @conn.assigns.current_mentor.ecvo_list_specialty do %>
-    <div class="shadow-md m-3 p-3">
-        <%= form_for @state_changeset, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), fn f -> %>
-            <label class="label justify-start space-x-2">
-                <%= radio_button f, :state, "needs_info", class: "radio" %>
-                <span>Needs info from parents or mentor</span>
-            </label>
-            <label class="label justify-start space-x-2">
-                <%= radio_button f, :state, "ready_for_specialist", class: "radio" %>
-                <span>All info is provided. Ready to start Extracurricular/Volunteer Opportunity research</span>
-            </label>
-            <label class="label justify-start space-x-2">
-                <%= radio_button f, :state, "specialist", class: "radio" %>
-                <span>Extracurricular/Volunteer Opportunity research in progress</span>
-            </label>
-            <label class="label justify-start space-x-2">
-                <%= radio_button f, :state, "designer", class: "radio" %>
-                <span>Sent to designer to put togther PDF</span>
-            </label>
-            <label class="label justify-start space-x-2">
-                <%= radio_button f, :state, "complete", class: "radio" %>
-                <span>Document is complete and sent to mentor</span>
-            </label>
+        <%= if @conn.assigns.current_mentor.ecvo_list_specialty do %>
+            <div class="shadow-md m-3 p-3">
+                <%= form_for @state_changeset, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), fn f -> %>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "needs_info", class: "radio" %>
+                        <span>Needs info from parents or mentor</span>
+                    </label>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "ready_for_specialist", class: "radio" %>
+                        <span>All info is provided. Ready to start Extracurricular/Volunteer Opportunity research</span>
+                    </label>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "specialist", class: "radio" %>
+                        <span>Extracurricular/Volunteer Opportunity research in progress</span>
+                    </label>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "designer", class: "radio" %>
+                        <span>Sent to designer to put togther PDF</span>
+                    </label>
+                    <label class="label justify-start space-x-2">
+                        <%= radio_button f, :state, "complete", class: "radio" %>
+                        <span>Document is complete and sent to mentor</span>
+                    </label>
 
-            <%= submit "Update Status", class: "btn btn-primary" %>
-        <% end %>
-    </div>
-<% end %>
-
-
-<%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-    <p>
-        Fill out the Pod Response column for each question.
-        Then submit it for a research specialist to get started.
-        Once you've submitted the form,
-        you'll be able to invite the parent to fill out the Parent Response column.
-        The researcher will reach out to you directly if there is any missing information.
-        You will be able to go back and change your answers,
-        but try to have the most accurate response the first time.
-        Your responses will be auto-saved! 🙂
-    </p>
-<% end %>
-<p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
-<%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
-    <%= form_for @conn, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), [method: :patch], fn _f -> %>
-        The research team has been notified and will review your answers.
-
-        <%= if @questionnaire.parent_email_sent_at do %>
-            <span>
-                An email was sent to the parents
-                <%= Timex.Format.DateTime.Formatters.Relative.format!(@questionnaire.parent_email_sent_at, "{relative}") %>
-                 with the following link: <pre class="mx-6"><%= public_url %></pre>
-            </span>
-        <% else %>
-            Now is a good time to have the parents fill in their answers.
-            You can use this form to send them an email to fill out their information.
-            You will be able to access the link to the form later, just in case.
-            Don't forget to edit name(s), date(s), and any other custom info as needed :)
-            <br />
-            <br />
-
-            <div class="rounded shadow-md p-6 space-y-4 bg-white border">
-            <p>
-                <strong>To:</strong> <%= [@mentee.parent1_email, @mentee.parent2_email] |> Enum.join("; ") %>
-            </p>
-            <p>
-                <strong>Subject:</strong> <%= Tzn.Util.informal_name(@mentee) %>'s Extracurricular/Volunteer Opportunity List
-            </p>
-            <textarea class="rte" rows="8" name="body">
-                <p>
-                    Hi <%= Tzn.Transizion.Mentee.parent_names(@mentee) %>,
-                </p>
-                <p>
-                    Please fill out some info for <%= Tzn.Util.informal_name(@mentee) %>'s Extracurricular/Volunteer Opportunity list by
-                    <b><%= Timex.today() |> Timex.shift(days: +3) |> Timex.format!("%B %d", :strftime) %></b>.
-                    You can access the form <a href="<%= public_url %>">here</a> or with the URL below.
-
-                </p>
-                <p>
-                    <%= public_url %>
-                </p>
-                <p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
-
-                <p>
-                    Thanks,<br />
-                    <%= Tzn.Util.informal_name(@current_mentor) %>
-                </p>
-            </textarea>
-            <div class="h-8"></div>
-                <%= if (@mentee.parent1_email || @mentee.parent2_email) do %>
-                    <%= submit "Send email to #{Tzn.Transizion.Mentee.parent_names(@mentee)}",
-                        class: "btn btn-primary"
-                    %>
-                <% else %>
-                    <p>No parents on file for <%= @mentee.name %></p>
+                    <%= submit "Update Status", class: "btn btn-primary" %>
                 <% end %>
             </div>
         <% end %>
-    <% end %>
-<% end %>
 
-<%= if @questionnaire.state === "specialist" && @is_my_mentee do %>
-    Research specialist is creating the Extracurricular/Volunteer Opportunity list list. Responses are locked.
-<% end %>
-<%= if @questionnaire.state === "designer" && @is_my_mentee do %>
-    Extracurricular/Volunteer Opportunity list list research is done. It's being compiled into a single document. Responses are locked.
-<% end %>
-<%= if @questionnaire.state === "complete" && @is_my_mentee do %>
-    <div class="alert alert-success shadow-md">
-        Extracurricular/Volunteer Opportunity list list research is done and you should have received a document from the research specialist. Responses are locked.
+
+        <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
+            <p>
+                Fill out the Pod Response column for each question.
+                Then submit it for a research specialist to get started.
+                Once you've submitted the form,
+                you'll be able to invite the parent to fill out the Parent Response column.
+                The researcher will reach out to you directly if there is any missing information.
+                You will be able to go back and change your answers,
+                but try to have the most accurate response the first time.
+                Your responses will be auto-saved! 🙂
+            </p>
+        <% end %>
+        <p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
+        <%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
+            <%= form_for @conn, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), [method: :patch], fn _f -> %>
+                The research team has been notified and will review your answers.
+
+                <%= if @questionnaire.parent_email_sent_at do %>
+                    <span>
+                        An email was sent to the parents
+                        <%= Timex.Format.DateTime.Formatters.Relative.format!(@questionnaire.parent_email_sent_at, "{relative}") %>
+                        with the following link: <pre class="mx-6"><%= public_url %></pre>
+                    </span>
+                <% else %>
+                    Now is a good time to have the parents fill in their answers.
+                    You can use this form to send them an email to fill out their information.
+                    You will be able to access the link to the form later, just in case.
+                    Don't forget to edit name(s), date(s), and any other custom info as needed :)
+                    <br />
+                    <br />
+
+                    <div class="rounded shadow-md p-6 space-y-4 bg-white border">
+                        <p>
+                            <strong>To:</strong> <%= [@mentee.parent1_email, @mentee.parent2_email] |> Enum.join("; ") %>
+                        </p>
+                        <p>
+                            <strong>Subject:</strong> <%= Tzn.Util.informal_name(@mentee) %>'s Extracurricular/Volunteer Opportunity List
+                        </p>
+                        <textarea class="rte" rows="8" name="body">
+                            <p>
+                                Hi <%= Tzn.Transizion.Mentee.parent_names(@mentee) %>,
+                            </p>
+                            <p>
+                                Please fill out some info for <%= Tzn.Util.informal_name(@mentee) %>'s Extracurricular/Volunteer Opportunity list by
+                                <b><%= Timex.today() |> Timex.shift(days: +3) |> Timex.format!("%B %d", :strftime) %></b>.
+                                You can access the form <a href="<%= public_url %>">here</a> or with the URL below.
+
+                            </p>
+                            <p>
+                                <%= public_url %>
+                            </p>
+                            <p>Although we make every effort to locate these experiences, internships for high school students are tough to find. The few opportunities which are active are often tied to ultra-competitive programs, so we encourage students to also look into volunteering and shadowing opportunities.</p>
+
+                            <p>
+                                Thanks,<br />
+                                <%= Tzn.Util.informal_name(@current_mentor) %>
+                            </p>
+                        </textarea>
+                        <div class="h-8"></div>
+                        <%= if (@mentee.parent1_email || @mentee.parent2_email) do %>
+                            <%= submit "Send email to #{Tzn.Transizion.Mentee.parent_names(@mentee)}",
+                                class: "btn btn-primary"
+                            %>
+                        <% else %>
+                            <p>No parents on file for <%= @mentee.name %></p>
+                        <% end %>
+                    </div>
+                <% end %>
+            <% end %>
+        <% end %>
+
+        <%= if @questionnaire.state === "specialist" && @is_my_mentee do %>
+            Research specialist is creating the Extracurricular/Volunteer Opportunity list list. Responses are locked.
+        <% end %>
+        <%= if @questionnaire.state === "designer" && @is_my_mentee do %>
+            Extracurricular/Volunteer Opportunity list list research is done. It's being compiled into a single document. Responses are locked.
+        <% end %>
+        <%= if @questionnaire.state === "complete" && @is_my_mentee do %>
+            <div class="alert alert-success shadow-md">
+                Extracurricular/Volunteer Opportunity list list research is done and you should have received a document from the research specialist. Responses are locked.
+            </div>
+        <% end %>
+
+        <div class="h-8"></div>
+
+        <%= live_render(@conn, TznWeb.MentorQuestionnaireAnswers, session: %{"questionnaire_id" => @questionnaire.id, "current_user_id" => @current_user.id}) %>
+
     </div>
-<% end %>
 
-<div class="h-8"></div>
-
-
-<div class="">
-    <div class="side md:top-6 bg-sky-blue-light p-4 rounded space-y-3 shadow-lg mb-16">
+    <div class="side md:top-6 md:sticky h-min bg-sky-blue-light p-4 rounded space-y-3 shadow-lg">
         <p>
             Feel free to attach any files that would help the research team.
         </p>
 
         <%= form_for @conn, Routes.mentor_ecvo_list_path(@conn, :update, @questionnaire), [multipart: true, method: :put], fn f -> %>
             <div class="input-group">
-                <%= file_input f, :attachment, required: true, class: "file-input file-input" %>
+                <%= file_input f, :attachment, required: true, class: "file-input file-input-bordered" %>
                 <%= submit "Upload File", class: "btn btn-secondary" %>
             </div>
         <% end %>
@@ -147,50 +152,6 @@ public_url = Routes.ecvo_list_url(@conn, :edit, @questionnaire.access_key |> Sho
             <% end %>
         </div>
     </div>
-
-    <%= for q <- @questions do %>
-        <% answer = Enum.find(@answers, %{from_pod: "", from_parent: "", internal: ""}, &(&1.question_id == q.id)) %>
-        <div class="text-lg"><%= raw q.question %></div>
-        <table class="table w-full mb-24 mt-1">
-            <thead>
-                <tr>
-                    <th>
-                        Parent response
-                    </th>
-                    <th>
-                        Pod response <br /><small>Parents can see this</small>
-                    </th>
-                    <th>
-                        Internal Notes <br /><small>Parents cannot see this</small>
-                    </th>
-                </tr>
-            </thead>
-            <tr>
-                <td width="33%">
-                    <em class="text-grey whitespace-pre-wrap"><%= answer.from_parent %></em>
-                </td>
-                <td width="33%">
-                    <%= if @is_my_mentee && (@questionnaire.state === "needs_info" || @questionnaire.state === "ready_for_specialist") do %>
-                        <%= react_component("Components.MentorAnswerPodInput", %{
-                            question_id: q.id,
-                            mentee_id: @mentee.id,
-                            value: Map.get(answer, :from_pod)
-                        }) %>
-                    <% else %>
-                        <p class="whitespace-pre-wrap"><%= Map.get(answer, :from_pod) %></p>
-                    <% end %>
-
-                </td>
-                <td width="33%">
-                    <%= react_component("Components.MentorAnswerInternalInput", %{
-                        question_id: q.id,
-                        mentee_id: @mentee.id,
-                        value: Map.get(answer, :internal)
-                    }) %>
-                </td>
-            </tr>
-        </table>
-    <% end %>
 </div>
 
 <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>

@@ -43,14 +43,16 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
 
 
         <%= if @questionnaire.state === "needs_info" && @is_my_mentee do %>
-            <p>Fill out the Pod Response column for each question.
-            Then submit it for a research specialist to get started.
-            Once you've submitted the form,
-            you'll be able to invite the parent to fill out the Parent Response column.
-            The researcher will reach out to you directly if there is any missing information.
-            You will be able to go back and change your answers,
-            but try to have the most accurate response the first time.
-            Your responses will be auto-saved! 🙂</p>
+            <p>
+                Fill out the Pod Response column for each question.
+                Then submit it for a research specialist to get started.
+                Once you've submitted the form,
+                you'll be able to invite the parent to fill out the Parent Response column.
+                The researcher will reach out to you directly if there is any missing information.
+                You will be able to go back and change your answers,
+                but try to have the most accurate response the first time.
+                Your responses will be auto-saved! 🙂
+            </p>
         <% end %>
         <%= if @questionnaire.state === "ready_for_specialist" && @is_my_mentee do %>
 
@@ -96,6 +98,7 @@ public_url = Routes.college_list_url(@conn, :edit, @questionnaire.access_key |> 
                                 <%= Tzn.Util.informal_name(@current_mentor) %>
                             </p>
                         </textarea>
+                        <div class="h-8"></div>
                         <%= if (@mentee.parent1_email || @mentee.parent2_email) do %>
                             <%= submit "Send email to #{Tzn.Transizion.Mentee.parent_names(@mentee)}",
                                 class: "btn btn-primary"

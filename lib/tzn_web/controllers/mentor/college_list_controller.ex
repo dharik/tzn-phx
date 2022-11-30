@@ -16,11 +16,12 @@ defmodule TznWeb.Mentor.CollegeListController do
 
   def show(conn, %{"id" => id} = params) do
     questionnaire =
-        Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
-        |> Repo.preload(:snapshots)
+      Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
+      |> Repo.preload(:snapshots)
 
     selected_snapshot =
-      Tzn.Util.find_by_id(questionnaire.snapshots, params["version"]) || List.last(questionnaire.snapshots)
+      Tzn.Util.find_by_id(questionnaire.snapshots, params["version"]) ||
+        List.last(questionnaire.snapshots)
 
     if is_nil(selected_snapshot) do
       raise "No snapshot found"
@@ -70,7 +71,7 @@ defmodule TznWeb.Mentor.CollegeListController do
   def update(conn, %{"id" => id, "body" => body}) do
     questionnaire = Questionnaire.get_questionnaire_by_id(id, conn.assigns.current_user)
 
-    Tzn.Questionnaire.send_parent_email(questionnaire, body, conn.assigns.current_mentor)
+    Tzn.ResearchListEmailer.send_parent_email(questionnaire, body, conn.assigns.current_mentor)
 
     conn
     |> redirect(to: Routes.mentor_college_list_path(conn, :edit, questionnaire))

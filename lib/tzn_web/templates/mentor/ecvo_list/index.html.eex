@@ -12,6 +12,7 @@ end
             <th>Mentee</th>
             <th>Mentor</th>
             <th>List Status</th>
+            <th>List Iteration</th>
             <th>View / Edit</th>
         </tr>
     </thead>
@@ -37,7 +38,7 @@ end
                         <% end %>
                          <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :email_not_sent do %>
                             <small>
-                                <span class="text-grey px-1">
+                                <span class="text-grey px-2">
                                     Email not sent to parents
                                 </span>
                             </small>
@@ -51,7 +52,7 @@ end
                         <% end %>
                         <%= if TznWeb.Mentor.CollegeListView.parent_state(q) == :past_grace_period do %>
                             <small>
-                                <span class="color-error px-1">
+                                <span class="text-error px-1">
                                     Email sent to parents <%= Tzn.Util.format_date_relative(q.parent_email_sent_at) %> but they haven't opened it yet
                                 </span>
                             </small>
@@ -67,6 +68,16 @@ end
                     <%= if q.state == "complete" do %>
                         Completed
                     <% end  %>
+                </td>
+                <td>
+                    <%=
+                        q.mentee.questionnaires
+                        |> Tzn.EcvoLists.only_ecvo_lists()
+                        |> Enum.sort_by(fn q -> q.updated_at end, {:asc, NaiveDateTime})
+                        |> Enum.find_index(fn other_q -> other_q.id == q.id end)
+                        |> then(fn idx -> idx + 1 end)
+                        |> Number.Human.number_to_ordinal()
+                    %>
                 </td>
                 <td><%= link "See Request", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "btn btn-sm btn-outline" %>
             </tr>

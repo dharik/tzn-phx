@@ -164,34 +164,11 @@
   <div class="card shadow-lg bg-white">
     <div class="card-body">
       <h2 class="card-title">Extracurricular / Volunteer Opportunity List</h2>
-        <%= if Tzn.Pods.ecvo_list_access?(@pod) do %>
-          <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "ec_vo_list")) do %>
-            <em>
-              <%=
-              case q.state do
-                "needs_info" -> "Needs info from you or parent(s)."
-                "ready_for_specialist" -> "Submitted to research specialist to begin research."
-                "specialist" -> "Research specialist is creating the list."
-                "designer" -> "Research is done. It's being compiled into a single document."
-                "complete" -> "Research is done and you should have received a document from the research specialist."
-                _ -> "Unknown"
-              end
-            %>
-            </em>
-            <div class="card-actions">
-              <%= link "Open", to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "btn btn-primary" %>
-            </div>
-          <% else %>
-            Not started
-            <div class="card-actions">
-              <%= link "Start",
-                to: Routes.mentor_ecvo_list_path(@conn, :create, mentee_id: @mentee.id),
-                class: "btn btn-primary", method: :post
-              %>
-            </div>
-        <% end %>
+      <%= if Tzn.EcvoLists.access?(@pod) do %>
+        <%= render "_ecvo_lists.html", conn: @conn, pod: @pod %>
       <% else %>
-        <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a extracurricular / volunteer opportunity list. Please reach out to your CMT if you have questions.
+        <%= Tzn.Util.informal_name(@pod.mentee) %>’s package does not cover a extracurricular / volunteer opportunity list.
+        Please reach out to your CMT if you have questions.
       <% end %>
     </div>
   </div>
@@ -199,34 +176,11 @@
   <div class="card shadow-lg bg-white">
     <div class="card-body">
       <h2 class="card-title">Scholarship Opportunity List</h2>
-      <%= if Tzn.Pods.scholarship_list_access?(@pod) do %>
-      <%= if q = Enum.find(@pod.questionnaires, &(&1.question_set.slug == "scholarship_list")) do %>
-        <em>
-          <%=
-          case q.state do
-            "needs_info" -> "Needs info from you or parent(s)."
-            "ready_for_specialist" -> "Submitted to research specialist to begin research."
-            "specialist" -> "Research specialist is creating the Scholarship opportunity list."
-            "designer" -> "Scholarship opportunity research is done. It's being compiled into a single document."
-            "complete" -> "Scholarship opportunity research is done and you should have received a document from the research specialist."
-            _ -> "Unknown"
-          end
-        %>
-        </em>
-        <div class="space-m"></div>
-        <%= link "Open", to: Routes.mentor_scholarship_list_path(@conn, :edit, q), class: "btn-primary" %>
+      <%= if Tzn.ScholarshipLists.access?(@pod) do %>
+        <%= render "_scholarship_lists.html", conn: @conn, pod: @pod %>
       <% else %>
-        Not started
-        <div class="card-actions">
-        <%= link "Start",
-          to: Routes.mentor_scholarship_list_path(@conn, :create, mentee_id: @mentee.id),
-          class: "btn btn-primary", method: :post
-        %>
-        </div>
+        <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
       <% end %>
-    <% else %>
-      <%= Tzn.Util.informal_name(@mentee) %>’s package does not cover a scholarship list. Please reach out to your CMT if you have questions.
-    <% end %>
     </div>
   </div>
 </div>

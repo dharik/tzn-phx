@@ -40,10 +40,12 @@ export default (props: Props) => {
 
   return (
     <Fragment>
-      <textarea onChange={handleChange} value={value}></textarea>
-      {saveState === 'success' && <span className="form-message success">✓ Saved</span>}
-      {saveState === 'saving' && <span className="form-message">Saving...</span>}
-      {saveState === 'fail' && <span className="form-message error">Unable to save</span>}
+      <textarea onChange={handleChange} value={value} className="textarea textarea-bordered w-full"></textarea>
+      <br />
+      &nbsp;
+      {saveState === 'success' && <span className="text-sm text-success">✓ Saved</span>}
+      {saveState === 'saving' && <span className="text-sm text-grey">Saving...</span>}
+      {saveState === 'fail' && <span className="text-sm text-error">Unable to save</span>}
     </Fragment>
   );
 };

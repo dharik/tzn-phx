@@ -1,0 +1,50 @@
+<%= if Tzn.EcvoLists.completed_ecvo_lists(@pod) |> Enum.any? do %>
+    <ol class="menu">
+        <%= for q <- Tzn.EcvoLists.completed_ecvo_lists(@pod) do %>
+            <li>
+                <%= link "Completed: " <> Tzn.Util.fomat_date_month_year(q.updated_at), to: Routes.mentor_ecvo_list_path(@conn, :show, q) %>
+            </li>
+        <% end %>
+    </ol>
+<% end %>
+
+
+
+<%= if q = Tzn.EcvoLists.current_ecvo_list(@pod) do %>
+    <div class="flex flex-col space-y-2 items-start">
+        <span>
+            Current EC/VO List: 
+            <%=
+                case q.state do
+                   "needs_info" -> "Needs info from you or parent(s)."
+                    "ready_for_specialist" -> "Submitted to research specialist to begin research."
+                    "specialist" -> "Research specialist is creating the list."
+                    "designer" -> "Research is done. It's being compiled into a single document."
+                end 
+            %>
+        </span>
+    </div>
+    <div class="card-actions">
+        <%= link to: Routes.mentor_ecvo_list_path(@conn, :edit, q), class: "btn btn-primary" do %>
+            View
+        <% end %>
+    </div>
+<% end %>
+
+<%= if Tzn.EcvoLists.can_start_ecvo_list(@pod) do %>
+    <%= if Tzn.EcvoLists.completed_ecvo_lists(@pod) |> Enum.any? do %>
+        <div class="card-actions">
+            <%= link "Start New",
+                to: Routes.mentor_ecvo_list_path(@conn, :create, pod_id: @pod),
+                class: "btn btn-primary", method: :post
+                %>
+        </div>
+    <% else %>
+        <div class="card-actions">
+            <%= link "Start",
+                to: Routes.mentor_ecvo_list_path(@conn, :create, pod_id: @pod),
+                class: "btn btn-primary", method: :post
+            %>
+        </div>
+    <% end %>
+<% end %>

@@ -82,10 +82,10 @@ defmodule TznWeb.Router do
       resources "/college_lists", Mentor.CollegeListController,
         only: [:index, :show, :edit, :update, :create]
 
-      resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :edit, :update, :create]
+      resources "/ecvo_lists", Mentor.ECVOListController, only: [:index, :show, :edit, :update, :create]
 
       resources "/scholarship_lists", Mentor.ScholarshipListController,
-        only: [:index, :edit, :update, :create]
+        only: [:index, :show, :edit, :update, :create]
 
       get "/help", Mentor.HelpController, :show
     end

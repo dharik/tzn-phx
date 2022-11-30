@@ -263,44 +263,6 @@ defmodule Tzn.Pods do
     end
   end
 
-  def ecvo_list_access?(%Pod{ecvo_list_limit: limit}) do
-    case limit do
-      nil -> false
-      0 -> false
-      _ -> true
-    end
-  end
-
-  def ecvo_list_usage(%Pod{} = p) do
-    used =
-      p.questionnaires
-      |> Tzn.Questionnaire.only_ecvo_lists()
-      |> Enum.count()
-
-    total = p.ecvo_list_limit || 0
-
-    %{used: used, total: total}
-  end
-
-  def scholarship_list_access?(%Pod{scholarship_list_limit: limit}) do
-    case limit do
-      nil -> false
-      0 -> false
-      _ -> true
-    end
-  end
-
-  def scholarship_list_usage(%Pod{} = p) do
-    used =
-      p.questionnaires
-      |> Tzn.Questionnaire.only_scholarship_lists()
-      |> Enum.count()
-
-    total = p.scholarship_list_limit || 0
-
-    %{used: used, total: total}
-  end
-
   def admin_create_todo(attrs), do: PodTodo.admin_changeset(%PodTodo{}, attrs) |> Repo.insert()
 
   def admin_change_todo(todo \\ %PodTodo{}, attrs \\ %{}),

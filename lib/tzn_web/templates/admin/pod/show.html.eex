@@ -140,11 +140,11 @@
         </tr>
         <tr>
           <td class="font-light">EC/VO Lists</td>
-          <td><%= "#{Tzn.Pods.ecvo_list_usage(@pod).used} / #{Tzn.Pods.ecvo_list_usage(@pod).total}" %></td>
+          <td><%= "#{Tzn.EcvoLists.usage(@pod).used} / #{Tzn.EcvoLists.usage(@pod).total}" %></td>
         </tr>
         <tr>
           <td class="font-light">Scholarship Lists</td>
-          <td><%= "#{Tzn.Pods.scholarship_list_usage(@pod).used} / #{Tzn.Pods.scholarship_list_usage(@pod).total}" %></td>
+          <td><%= "#{Tzn.ScholarshipLists.usage(@pod).used} / #{Tzn.ScholarshipLists.usage(@pod).total}" %></td>
         </tr>
         <tr>
           <td class="font-light">Hours Used</td>

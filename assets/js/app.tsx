@@ -4,8 +4,6 @@ import { LiveSocket } from 'phoenix_live_view';
 
 import ClassicEditor from '@ckeditor/ckeditor5-build-classic';
 
-import MentorAnswerPodInput from './mentor/answer_pod_input';
-import MentorAnswerInternalInput from './mentor/answer_internal_input';
 import ParentAnswerInput from './parent/answer_input';
 import AdminAnswerInput from './admin/answer_input';
 
@@ -38,8 +36,6 @@ document.addEventListener('DOMContentLoaded', (e) => {
 });
 
 window.Components = {
-  MentorAnswerPodInput,
-  MentorAnswerInternalInput,
   ParentAnswerInput,
   AdminAnswerInput,
 };
