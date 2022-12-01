@@ -11,7 +11,6 @@ defmodule Tzn.Transizion.Mentee do
     field :email, :string
     field :archived, :boolean
     field :archived_reason, :string
-    field :type, :string
 
     field :internal_note, :string
 

@@ -124,10 +124,6 @@ defmodule Tzn.Timesheets do
     categories() |> Enum.filter(&(&1.pod_type == type))
   end
 
-  def categories(%Mentor{}, %Mentee{type: pod_type}) do
-    categories() |> Enum.filter(&(&1.pod_type == pod_type))
-  end
-
   def categories do
     [
       %Category{name: "Research Specialist", slug: "research_specialist", requires_pod: false},
