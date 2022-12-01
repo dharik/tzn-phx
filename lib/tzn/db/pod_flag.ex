@@ -7,8 +7,8 @@ defmodule Tzn.DB.PodFlag do
 
     field :description, :string
     field :status, :string
-    field :parent_can_read, :boolean
-    field :school_admin_can_read, :boolean
+    field :parent_can_read, :boolean, default: false
+    field :school_admin_can_read, :boolean, default: false
 
     timestamps()
   end

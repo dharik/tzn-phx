@@ -47,26 +47,8 @@
                 
                 <div class="form-control">
                     <%= label f, :description, class: "label" %>
-                    <%= textarea f, :description, class: "textarea textarea-bordered w-full" %>
+                    <%= textarea f, :description, class: "textarea textarea-bordered w-full", placeholder: "Type notes about why this student needs CMT review" %>
                     <%= error_tag f, :description %>
-                </div>
-
-                <div>Who can see this flag?</div>
-                
-                <div class="form-control">
-                    <%= label f, :parent_can_read, class: "label cursor-pointer justify-start space-x-2" do %>
-                        <%= checkbox f, :parent_can_read, class: "toggle" %>
-                        <span class="label-text">Parents</span>
-                    <% end %>
-                    <%= error_tag f, :parent_can_read %>
-                </div>
-
-                <div class="form-control">
-                    <%= label f, :school_admin_can_read, class: "label cursor-pointer justify-start space-x-2" do %>
-                    <%= checkbox f, :school_admin_can_read, class: "toggle" %>
-                    <span class="label-text">Guidance Counselors &amp; School Administrators</span>
-                    <%= error_tag f, :school_admin_can_read %>
-                    <% end %>
                 </div>
 
                 <div class="flex justify-end">
