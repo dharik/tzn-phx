@@ -94,12 +94,6 @@ defmodule Tzn.Timesheets do
     )
   end
 
-  def list_entries(%Mentee{} = mentee) do
-    Repo.all(
-      from(e in TimesheetEntry, where: e.mentee_id == ^mentee.id, order_by: [desc: :started_at])
-    )
-  end
-
   def list_entries(%Tzn.DB.Pod{} = pod) do
     Repo.all(from(e in TimesheetEntry, where: e.pod_id == ^pod.id, order_by: [desc: :started_at]))
   end
