@@ -124,6 +124,7 @@ defmodule Tzn.Util do
     end
   end
 
+  # Warning: This is high vulnerability. Be very careful.
   def make_hyperlinks(text) do
     Regex.replace(
       ~r/(http|https|ftp|ftps)\:\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z]{2,3}(\/\S*)?/,
