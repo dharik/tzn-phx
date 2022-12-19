@@ -35,13 +35,18 @@ const fs = require('fs');
     // puppeteer captures the request twice - once as a 'preflight' and once as the actual request
     // so the GET filter is to make sure we capture the right one
     page.on('response', async (response) => {
-        if (response.url() == "https://api21.commonapp.org/datacatalog/members/requirements") {
+        console.log("loading url" + response.url())
+        if (response.url().includes("datacatalog/members/requirements")) {
+            console.log("Got a potential API request for deadlines data");
             if(response.request().method() == 'GET') {
+                console.log("Saving the deadline data")
                 const text = await response.text();
                 fs.writeFileSync('common_app_colleges.json', text);
             }
         }
     });
+
+    console.log("Navigating to requirements page")
     await page.goto('https://apply.commonapp.org/requirements?myColleges=true', { waitUntil: 'networkidle2' });
     await page.waitFor(3000);
     await page.screenshot({ path: 'after_requirements_grid.png' });
