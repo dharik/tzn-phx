@@ -55,6 +55,21 @@ config :bugsnag,
 
 config :tzn, allow_impersonating_admins: false
 
+config :ex_audit,
+  ecto_repos: [Tzn.Repo],
+  version_schema: Tzn.DB.Version,
+  tracked_schemas: [
+    Tzn.Users.Admin,
+    Tzn.Transizion.ContractPurchase,
+    Tzn.DB.PodFlag,
+    Tzn.DB.PodGroup,
+    Tzn.Questionnaire.QuestionSet,
+    Tzn.Questionnaire.Question,
+    Tzn.DB.Calendar,
+    Tzn.DB.CalendarEvent,
+    Tzn.DB.SchoolAdmin
+  ]
+
 config :esbuild,
   version: "0.14.41",
   default: [
