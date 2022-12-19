@@ -102,14 +102,11 @@ defmodule Tzn.Scripts.ImportCaDeadlines do
   end
 
   def local_log(msg) do
-    if Mix.env() == :dev do
-      {:ok, file} = File.open("import_ca_deadlines.log", [:append])
-      IO.binwrite(file, msg)
-      IO.binwrite(file, "\n")
-      File.close(file)
-    else
-      Logger.info(msg)
-    end
+    # {:ok, file} = File.open("import_ca_deadlines.log", [:append])
+    # IO.binwrite(file, msg)
+    # IO.binwrite(file, "\n")
+    # File.close(file)
+    Logger.info(msg)
   end
 
   def get_or_create_deadline(calendar, date, name, description, import_data) do
