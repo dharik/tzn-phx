@@ -71,7 +71,8 @@ defmodule Tzn.MixProject do
       {:accent, "~> 1.1"},
       {:cachex, "~> 3.4"},
       {:plug_attack, "~> 0.4.2"},
-      {:plug_forwarded_peer, "~> 0.0.2"}
+      {:plug_forwarded_peer, "~> 0.0.2"},
+      {:ex_audit, "~> 0.9"}
     ]
   end
 
