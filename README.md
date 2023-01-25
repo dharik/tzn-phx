@@ -14,3 +14,11 @@ Idea for automated mentor QA with pod_flags:
 * Run job on schedule that looks for something like mentor did not meet with mentee for > 2 weeks
 * Create a pod_flag if that's detected with a new `type` field
 * Search for mentors with multiple pod_flags of the same type. To track mentor quality/consistency over time
+
+## Running the common app deadlines updater
+
+* Update `ca_scraper/index.js` with a user + pass for common app's website
+* Run `./run.sh` in `ca_scraper`. It should spit out some screenshots as well as a `common_app_colleges.json` result
+* Copy & Paste the content of `common_app_colleges.json` into `lib/tzn/scripts/import_ca_deadlines.ex`
+* Uncommon the lines in `local_log` if desired
+* Run the server & call `Tzn.Scripts.ImportCaDeadlines.run` from the console
