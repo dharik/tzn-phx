@@ -292,7 +292,8 @@ defmodule TznWeb.SchoolAdmin.ApiController do
           ])
         end
       )
-
+    # TODO: Cachex.fetch didn't support setting expiration before
+    # but now it does so combine the .fetch and .expire calls
     Cachex.expire(
       :school_admin_cache,
       conn.assigns.current_user.school_admin_profile.id,

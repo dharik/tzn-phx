@@ -1,4 +1,7 @@
 defmodule Tzn.Scripts.ImportAeriesData do
+  @moduledoc """
+  This is not used, just for reference
+  """
   def run(url, cert, pod_group_id) do
     pod_group = Tzn.PodGroups.get_group(pod_group_id)
 
