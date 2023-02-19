@@ -3,11 +3,11 @@
     "deploy": "cd .. && mix assets.deploy && rm -f _build/esbuild*"
   },
   "dependencies": {
-    "@chakra-ui/react": "^2.3.5",
+    "@chakra-ui/react": "^2.5.1",
     "@ckeditor/ckeditor5-build-classic": "^24.0.0",
     "@emotion/react": "^11.10.4",
     "@emotion/styled": "^11.10.4",
-    "daisyui": "^2.41.0",
+    "daisyui": "^2.50.1",
     "date-fns": "^2.29.3",
     "framer-motion": "^7.3.6",
     "lodash-es": "^4.17.21",
