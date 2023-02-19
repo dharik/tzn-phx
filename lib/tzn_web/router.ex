@@ -133,7 +133,7 @@ defmodule TznWeb.Router do
       get "/additional_offerings", Parent.AdditionalOfferingsController, :show
       post "/refer", Parent.ReferralController, :create
       get "/timeline", Parent.TimelineController, :show
-      get "/resources", Parent.LibraryController, :show
+      # get "/resources", Parent.LibraryController, :show
     end
   end
 
