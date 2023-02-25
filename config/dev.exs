@@ -54,7 +54,11 @@ config :tzn, TznWeb.Endpoint,
 # Watch static and templates for browser reloading.
 config :tzn, TznWeb.Endpoint,
   live_reload: [
-    interval: 1000,
+    interval: 200,
+    backend: :fs_poll,
+    backend_opts: [
+      interval: 500
+    ],
     patterns: [
       ~r"priv/static/.*(js|css|png|jpeg|jpg|gif|svg)$",
       ~r"priv/gettext/.*(po)$",
