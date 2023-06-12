@@ -108,6 +108,10 @@ defmodule Tzn.Util do
     Phoenix.Naming.humanize(str)
   end
 
+  def informal_name(nil) do
+    ""
+  end
+
   def informal_name(%Mentee{} = m) do
     if is_binary(m.nick_name) do
       m.nick_name
