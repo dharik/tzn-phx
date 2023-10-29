@@ -1,6 +1,7 @@
 defmodule Tzn.Jobs.SyncMenteeGradeWithPodTimelines do
   alias Tzn.Repo
   import Ecto.Query
+  require Logger
 
   def run do
     from(p in Tzn.DB.Pod, where: not is_nil(p.timeline_id))
@@ -15,7 +16,8 @@ defmodule Tzn.Jobs.SyncMenteeGradeWithPodTimelines do
     end)
     |> Enum.each(fn p ->
       # For now just report so we can verify this detection works
-      Bugsnag.report("#{p.mentee.name}'s grade doesn't match graduation year for timeline: #{p.timeline.graduation_year}")
+      # Bugsnag.report("#{p.mentee.name}'s grade doesn't match graduation year for timeline: #{p.timeline.graduation_year}")
+      Logger.info("#{p.mentee.name}'s grade doesn't match graduation year for timeline: #{p.timeline.graduation_year}")
     end)
   end
 end
